@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/GameMap.dart';
 import 'header.dart';
 import 'bottomnavbar.dart';
 import 'analyzer.dart';
@@ -99,22 +100,28 @@ class _MapScouterState extends State<MapScouter> {
     return Scaffold(
       appBar: Header(context, 'Map'),
       body: Container(
-        height: 0.61 * MediaQuery.of(context).size.height,
-        child: SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.asset('assets/map.png', fit: BoxFit.contain),
-                myAnalyzer,
-                plotter,
-                MapScouterKey()
-              ],
-            ),
+          // height: 0.61 * MediaQuery.of(context).size.height,
+          child: GameMap(
+        children: [
+          FlatButton(onPressed: null, child: Text('Hello')),
+          myAnalyzer,
+        ],
+      )
+          // child: SingleChildScrollView(
+          //   child: ConstrainedBox(
+          //     constraints: BoxConstraints(),
+          //     child: Column(
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       children: <Widget>[
+          //         Image.asset('assets/map.png', fit: BoxFit.contain),
+          //         myAnalyzer,
+          //         plotter,
+          //         MapScouterKey()
+          //       ],
+          //     ),
+          //   ),
+          // ),
           ),
-        ),
-      ),
       bottomNavigationBar: BottomNavBar(context),
     );
   }
