@@ -236,8 +236,8 @@ class TeamDataAnalyzer {
     Map<String, Map<String, double>> averages = {};
     for (int i = 0; i < _teams.length; i++) {
       DocumentSnapshot team = _teams[i];
-      averages[team.documentID] =
-          _calcTeamAverages(team.documentID, team.data['hasAnalysis']);
+      averages[team.documentID] = _calcTeamAverages(team.documentID,
+          team.data['hasAnalysis'] == null ? false : team.data['hasAnalysis']);
     }
     _teamAverages = averages;
   }
