@@ -101,7 +101,15 @@ class _MapScouterState extends State<MapScouter> {
       appBar: Header(context, 'Map'),
       body: Container(
           // height: 0.61 * MediaQuery.of(context).size.height,
-          child: GameMap()
+          child: GameMap(
+        imageChildren: [
+          Positioned.fill(
+            child: Align(
+                alignment: Alignment.center,
+                child: RaisedButton(onPressed: () {}, child: Text('Hello'))),
+          )
+        ],
+      )
           // child: SingleChildScrollView(
           //   child: ConstrainedBox(
           //     constraints: BoxConstraints(),

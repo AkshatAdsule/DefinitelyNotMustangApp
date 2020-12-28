@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
 
 class GameMap extends StatelessWidget {
-  List<Widget> _children;
-  GameMap({List<Widget> children}) {
-    _children = [];
-    _children.add(Container(
-      margin: EdgeInsets.only(left: 10),
-      decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('assets/croppedmap.png'),
-              fit: BoxFit.contain,
-              alignment: Alignment.centerLeft)),
-    ));
-    if (children != null) _children.addAll(children);
+  List<Widget> _imageChildren = [], _columnChildren = [];
+  GameMap({List<Widget> imageChildren, List<Widget> columnChildren}) {
+    _imageChildren.add(Image.asset('assets/croppedmap.png'));
+    _imageChildren.addAll(imageChildren);
+    _columnChildren.addAll(columnChildren);
   }
 
   @override
@@ -21,26 +14,12 @@ class GameMap extends StatelessWidget {
         child: Row(
       children: [
         Container(
-          child: Stack(
-            children: [
-              Image.asset('assets/croppedmap.png'),
-              Positioned.fill(
-                child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child:
-                        RaisedButton(onPressed: () {}, child: Text('Hello'))),
-              )
-            ],
-          ),
+          child: Stack(children: _imageChildren),
         ),
         Container(
+          decoration: BoxDecoration(color: Colors.grey),
           child: Column(
-            children: [
-              RaisedButton(onPressed: () {}, child: Text('Offense')),
-              RaisedButton(onPressed: () {}, child: Text('Inner')),
-              RaisedButton(onPressed: () {}, child: Text('Inner')),
-              RaisedButton(onPressed: () {}, child: Text('Inner'))
-            ],
+            children: _columnChildren,
           ),
         )
       ],
