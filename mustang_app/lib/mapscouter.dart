@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mustang_app/GameMap.dart';
+import 'package:mustang_app/gamemap.dart';
 import 'header.dart';
 import 'bottomnavbar.dart';
 import 'analyzer.dart';
@@ -103,28 +103,30 @@ class _MapScouterState extends State<MapScouter> {
           // height: 0.61 * MediaQuery.of(context).size.height,
           child: GameMap(
         imageChildren: [
-          Positioned.fill(
-            child: Align(
-                alignment: Alignment.center,
-                child: RaisedButton(onPressed: () {}, child: Text('Hello'))),
-          )
+          GameMapChild(
+              align: Alignment.bottomCenter,
+              child: RaisedButton(
+                onPressed: () {},
+                child: Text('Hello'),
+              ))
         ],
-      )
-          // child: SingleChildScrollView(
-          //   child: ConstrainedBox(
-          //     constraints: BoxConstraints(),
-          //     child: Column(
-          //       mainAxisAlignment: MainAxisAlignment.center,
-          //       children: <Widget>[
-          //         Image.asset('assets/map.png', fit: BoxFit.contain),
-          //         myAnalyzer,
-          //         plotter,
-          //         MapScouterKey()
-          //       ],
-          //     ),
-          //   ),
-          // ),
-          ),
+        columnChildren: [],
+      )),
+      // child: SingleChildScrollView(
+      //   child: ConstrainedBox(
+      //     constraints: BoxConstraints(),
+      //     child: Column(
+      //       mainAxisAlignment: MainAxisAlignment.center,
+      //       children: <Widget>[
+      //         Image.asset('assets/map.png', fit: BoxFit.contain),
+      //         myAnalyzer,
+      //         plotter,
+      //         MapScouterKey()
+      //       ],
+      //     ),
+      //   ),
+      // ),
+
       bottomNavigationBar: BottomNavBar(context),
     );
   }
