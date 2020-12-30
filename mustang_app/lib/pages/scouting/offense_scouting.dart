@@ -16,7 +16,7 @@ class OffenseScouting extends StatefulWidget {
 
 class _OffenseScoutingState extends State<OffenseScouting> {
   void Function() _toggleMode;
-  double _topSliderValue = 2, _bottomSliderValue = 2;
+  double _sliderValue = 2;
 
   _OffenseScoutingState({void Function() toggleMode}) {
     _toggleMode = toggleMode;
@@ -55,41 +55,6 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                 ),
               )),
           GameMapChild(
-              left: 65,
-              top: 17.5,
-              align: Alignment.topCenter,
-              child: CircleAvatar(
-                backgroundColor: Colors.green,
-                child: IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.donut_large,
-                    color: Colors.white,
-                  ),
-                ),
-              )),
-          GameMapChild(
-            left: 30,
-            top: 55,
-            align: Alignment.center,
-            child: Transform.rotate(
-              angle: -pi / 8,
-              child: Container(
-                width: 200,
-                child: Slider(
-                  divisions: 2,
-                  label: _topSliderValue.round().toString(),
-                  onChanged: (newVal) => setState(() {
-                    _topSliderValue = newVal;
-                  }),
-                  min: 1,
-                  max: 3,
-                  value: _topSliderValue,
-                ),
-              ),
-            ),
-          ),
-          GameMapChild(
             right: 30,
             bottom: 55,
             align: Alignment.center,
@@ -99,13 +64,13 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                 width: 200,
                 child: Slider(
                   divisions: 2,
-                  label: _bottomSliderValue.round().toString(),
+                  label: _sliderValue.round().toString(),
                   onChanged: (newVal) => setState(() {
-                    _bottomSliderValue = newVal;
+                    _sliderValue = newVal;
                   }),
                   min: 1,
                   max: 3,
-                  value: _bottomSliderValue,
+                  value: _sliderValue,
                 ),
               ),
             ),
