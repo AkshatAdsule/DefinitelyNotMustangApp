@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'mapscouter.dart';
 
 class SymbolPlotter extends StatefulWidget {
   static const String route = './SymbolPlotter';
@@ -35,7 +34,7 @@ class ScatterPlot extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     double width = MediaQuery.of(_context).size.width,
         height = MediaQuery.of(_context).size.height;
-    canvas.translate(-0.5*width, -1.33*height);    
+    canvas.translate(-0.5 * width, -1.33 * height);
     for (PlotPoint p in _plotPoint) {
       double x = (p.x * width);
       double y = (p.y * height);
@@ -43,13 +42,11 @@ class ScatterPlot extends CustomPainter {
         ..color = p.fillColor
         ..strokeWidth = 5
         ..style = PaintingStyle.fill;
-      canvas.drawCircle(
-          Offset(x, y), p.radius, ppPaint);
+      canvas.drawCircle(Offset(x, y), p.radius, ppPaint);
 
       ppPaint.color = Colors.black;
       ppPaint.style = PaintingStyle.stroke;
-      canvas.drawCircle(
-          Offset(x, y), p.radius, ppPaint);
+      canvas.drawCircle(Offset(x, y), p.radius, ppPaint);
 
       TextSpan ppSpan = TextSpan(
         style: TextStyle(
@@ -71,10 +68,24 @@ class ScatterPlot extends CustomPainter {
         canvas,
         Offset(x - pptp.width / 2, y - p.fontSize / 2),
       );
-      
     }
   }
 
   @override
   bool shouldRepaint(ScatterPlot old) => true;
+}
+
+class PlotPoint {
+  double _x;
+  double _y;
+  String _avgScore;
+  Color _fillColor;
+
+  double radius = 20;
+  double fontSize = 15;
+  PlotPoint(this._x, this._y, this._fillColor, this._avgScore, this.fontSize);
+  double get x => _x;
+  double get y => _y;
+  Color get fillColor => _fillColor;
+  String get avgScore => _avgScore;
 }

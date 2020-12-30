@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'header.dart';
-import 'bottomnavbar.dart';
+import '../components/header.dart';
+import '../components/bottom_nav_bar.dart';
 
 class Calendar extends StatefulWidget {
   static const String route = '/Calendar';

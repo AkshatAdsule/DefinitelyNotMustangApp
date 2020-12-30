@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mustang_app/counter.dart';
+import '../../components/counter.dart';
 
-import 'scoutingoperations.dart';
-import 'header.dart';
-import 'postscouter.dart';
+import '../../backend/scouting_operations.dart';
+import '../../components/header.dart';
+import 'post_scouter.dart';
 
 class MatchEndScouter extends StatefulWidget {
   static const String route = '/MatchEndScouter';

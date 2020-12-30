@@ -1,30 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:mustang_app/gamemap.dart';
-import 'header.dart';
-import 'bottomnavbar.dart';
-import 'analyzer.dart';
-import 'symbolplotter.dart';
-import 'teamdataanalyzer.dart';
-import 'mapscouterkey.dart';
+import '../components/header.dart';
+import '../components/bottom_nav_bar.dart';
+import '../components/analyzer.dart';
+import '../utils/symbolplotter.dart';
+import '../backend/team_data_analyzer.dart';
+import '../components/map_scouter_key.dart';
 
-class MapScouter extends StatefulWidget {
-  static const String route = '/MapScouter';
+class MapAnalysisDisplay extends StatefulWidget {
+  static const String route = '/MapAnalysisDisplay';
   String _teamNumber = '';
-  MapScouter({String teamNumber}) {
+  MapAnalysisDisplay({String teamNumber}) {
     _teamNumber = teamNumber;
   }
   @override
   State<StatefulWidget> createState() {
-    return new _MapScouterState(_teamNumber);
+    return new _MapAnalysisDisplayState(_teamNumber);
   }
 }
 
-class _MapScouterState extends State<MapScouter> {
+class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
   Analyzer myAnalyzer;
   String _teamNumber;
   SymbolPlotter plotter;
 
-  _MapScouterState(String teamNumber) {
+  _MapAnalysisDisplayState(String teamNumber) {
     myAnalyzer = new Analyzer(teamNumber);
     _teamNumber = teamNumber;
     plotter = new SymbolPlotter(_getPoints());
@@ -100,49 +99,24 @@ class _MapScouterState extends State<MapScouter> {
     return Scaffold(
       appBar: Header(context, 'Map'),
       body: Container(
-          // height: 0.61 * MediaQuery.of(context).size.height,
-          child: GameMap(
-        imageChildren: [
-          GameMapChild(
-              align: Alignment.bottomCenter,
-              child: RaisedButton(
-                onPressed: () {},
-                child: Text('Hello'),
-              ))
-        ],
-        columnChildren: [],
-      )),
-      // child: SingleChildScrollView(
-      //   child: ConstrainedBox(
-      //     constraints: BoxConstraints(),
-      //     child: Column(
-      //       mainAxisAlignment: MainAxisAlignment.center,
-      //       children: <Widget>[
-      //         Image.asset('assets/map.png', fit: BoxFit.contain),
-      //         myAnalyzer,
-      //         plotter,
-      //         MapScouterKey()
-      //       ],
-      //     ),
-      //   ),
-      // ),
+        // height: 0.61 * MediaQuery.of(context).size.height,
 
+        child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset('assets/map.png', fit: BoxFit.contain),
+                myAnalyzer,
+                plotter,
+                MapScouterKey()
+              ],
+            ),
+          ),
+        ),
+      ),
       bottomNavigationBar: BottomNavBar(context),
     );
   }
-}
-
-class PlotPoint {
-  double _x;
-  double _y;
-  String _avgScore;
-  Color _fillColor;
-
-  double radius = 20;
-  double fontSize = 15;
-  PlotPoint(this._x, this._y, this._fillColor, this._avgScore, this.fontSize);
-  double get x => _x;
-  double get y => _y;
-  Color get fillColor => _fillColor;
-  String get avgScore => _avgScore;
 }

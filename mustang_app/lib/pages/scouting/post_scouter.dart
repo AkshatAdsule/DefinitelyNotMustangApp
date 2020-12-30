@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mustang_app/bottomnavbar.dart';
+import '../../components/bottom_nav_bar.dart';
 
-import 'header.dart';
-import 'calendar.dart';
+import '../../components/header.dart';
+import '../calendar.dart';
 import 'scouter.dart';
 
 class PostScouter extends StatelessWidget {

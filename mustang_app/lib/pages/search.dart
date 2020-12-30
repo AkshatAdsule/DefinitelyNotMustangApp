@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mustang_app/header.dart';
-import 'mapscouter.dart';
-import 'bottomnavbar.dart';
-import 'teaminfodisplay.dart';
-import 'teamdataanalyzer.dart';
+import '../components/header.dart';
+import 'map_analysis_display.dart';
+import '../components/bottom_nav_bar.dart';
+import 'team_info_display.dart';
+import '../backend/team_data_analyzer.dart';
 
 class SearchPage extends StatefulWidget {
   static const String route = './Search';
@@ -57,7 +57,7 @@ class _SearchPageState extends State<SearchPage> {
       child: Text("Analysis"),
       onPressed: () {
         Navigator.pop(context);
-        Navigator.pushNamed(context, MapScouter.route, arguments: {
+        Navigator.pushNamed(context, MapAnalysisDisplay.route, arguments: {
           'teamNumber': teamNumber,
         });
       },

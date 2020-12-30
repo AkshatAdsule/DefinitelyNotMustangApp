@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'constants.dart';
+import '../constants/constants.dart';
 
 class TeamDataAnalyzer {
   static Map<String, Map<String, dynamic>> _teamAverages = {};

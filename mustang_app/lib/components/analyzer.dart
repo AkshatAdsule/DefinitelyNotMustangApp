@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'teamdataanalyzer.dart';
+import '../backend/team_data_analyzer.dart';
 
 class Analyzer extends StatefulWidget {
   String _teamNum;

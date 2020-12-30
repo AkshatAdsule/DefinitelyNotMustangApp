@@ -4,15 +4,7 @@ class GameMap extends StatelessWidget {
   List<Widget> _imageChildren = [], _columnChildren = [];
   GameMap({List<Widget> imageChildren, List<Widget> columnChildren}) {
     _imageChildren.add(Image.asset('assets/croppedmap.png'));
-    _imageChildren.add(GameMapChild(
-      align: Alignment.center,
-      child: RaisedButton(
-        child: Text('Hello'),
-        onPressed: () {},
-      ),
-    ));
-
-    // _imageChildren.addAll(imageChildren);
+    _imageChildren.addAll(imageChildren);
     _columnChildren.addAll(columnChildren);
   }
 

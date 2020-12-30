@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:mustang_app/constants.dart';
-import 'package:mustang_app/header.dart';
+import '../constants/constants.dart';
+import '../components/header.dart';
 
 class TeamInfoDisplay extends StatefulWidget {
   String _team;

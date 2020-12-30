@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'bottomnavbar.dart';
-import 'teamdataanalyzer.dart';
+import '../components/bottom_nav_bar.dart';
+import '../backend/team_data_analyzer.dart';
 
 class HomePage extends StatefulWidget {
   HomePage() {

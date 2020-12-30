@@ -1,18 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mustang_app/teaminfodisplay.dart';
-import 'mapscouter.dart';
-import 'calendar.dart';
-import 'scouter.dart';
-import 'search.dart';
-import 'homepage.dart';
-import 'sketcher.dart';
-import 'autonscouting.dart';
-import 'teleopscouting.dart';
-import 'endgamescouting.dart';
-import 'postscouter.dart';
-import 'matchendscouting.dart';
-import 'orientation_helpers.dart';
-import 'pitscouting.dart';
+import 'exports/pages.dart';
+import 'utils/orientation_helpers.dart';
 
 void main() => runApp(MyApp());
 
@@ -70,9 +58,9 @@ class MyApp extends StatelessWidget {
         builder: (context) => PostScouter(),
         settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
       );
-    } else if (settings.name == MapScouter.route) {
+    } else if (settings.name == MapAnalysisDisplay.route) {
       return MaterialPageRoute(
-        builder: (context) => MapScouter(
+        builder: (context) => MapAnalysisDisplay(
           teamNumber: args['teamNumber'],
         ),
         settings: rotationSettings(settings, ScreenOrientation.landscapeOnly),

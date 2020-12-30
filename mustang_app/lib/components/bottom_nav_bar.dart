@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mustang_app/sketcher.dart';
-import 'calendar.dart';
-import 'scouter.dart';
-import 'search.dart';
+import '../pages/sketcher.dart';
+import '../pages/calendar.dart';
+import '../pages/scouting/scouter.dart';
+import '../pages/search.dart';
 
 class BottomNavBar extends BottomNavigationBar {
   static int _selectedIndex = 0;
