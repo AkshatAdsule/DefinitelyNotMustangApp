@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import '../../components/game_map.dart';
 
 class DefenseScouting extends StatefulWidget {
-  Function _toggleMode;
+  void Function() _toggleMode;
 
-  DefenseScouting({Function toggleMode}) {
+  DefenseScouting({void Function() toggleMode}) {
     _toggleMode = toggleMode;
   }
 
@@ -14,9 +14,9 @@ class DefenseScouting extends StatefulWidget {
 }
 
 class _DefenseScoutingState extends State<DefenseScouting> {
-  Function _toggleMode;
+  void Function() _toggleMode;
 
-  _DefenseScoutingState({Function toggleMode}) {
+  _DefenseScoutingState({void Function() toggleMode}) {
     _toggleMode = toggleMode;
   }
 
@@ -26,16 +26,49 @@ class _DefenseScoutingState extends State<DefenseScouting> {
       child: GameMap(
         imageChildren: [
           GameMapChild(
-              align: Alignment.center,
-              child: RaisedButton(
+            align: Alignment.bottomLeft,
+            left: 7,
+            bottom: 7,
+            child: CircleAvatar(
+              backgroundColor: Colors.green,
+              child: IconButton(
+                icon: Icon(Icons.undo),
+                color: Colors.white,
                 onPressed: () {},
-                child: Text('This is Defense'),
-              ))
+              ),
+            ),
+          )
         ],
         sideWidgets: [
-          RaisedButton(
-            onPressed: _toggleMode,
-            child: Text('Offense'),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(color: Colors.grey),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  RaisedButton(
+                    onPressed: _toggleMode,
+                    child: Text('Offense'),
+                  ),
+                  RaisedButton(
+                    onPressed: () {},
+                    child: Text('Prevent Shot'),
+                  ),
+                  RaisedButton(
+                    onPressed: () {},
+                    child: Text('Prevent Intake'),
+                  ),
+                  RaisedButton(
+                    onPressed: () {},
+                    child: Text('Push'),
+                  ),
+                  RaisedButton(
+                    onPressed: () {},
+                    child: Text('Foul'),
+                  ),
+                ],
+              ),
+            ),
           )
         ],
       ),
