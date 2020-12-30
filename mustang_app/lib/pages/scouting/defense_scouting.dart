@@ -32,10 +32,10 @@ class _DefenseScoutingState extends State<DefenseScouting> {
                 child: Text('This is Defense'),
               ))
         ],
-        columnChildren: [
+        sideWidgets: [
           RaisedButton(
             onPressed: _toggleMode,
-            child: Text('Toggle Mode'),
+            child: Text('Offense'),
           )
         ],
       ),

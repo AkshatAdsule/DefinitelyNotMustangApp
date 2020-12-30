@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class GameMap extends StatelessWidget {
-  List<Widget> _imageChildren = [], _columnChildren = [];
+  List<Widget> _imageChildren = [], _sideWidgets;
   GameMap(
       {List<Widget> imageChildren = const [],
-      List<Widget> columnChildren = const []}) {
+      List<Widget> sideWidgets = const []}) {
     _imageChildren.add(Image.asset('assets/croppedmap.png'));
     _imageChildren.addAll(imageChildren);
-    _columnChildren.addAll(columnChildren);
+    _sideWidgets = sideWidgets;
   }
 
   @override
@@ -18,12 +18,7 @@ class GameMap extends StatelessWidget {
         Container(
           child: Stack(children: _imageChildren),
         ),
-        Container(
-          // decoration: BoxDecoration(color: Colors.grey),
-          child: Column(
-            children: _columnChildren,
-          ),
-        )
+        ..._sideWidgets
       ],
     ));
   }
