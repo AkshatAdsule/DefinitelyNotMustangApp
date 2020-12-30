@@ -97,10 +97,8 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Header(context, 'Map'),
       body: Container(
-        // height: 0.61 * MediaQuery.of(context).size.height,
-
+        // height: MediaQuery.of(context).size.height,
         child: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: BoxConstraints(),
@@ -116,7 +114,9 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavBar(context),
+      // TODO: Make sure that bottom nav appears when the end game notes button
+      // is clicked or when the undo button is held down
+      // bottomNavigationBar: BottomNavBar(context),
     );
   }
 }
