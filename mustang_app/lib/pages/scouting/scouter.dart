@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/pages/scouting/map_scouting.dart';
 import 'pit_scouting.dart';
 import '../../components/header.dart';
 import 'auton_scouting.dart';
@@ -159,6 +160,11 @@ class _ScouterState extends State<Scouter> {
               builder: (BuildContext buildContext) => new RaisedButton(
                 color: Colors.green,
                 onPressed: () {
+                  Navigator.pushNamed(context, MapScouting.route, arguments: {
+                    'teamNumber': _teamNumberController.text,
+                    'matchNumber': _matchNumberController.text
+                  });
+                  return;
                   setState(() {
                     if (_teamNumberController.text.isEmpty) {
                       Scaffold.of(buildContext).showSnackBar(SnackBar(

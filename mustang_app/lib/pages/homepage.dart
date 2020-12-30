@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../components/header.dart';
 import '../components/bottom_nav_bar.dart';
 import '../backend/team_data_analyzer.dart';
 
@@ -18,9 +19,7 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-      ),
+      appBar: Header(context, 'Home'),
       // body: Column(
       //   children: [
       //     Text('Welcome!',

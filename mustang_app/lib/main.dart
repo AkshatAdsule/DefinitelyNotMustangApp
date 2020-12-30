@@ -85,6 +85,11 @@ class MyApp extends StatelessWidget {
         builder: (context) => PitScouter(teamNumber: args['teamNumber']),
         settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
       );
+    } else if (settings.name == MapScouting.route) {
+      return MaterialPageRoute(
+        builder: (context) => MapScouting(),
+        settings: rotationSettings(settings, ScreenOrientation.landscapeOnly),
+      );
     }
     return null;
   }
