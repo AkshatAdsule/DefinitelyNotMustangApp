@@ -245,6 +245,16 @@ class ScoutingOperations {
     await this.updateMatchDataSummary(teamNumber, matchNumber);
   }
 
+  void writeMatchData(String teamNumber, String matchNumber,
+      Map<String, dynamic> matchData) async {
+    await Constants.db
+        .collection('teams')
+        .document(teamNumber)
+        .collection('matches')
+        .document(matchNumber)
+        .updateData(matchData);
+  }
+
   Future<void> updateMatchDataSummary(
       String teamNumber, String matchNumber) async {
     DocumentSnapshot dataSnapshot = await Constants.db
