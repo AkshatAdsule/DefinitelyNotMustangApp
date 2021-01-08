@@ -1,6 +1,163 @@
 import 'package:flutter/material.dart';
 import '../backend/team_data_analyzer.dart';
+import 'package:mustang_app/constants/constants.dart';
 
+class Analyzer extends StatefulWidget {
+  String _teamNum;
+  Analyzer(String teamNum) {
+    _teamNum = teamNum;
+  }
+  @override
+  State<StatefulWidget> createState() {
+    return _AnalyzerState(_teamNum);
+  }
+}
+
+class _AnalyzerState extends State<Analyzer> {
+  bool _initialized = false, _hasAnalysis = true;
+  String _teamNum, _driveBase;
+  double _numShotsPrev, _numIntakesPrev, _totalDefActionTime, _totalQualGameTime;
+  var _pushStartZones, _pushEndZones, _pushTime; //in seconds
+  Map<String, double> _fouls;
+
+  _AnalyzerState(String teamNum) {
+    _teamNum = teamNum;
+  }
+
+  void initState() {
+    super.initState();
+    if (_teamNum.isEmpty) {
+      return;
+    }
+    // setState(() {
+    _hasAnalysis = TeamDataAnalyzer.getTeamDoc(_teamNum)['hasAnalysis'];
+    // });
+    if (!_hasAnalysis) {
+      return;
+    }
+    //initialize all vars
+    setState(() {
+      //random values for now just to test
+      _driveBase = "swerve";
+      _numShotsPrev = 10;
+      _numIntakesPrev = 5;
+      _totalDefActionTime = 120;
+      _totalQualGameTime = 600; //4 games
+      _fouls = {"regFouls":3, "techFouls":2, "yellowCards":1, "redCards":0};
+
+      //just trying smth diff bc smths not working n its pissing me off
+      //doesnt matter just testing anyways
+      //so apparently instead of doing this:
+      //_pushStartZones = {1, 19, 29, 4};
+      //for everything i need to do this and idk why but pls just let it be?? idk lmao
+      _pushStartZones = new List(4);
+      _pushStartZones[0] = 1;
+      _pushStartZones[1] = 19;
+      _pushStartZones[2] = 29;
+      _pushStartZones[3] = 4;
+
+      //_pushEndZones = {2, 17, 29, 6};
+      _pushEndZones = new List(4);
+      _pushEndZones[0] = 2;
+      _pushEndZones[1] = 17;    
+      _pushEndZones[2] = 29;
+      _pushEndZones[3] = 6;
+
+      _pushTime = new List(4);
+      _pushTime[0] = 2;
+      _pushTime[1] = 3;
+      _pushTime[2] = 1;
+      _pushTime[3] = 4;
+      //_pushTime = {2, 3, 1, 4};
+      _initialized = true;
+    });
+  }
+
+  String getReport() {
+    double _totPtsPrev = calcTotPtsPrev();
+    double _ptsPrevOverDefTime = calcTotPtsPrev()/_totalDefActionTime;
+    double _percentTimeInDefense = 100*(_totalDefActionTime/_totalQualGameTime);
+    double _percentTimeInOffense = 100 - _percentTimeInDefense;
+    double _regFouls = _fouls["regFouls"];
+    double _techFouls = _fouls["techFouls"];
+    double _yellowCards = _fouls["yellowCards"];
+    double _redCards = _fouls["redCards"];
+
+    return "Team: " + _teamNum
+    + "\nTotal points prevented: " + _totPtsPrev.toString()
+    + "\nPoints prevented/sec: " + _ptsPrevOverDefTime.toString()
+    + "\n% time in defense: " + _percentTimeInDefense.toString() + "%, "
+    + "% time in offense: " + _percentTimeInOffense.toString() + "%"
+    + "\nTotal reg fouls: " + _regFouls.toString()
+    + " Total tech fouls: " + _techFouls.toString()
+    + "\nTotal yellow cards: " + _yellowCards.toString()
+    + " Total red cards: " + _redCards.toString();
+    //+ "\npushTime[i]: " + _pushTime[0].toString();
+
+  }
+
+  double calcTotPtsPrev(){
+    return calcShotPtsPrev() + calcIntakePtsPrev() + calcPushPtsPrev() - calcFoulLostPts();
+  }
+  double calcShotPtsPrev(){
+    return _numShotsPrev*Constants.shotValue;
+  }
+  double calcIntakePtsPrev(){
+    return _numIntakesPrev*Constants.intakeValue;
+  }
+  double calcPushPtsPrev(){
+    double _result = 0;
+    //set speed
+    double _speed = 10;
+    
+    if (_driveBase.contains("tank")){ _speed = Constants.tankSpeed; }
+    if (_driveBase.contains("omni")){ _speed = Constants.omniSpeed; }
+    if (_driveBase.contains("westCoast")){ _speed = Constants.westCoastSpeed; }
+    if (_driveBase.contains("mecanum")){ _speed = Constants.mecanumSpeed; }
+    if (_driveBase.contains("swerve")){ _speed = Constants.swerveSpeed; }
+
+//so basically only works for pushing in straight lines and i haven't even tested that
+    for (var i = 0; i < _pushStartZones.length; i++){
+      var _currentPushTime = _pushTime[i];
+      var _currentPushStartZone = _pushStartZones[i];
+      var _currentPushEndZone = _pushEndZones[i];
+      var _predictedDisplacement = _currentPushTime*_speed;
+      double _predicatedFinalZone = _currentPushStartZone + (_predictedDisplacement/Constants.zoneSideLength);
+      //abs value of zone difference
+      double _zoneDifference = (_predicatedFinalZone - _currentPushEndZone).abs();
+      _result += (_zoneDifference * Constants.zoneDisplacementValue);
+    }
+    //print(_result.toString());
+    
+    return _result;
+  }
+  //returns a positive number, must subtract from total
+  double calcFoulLostPts(){
+    double _regPtsLost = _fouls["regFouls"] * Constants.regFoul;
+    double _techPtsLost = _fouls["techFouls"] * Constants.techFoul;
+    double _yellowPtsLost = _fouls["yellowCards"] * Constants.yellowCard;
+    double _redPtsLost = _fouls["redCards"] * Constants.redCard;
+    return _regPtsLost + _techPtsLost + _yellowPtsLost + _redPtsLost;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_hasAnalysis) {
+      return Text('No Analysis For This Team :(');
+    } else if (_initialized) {
+      return Text(this.getReport());
+    } else if (_teamNum.isEmpty) {
+      return Text('Error! No Team Number Entered');
+    } else {
+      return Text('Loading...');
+    }
+  }
+}
+
+//BELOW IS OLD BEACH BLITZ VERSION BUT I DON'T WANT TO MAKE A NEW CLASS 
+//BC THEN I HAVE TO UPDATE EVERYTHING IN ALL THE OTHER CLASSES - YES I KNOW REFRACTOR 
+//EXISTS BUT STILL *insert passive aggressive smile*
+/*
 class Analyzer extends StatefulWidget {
   String _teamNum;
   Analyzer(String teamNum) {
@@ -258,3 +415,4 @@ class _AnalyzerState extends State<Analyzer> {
     }
   }
 }
+*/
