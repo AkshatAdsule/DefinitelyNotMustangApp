@@ -45,10 +45,8 @@ class _AnalyzerState extends State<Analyzer> {
       _totalQualGameTime = 600; //4 games
       _fouls = {"regFouls":3, "techFouls":2, "yellowCards":1, "redCards":0};
 
-      //just trying smth diff bc smths not working n its pissing me off
-      //doesnt matter just testing anyways
-      //so apparently instead of doing this:
-      //_pushStartZones = {1, 19, 29, 4};
+      //just trying smth diff bc smths not working n its pissing me off　doesnt matter just testing anyways
+      //so apparently instead of doing this:　_pushStartZones = {1, 19, 29, 4};
       //for everything i need to do this and idk why but pls just let it be?? idk lmao
       _pushStartZones = new List(4);
       _pushStartZones[0] = 1;
@@ -63,12 +61,13 @@ class _AnalyzerState extends State<Analyzer> {
       _pushEndZones[2] = 29;
       _pushEndZones[3] = 6;
 
+      //_pushTime = {2, 3, 1, 4};
       _pushTime = new List(4);
       _pushTime[0] = 2;
       _pushTime[1] = 3;
       _pushTime[2] = 1;
       _pushTime[3] = 4;
-      //_pushTime = {2, 3, 1, 4};
+
       _initialized = true;
     });
   }
@@ -92,8 +91,6 @@ class _AnalyzerState extends State<Analyzer> {
     + " Total tech fouls: " + _techFouls.toString()
     + "\nTotal yellow cards: " + _yellowCards.toString()
     + " Total red cards: " + _redCards.toString();
-    //+ "\npushTime[i]: " + _pushTime[0].toString();
-
   }
 
   double calcTotPtsPrev(){
@@ -108,15 +105,14 @@ class _AnalyzerState extends State<Analyzer> {
   double calcPushPtsPrev(){
     double _result = 0;
     //set speed
-    double _speed = 10;
-    
+    double _speed;
     if (_driveBase.contains("tank")){ _speed = Constants.tankSpeed; }
     if (_driveBase.contains("omni")){ _speed = Constants.omniSpeed; }
     if (_driveBase.contains("westCoast")){ _speed = Constants.westCoastSpeed; }
     if (_driveBase.contains("mecanum")){ _speed = Constants.mecanumSpeed; }
     if (_driveBase.contains("swerve")){ _speed = Constants.swerveSpeed; }
 
-//so basically only works for pushing in straight lines and i haven't even tested that
+    //so basically only works for pushing in straight lines
     for (var i = 0; i < _pushStartZones.length; i++){
       var _currentPushTime = _pushTime[i];
       var _currentPushStartZone = _pushStartZones[i];
@@ -126,9 +122,7 @@ class _AnalyzerState extends State<Analyzer> {
       //abs value of zone difference
       double _zoneDifference = (_predicatedFinalZone - _currentPushEndZone).abs();
       _result += (_zoneDifference * Constants.zoneDisplacementValue);
-    }
-    //print(_result.toString());
-    
+    }    
     return _result;
   }
   //returns a positive number, must subtract from total
