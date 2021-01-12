@@ -1,41 +1,61 @@
 import 'package:flutter/material.dart';
 
 class TextButton extends StatelessWidget {
+  ButtonStyle style;
   ButtonType type;
-  Color color;
   void Function() onPressed;
-  String text;
-  double borderRadius;
+  String text = '';
 
-  TextButton(
-      {this.type, this.color, this.onPressed, this.text, this.borderRadius});
+  TextButton({this.style, this.type, this.onPressed, this.text});
 
   @override
   Widget build(BuildContext context) {
+    Color color = Colors.green;
+    Color borderColor = Colors.black;
+    double borderWidth = 2;
     switch (type) {
-      case ButtonType.RAISED:
+      case ButtonType.MAKE:
+        if (this.text == 'In') {
+          borderColor = Colors.white;
+          borderWidth = 3;
+        }
+        break;
+      case ButtonType.MISS:
+        color = Colors.deepPurple;
+        break;
+      case ButtonType.PAGEBUTTON:
+        color = Colors.white;
+        break;
+      default:
+        break;
+    }
+    switch (style) {
+      case ButtonStyle.RAISED:
         return RaisedButton(
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(borderRadius)),
-          color: this.color,
+              borderRadius: BorderRadius.circular(borderWidth),
+              side: BorderSide(color: borderColor, width: borderWidth)),
+          color: color,
           onPressed: this.onPressed,
           child: Text(text),
         );
         break;
-      case ButtonType.OUTLINED:
+      case ButtonStyle.OUTLINED:
         return OutlineButton(
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(borderRadius)),
-          color: this.color,
+              borderRadius: BorderRadius.circular(borderWidth),
+              side: BorderSide(color: borderColor, width: borderWidth)),
+          color: color,
           onPressed: this.onPressed,
           child: Text(text),
         );
         break;
-      case ButtonType.FLAT:
+      case ButtonStyle.FLAT:
         return FlatButton(
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(borderRadius)),
-          color: this.color,
+              borderRadius: BorderRadius.circular(borderWidth),
+              side: BorderSide(color: borderColor, width: borderWidth)),
+          color: color,
           onPressed: this.onPressed,
           child: Text(text),
         );
@@ -46,8 +66,6 @@ class TextButton extends StatelessWidget {
   }
 }
 
-enum ButtonType {
-  RAISED,
-  OUTLINED,
-  FLAT,
-}
+enum ButtonStyle { RAISED, OUTLINED, FLAT }
+
+enum ButtonType { MAKE, MISS, PAGEBUTTON, ELEMENT, TOGGLE }
