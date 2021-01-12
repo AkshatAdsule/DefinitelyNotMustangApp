@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import '../../components/game_map.dart';
+import '../../components/buttons.dart' as theme;
 
 class OffenseScouting extends StatefulWidget {
   void Function() _toggleMode;
@@ -14,18 +15,34 @@ class OffenseScouting extends StatefulWidget {
       _OffenseScoutingState(toggleMode: _toggleMode);
 }
 
+class Action {
+  int timeStamp;
+  String buttonId;
+  Action({this.timeStamp, this.buttonId});
+}
+
 class _OffenseScoutingState extends State<OffenseScouting> {
   void Function() _toggleMode;
   double _sliderValue = 2;
 
+  List<Action> shots = new List<Action>();
+
   _OffenseScoutingState({void Function() toggleMode}) {
     _toggleMode = toggleMode;
+  }
+
+// TODO: make addAction() get called everytime element-of-game button is clicked,
+// to keep track of all actions
+  void addAction(String id) {
+    int now = 111; //TODO: change this to acutal time
+    shots.add(new Action(timeStamp: now, buttonId: id));
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: GameMap(
+        withGoal: true,
         imageChildren: [
           GameMapChild(
             align: Alignment.bottomLeft,
@@ -78,49 +95,68 @@ class _OffenseScoutingState extends State<OffenseScouting> {
         ],
         sideWidgets: [
           Expanded(
+            // child: Image(image: Image.asset('assets/goal.jpg'),),
             child: Container(
-              decoration: BoxDecoration(color: Colors.grey),
+              // decoration: BoxDecoration(// TODO: fix to make it actually showing
+              //   image: DecorationImage(
+              //     image: AssetImage('assets/goal.jpg'),
+              //     fit: BoxFit.fitHeight,
+              //   ),
+              // ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  RaisedButton(
-                    onPressed: _toggleMode,
-                    child: Text('Defense'),
-                  ),
-                  RaisedButton(
-                    onPressed: () {},
-                    child: Text('Inner'),
-                  ),
+                  theme.TextButton(
+                      style: theme.ButtonStyle.RAISED,
+                      type: theme.ButtonType.TOGGLE,
+                      onPressed: _toggleMode,
+                      text: 'Defense'),
+                  theme.TextButton(
+                      style: theme.ButtonStyle.RAISED,
+                      type: theme.ButtonType.MAKE,
+                      onPressed: null,
+                      id: '@in',
+                      text: 'In'),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      RaisedButton(
-                        onPressed: () {},
-                        child: Text('Outer'),
-                      ),
-                      RaisedButton(
-                        onPressed: () {},
-                        child: Text('Miss'),
-                      ),
+                      theme.TextButton(
+                          style: theme.ButtonStyle.RAISED,
+                          type: theme.ButtonType.MAKE,
+                          onPressed: null,
+                          id: '@out_make',
+                          text: 'Out'),
+                      theme.TextButton(
+                          style: theme.ButtonStyle.RAISED,
+                          type: theme.ButtonType.MISS,
+                          onPressed: null,
+                          id: '@out_miss',
+                          text: ''),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      RaisedButton(
-                        onPressed: () {},
-                        child: Text('Bottom'),
-                      ),
-                      RaisedButton(
-                        onPressed: () {},
-                        child: Text('Miss'),
-                      ),
+                      theme.TextButton(
+                          style: theme.ButtonStyle.RAISED,
+                          type: theme.ButtonType.MAKE,
+                          onPressed: null,
+                          id: '@low_make',
+                          text: 'Low'),
+                      theme.TextButton(
+                          style: theme.ButtonStyle.RAISED,
+                          type: theme.ButtonType.MISS,
+                          onPressed: null,
+                          id: '@low_miss',
+                          text: '')
                     ],
                   ),
-                  RaisedButton(
-                    onPressed: () {},
-                    child: Text('Foul'),
-                  ),
+                  // theme.TextButton(
+                  //   style: theme.ButtonStyle.RAISED,
+                  //   type: theme.ButtonType.ELEMENT,
+                  //   onPressed: null,
+                  //   text: 'Foul'
+                  // ),
                 ],
               ),
             ),
