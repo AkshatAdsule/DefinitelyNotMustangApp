@@ -5,14 +5,15 @@ class TextButton extends StatelessWidget {
   ButtonType type;
   void Function() onPressed;
   String text = '';
+  String id = '';
 
-  TextButton({this.style, this.type, this.onPressed, this.text});
+  TextButton({this.style, this.type, this.onPressed, this.text, this.id});
 
   @override
   Widget build(BuildContext context) {
     Color color = Colors.green;
     Color borderColor = Colors.black;
-    double borderWidth = 2;
+    double borderWidth = 1;
     switch (type) {
       case ButtonType.MAKE:
         if (this.text == 'In') {
@@ -21,7 +22,7 @@ class TextButton extends StatelessWidget {
         }
         break;
       case ButtonType.MISS:
-        color = Colors.deepPurple;
+        color = Colors.purple;
         break;
       case ButtonType.PAGEBUTTON:
         color = Colors.white;

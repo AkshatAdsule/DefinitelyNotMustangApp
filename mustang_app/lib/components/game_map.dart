@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 class GameMap extends StatelessWidget {
   List<Widget> _imageChildren = [], _sideWidgets;
   GameMap(
-      {List<Widget> imageChildren = const [],
+      {bool withGoal = false,
+      List<Widget> imageChildren = const [],
       List<Widget> sideWidgets = const []}) {
     _imageChildren.add(Image.asset('assets/croppedmap.png'));
+    if (withGoal) {
+      _imageChildren.add(Image.asset('assets/goal.jpg'));
+    }
     _imageChildren.addAll(imageChildren);
     _sideWidgets = sideWidgets;
   }
