@@ -42,7 +42,6 @@ class _OffenseScoutingState extends State<OffenseScouting> {
   Widget build(BuildContext context) {
     return Container(
       child: GameMap(
-        withGoal: true,
         imageChildren: [
           GameMapChild(
             align: Alignment.bottomLeft,
@@ -95,14 +94,13 @@ class _OffenseScoutingState extends State<OffenseScouting> {
         ],
         sideWidgets: [
           Expanded(
-            // child: Image(image: Image.asset('assets/goal.jpg'),),
             child: Container(
-              // decoration: BoxDecoration(// TODO: fix to make it actually showing
-              //   image: DecorationImage(
-              //     image: AssetImage('assets/goal.jpg'),
-              //     fit: BoxFit.fitHeight,
-              //   ),
-              // ),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/goal.jpg'),
+                  fit: BoxFit.fitHeight,
+                ),
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -114,7 +112,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                   theme.TextButton(
                       style: theme.ButtonStyle.RAISED,
                       type: theme.ButtonType.MAKE,
-                      onPressed: null,
+                      onPressed: () {},
                       id: '@in',
                       text: 'In'),
                   Row(
@@ -123,13 +121,13 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                       theme.TextButton(
                           style: theme.ButtonStyle.RAISED,
                           type: theme.ButtonType.MAKE,
-                          onPressed: null,
+                          onPressed: () {},
                           id: '@out_make',
                           text: 'Out'),
                       theme.TextButton(
                           style: theme.ButtonStyle.RAISED,
                           type: theme.ButtonType.MISS,
-                          onPressed: null,
+                          onPressed: () {},
                           id: '@out_miss',
                           text: ''),
                     ],
@@ -140,13 +138,13 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                       theme.TextButton(
                           style: theme.ButtonStyle.RAISED,
                           type: theme.ButtonType.MAKE,
-                          onPressed: null,
+                          onPressed: () {},
                           id: '@low_make',
                           text: 'Low'),
                       theme.TextButton(
                           style: theme.ButtonStyle.RAISED,
                           type: theme.ButtonType.MISS,
-                          onPressed: null,
+                          onPressed: () {},
                           id: '@low_miss',
                           text: '')
                     ],

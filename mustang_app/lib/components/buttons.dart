@@ -22,7 +22,7 @@ class TextButton extends StatelessWidget {
         }
         break;
       case ButtonType.MISS:
-        color = Colors.purple;
+        color = Colors.deepPurple;
         break;
       case ButtonType.PAGEBUTTON:
         color = Colors.white;
