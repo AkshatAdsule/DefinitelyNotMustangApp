@@ -20,9 +20,9 @@ class Constants {
   static const double mecanumSpeed = 10;
   static const double swerveSpeed = 10;
 
-  static const double zoneSideLength = 6.6;
-  static const double numZonesAlongWidth = 8;
-  static const double numZonesAlongHeight = 4;
+  static const double zoneSideLength = 3.3;
+  static const double numColumns = 16;
+  static const double numRows = 8;
 
   //OFFENSE ANALYSIS
   static const double lowShotValue = 1;

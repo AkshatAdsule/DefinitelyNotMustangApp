@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import '../backend/team_data_analyzer.dart';
 import 'package:mustang_app/constants/constants.dart';
@@ -17,8 +19,9 @@ class _AnalyzerState extends State<Analyzer> {
   bool _initialized = false, _hasAnalysis = true;
   String _teamNum, _driveBase;
   double _numShotsPrev, _numIntakesPrev, _totalDefActionTime, _totalQualGameTime;
-  var _pushStartZones, _pushEndZones, _pushTime; //in seconds
+  var _pushTime;
   Map<String, double> _fouls;
+  Map<double, double> _pushStartZones, _pushEndZones; //<columnNum, rowNum>
 
   _AnalyzerState(String teamNum) {
     _teamNum = teamNum;
@@ -45,28 +48,16 @@ class _AnalyzerState extends State<Analyzer> {
       _totalQualGameTime = 600; //4 games
       _fouls = {"regFouls":3, "techFouls":2, "yellowCards":1, "redCards":0};
 
-      //just trying smth diff bc smths not working n its pissing me off　doesnt matter just testing anyways
-      //so apparently instead of doing this:　_pushStartZones = {1, 19, 29, 4};
-      //for everything i need to do this and idk why but pls just let it be?? idk lmao
-      _pushStartZones = new List(4);
-      _pushStartZones[0] = 1;
-      _pushStartZones[1] = 19;
-      _pushStartZones[2] = 29;
-      _pushStartZones[3] = 4;
-
-      //_pushEndZones = {2, 17, 29, 6};
-      _pushEndZones = new List(4);
-      _pushEndZones[0] = 2;
-      _pushEndZones[1] = 17;    
-      _pushEndZones[2] = 29;
-      _pushEndZones[3] = 6;
+      _pushStartZones = {10:4};
+      _pushEndZones = {6:2};
 
       //_pushTime = {2, 3, 1, 4};
-      _pushTime = new List(4);
+      //for some reason I need to do it this way idk why either man
+      _pushTime = new List(1);
       _pushTime[0] = 2;
-      _pushTime[1] = 3;
-      _pushTime[2] = 1;
-      _pushTime[3] = 4;
+      //_pushTime[1] = 3;
+      //_pushTime[2] = 1;
+      //_pushTime[3] = 4;
 
       _initialized = true;
     });
@@ -82,6 +73,7 @@ class _AnalyzerState extends State<Analyzer> {
     double _yellowCards = _fouls["yellowCards"];
     double _redCards = _fouls["redCards"];
 
+    double _pushPtsPrev = calcPushPtsPrev();
     return "Team: " + _teamNum
     + "\nTotal points prevented: " + _totPtsPrev.toString()
     + "\nPoints prevented/sec: " + _ptsPrevOverDefTime.toString()
@@ -90,7 +82,8 @@ class _AnalyzerState extends State<Analyzer> {
     + "\nTotal reg fouls: " + _regFouls.toString()
     + " Total tech fouls: " + _techFouls.toString()
     + "\nTotal yellow cards: " + _yellowCards.toString()
-    + " Total red cards: " + _redCards.toString();
+    + " Total red cards: " + _redCards.toString()
+    + " \n push pts prev: " + _pushPtsPrev.toString();
   }
 
   double calcTotPtsPrev(){
@@ -104,27 +97,48 @@ class _AnalyzerState extends State<Analyzer> {
   }
   double calcPushPtsPrev(){
     double _result = 0;
-    //set speed
-    double _speed;
-    if (_driveBase.contains("tank")){ _speed = Constants.tankSpeed; }
-    if (_driveBase.contains("omni")){ _speed = Constants.omniSpeed; }
-    if (_driveBase.contains("westCoast")){ _speed = Constants.westCoastSpeed; }
-    if (_driveBase.contains("mecanum")){ _speed = Constants.mecanumSpeed; }
-    if (_driveBase.contains("swerve")){ _speed = Constants.swerveSpeed; }
 
-    //so basically only works for pushing in straight lines
-    for (var i = 0; i < _pushStartZones.length; i++){
-      var _currentPushTime = _pushTime[i];
-      var _currentPushStartZone = _pushStartZones[i];
-      var _currentPushEndZone = _pushEndZones[i];
-      var _predictedDisplacement = _currentPushTime*_speed;
-      double _predicatedFinalZone = _currentPushStartZone + (_predictedDisplacement/Constants.zoneSideLength);
-      //abs value of zone difference
-      double _zoneDifference = (_predicatedFinalZone - _currentPushEndZone).abs();
-      _result += (_zoneDifference * Constants.zoneDisplacementValue);
-    }    
+    //set speed
+    double _normalVelocity;
+    if (_driveBase.contains("tank")){ _normalVelocity = Constants.tankSpeed; }
+    if (_driveBase.contains("omni")){ _normalVelocity = Constants.omniSpeed; }
+    if (_driveBase.contains("westCoast")){ _normalVelocity = Constants.westCoastSpeed; }
+    if (_driveBase.contains("mecanum")){ _normalVelocity = Constants.mecanumSpeed; }
+    if (_driveBase.contains("swerve")){ _normalVelocity = Constants.swerveSpeed; }
+
+    //only way of accessing it bc they're not in numerical order or anything 
+    List _startColumn = _pushStartZones.keys.toList();
+    List _startRow = _pushStartZones.values.toList();
+    List _endColumn = _pushEndZones.keys.toList();
+    List _endRow = _pushEndZones.values.toList();
+
+    //ALL OF THIS IS ASSUMING ABOT WANTS TO GO TOWARDS RED SHOOTING ZONE - ALWAYS WANT TO BE BC SCREEN WILL BE FLIPPED?
+    for (var i = 0; i < _pushTime.length; i++){
+      var _predictedDisplacement = _normalVelocity * _pushTime[i];
+      var _actualDisplacement = calcDisplacement(_startColumn[i], _startRow[i], _endColumn[i], _endRow[i])
+      var _zoneDisplacementDifference = (_predictedDisplacement - _actualDisplacement)/Constants.zoneSideLength;
+      
+      _result += (_zoneDisplacementDifference * Constants.zoneDisplacementValue);
+      debugPrint("smth here: " +  _result.toString());
+    }
     return _result;
   }
+
+  //returns neg value if displaced in opp direction, positive if displaced in aBot's intended direction
+  //returned in feet
+  double calcDisplacement(double startColumn, double startRow, double endColumn, double endRow){
+    var _columnDisplacement = (endColumn - startColumn)*Constants.zoneSideLength;
+    var _rowDisplacement = (endRow - startRow)*Constants.zoneSideLength;
+    //"hypotenuse" of column and row displacement
+    var _displacement = pow(pow(_columnDisplacement, 2) + pow(_rowDisplacement, 2), 1/2);
+    
+    //went backwards, make displacement negative
+    if (endColumn - startColumn < 0){
+      _displacement *= -1;
+    }
+    return _displacement;
+  }
+
   //returns a positive number, must subtract from total
   double calcFoulLostPts(){
     double _regPtsLost = _fouls["regFouls"] * Constants.regFoul;
