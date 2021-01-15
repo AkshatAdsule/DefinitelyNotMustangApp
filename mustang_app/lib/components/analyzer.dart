@@ -48,14 +48,14 @@ class _AnalyzerState extends State<Analyzer> {
       _totalQualGameTime = 600; //4 games
       _fouls = {"regFouls":3, "techFouls":2, "yellowCards":1, "redCards":0};
 
-      _pushStartZones = {10:4};
-      _pushEndZones = {6:2};
+      _pushStartZones = {10:4, 6:6};
+      _pushEndZones = {6:2, 5:4};
 
       //_pushTime = {2, 3, 1, 4};
       //for some reason I need to do it this way idk why either man
-      _pushTime = new List(1);
+      _pushTime = new List(2);
       _pushTime[0] = 2;
-      //_pushTime[1] = 3;
+      _pushTime[1] = 3;
       //_pushTime[2] = 1;
       //_pushTime[3] = 4;
 
@@ -115,7 +115,7 @@ class _AnalyzerState extends State<Analyzer> {
     //ALL OF THIS IS ASSUMING ABOT WANTS TO GO TOWARDS RED SHOOTING ZONE - ALWAYS WANT TO BE BC SCREEN WILL BE FLIPPED?
     for (var i = 0; i < _pushTime.length; i++){
       var _predictedDisplacement = _normalVelocity * _pushTime[i];
-      var _actualDisplacement = calcDisplacement(_startColumn[i], _startRow[i], _endColumn[i], _endRow[i])
+      var _actualDisplacement = calcDisplacement(_startColumn[i], _startRow[i], _endColumn[i], _endRow[i]);
       var _zoneDisplacementDifference = (_predictedDisplacement - _actualDisplacement)/Constants.zoneSideLength;
       
       _result += (_zoneDisplacementDifference * Constants.zoneDisplacementValue);
