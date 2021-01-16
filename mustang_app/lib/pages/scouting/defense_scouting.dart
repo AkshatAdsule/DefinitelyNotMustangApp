@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../components/game_map.dart';
 
+import '../../components/game_buttons.dart' as game_button;
+
 class DefenseScouting extends StatefulWidget {
   void Function() _toggleMode;
 
@@ -46,26 +48,26 @@ class _DefenseScoutingState extends State<DefenseScouting> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  RaisedButton(
-                    onPressed: _toggleMode,
-                    child: Text('Offense'),
-                  ),
-                  RaisedButton(
-                    onPressed: () {},
-                    child: Text('Prevent Shot'),
-                  ),
-                  RaisedButton(
-                    onPressed: () {},
-                    child: Text('Prevent Intake'),
-                  ),
-                  RaisedButton(
-                    onPressed: () {},
-                    child: Text('Push'),
-                  ),
-                  RaisedButton(
-                    onPressed: () {},
-                    child: Text('Foul'),
-                  ),
+                  game_button.ScoutingButton(
+                      style: game_button.ButtonStyle.RAISED,
+                      type: game_button.ButtonType.TOGGLE,
+                      onPressed: _toggleMode,
+                      text: 'Offense'),
+                  game_button.ScoutingButton(
+                      style: game_button.ButtonStyle.RAISED,
+                      type: game_button.ButtonType.ELEMENT,
+                      onPressed: () {},
+                      text: 'Prevent Intake'),
+                  game_button.ScoutingButton(
+                      style: game_button.ButtonStyle.RAISED,
+                      type: game_button.ButtonType.ELEMENT,
+                      onPressed: () {},
+                      text: 'Push'),
+                  game_button.ScoutingButton(
+                      style: game_button.ButtonStyle.RAISED,
+                      type: game_button.ButtonType.ELEMENT,
+                      onPressed: () {},
+                      text: 'Foul'),
                 ],
               ),
             ),

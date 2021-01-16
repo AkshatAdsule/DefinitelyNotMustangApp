@@ -27,6 +27,9 @@ class ScoutingButton extends StatelessWidget {
       case ButtonType.PAGEBUTTON:
         color = Colors.white;
         break;
+      case ButtonType.TOGGLE:
+        color = Colors.green.shade700;
+        break;
       default:
         break;
     }
