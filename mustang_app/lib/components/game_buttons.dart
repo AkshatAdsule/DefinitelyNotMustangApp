@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class TextButton extends StatelessWidget {
+class ScoutingButton extends StatelessWidget {
   ButtonStyle style;
   ButtonType type;
   void Function() onPressed;
   String text = '';
   String id = '';
 
-  TextButton({this.style, this.type, this.onPressed, this.text, this.id});
+  ScoutingButton({this.style, this.type, this.onPressed, this.text, this.id});
 
   @override
   Widget build(BuildContext context) {

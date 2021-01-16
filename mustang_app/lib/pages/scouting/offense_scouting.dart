@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import '../../components/game_map.dart';
-import '../../components/buttons.dart' as theme;
+import '../../components/game_buttons.dart' as game_button;
 
 class OffenseScouting extends StatefulWidget {
   void Function() _toggleMode;
@@ -104,29 +104,29 @@ class _OffenseScoutingState extends State<OffenseScouting> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  theme.TextButton(
-                      style: theme.ButtonStyle.RAISED,
-                      type: theme.ButtonType.TOGGLE,
+                  game_button.ScoutingButton(
+                      style: game_button.ButtonStyle.RAISED,
+                      type: game_button.ButtonType.TOGGLE,
                       onPressed: _toggleMode,
                       text: 'Defense'),
-                  theme.TextButton(
-                      style: theme.ButtonStyle.RAISED,
-                      type: theme.ButtonType.MAKE,
+                  game_button.ScoutingButton(
+                      style: game_button.ButtonStyle.RAISED,
+                      type: game_button.ButtonType.MAKE,
                       onPressed: () {},
                       id: '@in',
                       text: 'In'),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      theme.TextButton(
-                          style: theme.ButtonStyle.RAISED,
-                          type: theme.ButtonType.MAKE,
+                      game_button.ScoutingButton(
+                          style: game_button.ButtonStyle.RAISED,
+                          type: game_button.ButtonType.MAKE,
                           onPressed: () {},
                           id: '@out_make',
                           text: 'Out'),
-                      theme.TextButton(
-                          style: theme.ButtonStyle.RAISED,
-                          type: theme.ButtonType.MISS,
+                      game_button.ScoutingButton(
+                          style: game_button.ButtonStyle.RAISED,
+                          type: game_button.ButtonType.MISS,
                           onPressed: () {},
                           id: '@out_miss',
                           text: ''),
@@ -135,15 +135,15 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      theme.TextButton(
-                          style: theme.ButtonStyle.RAISED,
-                          type: theme.ButtonType.MAKE,
+                      game_button.ScoutingButton(
+                          style: game_button.ButtonStyle.RAISED,
+                          type: game_button.ButtonType.MAKE,
                           onPressed: () {},
                           id: '@low_make',
                           text: 'Low'),
-                      theme.TextButton(
-                          style: theme.ButtonStyle.RAISED,
-                          type: theme.ButtonType.MISS,
+                      game_button.ScoutingButton(
+                          style: game_button.ButtonStyle.RAISED,
+                          type: game_button.ButtonType.MISS,
                           onPressed: () {},
                           id: '@low_miss',
                           text: '')
