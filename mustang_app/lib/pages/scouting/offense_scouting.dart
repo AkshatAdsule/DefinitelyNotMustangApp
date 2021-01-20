@@ -5,14 +5,16 @@ import '../../components/game_buttons.dart' as game_button;
 
 class OffenseScouting extends StatefulWidget {
   void Function() _toggleMode;
+  Stopwatch _stopwatch;
 
-  OffenseScouting({void Function() toggleMode}) {
+  OffenseScouting({void Function() toggleMode, Stopwatch stopwatch}) {
     _toggleMode = toggleMode;
+    _stopwatch = stopwatch;
   }
 
   @override
   _OffenseScoutingState createState() =>
-      _OffenseScoutingState(toggleMode: _toggleMode);
+      _OffenseScoutingState(toggleMode: _toggleMode, stopwatch: _stopwatch);
 }
 
 class Action {
@@ -23,12 +25,15 @@ class Action {
 
 class _OffenseScoutingState extends State<OffenseScouting> {
   void Function() _toggleMode;
+  Stopwatch _stopwatch;
+
   double _sliderValue = 2;
 
   List<Action> shots = new List<Action>();
 
-  _OffenseScoutingState({void Function() toggleMode}) {
+  _OffenseScoutingState({void Function() toggleMode, Stopwatch stopwatch}) {
     _toggleMode = toggleMode;
+    _stopwatch = stopwatch;
   }
 
 // TODO: make addAction() get called everytime element-of-game button is clicked,
