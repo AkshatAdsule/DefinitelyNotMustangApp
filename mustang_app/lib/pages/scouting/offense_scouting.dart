@@ -94,70 +94,65 @@ class _OffenseScoutingState extends State<OffenseScouting> {
         ],
         sideWidgets: [
           Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/goal.jpg'),
-                  fit: BoxFit.fitHeight,
-                ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  game_button.ScoutingButton(
-                      style: game_button.ButtonStyle.RAISED,
-                      type: game_button.ButtonType.TOGGLE,
-                      onPressed: _toggleMode,
-                      text: 'Defense'),
-                  game_button.ScoutingButton(
-                      style: game_button.ButtonStyle.RAISED,
-                      type: game_button.ButtonType.MAKE,
-                      onPressed: () {},
-                      id: '@in',
-                      text: 'In'),
-                  Row(
+            child: Column(children: [
+              game_button.ScoutingButton(
+                  style: game_button.ButtonStyle.RAISED,
+                  type: game_button.ButtonType.TOGGLE,
+                  onPressed: _toggleMode,
+                  text: 'Defense'),
+              Container(
+                  alignment: Alignment.bottomRight,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('assets/goal_cropped.jpg'),
+                        fit: BoxFit.fitHeight),
+                  ),
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       game_button.ScoutingButton(
                           style: game_button.ButtonStyle.RAISED,
                           type: game_button.ButtonType.MAKE,
                           onPressed: () {},
-                          id: '@out_make',
-                          text: 'Out'),
-                      game_button.ScoutingButton(
-                          style: game_button.ButtonStyle.RAISED,
-                          type: game_button.ButtonType.MISS,
-                          onPressed: () {},
-                          id: '@out_miss',
-                          text: ''),
+                          id: '@in',
+                          text: 'In'),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          game_button.ScoutingButton(
+                              style: game_button.ButtonStyle.RAISED,
+                              type: game_button.ButtonType.MAKE,
+                              onPressed: () {},
+                              id: '@out_make',
+                              text: 'Out'),
+                          game_button.ScoutingButton(
+                              style: game_button.ButtonStyle.RAISED,
+                              type: game_button.ButtonType.MISS,
+                              onPressed: () {},
+                              id: '@out_miss',
+                              text: ''),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          game_button.ScoutingButton(
+                              style: game_button.ButtonStyle.RAISED,
+                              type: game_button.ButtonType.MAKE,
+                              onPressed: () {},
+                              id: '@low_make',
+                              text: 'Low'),
+                          game_button.ScoutingButton(
+                              style: game_button.ButtonStyle.RAISED,
+                              type: game_button.ButtonType.MISS,
+                              onPressed: () {},
+                              id: '@low_miss',
+                              text: '')
+                        ],
+                      ),
                     ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      game_button.ScoutingButton(
-                          style: game_button.ButtonStyle.RAISED,
-                          type: game_button.ButtonType.MAKE,
-                          onPressed: () {},
-                          id: '@low_make',
-                          text: 'Low'),
-                      game_button.ScoutingButton(
-                          style: game_button.ButtonStyle.RAISED,
-                          type: game_button.ButtonType.MISS,
-                          onPressed: () {},
-                          id: '@low_miss',
-                          text: '')
-                    ],
-                  ),
-                  // theme.TextButton(
-                  //   style: theme.ButtonStyle.RAISED,
-                  //   type: theme.ButtonType.ELEMENT,
-                  //   onPressed: null,
-                  //   text: 'Foul'
-                  // ),
-                ],
-              ),
-            ),
+                  )),
+            ]),
           )
         ],
       ),
