@@ -110,6 +110,12 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      game_button.ScoutingButton(
+                          style: game_button.ButtonStyle.RAISED,
+                          type: game_button.ButtonType.MAKE,
+                          onPressed: () {},
+                          id: '@in',
+                          text: 'In'),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -121,18 +127,12 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                               text: 'Out'),
                           game_button.ScoutingButton(
                               style: game_button.ButtonStyle.RAISED,
-                              type: game_button.ButtonType.MAKE,
+                              type: game_button.ButtonType.MISS,
                               onPressed: () {},
-                              id: '@in',
-                              text: 'In'),
+                              id: '@out_miss',
+                              text: ''),
                         ],
                       ),
-                      game_button.ScoutingButton(
-                          style: game_button.ButtonStyle.RAISED,
-                          type: game_button.ButtonType.MISS,
-                          onPressed: () {},
-                          id: '@out_miss',
-                          text: ''),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
