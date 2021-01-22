@@ -5,21 +5,25 @@ import '../../components/game_buttons.dart' as game_button;
 
 class DefenseScouting extends StatefulWidget {
   void Function() _toggleMode;
+  Stopwatch _stopwatch;
 
-  DefenseScouting({void Function() toggleMode}) {
+  DefenseScouting({void Function() toggleMode, Stopwatch stopwatch}) {
     _toggleMode = toggleMode;
+    _stopwatch = stopwatch;
   }
 
   @override
   _DefenseScoutingState createState() =>
-      _DefenseScoutingState(toggleMode: _toggleMode);
+      _DefenseScoutingState(toggleMode: _toggleMode, stopwatch: _stopwatch);
 }
 
 class _DefenseScoutingState extends State<DefenseScouting> {
   void Function() _toggleMode;
+  Stopwatch _stopwatch;
 
-  _DefenseScoutingState({void Function() toggleMode}) {
+  _DefenseScoutingState({void Function() toggleMode, Stopwatch stopwatch}) {
     _toggleMode = toggleMode;
+    stopwatch = _stopwatch;
   }
 
   @override

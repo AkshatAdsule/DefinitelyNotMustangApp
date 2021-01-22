@@ -65,6 +65,7 @@ class _AnalyzerState extends State<Analyzer> {
 
   String getReport() {
     double _totPtsPrev = calcTotPtsPrev();
+    //_totPtsPrev = _totPtsPrev.round() as int;
     double _ptsPrevOverDefTime = calcTotPtsPrev()/_totalDefActionTime;
     double _percentTimeInDefense = 100*(_totalDefActionTime/_totalQualGameTime);
     double _percentTimeInOffense = 100 - _percentTimeInDefense;
@@ -73,17 +74,16 @@ class _AnalyzerState extends State<Analyzer> {
     double _yellowCards = _fouls["yellowCards"];
     double _redCards = _fouls["redCards"];
 
-    double _pushPtsPrev = calcPushPtsPrev();
     return "Team: " + _teamNum
-    + "\nTotal points prevented: " + _totPtsPrev.toString()
-    + "\nPoints prevented/sec: " + _ptsPrevOverDefTime.toString()
-    + "\n% time in defense: " + _percentTimeInDefense.toString() + "%, "
-    + "% time in offense: " + _percentTimeInOffense.toString() + "%"
-    + "\nTotal reg fouls: " + _regFouls.toString()
-    + " Total tech fouls: " + _techFouls.toString()
-    + "\nTotal yellow cards: " + _yellowCards.toString()
-    + " Total red cards: " + _redCards.toString()
-    + " \n push pts prev: " + _pushPtsPrev.toString();
+    + "\nTotal points prevented: " + _totPtsPrev.toStringAsFixed(1).toString()
+    + "\nPoints prevented/sec: " + _ptsPrevOverDefTime.toStringAsFixed(3)
+    + "\n% time in defense: " + _percentTimeInDefense.toString() 
+    + "%, offense: " + _percentTimeInOffense.toString()
+    
+     + "%\nTotal reg fouls: " + _regFouls.round().toString()
+    + ", tech: " + _techFouls.round().toString()
+    + ", yellow: " + _yellowCards.round().toString()
+    + ", red: " + _redCards.round().toString();
   }
 
   double calcTotPtsPrev(){
