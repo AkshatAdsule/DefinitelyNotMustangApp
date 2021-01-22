@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/constants/constants.dart';
 import 'package:mustang_app/pages/scouting/map_scouting.dart';
 import 'pit_scouting.dart';
 import '../../components/header.dart';
 import 'auton_scouting.dart';
 import '../../components/bottom_nav_bar.dart';
 import '../../backend/scouting_operations.dart';
-
+import 'package:flutter/material.dart';
 class Scouter extends StatefulWidget {
   static const String route = '/Scouter';
 
@@ -19,9 +20,29 @@ class _ScouterState extends State<Scouter> {
   TextEditingController _teamNumberController = TextEditingController();
   TextEditingController _matchNumberController = TextEditingController();
   TextEditingController _namesController = new TextEditingController();
+  String _allianceColor = "Blue Alliance";
+  int _allianceNum = 0;
+
   bool _showError = false;
   ScoutingOperations db = new ScoutingOperations();
+  /*
+   _handleRadioValueChange (String color){
+    setState(() {
+      _allianceColor = color;
+      switch(color){
+        case "Blue Alliance" : { debugPrint("blue");}
+        break;
 
+        case "Red Alliance" : { debugPrint("red");}
+        break;
+
+        default: {debugPrint("default");}
+        break;
+      }
+    });
+  }
+  */
+  
   showAlertDialog(BuildContext context, bool pit) {
     // set up the buttons
     Widget cancelButton = FlatButton(
@@ -74,44 +95,88 @@ class _ScouterState extends State<Scouter> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: Header(
-        context,
-        'Pre Scouting Info',
-      ),
-      body: ListView(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 15),
-            child: TextField(
-              controller: _teamNumberController,
-              decoration: InputDecoration(
-                labelText: 'Team Number',
-                errorText: _showError ? 'Team number is required' : null,
-                border: OutlineInputBorder(),
-              ),
-            ),
+    String _allianceColor;
+        return Scaffold(
+          appBar: Header(
+            context,
+            'Pre Game Notes',
           ),
-          Container(
-            padding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
-            child: TextField(
-              controller: _matchNumberController,
-              decoration: InputDecoration(
-                labelText: 'Match Number',
-                border: OutlineInputBorder(),
+          body: ListView(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 15),
+                child: TextField(
+                  controller: _teamNumberController,
+                  decoration: InputDecoration(
+                    labelText: 'Team Number',
+                    errorText: _showError ? 'Team number is required' : null,
+                    border: OutlineInputBorder(),
+                  ),
+                ),
               ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
-            child: TextField(
-              controller: _namesController,
-              decoration: InputDecoration(
-                labelText: 'Names',
-                border: OutlineInputBorder(),
+              Container(
+                padding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
+                child: TextField(
+                  controller: _matchNumberController,
+                  decoration: InputDecoration(
+                    labelText: 'Match Number',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
               ),
-            ),
-          ),
+              Container(
+                padding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
+                child: TextField(
+                  controller: _namesController,
+                  decoration: InputDecoration(
+                    labelText: 'Name',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              Container(
+                  padding: EdgeInsets.all(8.0),
+                  child: new Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        new Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                          new Radio(
+                            value: 0,
+                            groupValue: _allianceNum,
+                            onChanged: (int value) {
+                              setState((){
+                                _allianceNum = value;
+                                Constants.fieldColor = value;
+
+                              });
+                            }
+                          ),
+                          new Text(
+                            'Blue Alliance',
+                            style: new TextStyle(fontSize: 16.0),
+                          ),
+                          new Radio(
+                            value: 1,
+                            groupValue: _allianceNum,
+                            onChanged: (int value) {
+                              setState((){
+                                _allianceNum = value;
+                                Constants.fieldColor = value;
+                                debugPrint(Constants.fieldColor.toString());
+
+                              });
+                            }
+                          ),
+                          new Text(
+                            'Red Alliance',
+                            style: new TextStyle(
+                              fontSize: 16.0,
+                            ),
+                          ),
+                        ],
+                      ),                  
           Container(
             padding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
             child: new Builder(
@@ -210,7 +275,7 @@ class _ScouterState extends State<Scouter> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavBar(context),
-    );
+      //bottomNavigationBar: BottomNavBar(context),
+    )]));
   }
 }
