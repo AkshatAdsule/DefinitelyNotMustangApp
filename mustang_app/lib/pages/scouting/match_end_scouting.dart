@@ -1,6 +1,5 @@
-// import 'dart:html';
-
 import 'package:flutter/material.dart';
+import '../../components/counter.dart';
 
 import '../../backend/scouting_operations.dart';
 import '../../components/header.dart';
@@ -23,24 +22,19 @@ class MatchEndScouter extends StatefulWidget {
 class _MatchEndScouterState extends State<MatchEndScouter> {
   String _teamNumber;
   String _matchNumber;
-
-  String _matchResult;
-  bool _noAction = false;
   TextEditingController _finalCommentsController = TextEditingController();
-
+  Counter _fouls = Counter('Fouls');
+  String _matchResult;
   ScoutingOperations db = new ScoutingOperations();
 
-  _MatchEndScouterState(
-    teamNumber,
-    matchNumber,
-  ) {
+  _MatchEndScouterState(teamNumber, matchNumber) {
     _teamNumber = teamNumber;
     _matchNumber = matchNumber;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold( 
         appBar: Header(
           context,
           'Match End',
@@ -69,21 +63,11 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
                 },
               ),
             ),
-            // Container(
-            //   padding:
-            //       EdgeInsets.only(left: 30, right: 30, top: 15, bottom: 30),
-            //   child: Row(children: [
-            //     Text('Not in action?',
-            //         style: TextStyle(color: Colors.black, fontSize: 20)),
-            //     TextField(
-            //     controller: _finalCommentsController,
-            //     decoration: InputDecoration(
-            //       labelText: 'Final Comments',
-            //       border: OutlineInputBorder(),
-            //     ),
-            //   ),
-            //   ],
-            // ), //TODO: add not in action
+            Container(
+              padding:
+                  EdgeInsets.only(left: 30, right: 30, top: 15, bottom: 30),
+              child: _fouls,
+            ),
             Container(
               padding:
                   EdgeInsets.only(left: 30, right: 30, top: 15, bottom: 30),
@@ -102,7 +86,7 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
                   color: Colors.green,
                   onPressed: () {
                     db.updateMatchDataEnd(_teamNumber, _matchNumber,
-                        fouls: 0, //TODO: change back to how it was
+                        fouls: _fouls.count,
                         finalComments: _finalCommentsController.text,
                         matchResult: _matchResult);
                     Navigator.pushNamed(context, PostScouter.route);
