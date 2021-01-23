@@ -3,6 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Constants {
   static Firestore db = Firestore.instance;
 
+  //not a constant but needs to be accessible
+  static int fieldColor = 0;
+
   //DEFENSE ANAYLSIS
   static const double intakeValue = 1.5;
   static const double shotValue = 2; //avg of low, outer, inner

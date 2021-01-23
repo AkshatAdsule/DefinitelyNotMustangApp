@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/constants/constants.dart';
 
 class GameMap extends StatelessWidget {
   List<Widget> _imageChildren = [], _sideWidgets;
   GameMap(
       {List<Widget> imageChildren = const [],
       List<Widget> sideWidgets = const []}) {
-    _imageChildren.add(Image.asset('assets/croppedmap.png'));
+        if (Constants.fieldColor == 0){
+          _imageChildren.add(Image.asset('assets/blue_field.png'));
+        }
+        else if (Constants.fieldColor == 1){
+          _imageChildren.add(Image.asset('assets/red_field.png'));
+        }
+    //_imageChildren.add(Image.asset('assets/croppedmap.png'));
     _imageChildren.addAll(imageChildren);
     _sideWidgets = sideWidgets;
   }

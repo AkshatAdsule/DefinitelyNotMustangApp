@@ -34,7 +34,7 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold( 
         appBar: Header(
           context,
           'Match End',
