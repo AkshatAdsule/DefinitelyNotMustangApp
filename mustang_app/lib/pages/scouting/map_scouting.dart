@@ -38,7 +38,6 @@ class _MapScoutingState extends State<MapScouting> {
 
   @override
   Widget build(BuildContext context) {
-    print(_stopwatch.elapsed.toString());
     Widget scoutingMode;
 
     if (_onOffense) {
