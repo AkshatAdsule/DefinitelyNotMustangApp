@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/blur_overlay.dart';
+import 'package:mustang_app/exports/pages.dart';
 import '../../components/bottom_nav_bar.dart';
 import '../../components/header.dart';
 import 'defense_scouting.dart';
@@ -7,20 +8,34 @@ import 'offense_scouting.dart';
 
 class MapScouting extends StatefulWidget {
   static const String route = '/MapScouter';
+  String _teamNumber, _matchNumber;
+
+  MapScouting({String teamNumber, String matchNumber}) {
+    _teamNumber = teamNumber;
+    _matchNumber = matchNumber;
+  }
 
   @override
-  _MapScoutingState createState() => _MapScoutingState();
+  _MapScoutingState createState() =>
+      _MapScoutingState(_teamNumber, _matchNumber);
 }
 
 class _MapScoutingState extends State<MapScouting> {
-  bool _onOffense, _startedScouting;
+  bool _onOffense, _startedScouting, _stopGame;
   Stopwatch _stopwatch;
+  String _teamNumber, _matchNumber;
+
+  _MapScoutingState(String teamNumber, String matchNumber) {
+    _teamNumber = teamNumber;
+    _matchNumber = matchNumber;
+  }
 
   @override
   void initState() {
     super.initState();
     _onOffense = true;
     _startedScouting = false;
+    _stopGame = false;
     _stopwatch = new Stopwatch();
   }
 
@@ -28,6 +43,10 @@ class _MapScoutingState extends State<MapScouting> {
     setState(() {
       _onOffense = !_onOffense;
     });
+  }
+
+  void endGame() {
+    _stopGame = true;
   }
 
   @override
@@ -64,8 +83,15 @@ class _MapScoutingState extends State<MapScouting> {
           child: Text('Start'),
         ),
       );
-    } else {
-      display = scoutingMode;
+    } else if (_startedScouting) {
+      if (_stopGame) {
+        Navigator.pushNamed(context, MatchEndScouter.route, arguments: {
+          'teamNumber': _teamNumber,
+          'matchNumber': _matchNumber
+        });
+      } else {
+        display = scoutingMode;
+      }
     }
     return Scaffold(
       appBar: Header(context, 'Map Scouting'),
@@ -76,3 +102,5 @@ class _MapScoutingState extends State<MapScouting> {
     );
   }
 }
+
+enum GameStatus { NOT_STARTED, IN_GAME, GAME_ENDED }
