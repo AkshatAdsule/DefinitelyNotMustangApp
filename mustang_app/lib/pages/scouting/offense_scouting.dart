@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/exports/pages.dart';
 import 'dart:math';
 import '../../components/game_map.dart';
 import '../../components/game_buttons.dart' as game_button;
@@ -24,15 +25,19 @@ class Action {
 }
 
 class _OffenseScoutingState extends State<OffenseScouting> {
-  void Function() _toggleMode;
+  void Function() _toggleMode, _endGame;
   Stopwatch _stopwatch;
 
   double _sliderValue = 2;
 
   List<Action> shots = new List<Action>();
 
-  _OffenseScoutingState({void Function() toggleMode, Stopwatch stopwatch}) {
+  _OffenseScoutingState(
+      {void Function() toggleMode,
+      void Function() endGame,
+      Stopwatch stopwatch}) {
     _toggleMode = toggleMode;
+    _endGame = endGame;
     _stopwatch = stopwatch;
   }
 
@@ -95,7 +100,16 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                 ),
               ),
             ),
-          )
+          ),
+          GameMapChild(
+              align: Alignment.topLeft,
+              left: 7,
+              top: 7,
+              child: game_button.ScoutingButton(
+                  style: game_button.ButtonStyle.RAISED,
+                  type: game_button.ButtonType.PAGEBUTTON,
+                  onPressed:_endGame,
+                  text: 'End Game')),
         ],
         sideWidgets: [
           Expanded(
