@@ -38,7 +38,7 @@ class _MapScoutingState extends State<MapScouting> {
 
   @override
   Widget build(BuildContext context) {
-    Widget scoutingMode, display;
+    Widget scoutingMode;
 
     if (_onOffense) {
       scoutingMode = OffenseScouting(
@@ -51,26 +51,20 @@ class _MapScoutingState extends State<MapScouting> {
         stopwatch: _stopwatch,
       );
     }
-    if (!_startedScouting) {
-      display = BlurOverlay(
-        background: scoutingMode,
-        overlay: RaisedButton(
-          color: Colors.red,
-          onPressed: () {
-            setState(() {
-              _startedScouting = true;
-            });
-          },
-          child: Text('Start'),
-        ),
-      );
-    } else {
-      display = scoutingMode;
-    }
+
     return Scaffold(
       appBar: Header(context, 'Map Scouting'),
       body: Container(
-        child: display,
+        child: BlurOverlay(
+          background: scoutingMode,
+          text: Text('Start'),
+          onEnd: () {
+            setState(() {
+              _startedScouting = true;
+              _stopwatch.start();
+            });
+          },
+        ),
       ),
       bottomNavigationBar: BottomNavBar(context),
     );
