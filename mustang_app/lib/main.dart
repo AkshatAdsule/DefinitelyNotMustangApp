@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
       case MapAnalysisDisplay.route:
         return MaterialPageRoute(
           builder: (context) => MapAnalysisDisplay(
-            teamNumber: args['teamNumber'],
+            teamNumber: args['teamNumber'], 
           ),
           settings: rotationSettings(settings, ScreenOrientation.landscapeOnly),
         );

@@ -23,6 +23,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
   String _teamNumber;
   SymbolPlotter plotter;
 
+
   _MapAnalysisDisplayState(String teamNumber) {
     myAnalyzer = new Analyzer(teamNumber);
     _teamNumber = teamNumber;

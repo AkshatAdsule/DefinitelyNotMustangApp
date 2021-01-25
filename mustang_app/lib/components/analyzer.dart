@@ -1,19 +1,21 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:mustang_app/components/game_action.dart';
+//import 'package:mustang_app/components/action.dart';
 import '../backend/team_data_analyzer.dart';
+
 import 'package:mustang_app/constants/constants.dart';
 
 class Analyzer extends StatefulWidget {
   String _teamNum, _driveBase;
 
-  Analyzer(String teamNum, String driveBase) {
+  Analyzer(String teamNum) {
     _teamNum = teamNum;
-    _driveBase = driveBase;
   }
   @override
   State<StatefulWidget> createState() {
-    return _AnalyzerState(_teamNum, _driveBase);
+    return _AnalyzerState(_teamNum,);
   }
 }
 
@@ -25,9 +27,8 @@ class _AnalyzerState extends State<Analyzer> {
   Map<String, double> _fouls;
   Map<double, double> _pushStartZones, _pushEndZones; //<columnNum, rowNum>
 
-  _AnalyzerState(String teamNum, String driveBase) {
+  _AnalyzerState(String teamNum) {
     _teamNum = teamNum;
-    _driveBase = driveBase;
   }
 
   void initState() {
@@ -36,9 +37,11 @@ class _AnalyzerState extends State<Analyzer> {
       return;
     }
     //default is tank
-    if (_driveBase.isEmpty){
+    /*
+    if (_driveBase == null){
       _driveBase = "tank";
     }
+    */
     // setState(() {
     _hasAnalysis = TeamDataAnalyzer.getTeamDoc(_teamNum)['hasAnalysis'];
     // });
@@ -48,7 +51,7 @@ class _AnalyzerState extends State<Analyzer> {
     //initialize all vars
     setState(() {
       //random values for now just to test
-      
+      _driveBase = "tank";
       _numShotsPrev = 10;
       _numIntakesPrev = 5;
       _totalDefActionTime = 120;
@@ -80,8 +83,12 @@ class _AnalyzerState extends State<Analyzer> {
     double _techFouls = _fouls["techFouls"];
     double _yellowCards = _fouls["yellowCards"];
     double _redCards = _fouls["redCards"];
+    var actionTest;
+    actionTest = new Game_Action(ActionType.FOUL_REG, 2, 3, 4);
+    //action.Action( action: action.ActionType.FOUL_REG, seconds_elapsed: 2, row: 3, column: 4);
 
     return "Team: " + _teamNum
+    + "\n action" + actionTest.seconds_elapsed.toString()
     + "\nTotal points prevented: " + _totPtsPrev.toStringAsFixed(1).toString()
     + "\nPoints prevented/sec: " + _ptsPrevOverDefTime.toStringAsFixed(3)
     + "\n% time in defense: " + _percentTimeInDefense.toString() 
