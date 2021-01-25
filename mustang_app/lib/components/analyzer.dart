@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/game_action.dart';
-//import 'package:mustang_app/components/action.dart';
 import '../backend/team_data_analyzer.dart';
 
 import 'package:mustang_app/constants/constants.dart';
@@ -84,7 +83,7 @@ class _AnalyzerState extends State<Analyzer> {
     double _yellowCards = _fouls["yellowCards"];
     double _redCards = _fouls["redCards"];
     var actionTest;
-    actionTest = new Game_Action(ActionType.FOUL_REG, 2, 3, 4);
+    actionTest = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
     //action.Action( action: action.ActionType.FOUL_REG, seconds_elapsed: 2, row: 3, column: 4);
 
     return "Team: " + _teamNum

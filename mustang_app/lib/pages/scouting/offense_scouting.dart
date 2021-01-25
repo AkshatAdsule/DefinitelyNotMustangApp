@@ -18,19 +18,20 @@ class OffenseScouting extends StatefulWidget {
       _OffenseScoutingState(toggleMode: _toggleMode, stopwatch: _stopwatch);
 }
 
+/*
 class Action {
   int timeStamp;
   String buttonId;
   Action({this.timeStamp, this.buttonId});
 }
-
+*/
 class _OffenseScoutingState extends State<OffenseScouting> {
   void Function() _toggleMode, _endGame;
   Stopwatch _stopwatch;
 
   double _sliderValue = 2;
 
-  List<Action> shots = new List<Action>();
+  //List<Action> shots = new List<Action>();
 
   _OffenseScoutingState(
       {void Function() toggleMode,
@@ -40,14 +41,17 @@ class _OffenseScoutingState extends State<OffenseScouting> {
     _endGame = endGame;
     _stopwatch = stopwatch;
   }
-
+//not anymore, just making new actions in list
+/*
 // TODO: make addAction() get called everytime element-of-game button is clicked,
 // to keep track of all actions
   void addAction(String id) {
     int now = 111; //TODO: change this to acutal time
+    double _row = 2;
+    double _column = 3;
     shots.add(new Action(timeStamp: now, buttonId: id));
   }
-
+*/
   @override
   Widget build(BuildContext context) {
     return Container(
