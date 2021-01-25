@@ -4,18 +4,18 @@ import 'package:flutter/material.dart';
 import '../backend/team_data_analyzer.dart';
 import 'package:mustang_app/constants/constants.dart';
 
-class Analyzer extends StatefulWidget {
+class OldAnalyzer extends StatefulWidget {
   String _teamNum;
-  Analyzer(String teamNum) {
+  OldAnalyzer(String teamNum) {
     _teamNum = teamNum;
   }
   @override
   State<StatefulWidget> createState() {
-    return _AnalyzerState(_teamNum);
+    return _OldAnalyzerState(_teamNum);
   }
 }
 
-class _AnalyzerState extends State<Analyzer> {
+class _OldAnalyzerState extends State<OldAnalyzer> {
   bool _initialized = false, _hasAnalysis = true;
   String _teamNum, _driveBase;
   double _numShotsPrev, _numIntakesPrev, _totalDefActionTime, _totalQualGameTime;
@@ -23,7 +23,7 @@ class _AnalyzerState extends State<Analyzer> {
   Map<String, double> _fouls;
   Map<double, double> _pushStartZones, _pushEndZones; //<columnNum, rowNum>
 
-  _AnalyzerState(String teamNum) {
+  _OldAnalyzerState(String teamNum) {
     _teamNum = teamNum;
   }
 
