@@ -7,6 +7,6 @@ enum actionType {foul_reg, foul_tech, foul_yellow, foul_red, foul_disabled, foul
 class Action{
   double seconds_elapsed, row, column, end_row, end_column, push_time;
   
-  Action.normalAction (this.seconds_elapsed, this.row, this.column);
-  Action.pushAction(this.seconds_elapsed, this.row, this.column, this.end_row, this.end_column, this.push_time);
+  Action.normalAction (actionType, this.seconds_elapsed, this.row, this.column);
+  Action.pushAction(actionType, this.seconds_elapsed, this.row, this.column, this.end_row, this.end_column, this.push_time);
 }

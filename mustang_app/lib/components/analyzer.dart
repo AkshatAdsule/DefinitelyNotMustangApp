@@ -5,13 +5,15 @@ import '../backend/team_data_analyzer.dart';
 import 'package:mustang_app/constants/constants.dart';
 
 class Analyzer extends StatefulWidget {
-  String _teamNum;
-  Analyzer(String teamNum) {
+  String _teamNum, _driveBase;
+
+  Analyzer(String teamNum, String driveBase) {
     _teamNum = teamNum;
+    _driveBase = driveBase;
   }
   @override
   State<StatefulWidget> createState() {
-    return _AnalyzerState(_teamNum);
+    return _AnalyzerState(_teamNum, _driveBase);
   }
 }
 
@@ -23,14 +25,19 @@ class _AnalyzerState extends State<Analyzer> {
   Map<String, double> _fouls;
   Map<double, double> _pushStartZones, _pushEndZones; //<columnNum, rowNum>
 
-  _AnalyzerState(String teamNum) {
+  _AnalyzerState(String teamNum, String driveBase) {
     _teamNum = teamNum;
+    _driveBase = driveBase;
   }
 
   void initState() {
     super.initState();
     if (_teamNum.isEmpty) {
       return;
+    }
+    //default is tank
+    if (_driveBase.isEmpty){
+      _driveBase = "tank";
     }
     // setState(() {
     _hasAnalysis = TeamDataAnalyzer.getTeamDoc(_teamNum)['hasAnalysis'];
@@ -41,7 +48,7 @@ class _AnalyzerState extends State<Analyzer> {
     //initialize all vars
     setState(() {
       //random values for now just to test
-      _driveBase = "swerve";
+      
       _numShotsPrev = 10;
       _numIntakesPrev = 5;
       _totalDefActionTime = 120;
