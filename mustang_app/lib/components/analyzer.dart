@@ -50,6 +50,15 @@ class _AnalyzerState extends State<Analyzer> {
     //initialize all vars
     setState(() {
       //random values for now just to test
+      var action1 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
+      var action2 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
+      var action3 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
+      var action4 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
+      var action5 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
+      var action6 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
+      var action7 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
+      var action8 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
+
       _driveBase = "tank";
       _numShotsPrev = 10;
       _numIntakesPrev = 5;
@@ -82,12 +91,10 @@ class _AnalyzerState extends State<Analyzer> {
     double _techFouls = _fouls["techFouls"];
     double _yellowCards = _fouls["yellowCards"];
     double _redCards = _fouls["redCards"];
-    var actionTest;
-    actionTest = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
+    var actionTest = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
     //action.Action( action: action.ActionType.FOUL_REG, seconds_elapsed: 2, row: 3, column: 4);
 
     return "Team: " + _teamNum
-    + "\n action" + actionTest.seconds_elapsed.toString()
     + "\nTotal points prevented: " + _totPtsPrev.toStringAsFixed(1).toString()
     + "\nPoints prevented/sec: " + _ptsPrevOverDefTime.toStringAsFixed(3)
     + "\n% time in defense: " + _percentTimeInDefense.toString() 
