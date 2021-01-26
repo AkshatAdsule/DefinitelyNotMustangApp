@@ -50,14 +50,22 @@ class _AnalyzerState extends State<Analyzer> {
     //initialize all vars
     setState(() {
       //random values for now just to test
-      var action1 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
-      var action2 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
-      var action3 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
-      var action4 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
-      var action5 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
-      var action6 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
-      var action7 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
-      var action8 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
+      var action1 = new GameAction.normal(ActionType.FOUL_REG, 2, 3, 4);
+      var action2 = new GameAction.normal(ActionType.SHOT_INNER, 6, 15, 1);
+      var action3 = new GameAction.normal(ActionType.PREV_SHOT, 10, 13, 9);
+      var action4 = new GameAction.normal(ActionType.MISSED_OUTER, 15, 2, 4);
+      var action5 = new GameAction.normal(ActionType.OTHER_CLIMB_MISS, 9, 3, 3);
+      var action6 = new GameAction.normal(ActionType.SHOT_LOW, 30, 0, 13);
+      var action7 = new GameAction.normal(ActionType.SHOT_INNER, 39, 5, 2);
+      var action8 = new GameAction.normal(ActionType.SHOT_OUTER, 40, 8, 12);
+      var action9 = new GameAction.push(44, 10, 5, 8, 4, 3);
+
+      var matchArray1 = {action1, action2, action3};
+      var matchArray2 = {action4, action5, action6};
+      var matchArray3 = {action7, action8, action9};
+
+      var finalArray = {matchArray1, matchArray2, matchArray3};
+     
 
       _driveBase = "tank";
       _numShotsPrev = 10;
@@ -69,13 +77,9 @@ class _AnalyzerState extends State<Analyzer> {
       _pushStartZones = {10:4, 6:6};
       _pushEndZones = {6:2, 5:4};
 
-      //_pushTime = {2, 3, 1, 4};
-      //for some reason I need to do it this way idk why either man
       _pushTime = new List(2);
       _pushTime[0] = 2;
       _pushTime[1] = 3;
-      //_pushTime[2] = 1;
-      //_pushTime[3] = 4;
 
       _initialized = true;
     });

@@ -3,10 +3,12 @@ enum ActionType {FOUL_REG, FOUL_TECH, FOUL_YELLOW, FOUL_RED, FOUL_DISABLED, FOUL
                 OTHER_CLIMB, OTHER_CLIMB_MISS, OTHER_WHEEL_POSITION, OTHER_WHEEL_COLOR,
                 PREV_SHOT, PREV_INTAKE, PUSH}
 class GameAction{
-  //end row, end column, push time are only for push
-  double seconds_elapsed, row, column, end_row, end_column, push_time;
+  //end row, end column, push time are only for push, will be null most of time
+  double seconds_elapsed, column, row, end_column, end_row, push_time;
   ActionType action;
-  GameAction.normal(this.action, this.seconds_elapsed, this.row, this.column);
-  GameAction.push(this.action, this.seconds_elapsed, this.row, this.column, this.end_row, this.end_column, this.push_time);
+  GameAction.normal(this.action, this.seconds_elapsed, this.column, this.row, );
+  GameAction.push(this.seconds_elapsed, this.column, this.row, this.end_column, this.end_row, this.push_time){
+    action = ActionType.PUSH;
+  }
 
 }
