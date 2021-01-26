@@ -95,7 +95,7 @@ class _AnalyzerState extends State<Analyzer> {
     double _techFouls = _fouls["techFouls"];
     double _yellowCards = _fouls["yellowCards"];
     double _redCards = _fouls["redCards"];
-    var actionTest = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
+    //var actionTest = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
     //action.Action( action: action.ActionType.FOUL_REG, seconds_elapsed: 2, row: 3, column: 4);
 
     return "Team: " + _teamNum
