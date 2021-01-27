@@ -112,7 +112,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
               child: game_button.ScoutingButton(
                   style: game_button.ButtonStyle.RAISED,
                   type: game_button.ButtonType.PAGEBUTTON,
-                  onPressed:_endGame,
+                  onPressed: _endGame,
                   text: 'End Game')),
         ],
         sideWidgets: [
@@ -123,7 +123,8 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                   type: game_button.ButtonType.TOGGLE,
                   onPressed: _toggleMode,
                   text: 'Defense'),
-              Container(
+              Expanded(
+                child: Container(
                   alignment: Alignment.bottomRight,
                   decoration: BoxDecoration(
                     image: DecorationImage(
@@ -174,7 +175,9 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                         ],
                       ),
                     ],
-                  )),
+                  ),
+                ),
+              ),
             ]),
           )
         ],

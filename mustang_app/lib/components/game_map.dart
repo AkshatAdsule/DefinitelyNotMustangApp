@@ -6,12 +6,11 @@ class GameMap extends StatelessWidget {
   GameMap(
       {List<Widget> imageChildren = const [],
       List<Widget> sideWidgets = const []}) {
-        if (Constants.fieldColor == 0){
-          _imageChildren.add(Image.asset('assets/blue_field.png'));
-        }
-        else if (Constants.fieldColor == 1){
-          _imageChildren.add(Image.asset('assets/red_field.png'));
-        }
+    if (Constants.fieldColor == 0) {
+      _imageChildren.add(Image.asset('assets/blue_field.png'));
+    } else if (Constants.fieldColor == 1) {
+      _imageChildren.add(Image.asset('assets/red_field.png'));
+    }
     //_imageChildren.add(Image.asset('assets/croppedmap.png'));
     _imageChildren.addAll(imageChildren);
     _sideWidgets = sideWidgets;
@@ -23,7 +22,27 @@ class GameMap extends StatelessWidget {
         child: Row(
       children: [
         Container(
-          child: Stack(children: _imageChildren),
+          child: Stack(fit: StackFit.expand, children: [
+            FittedBox(
+              fit: BoxFit.fitHeight,
+              child: Container(
+                child: GridView.count(
+                  childAspectRatio: 0.5,
+                  crossAxisCount: 16,
+                  children: List.generate(
+                    8 * 16,
+                    (index) => Container(
+                      child: Center(),
+                      decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(2)),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            ..._imageChildren
+          ]),
         ),
         ..._sideWidgets
       ],
