@@ -26,15 +26,15 @@ class _AnalyzerState extends State<Analyzer> {
   Map<String, double> _fouls;
   Map<double, double> _pushStartZones, _pushEndZones; //<columnNum, rowNum>
 
-  var allMatches;
+  var _allMatches;
+  //for testing if data needs to be collected again or not - if same then don't
+  int _oldAllMatchLength = 0, _totalNumGames = 0;
   //array for each type of action, has all instances of that action for all games
   //FOR NOW ONLY ARRAY LENGTH OF EACH IS USEFUL BUT AFTER FOR LIKE COMMON ZONE AND TIMES N STUFF
-  List<ActionType> foul_reg = [], foul_tech = [], foul_yellow = [], foul_red = [], foul_disabled = [], foul_disqual = [],
-      shot_low = [], show_outer = [], shot_inner = [], missed_low = [], missed_outer = [],
-      other_climb = [], other_climb_miss = [], other_wheel_position = [], other_wheel_color = [],
-      prev_shot = [], prev_intake = [], push = [];
-
-
+  List<GameAction> _foul_reg = [], _foul_tech = [], _foul_yellow = [], _foul_red = [], _foul_disabled = [], _foul_disqual = [],
+      _shot_low = [], _shot_outer = [], _shot_inner = [], _missed_low = [], _missed_outer = [],
+      _other_climb = [], _other_climb_miss = [], _other_wheel_position = [], _other_wheel_color = [],
+      _prev_shot = [], _prev_intake = [], _push = [];
 
   _AnalyzerState(String teamNum) {
     _teamNum = teamNum;
@@ -51,32 +51,32 @@ class _AnalyzerState extends State<Analyzer> {
       _driveBase = "tank";
     }
     */
-    // setState(() {
     _hasAnalysis = TeamDataAnalyzer.getTeamDoc(_teamNum)['hasAnalysis'];
-    // });
     if (!_hasAnalysis) {
       return;
     }
     //initialize all vars
-    //setState(() {
-      //random values for now just to test
+
       var action1 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
+      var action1a = new GameAction(ActionType.FOUL_TECH, 2, 4, 4);
+
       var action2 = new GameAction(ActionType.SHOT_INNER, 6, 15, 1);
       var action3 = new GameAction(ActionType.PREV_SHOT, 10, 13, 9);
       var action4 = new GameAction(ActionType.MISSED_OUTER, 15, 2, 4);
-      var action5 = new GameAction(ActionType.OTHER_CLIMB_MISS, 9, 3, 3);
+      var action4a = new GameAction(ActionType.MISSED_OUTER, 16, 1, 4);
+      var action5 = new GameAction(ActionType.OTHER_CLIMB_MISS, 19, 3, 3);
       var action6 = new GameAction(ActionType.SHOT_LOW, 30, 0, 13);
       var action7 = new GameAction(ActionType.SHOT_INNER, 39, 5, 2);
       var action8 = new GameAction(ActionType.SHOT_OUTER, 40, 8, 12);
       var action9 = new GameAction.push(44, 10, 5, 8, 4, 3);
 
-      var matchArray1 = [action1, action2, action3];
-      var matchArray2 = [action4, action5, action6];
+      var matchArray1 = [action1, action1a, action2, action3];
+      var matchArray2 = [action4, action4a, action5, action6];
       var matchArray3 = [action7, action8, action9];
 
       //FINALARRAY IS WHAT WILL BE PASSED INTO THE ANALYZER
       var finalArray = [matchArray1, matchArray2, matchArray3];     
-      allMatches = finalArray;
+      _allMatches = finalArray;
       //_collectData();
 
       _driveBase = "tank";
@@ -96,73 +96,166 @@ class _AnalyzerState extends State<Analyzer> {
       _pushTime[1] = 3;
 
       _initialized = true;
-    //});
+ 
   }
 
   String getReport() {
-    _collectData();
+    //TEST TO SEE IF DATA RLY NEEDS TO BE COLLECTED!!
+    if (_allMatches.length > _oldAllMatchLength){
+      _oldAllMatchLength = _allMatches.length;
+      //need to reset everything to 0 (simpler than checking what parts need to be updated)
+      _clearAllData();
+      _collectData();
+    }
+
     double _totPtsPrev = calcTotPtsPrev();
-    //_totPtsPrev = _totPtsPrev.round() as int;
     double _ptsPrevOverDefTime = calcTotPtsPrev()/_totalDefActionTime;
     double _percentTimeInDefense = 100*(_totalDefActionTime/_totalQualGameTime);
     double _percentTimeInOffense = 100 - _percentTimeInDefense;
+    /*
     double _regFouls = _fouls["regFouls"];
     double _techFouls = _fouls["techFouls"];
     double _yellowCards = _fouls["yellowCards"];
     double _redCards = _fouls["redCards"];
+*/
+    //new
+    String fouls = "";
 
-    //testing purposes
-    //var match2 = allMatches.elementAt(2);
-    //var some2match2 = match2.elementAt(2);
-    //ActionType action = some2match2.action;
+    if (_foul_reg.length > 0){
+      fouls += "Reg Fouls:" + _foul_reg.length.toString();
+    }
+    if (_foul_tech.length > 0){
+      fouls += " Tech Fouls:" + _foul_tech.length.toString();
+    }
+    if (_foul_yellow.length > 0){
+      fouls += " Yellow Fouls:" + _foul_yellow.length.toString();
+    }
+    if (_foul_red.length > 0){
+      fouls += " Red Fouls:" + _foul_red.length.toString();
+    }
+    if (_foul_disabled.length > 0){
+      fouls += " Disabled Fouls:" + _foul_disabled.length.toString();
+    }
+    if (_foul_disqual.length > 0){
+      fouls += " Disqual Fouls:" + _foul_disqual.length.toString();
+    }
 
     return "Team: " + _teamNum
-    + "\n foul_reg: " + foul_reg.toString()
-    //+ "\n action: " + action.toString()
     + "\nTotal points prevented: " + _totPtsPrev.toStringAsFixed(1).toString()
     + "\nPoints prevented/sec: " + _ptsPrevOverDefTime.toStringAsFixed(3)
     + "\n% time in defense: " + _percentTimeInDefense.toString() 
     + "%, offense: " + _percentTimeInOffense.toString()
-    
-     + "%\nTotal reg fouls: " + _regFouls.round().toString()
-    + ", tech: " + _techFouls.round().toString()
-    + ", yellow: " + _yellowCards.round().toString()
-    + ", red: " + _redCards.round().toString();
+
+    + "\nNEW"
+    + "\nTotal Offense Shooting Points: " + calcTotOffenseShootingPts().round().toString()
+    + "\nOverall Climb Accuracy: " + calcTotClimbAccuracy().round().toString() + "%"
+    + "\n" + fouls;
+
+
   }
 
   void _collectData(){
-    debugPrint("allMatch: " + allMatches.toString());
-    //DO I NEED TO RESET ALL ARRAYS TO 0 BC THEN IT JUST KEEPS ON ADDING??
-    //LOOK UP!
+    _totalNumGames = _allMatches.length;
     //goes thru all matches
-    for (int i = 0; i < allMatches.length; i++){
-      var currentMatch = allMatches.elementAt(i);
+    for (int i = 0; i < _totalNumGames; i++){
+      var _currentMatch = _allMatches.elementAt(i);
         //goes thru each action in the match
-       for (int j = 0; j < currentMatch.length; j++){
-        //ActionType currentAction = currentMatch.elementAt(j).action;
-        //ActionType currentA = currentMatch[j].action;
+       for (int j = 0; j < _currentMatch.length; j++){
+        GameAction _currentGameAction = _currentMatch[j];
+        ActionType _currentAction = _currentGameAction.action;
 
-        //debugPrint("currentA: " + currentA.toString());
+        debugPrint("currentA: " + _currentAction.toString());
 
-         //debugPrint(currentAction.toString());
-         //switch (currentAction){
-          //case ActionType.FOUL_REG: {_foul_reg_total++;}
-          //break;
-         //}
-         /*
-         if (currentAction == ActionType.FOUL_REG){
-           foul_reg.add(currentAction);
+        //fill up each array of actions
+         switch (_currentAction){
+          case ActionType.FOUL_REG: {_foul_reg.add(_currentGameAction);}
+            break;
+           case ActionType.FOUL_TECH: {_foul_tech.add(_currentGameAction);             }
+             break;
+           case ActionType.FOUL_YELLOW: {_foul_yellow.add(_currentGameAction);}
+             break;
+           case ActionType.FOUL_RED: {_foul_red.add(_currentGameAction);}
+             break;
+           case ActionType.FOUL_DISABLED: {_foul_disabled.add(_currentGameAction);}
+             break;
+           case ActionType.FOUL_DISQUAL: {_foul_disqual.add(_currentGameAction);}
+             break;
+           case ActionType.SHOT_LOW: {_shot_low.add(_currentGameAction);}
+             break;
+           case ActionType.SHOT_OUTER: {_shot_outer.add(_currentGameAction);}
+             break;
+           case ActionType.SHOT_INNER: {_shot_inner.add(_currentGameAction);}
+             break;
+           case ActionType.MISSED_LOW: {_missed_low.add(_currentGameAction);}
+             break;
+           case ActionType.MISSED_OUTER: {_missed_outer.add(_currentGameAction);}
+             break;
+           case ActionType.OTHER_CLIMB: {_other_climb.add(_currentGameAction);}
+             break;
+           case ActionType.OTHER_CLIMB_MISS: {_other_climb_miss.add(_currentGameAction);}
+             break;
+           case ActionType.OTHER_WHEEL_POSITION: {_other_wheel_position.add(_currentGameAction);}
+             break;
+           case ActionType.OTHER_WHEEL_COLOR: {_other_wheel_color.add(_currentGameAction);}
+             break;
+           case ActionType.PREV_SHOT: {_prev_shot.add(_currentGameAction);}
+             break;
+           case ActionType.PREV_INTAKE: {_prev_intake.add(_currentGameAction);}
+             break;
+           case ActionType.PUSH: {_push.add(_currentGameAction);}
+             break;
          }
-*/
        }
      }
-     //debugPrint("_foul_reg_total: " + _foul_reg_total.toString());
+
+
+     debugPrint("_foul_reg: " + _foul_reg.toString());
+     debugPrint("_missed_outer: " + _missed_outer.toString());
+     debugPrint("_push: " + _push.toString());
   }
 
-  void updateData(){
-
+  //used when more data is added, need to clear everything then re-add
+  void _clearAllData(){
+    _foul_reg = [];
+    _foul_tech = [];
+    _foul_yellow = [];
+    _foul_red = [];
+    _foul_disabled = [];
+    _foul_disqual = [];
+    _shot_low = [];
+    _shot_outer = [];
+    _shot_inner = [];
+    _missed_low = [];
+    _missed_outer = [];
+    _other_climb = [];
+    _other_climb_miss = [];
+    _other_wheel_position = [];
+    _other_wheel_color = [];
+    _prev_shot = [];
+    _prev_intake = [];
+    _push = [];
   }
 
+  double calcTotOffenseShootingPts(){
+    //TODO: HIGHER PTS FOR AUTON (time <= 15 sec)
+    double _lowPts = _shot_low.length*Constants.lowShotValue;
+    double _outerPts = _shot_outer.length*Constants.outerShotValue;
+    double _innerPts = _shot_inner.length*Constants.innerShotValue;
+    double _rotationControl = _other_wheel_color.length*Constants.positionControl;
+    double _positionControl = _other_wheel_position.length*Constants.positionControl;
+    double _climb = _other_climb.length*Constants.climbValue;
+    
+    return _lowPts + _outerPts + _innerPts + _rotationControl + _positionControl + _climb;
+  }
+
+  //climb and color wheel
+  double calcTotClimbAccuracy(){
+    double _climb = _other_climb.length*1.0;
+    double _miss = _other_climb_miss.length*1.0;
+    double _totalClimbAttempts = _climb + _miss;
+
+    return (_climb/_totalClimbAttempts)*100.0;
+  }
 
   double calcTotPtsPrev(){
     return calcShotPtsPrev() + calcIntakePtsPrev() + calcPushPtsPrev() - calcFoulLostPts();
@@ -218,10 +311,10 @@ class _AnalyzerState extends State<Analyzer> {
 
   //returns a positive number, must subtract from total
   double calcFoulLostPts(){
-    double _regPtsLost = _fouls["regFouls"] * Constants.regFoul;
-    double _techPtsLost = _fouls["techFouls"] * Constants.techFoul;
-    double _yellowPtsLost = _fouls["yellowCards"] * Constants.yellowCard;
-    double _redPtsLost = _fouls["redCards"] * Constants.redCard;
+    double _regPtsLost = _foul_reg.length*Constants.regFoul;
+    double _techPtsLost = _foul_tech.length*Constants.techFoul;
+    double _yellowPtsLost = _foul_yellow.length*Constants.techFoul;
+    double _redPtsLost = _foul_red.length*Constants.redCard;
     return _regPtsLost + _techPtsLost + _yellowPtsLost + _redPtsLost;
   }
 
