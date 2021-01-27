@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
+import 'package:mustang_app/components/game_action.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
@@ -101,6 +102,11 @@ class TeamDataAnalyzer {
             element.documentID == matchNumber)
         .toList()
         .first;
+  }
+
+  static List<GameAction> getMatchActions(
+      String teamNumber, String matchNumber) {
+    return _matches.map((match) => GameAction.fromJson(match.data));
   }
 
   static void _updateTeamNumbers() async {

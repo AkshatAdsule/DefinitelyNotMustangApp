@@ -1,3 +1,4 @@
+import 'dart:html';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
@@ -83,7 +84,7 @@ class _BlurOverlayState extends State<BlurOverlay> {
               child: !_animating
                   ? Center(
                       child: RaisedButton(
-                        color: Colors.red,
+                        color: Colors.red.shade900,
                         onPressed: () {
                           setState(() {
                             _targetValue = 0;

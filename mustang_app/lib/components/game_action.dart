@@ -11,6 +11,29 @@ class GameAction {
   GameAction.push(this._secondsElapsed, _x, _y, _endX, _endY, _pushTime) {
     _action = ActionType.PUSH;
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'secondsElapsed': _secondsElapsed,
+      'x': _x,
+      'y': _y,
+      'endX': _endX,
+      'endY': _endY,
+      'pushTime': _pushTime,
+      'actionType': _action.toString(),
+    };
+  }
+
+  GameAction.fromJson(Map<String, dynamic> data) {
+    _x = data['x'];
+    _y = data['y'];
+    _secondsElapsed = data['secondsElapsed'];
+    _endX = data['endX'];
+    _endY = data['endY'];
+    _pushTime = data['pushTime'];
+    _action = ActionType.values
+        .firstWhere((element) => element.toString() == data['actionType']);
+  }
 }
 
 enum ActionType {
