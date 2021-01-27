@@ -112,13 +112,13 @@ class _AnalyzerState extends State<Analyzer> {
     double _redCards = _fouls["redCards"];
 
     //testing purposes
-    var match2 = allMatches.elementAt(2);
-    var some2match2 = match2.elementAt(2);
-    ActionType action = some2match2.action;
+    //var match2 = allMatches.elementAt(2);
+    //var some2match2 = match2.elementAt(2);
+    //ActionType action = some2match2.action;
 
     return "Team: " + _teamNum
     + "\n foul_reg: " + foul_reg.toString()
-    + "\n action: " + action.toString()
+    //+ "\n action: " + action.toString()
     + "\nTotal points prevented: " + _totPtsPrev.toStringAsFixed(1).toString()
     + "\nPoints prevented/sec: " + _ptsPrevOverDefTime.toStringAsFixed(3)
     + "\n% time in defense: " + _percentTimeInDefense.toString() 
@@ -139,16 +139,16 @@ class _AnalyzerState extends State<Analyzer> {
       var currentMatch = allMatches.elementAt(i);
         //goes thru each action in the match
        for (int j = 0; j < currentMatch.length; j++){
-        ActionType currentAction = currentMatch.elementAt(j).action;
-        ActionType currentA = currentMatch[j].action;
+        //ActionType currentAction = currentMatch.elementAt(j).action;
+        //ActionType currentA = currentMatch[j].action;
 
-        debugPrint("currentA: " + currentA.toString());
+        //debugPrint("currentA: " + currentA.toString());
 
          //debugPrint(currentAction.toString());
-         switch (currentAction){
+         //switch (currentAction){
           //case ActionType.FOUL_REG: {_foul_reg_total++;}
           //break;
-         }
+         //}
          /*
          if (currentAction == ActionType.FOUL_REG){
            foul_reg.add(currentAction);
