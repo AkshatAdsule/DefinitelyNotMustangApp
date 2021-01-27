@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mustang_app/components/game_action.dart';
 import '../constants/constants.dart';
 import 'team_data_analyzer.dart';
 
@@ -245,14 +246,18 @@ class ScoutingOperations {
     await this.updateMatchDataSummary(teamNumber, matchNumber);
   }
 
-  void writeMatchData(String teamNumber, String matchNumber,
-      Map<String, dynamic> matchData) async {
+  List<Map<String, dynamic>> convertActionsToJson(List<GameAction> actions) {
+    return actions.map((action) => action.toJson());
+  }
+
+  void updateMatchData(
+      String teamNumber, String matchNumber, List<GameAction> actions) async {
     await Constants.db
         .collection('teams')
         .document(teamNumber)
         .collection('matches')
         .document(matchNumber)
-        .updateData(matchData);
+        .updateData({'actions': convertActionsToJson(actions)});
   }
 
   Future<void> updateMatchDataSummary(
