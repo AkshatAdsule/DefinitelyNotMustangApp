@@ -13,6 +13,14 @@ class GameAction {
     _action = ActionType.PUSH;
   }
 
+  double get timeStamp => _timeStamp;
+  double get x => _x;
+  double get y => _y;
+  double get endX => _endX;
+  double get endY => _endY;
+  double get pushTime => _pushTime;
+  ActionType get action => _action;
+
   Map<String, dynamic> toJson() {
     return {
       'timeStamp': _timeStamp,
@@ -23,6 +31,7 @@ class GameAction {
       'pushTime': _pushTime,
       'actionType': _action.toString(),
     };
+
   }
 
   GameAction.fromJson(Map<String, dynamic> data) {
