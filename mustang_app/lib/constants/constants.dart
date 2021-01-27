@@ -33,5 +33,8 @@ class Constants {
   static const double innerShotValue = 3;
   static const double rotationControl = 15;
   static const double positionControl = 20;
+  static const double climbValue = 25;
+  static const double endgameParkValue = 5;
+
 
 }

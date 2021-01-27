@@ -58,18 +58,20 @@ class _AnalyzerState extends State<Analyzer> {
     //initialize all vars
 
       var action1 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
+      var action1a = new GameAction(ActionType.FOUL_TECH, 2, 4, 4);
+
       var action2 = new GameAction(ActionType.SHOT_INNER, 6, 15, 1);
       var action3 = new GameAction(ActionType.PREV_SHOT, 10, 13, 9);
       var action4 = new GameAction(ActionType.MISSED_OUTER, 15, 2, 4);
-      var action41 = new GameAction(ActionType.MISSED_OUTER, 16, 1, 4);
+      var action4a = new GameAction(ActionType.MISSED_OUTER, 16, 1, 4);
       var action5 = new GameAction(ActionType.OTHER_CLIMB_MISS, 19, 3, 3);
       var action6 = new GameAction(ActionType.SHOT_LOW, 30, 0, 13);
       var action7 = new GameAction(ActionType.SHOT_INNER, 39, 5, 2);
       var action8 = new GameAction(ActionType.SHOT_OUTER, 40, 8, 12);
       var action9 = new GameAction.push(44, 10, 5, 8, 4, 3);
 
-      var matchArray1 = [action1, action2, action3];
-      var matchArray2 = [action4, action41, action5, action6];
+      var matchArray1 = [action1, action1a, action2, action3];
+      var matchArray2 = [action4, action4a, action5, action6];
       var matchArray3 = [action7, action8, action9];
 
       //FINALARRAY IS WHAT WILL BE PASSED INTO THE ANALYZER
@@ -110,26 +112,46 @@ class _AnalyzerState extends State<Analyzer> {
     double _ptsPrevOverDefTime = calcTotPtsPrev()/_totalDefActionTime;
     double _percentTimeInDefense = 100*(_totalDefActionTime/_totalQualGameTime);
     double _percentTimeInOffense = 100 - _percentTimeInDefense;
+    /*
     double _regFouls = _fouls["regFouls"];
     double _techFouls = _fouls["techFouls"];
     double _yellowCards = _fouls["yellowCards"];
     double _redCards = _fouls["redCards"];
-
+*/
     //new
-    
+    String fouls = "";
+
+    if (_foul_reg.length > 0){
+      fouls += "Reg Fouls:" + _foul_reg.length.toString();
+    }
+    if (_foul_tech.length > 0){
+      fouls += " Tech Fouls:" + _foul_tech.length.toString();
+    }
+    if (_foul_yellow.length > 0){
+      fouls += " Yellow Fouls:" + _foul_yellow.length.toString();
+    }
+    if (_foul_red.length > 0){
+      fouls += " Red Fouls:" + _foul_red.length.toString();
+    }
+    if (_foul_disabled.length > 0){
+      fouls += " Disabled Fouls:" + _foul_disabled.length.toString();
+    }
+    if (_foul_disqual.length > 0){
+      fouls += " Disqual Fouls:" + _foul_disqual.length.toString();
+    }
 
     return "Team: " + _teamNum
     + "\nTotal points prevented: " + _totPtsPrev.toStringAsFixed(1).toString()
     + "\nPoints prevented/sec: " + _ptsPrevOverDefTime.toStringAsFixed(3)
     + "\n% time in defense: " + _percentTimeInDefense.toString() 
     + "%, offense: " + _percentTimeInOffense.toString()
-     + "%\nTotal reg fouls: " + _regFouls.round().toString()
-    + ", tech: " + _techFouls.round().toString()
-    + ", yellow: " + _yellowCards.round().toString()
-    + ", red: " + _redCards.round().toString()
 
     + "\nNEW"
-    + "\nTotal Offense Shooting Points: " + calcTotOffenseShootingPts().round().toString();
+    + "\nTotal Offense Shooting Points: " + calcTotOffenseShootingPts().round().toString()
+    + "\nOverall Climb Accuracy: " + calcTotClimbAccuracy().round().toString() + "%"
+    + "\n" + fouls;
+
+
   }
 
   void _collectData(){
@@ -143,11 +165,12 @@ class _AnalyzerState extends State<Analyzer> {
         ActionType _currentAction = _currentGameAction.action;
 
         debugPrint("currentA: " + _currentAction.toString());
+
         //fill up each array of actions
          switch (_currentAction){
           case ActionType.FOUL_REG: {_foul_reg.add(_currentGameAction);}
             break;
-           case ActionType.FOUL_TECH: {_foul_tech.add(_currentGameAction);}
+           case ActionType.FOUL_TECH: {_foul_tech.add(_currentGameAction);             }
              break;
            case ActionType.FOUL_YELLOW: {_foul_yellow.add(_currentGameAction);}
              break;
@@ -218,15 +241,22 @@ class _AnalyzerState extends State<Analyzer> {
     double _lowPts = _shot_low.length*Constants.lowShotValue;
     double _outerPts = _shot_outer.length*Constants.outerShotValue;
     double _innerPts = _shot_inner.length*Constants.innerShotValue;
-    return _lowPts + _outerPts + _innerPts;
+    double _rotationControl = _other_wheel_color.length*Constants.positionControl;
+    double _positionControl = _other_wheel_position.length*Constants.positionControl;
+    double _climb = _other_climb.length*Constants.climbValue;
+    
+    return _lowPts + _outerPts + _innerPts + _rotationControl + _positionControl + _climb;
   }
 
   //climb and color wheel
-  /*
-  double _calcTotOffenseOtherPts(){
-    return 0.0;
+  double calcTotClimbAccuracy(){
+    double _climb = _other_climb.length*1.0;
+    double _miss = _other_climb_miss.length*1.0;
+    double _totalClimbAttempts = _climb + _miss;
+
+    return (_climb/_totalClimbAttempts)*100.0;
   }
-*/
+
   double calcTotPtsPrev(){
     return calcShotPtsPrev() + calcIntakePtsPrev() + calcPushPtsPrev() - calcFoulLostPts();
   }
@@ -281,10 +311,10 @@ class _AnalyzerState extends State<Analyzer> {
 
   //returns a positive number, must subtract from total
   double calcFoulLostPts(){
-    double _regPtsLost = _fouls["regFouls"] * Constants.regFoul;
-    double _techPtsLost = _fouls["techFouls"] * Constants.techFoul;
-    double _yellowPtsLost = _fouls["yellowCards"] * Constants.yellowCard;
-    double _redPtsLost = _fouls["redCards"] * Constants.redCard;
+    double _regPtsLost = _foul_reg.length*Constants.regFoul;
+    double _techPtsLost = _foul_tech.length*Constants.techFoul;
+    double _yellowPtsLost = _foul_yellow.length*Constants.techFoul;
+    double _redPtsLost = _foul_red.length*Constants.redCard;
     return _regPtsLost + _techPtsLost + _yellowPtsLost + _redPtsLost;
   }
 
