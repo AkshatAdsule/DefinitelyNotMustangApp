@@ -26,6 +26,16 @@ class _AnalyzerState extends State<Analyzer> {
   Map<String, double> _fouls;
   Map<double, double> _pushStartZones, _pushEndZones; //<columnNum, rowNum>
 
+  var allMatches;
+  //array for each type of action, has all instances of that action for all games
+  //FOR NOW ONLY ARRAY LENGTH OF EACH IS USEFUL BUT AFTER FOR LIKE COMMON ZONE AND TIMES N STUFF
+  List<ActionType> foul_reg = [], foul_tech = [], foul_yellow = [], foul_red = [], foul_disabled = [], foul_disqual = [],
+      shot_low = [], show_outer = [], shot_inner = [], missed_low = [], missed_outer = [],
+      other_climb = [], other_climb_miss = [], other_wheel_position = [], other_wheel_color = [],
+      prev_shot = [], prev_intake = [], push = [];
+
+
+
   _AnalyzerState(String teamNum) {
     _teamNum = teamNum;
   }
@@ -48,7 +58,7 @@ class _AnalyzerState extends State<Analyzer> {
       return;
     }
     //initialize all vars
-    setState(() {
+    //setState(() {
       //random values for now just to test
       var action1 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
       var action2 = new GameAction(ActionType.SHOT_INNER, 6, 15, 1);
@@ -60,14 +70,18 @@ class _AnalyzerState extends State<Analyzer> {
       var action8 = new GameAction(ActionType.SHOT_OUTER, 40, 8, 12);
       var action9 = new GameAction.push(44, 10, 5, 8, 4, 3);
 
-      var matchArray1 = {action1, action2, action3};
-      var matchArray2 = {action4, action5, action6};
-      var matchArray3 = {action7, action8, action9};
+      var matchArray1 = [action1, action2, action3];
+      var matchArray2 = [action4, action5, action6];
+      var matchArray3 = [action7, action8, action9];
 
-      var finalArray = {matchArray1, matchArray2, matchArray3};
-     
+      //FINALARRAY IS WHAT WILL BE PASSED INTO THE ANALYZER
+      var finalArray = [matchArray1, matchArray2, matchArray3];     
+      allMatches = finalArray;
+      //_collectData();
 
       _driveBase = "tank";
+
+      //EVERYTHING UNDER SHOULD BE GONE
       _numShotsPrev = 10;
       _numIntakesPrev = 5;
       _totalDefActionTime = 120;
@@ -82,10 +96,11 @@ class _AnalyzerState extends State<Analyzer> {
       _pushTime[1] = 3;
 
       _initialized = true;
-    });
+    //});
   }
 
   String getReport() {
+    _collectData();
     double _totPtsPrev = calcTotPtsPrev();
     //_totPtsPrev = _totPtsPrev.round() as int;
     double _ptsPrevOverDefTime = calcTotPtsPrev()/_totalDefActionTime;
@@ -95,10 +110,15 @@ class _AnalyzerState extends State<Analyzer> {
     double _techFouls = _fouls["techFouls"];
     double _yellowCards = _fouls["yellowCards"];
     double _redCards = _fouls["redCards"];
-    //var actionTest = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
-    //action.Action( action: action.ActionType.FOUL_REG, seconds_elapsed: 2, row: 3, column: 4);
+
+    //testing purposes
+    var match2 = allMatches.elementAt(2);
+    var some2match2 = match2.elementAt(2);
+    ActionType action = some2match2.action;
 
     return "Team: " + _teamNum
+    + "\n foul_reg: " + foul_reg.toString()
+    + "\n action: " + action.toString()
     + "\nTotal points prevented: " + _totPtsPrev.toStringAsFixed(1).toString()
     + "\nPoints prevented/sec: " + _ptsPrevOverDefTime.toStringAsFixed(3)
     + "\n% time in defense: " + _percentTimeInDefense.toString() 
@@ -109,6 +129,40 @@ class _AnalyzerState extends State<Analyzer> {
     + ", yellow: " + _yellowCards.round().toString()
     + ", red: " + _redCards.round().toString();
   }
+
+  void _collectData(){
+    debugPrint("allMatch: " + allMatches.toString());
+    //DO I NEED TO RESET ALL ARRAYS TO 0 BC THEN IT JUST KEEPS ON ADDING??
+    //LOOK UP!
+    //goes thru all matches
+    for (int i = 0; i < allMatches.length; i++){
+      var currentMatch = allMatches.elementAt(i);
+        //goes thru each action in the match
+       for (int j = 0; j < currentMatch.length; j++){
+        ActionType currentAction = currentMatch.elementAt(j).action;
+        ActionType currentA = currentMatch[j].action;
+
+        debugPrint("currentA: " + currentA.toString());
+
+         //debugPrint(currentAction.toString());
+         switch (currentAction){
+          //case ActionType.FOUL_REG: {_foul_reg_total++;}
+          //break;
+         }
+         /*
+         if (currentAction == ActionType.FOUL_REG){
+           foul_reg.add(currentAction);
+         }
+*/
+       }
+     }
+     //debugPrint("_foul_reg_total: " + _foul_reg_total.toString());
+  }
+
+  void updateData(){
+
+  }
+
 
   double calcTotPtsPrev(){
     return calcShotPtsPrev() + calcIntakePtsPrev() + calcPushPtsPrev() - calcFoulLostPts();
@@ -143,7 +197,6 @@ class _AnalyzerState extends State<Analyzer> {
       var _zoneDisplacementDifference = (_predictedDisplacement - _actualDisplacement)/Constants.zoneSideLength;
       
       _result += (_zoneDisplacementDifference * Constants.zoneDisplacementValue);
-      debugPrint("smth here: " +  _result.toString());
     }
     return _result;
   }

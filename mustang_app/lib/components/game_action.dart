@@ -7,6 +7,7 @@ class GameAction{
   double seconds_elapsed, x, y, end_x, end_y, push_time;
   ActionType action;
   GameAction(this.action, this.seconds_elapsed, this.x, this.y, );
+  //for push, seconds_elapsed is at the beginning of the push
   GameAction.push(this.seconds_elapsed, this.x, this.y, this.end_x, this.end_y, this.push_time){
     action = ActionType.PUSH;
   }
