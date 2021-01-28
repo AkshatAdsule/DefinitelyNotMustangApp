@@ -22,7 +22,7 @@ class ZoneGrid extends StatelessWidget {
                 _onTap(j, i);
                 print("($j,$i)");
               },
-              child: SizedBox(
+              child: Container(
                 key: Key("($j,$i)"),
                 height: cellHeight,
                 width: cellWidth,
@@ -42,9 +42,10 @@ class ZoneGrid extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Table(
-              defaultColumnWidth: IntrinsicColumnWidth(),
-              children: _getTableContents(
-                  constraints.maxWidth, constraints.maxHeight));
+            defaultColumnWidth: IntrinsicColumnWidth(),
+            children:
+                _getTableContents(constraints.maxWidth, constraints.maxHeight),
+          );
         },
       ),
     );

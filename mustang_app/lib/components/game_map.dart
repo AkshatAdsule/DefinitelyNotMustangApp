@@ -8,12 +8,15 @@ class GameMap extends StatelessWidget {
   GameMap(
       {List<Widget> imageChildren = const [],
       List<Widget> sideWidgets = const [],
-      Function() onTap}) {
+      Function(int x, int y) onTap}) {
     if (Constants.fieldColor == 0) {
       _imageChildren.add(Image.asset('assets/blue_field.png'));
     } else if (Constants.fieldColor == 1) {
       _imageChildren.add(Image.asset('assets/red_field.png'));
     }
+    _imageChildren.add(
+      ZoneGrid(onTap ?? (int x, int y) {}),
+    );
     _imageChildren.addAll(imageChildren);
     _sideWidgets = sideWidgets;
     _onTap = onTap ?? (int x, int y) {};
@@ -27,7 +30,6 @@ class GameMap extends StatelessWidget {
         Container(
           child: Stack(children: [
             ..._imageChildren,
-            ZoneGrid(_onTap),
           ]),
         ),
         ..._sideWidgets

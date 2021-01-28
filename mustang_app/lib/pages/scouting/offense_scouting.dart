@@ -91,6 +91,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
             child: Transform.rotate(
               angle: -pi / 8,
               child: Container(
+                height: 30,
                 width: 200,
                 child: Slider(
                   divisions: 2,
