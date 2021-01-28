@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/constants/constants.dart';
 
 class GameMap extends StatelessWidget {
-  List<Widget> _imageChildren = [], _sideWidgets;
+  List<Widget> _imageChildren = [], _sideWidgets = [];
+  Function(int x, int y) _onTap;
   GameMap(
       {List<Widget> imageChildren = const [],
-      List<Widget> sideWidgets = const []}) {
+      List<Widget> sideWidgets = const [],
+      Function() onTap}) {
     if (Constants.fieldColor == 0) {
       _imageChildren.add(Image.asset('assets/blue_field.png'));
     } else if (Constants.fieldColor == 1) {
       _imageChildren.add(Image.asset('assets/red_field.png'));
     }
-    //_imageChildren.add(Image.asset('assets/croppedmap.png'));
     _imageChildren.addAll(imageChildren);
     _sideWidgets = sideWidgets;
+    _onTap = onTap ?? (int x, int y) {};
   }
 
   @override
@@ -22,26 +25,9 @@ class GameMap extends StatelessWidget {
         child: Row(
       children: [
         Container(
-          child: Stack(fit: StackFit.expand, children: [
-            FittedBox(
-              fit: BoxFit.fitHeight,
-              child: Container(
-                child: GridView.count(
-                  childAspectRatio: 0.5,
-                  crossAxisCount: 16,
-                  children: List.generate(
-                    8 * 16,
-                    (index) => Container(
-                      child: Center(),
-                      decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(2)),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            ..._imageChildren
+          child: Stack(children: [
+            ..._imageChildren,
+            ZoneGrid(_onTap),
           ]),
         ),
         ..._sideWidgets
