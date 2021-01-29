@@ -21,11 +21,8 @@ class Analyzer extends StatefulWidget {
 class _AnalyzerState extends State<Analyzer> {
   bool _initialized = false, _hasAnalysis = true;
   String _teamNum, _driveBase;
-  double _totalDefActionTime, _totalQualGameTime;
-  //var _pushTime, _numShotsPrev, _numIntakesPrev;
-  //Map<String, double> _fouls;
-  //Map<double, double> _pushStartZones, _pushEndZones; //<columnNum, rowNum>
-
+  //double _totalDefActionTime, _totalQualGameTime;
+  
   var _allMatches;
   //for testing if data needs to be collected again or not - if same then don't
   int _oldAllMatchLength = 0, _totalNumGames = 0;
@@ -59,7 +56,6 @@ class _AnalyzerState extends State<Analyzer> {
 
       var action1 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
       var action1a = new GameAction(ActionType.FOUL_TECH, 2, 4, 4);
-
       var action2 = new GameAction(ActionType.SHOT_INNER, 6, 15, 1);
       var action3 = new GameAction(ActionType.PREV_SHOT, 10, 13, 9);
       var action4 = new GameAction(ActionType.MISSED_OUTER, 15, 2, 4);
@@ -80,23 +76,8 @@ class _AnalyzerState extends State<Analyzer> {
       //_collectData();
 
       _driveBase = "tank";
-
-      //EVERYTHING UNDER SHOULD BE GONE
-     // _numShotsPrev = 10;
-     // _numIntakesPrev = 5;
-      _totalDefActionTime = 120;
-      _totalQualGameTime = 600; //4 games
-     // _fouls = {"regFouls":3, "techFouls":2, "yellowCards":1, "redCards":0};
-
-     // _pushStartZones = {10:4, 6:6};
-      //_pushEndZones = {6:2, 5:4};
-
-      //_pushTime = new List(2);
-     // _pushTime[0] = 2;
-     // _pushTime[1] = 3;
-
       _initialized = true;
- 
+
   }
 
   String getReport() {
@@ -108,11 +89,7 @@ class _AnalyzerState extends State<Analyzer> {
       _collectData();
     }
 
-    //double _totPtsPrev = calcTotPtsPrev();
-    double _ptsPrevOverDefTime = calcTotPtsPrev()/_totalDefActionTime;
-    double _percentTimeInDefense = 100*(_totalDefActionTime/_totalQualGameTime);
-    double _percentTimeInOffense = 100 - _percentTimeInDefense;
-
+    
     //new
     String fouls = "";
     if (_foul_reg.length > 0){
@@ -135,15 +112,9 @@ class _AnalyzerState extends State<Analyzer> {
     }
 
     return "Team: " + _teamNum
-    //+ "\nTotal points prevented: " + _totPtsPrev.toStringAsFixed(1).toString()
-    + "\nPoints prevented/sec: " + _ptsPrevOverDefTime.toStringAsFixed(3)
-    + "\n% time in defense: " + _percentTimeInDefense.toString() 
-    + "%, offense: " + _percentTimeInOffense.toString()
-
-    + "\nNEW"
     + "\nTotal Offense Shooting Points: " + calcTotOffenseShootingPts().round().toString()
     + "\nOverall Climb Accuracy: " + calcTotClimbAccuracy().round().toString() + "%"
-    + "\nTotal points prevented: " + calcTotPtsPrev().toString()
+    + "\nTotal points prevented: " + calcTotPtsPrev().round().toString()
     + "\n" + fouls;
   }
 
@@ -156,8 +127,6 @@ class _AnalyzerState extends State<Analyzer> {
        for (int j = 0; j < _currentMatch.length; j++){
         GameAction _currentGameAction = _currentMatch[j];
         ActionType _currentAction = _currentGameAction.action;
-
-        //debugPrint("currentA: " + _currentAction.toString());
 
         //fill up each array of actions
          switch (_currentAction){
@@ -236,7 +205,6 @@ class _AnalyzerState extends State<Analyzer> {
     return _lowPts + _outerPts + _innerPts + _rotationControl + _positionControl + _climb;
   }
 
-  //climb and color wheel
   double calcTotClimbAccuracy(){
     double _climb = _other_climb.length*1.0;
     double _miss = _other_climb_miss.length*1.0;
@@ -246,9 +214,7 @@ class _AnalyzerState extends State<Analyzer> {
   }
 
   double calcTotPtsPrev(){
-    return calcShotPtsPrev() + calcIntakePtsPrev() - calcFoulLostPts();
-
-    //return calcShotPtsPrev() + calcIntakePtsPrev() + calcPushPtsPrev() - calcFoulLostPts();
+    return calcShotPtsPrev() + calcIntakePtsPrev() + calcPushPtsPrev() - calcFoulLostPts();
   }
   double calcShotPtsPrev(){
     return _prev_shot.length*Constants.shotValue;
@@ -268,14 +234,9 @@ class _AnalyzerState extends State<Analyzer> {
     if (_driveBase.contains("swerve")){ _normalVelocity = Constants.swerveSpeed; }
 
     for (int i = 0; i < _push.length; i++){
-      debugPrint("normal velocity: " + _normalVelocity.toString());
-      var _pushTime = _push[i].pushTime;
-      debugPrint("pushtime: " + _pushTime.toString());
-
-      var _predictedDisplacement = _normalVelocity * _pushTime;
-
+      var _predictedDisplacement = _normalVelocity * _push[i].pushTime;
       var _actualDisplacement = calcDisplacement(_push[i].x, _push[i].y, _push[i].endX, _push[i].endY);
-      double _zoneDisplacementDifference = (_predictedDisplacement - _actualDisplacement)/Constants.zoneSideLength;
+      var _zoneDisplacementDifference = (_predictedDisplacement - _actualDisplacement)/Constants.zoneSideLength;
       
       _result += (_zoneDisplacementDifference * Constants.zoneDisplacementValue);
 

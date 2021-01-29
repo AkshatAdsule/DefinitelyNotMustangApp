@@ -36,13 +36,14 @@ class _OffenseScoutingState extends State<OffenseScouting> {
     _stopwatch = stopwatch;
   }
 
+  /*
   void addAction(String id) {
     int now = 111; //TODO: change this to acutal time
     MapLocation newLoc = new MapLocation();
     shots.add(new GameAction(ActionType.YASS, 22, -1, -1));
     print(shots);
   }
-
+*/
   @override
   Widget build(BuildContext context) {
     return Container(
