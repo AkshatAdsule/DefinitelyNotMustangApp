@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/constants/constants.dart';
 
 class GameMap extends StatelessWidget {
-  List<Widget> _imageChildren = [], _sideWidgets;
+  List<Widget> _imageChildren = [], _sideWidgets = [];
+  Function(int x, int y) _onTap;
   GameMap(
       {List<Widget> imageChildren = const [],
-      List<Widget> sideWidgets = const []}) {
-        if (Constants.fieldColor == 0){
-          _imageChildren.add(Image.asset('assets/blue_field.png'));
-        }
-        else if (Constants.fieldColor == 1){
-          _imageChildren.add(Image.asset('assets/red_field.png'));
-        }
-    //_imageChildren.add(Image.asset('assets/croppedmap.png'));
+      List<Widget> sideWidgets = const [],
+      Function(int x, int y) onTap}) {
+    if (Constants.fieldColor == 0) {
+      _imageChildren.add(Image.asset('assets/blue_field.png'));
+    } else if (Constants.fieldColor == 1) {
+      _imageChildren.add(Image.asset('assets/red_field.png'));
+    }
+    _imageChildren.add(
+      ZoneGrid(onTap ?? (int x, int y) {}),
+    );
     _imageChildren.addAll(imageChildren);
     _sideWidgets = sideWidgets;
+    _onTap = onTap ?? (int x, int y) {};
   }
 
   @override
@@ -23,7 +28,9 @@ class GameMap extends StatelessWidget {
         child: Row(
       children: [
         Container(
-          child: Stack(children: _imageChildren),
+          child: Stack(children: [
+            ..._imageChildren,
+          ]),
         ),
         ..._sideWidgets
       ],

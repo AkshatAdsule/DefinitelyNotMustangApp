@@ -89,3 +89,21 @@ class _MapScoutingState extends State<MapScouting> {
     );
   }
 }
+
+// class MapLocation extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return new GestureDetector(
+//       onTap: () => print('tapped!'),
+//       onTapDown: (TapDownDetails details) => _onTapDown(details),
+//     );
+//   }
+
+//   _onTapDown(TapDownDetails details) {
+//     var x = details.globalPosition.dx;
+//     var y = details.globalPosition.dy;
+//     // or user the local position method to get the offset
+//     print(details.localPosition);
+//     print("tap down " + x.toString() + ", " + y.toString());
+//   }
+// }

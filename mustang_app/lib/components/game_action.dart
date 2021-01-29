@@ -9,9 +9,9 @@ class GameAction {
     this._y,
   );
   //for push, timeStamp is at the beginning of the push
-  GameAction.push(this._timeStamp, _x, _y, _endX, _endY, _pushTime) {
-    _action = ActionType.PUSH;
-  }
+  GameAction.push(this._action,this._timeStamp, this._x, this._y, this._endX, this._endY, this._pushTime);
+    //_action = ActionType.PUSH;
+  
 
   double get timeStamp => _timeStamp;
   double get x => _x;

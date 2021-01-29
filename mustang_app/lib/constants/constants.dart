@@ -36,5 +36,6 @@ class Constants {
   static const double climbValue = 25;
   static const double endgameParkValue = 5;
 
-
+  static int zoneRows = 8;
+  static int zoneColumns = 16;
 }

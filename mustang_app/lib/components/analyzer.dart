@@ -7,7 +7,7 @@ import '../backend/team_data_analyzer.dart';
 import 'package:mustang_app/constants/constants.dart';
 
 class Analyzer extends StatefulWidget {
-  String _teamNum, _driveBase;
+  String _teamNum;
 
   Analyzer(String teamNum) {
     _teamNum = teamNum;
@@ -21,10 +21,10 @@ class Analyzer extends StatefulWidget {
 class _AnalyzerState extends State<Analyzer> {
   bool _initialized = false, _hasAnalysis = true;
   String _teamNum, _driveBase;
-  double _numShotsPrev, _numIntakesPrev, _totalDefActionTime, _totalQualGameTime;
-  var _pushTime;
-  Map<String, double> _fouls;
-  Map<double, double> _pushStartZones, _pushEndZones; //<columnNum, rowNum>
+  double _totalDefActionTime, _totalQualGameTime;
+  //var _pushTime, _numShotsPrev, _numIntakesPrev;
+  //Map<String, double> _fouls;
+  //Map<double, double> _pushStartZones, _pushEndZones; //<columnNum, rowNum>
 
   var _allMatches;
   //for testing if data needs to be collected again or not - if same then don't
@@ -68,7 +68,7 @@ class _AnalyzerState extends State<Analyzer> {
       var action6 = new GameAction(ActionType.SHOT_LOW, 30, 0, 13);
       var action7 = new GameAction(ActionType.SHOT_INNER, 39, 5, 2);
       var action8 = new GameAction(ActionType.SHOT_OUTER, 40, 8, 12);
-      var action9 = new GameAction.push(44, 10, 5, 8, 4, 3);
+      var action9 = new GameAction.push(ActionType.PUSH, 44, 10, 5, 8, 4, 3);
 
       var matchArray1 = [action1, action1a, action2, action3];
       var matchArray2 = [action4, action4a, action5, action6];
@@ -82,18 +82,18 @@ class _AnalyzerState extends State<Analyzer> {
       _driveBase = "tank";
 
       //EVERYTHING UNDER SHOULD BE GONE
-      _numShotsPrev = 10;
-      _numIntakesPrev = 5;
+     // _numShotsPrev = 10;
+     // _numIntakesPrev = 5;
       _totalDefActionTime = 120;
       _totalQualGameTime = 600; //4 games
-      _fouls = {"regFouls":3, "techFouls":2, "yellowCards":1, "redCards":0};
+     // _fouls = {"regFouls":3, "techFouls":2, "yellowCards":1, "redCards":0};
 
-      _pushStartZones = {10:4, 6:6};
-      _pushEndZones = {6:2, 5:4};
+     // _pushStartZones = {10:4, 6:6};
+      //_pushEndZones = {6:2, 5:4};
 
-      _pushTime = new List(2);
-      _pushTime[0] = 2;
-      _pushTime[1] = 3;
+      //_pushTime = new List(2);
+     // _pushTime[0] = 2;
+     // _pushTime[1] = 3;
 
       _initialized = true;
  
@@ -108,40 +108,34 @@ class _AnalyzerState extends State<Analyzer> {
       _collectData();
     }
 
-    double _totPtsPrev = calcTotPtsPrev();
+    //double _totPtsPrev = calcTotPtsPrev();
     double _ptsPrevOverDefTime = calcTotPtsPrev()/_totalDefActionTime;
     double _percentTimeInDefense = 100*(_totalDefActionTime/_totalQualGameTime);
     double _percentTimeInOffense = 100 - _percentTimeInDefense;
-    /*
-    double _regFouls = _fouls["regFouls"];
-    double _techFouls = _fouls["techFouls"];
-    double _yellowCards = _fouls["yellowCards"];
-    double _redCards = _fouls["redCards"];
-*/
+
     //new
     String fouls = "";
-
     if (_foul_reg.length > 0){
-      fouls += "Reg Fouls:" + _foul_reg.length.toString();
+      fouls += "Reg Fouls: " + _foul_reg.length.toString();
     }
     if (_foul_tech.length > 0){
-      fouls += " Tech Fouls:" + _foul_tech.length.toString();
+      fouls += " Tech Fouls: " + _foul_tech.length.toString();
     }
     if (_foul_yellow.length > 0){
-      fouls += " Yellow Fouls:" + _foul_yellow.length.toString();
+      fouls += " Yellow Fouls: " + _foul_yellow.length.toString();
     }
     if (_foul_red.length > 0){
-      fouls += " Red Fouls:" + _foul_red.length.toString();
+      fouls += " Red Fouls: " + _foul_red.length.toString();
     }
     if (_foul_disabled.length > 0){
-      fouls += " Disabled Fouls:" + _foul_disabled.length.toString();
+      fouls += " Disabled Fouls: " + _foul_disabled.length.toString();
     }
     if (_foul_disqual.length > 0){
-      fouls += " Disqual Fouls:" + _foul_disqual.length.toString();
+      fouls += " Disqual Fouls: " + _foul_disqual.length.toString();
     }
 
     return "Team: " + _teamNum
-    + "\nTotal points prevented: " + _totPtsPrev.toStringAsFixed(1).toString()
+    //+ "\nTotal points prevented: " + _totPtsPrev.toStringAsFixed(1).toString()
     + "\nPoints prevented/sec: " + _ptsPrevOverDefTime.toStringAsFixed(3)
     + "\n% time in defense: " + _percentTimeInDefense.toString() 
     + "%, offense: " + _percentTimeInOffense.toString()
@@ -149,9 +143,8 @@ class _AnalyzerState extends State<Analyzer> {
     + "\nNEW"
     + "\nTotal Offense Shooting Points: " + calcTotOffenseShootingPts().round().toString()
     + "\nOverall Climb Accuracy: " + calcTotClimbAccuracy().round().toString() + "%"
+    + "\nTotal points prevented: " + calcTotPtsPrev().toString()
     + "\n" + fouls;
-
-
   }
 
   void _collectData(){
@@ -164,7 +157,7 @@ class _AnalyzerState extends State<Analyzer> {
         GameAction _currentGameAction = _currentMatch[j];
         ActionType _currentAction = _currentGameAction.action;
 
-        debugPrint("currentA: " + _currentAction.toString());
+        //debugPrint("currentA: " + _currentAction.toString());
 
         //fill up each array of actions
          switch (_currentAction){
@@ -207,11 +200,6 @@ class _AnalyzerState extends State<Analyzer> {
          }
        }
      }
-
-
-     debugPrint("_foul_reg: " + _foul_reg.toString());
-     debugPrint("_missed_outer: " + _missed_outer.toString());
-     debugPrint("_push: " + _push.toString());
   }
 
   //used when more data is added, need to clear everything then re-add
@@ -258,52 +246,53 @@ class _AnalyzerState extends State<Analyzer> {
   }
 
   double calcTotPtsPrev(){
-    return calcShotPtsPrev() + calcIntakePtsPrev() + calcPushPtsPrev() - calcFoulLostPts();
+    return calcShotPtsPrev() + calcIntakePtsPrev() - calcFoulLostPts();
+
+    //return calcShotPtsPrev() + calcIntakePtsPrev() + calcPushPtsPrev() - calcFoulLostPts();
   }
   double calcShotPtsPrev(){
-    return _numShotsPrev*Constants.shotValue;
+    return _prev_shot.length*Constants.shotValue;
   }
   double calcIntakePtsPrev(){
-    return _numIntakesPrev*Constants.intakeValue;
+    return _prev_intake.length*Constants.intakeValue;
   }
-  double calcPushPtsPrev(){
-    double _result = 0;
 
+  double calcPushPtsPrev(){
+    double _result = 0.0;
     //set speed
-    double _normalVelocity;
+    double _normalVelocity = 0.0;
     if (_driveBase.contains("tank")){ _normalVelocity = Constants.tankSpeed; }
     if (_driveBase.contains("omni")){ _normalVelocity = Constants.omniSpeed; }
     if (_driveBase.contains("westCoast")){ _normalVelocity = Constants.westCoastSpeed; }
     if (_driveBase.contains("mecanum")){ _normalVelocity = Constants.mecanumSpeed; }
     if (_driveBase.contains("swerve")){ _normalVelocity = Constants.swerveSpeed; }
 
-    //only way of accessing it bc they're not in numerical order or anything 
-    List _startColumn = _pushStartZones.keys.toList();
-    List _startRow = _pushStartZones.values.toList();
-    List _endColumn = _pushEndZones.keys.toList();
-    List _endRow = _pushEndZones.values.toList();
+    for (int i = 0; i < _push.length; i++){
+      debugPrint("normal velocity: " + _normalVelocity.toString());
+      var _pushTime = _push[i].pushTime;
+      debugPrint("pushtime: " + _pushTime.toString());
 
-    //ALL OF THIS IS ASSUMING ABOT WANTS TO GO TOWARDS RED SHOOTING ZONE - ALWAYS WANT TO BE BC SCREEN WILL BE FLIPPED?
-    for (var i = 0; i < _pushTime.length; i++){
-      var _predictedDisplacement = _normalVelocity * _pushTime[i];
-      var _actualDisplacement = calcDisplacement(_startColumn[i], _startRow[i], _endColumn[i], _endRow[i]);
-      var _zoneDisplacementDifference = (_predictedDisplacement - _actualDisplacement)/Constants.zoneSideLength;
+      var _predictedDisplacement = _normalVelocity * _pushTime;
+
+      var _actualDisplacement = calcDisplacement(_push[i].x, _push[i].y, _push[i].endX, _push[i].endY);
+      double _zoneDisplacementDifference = (_predictedDisplacement - _actualDisplacement)/Constants.zoneSideLength;
       
       _result += (_zoneDisplacementDifference * Constants.zoneDisplacementValue);
+
     }
     return _result;
   }
 
   //returns neg value if displaced in opp direction, positive if displaced in aBot's intended direction
   //returned in feet
-  double calcDisplacement(double startColumn, double startRow, double endColumn, double endRow){
-    var _columnDisplacement = (endColumn - startColumn)*Constants.zoneSideLength;
-    var _rowDisplacement = (endRow - startRow)*Constants.zoneSideLength;
+  double calcDisplacement(double x, double y, double endX, double endY){
+    var _columnDisplacement = (endX - x)*Constants.zoneSideLength;
+    var _rowDisplacement = (endY - y)*Constants.zoneSideLength;
     //"hypotenuse" of column and row displacement
     var _displacement = pow(pow(_columnDisplacement, 2) + pow(_rowDisplacement, 2), 1/2);
     
     //went backwards, make displacement negative
-    if (endColumn - startColumn < 0){
+    if (endX - x < 0){
       _displacement *= -1;
     }
     return _displacement;
