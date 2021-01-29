@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/exports/pages.dart';
 import 'dart:math';
+import '../../components/game_action.dart';
 import '../../components/game_map.dart';
 import '../../components/game_buttons.dart' as game_button;
 
@@ -18,20 +19,13 @@ class OffenseScouting extends StatefulWidget {
       _OffenseScoutingState(toggleMode: _toggleMode, stopwatch: _stopwatch);
 }
 
-/*
-class Action {
-  int timeStamp;
-  String buttonId;
-  Action({this.timeStamp, this.buttonId});
-}
-*/
 class _OffenseScoutingState extends State<OffenseScouting> {
   void Function() _toggleMode, _endGame;
   Stopwatch _stopwatch;
 
   double _sliderValue = 2;
 
-  //List<Action> shots = new List<Action>();
+  List<GameAction> shots = new List<GameAction>();
 
   _OffenseScoutingState(
       {void Function() toggleMode,
@@ -41,17 +35,14 @@ class _OffenseScoutingState extends State<OffenseScouting> {
     _endGame = endGame;
     _stopwatch = stopwatch;
   }
-//not anymore, just making new actions in list
-/*
-// TODO: make addAction() get called everytime element-of-game button is clicked,
-// to keep track of all actions
+
   void addAction(String id) {
     int now = 111; //TODO: change this to acutal time
-    double _row = 2;
-    double _column = 3;
-    shots.add(new Action(timeStamp: now, buttonId: id));
+    MapLocation newLoc = new MapLocation();
+    shots.add(new GameAction(ActionType.YASS, 22, -1, -1));
+    print(shots);
   }
-*/
+
   @override
   Widget build(BuildContext context) {
     return Container(
