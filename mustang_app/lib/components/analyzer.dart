@@ -56,6 +56,8 @@ class _AnalyzerState extends State<Analyzer> {
 
       var action1 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
       var action1a = new GameAction(ActionType.FOUL_TECH, 2, 4, 4);
+      var action1b = new GameAction(ActionType.SHOT_LOW, 5, 0, 13);
+
       var action2 = new GameAction(ActionType.SHOT_INNER, 6, 15, 1);
       var action3 = new GameAction(ActionType.PREV_SHOT, 10, 13, 9);
       var action4 = new GameAction(ActionType.MISSED_OUTER, 15, 2, 4);
@@ -66,7 +68,7 @@ class _AnalyzerState extends State<Analyzer> {
       var action8 = new GameAction(ActionType.SHOT_OUTER, 40, 8, 12);
       var action9 = new GameAction.push(ActionType.PUSH, 44, 10, 5, 8, 4, 3);
 
-      var matchArray1 = [action1, action1a, action2, action3];
+      var matchArray1 = [action1, action1a, action1b, action2, action3];
       var matchArray2 = [action4, action4a, action5, action6];
       var matchArray3 = [action7, action8, action9];
 
@@ -77,7 +79,6 @@ class _AnalyzerState extends State<Analyzer> {
 
       _driveBase = "tank";
       _initialized = true;
-
   }
 
   String getReport() {
@@ -195,7 +196,18 @@ class _AnalyzerState extends State<Analyzer> {
 
   double calcTotOffenseShootingPts(){
     //TODO: HIGHER PTS FOR AUTON (time <= 15 sec)
-    double _lowPts = _shot_low.length*Constants.lowShotValue;
+    
+    double _lowPts = 0.0;
+    for (int i = 0; i < _shot_low.length; i++){
+      if (_shot_low[i].timeStamp <= Constants.autonMillisecondLength){
+        _lowPts += Constants.lowShotAutonValue;
+      } 
+      else{
+        _lowPts += Constants.lowShotValue;
+      }
+    }
+    
+    //double _lowPts = _shot_low.length*Constants.lowShotValue;
     double _outerPts = _shot_outer.length*Constants.outerShotValue;
     double _innerPts = _shot_inner.length*Constants.innerShotValue;
     double _rotationControl = _other_wheel_color.length*Constants.positionControl;
