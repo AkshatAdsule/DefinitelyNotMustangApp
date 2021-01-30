@@ -2,15 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/constants/constants.dart';
 
 class ZoneGrid extends StatefulWidget {
-  Function(int x, int y) _onTap;
-  ZoneGrid(this._onTap);
+  static _ZoneGridState _zoneGridState;
+
+  ZoneGrid(Function(int x, int y) onTap) {
+    _zoneGridState = _ZoneGridState(onTap);
+  }
+
+  static int get x {
+    return _zoneGridState.x;
+  }
+
+  static int get y {
+    return _zoneGridState.y;
+  }
 
   @override
-  _ZoneGridState createState() => _ZoneGridState(_onTap);
+  _ZoneGridState createState() => _zoneGridState;
 }
 
 class _ZoneGridState extends State<ZoneGrid> {
-  int _selectedX, _selectedY;
+  int _selectedX = 0, _selectedY = 0;
   bool _hasSelected;
 
   Function(int x, int y) _onTap;

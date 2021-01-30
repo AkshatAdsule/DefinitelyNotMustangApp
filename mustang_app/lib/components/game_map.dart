@@ -22,6 +22,10 @@ class GameMap extends StatelessWidget {
     _onTap = onTap ?? (int x, int y) {};
   }
 
+  // Set() location(x, y) {
+  //   return [x, y];
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Container(
