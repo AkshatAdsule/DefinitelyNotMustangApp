@@ -1,27 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/zone_grid.dart';
-import 'package:mustang_app/exports/pages.dart';
 import 'dart:math';
 import '../../components/game_action.dart';
 import '../../components/game_map.dart';
 import '../../components/game_buttons.dart' as game_button;
 
 class OffenseScouting extends StatefulWidget {
-  void Function() _toggleMode;
+  void Function() _toggleMode, _finishGame;
   Stopwatch _stopwatch;
 
-  OffenseScouting({void Function() toggleMode, Stopwatch stopwatch}) {
+  OffenseScouting(
+      {void Function() toggleMode,
+      void Function() finishGame,
+      Stopwatch stopwatch}) {
     _toggleMode = toggleMode;
     _stopwatch = stopwatch;
+    _finishGame = finishGame;
   }
 
   @override
-  _OffenseScoutingState createState() =>
-      _OffenseScoutingState(toggleMode: _toggleMode, stopwatch: _stopwatch);
+  _OffenseScoutingState createState() => _OffenseScoutingState(
+      toggleMode: _toggleMode, finishGame: _finishGame, stopwatch: _stopwatch);
 }
 
 class _OffenseScoutingState extends State<OffenseScouting> {
-  void Function() _toggleMode, _endGame;
+  void Function() _toggleMode, _finishGame;
   Stopwatch _stopwatch;
 
   double _sliderValue = 2;
@@ -30,10 +33,10 @@ class _OffenseScoutingState extends State<OffenseScouting> {
 
   _OffenseScoutingState(
       {void Function() toggleMode,
-      void Function() endGame,
+      void Function() finishGame,
       Stopwatch stopwatch}) {
     _toggleMode = toggleMode;
-    _endGame = endGame;
+    _finishGame = finishGame;
     _stopwatch = stopwatch;
   }
 
@@ -84,37 +87,41 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                   ),
                 ),
               )),
-          GameMapChild(
-            right: 30,
-            bottom: 55,
-            align: Alignment.center,
-            child: Transform.rotate(
-              angle: -pi / 8,
-              child: Container(
-                height: 30,
-                width: 200,
-                child: Slider(
-                  divisions: 2,
-                  label: _sliderValue.round().toString(),
-                  onChanged: (newVal) => setState(() {
-                    _sliderValue = newVal;
-                  }),
-                  min: 1,
-                  max: 3,
-                  value: _sliderValue,
-                ),
-              ),
-            ),
-          ),
-          GameMapChild(
-              align: Alignment.topLeft,
-              left: 7,
-              top: 7,
-              child: game_button.ScoutingButton(
-                  style: game_button.ButtonStyle.RAISED,
-                  type: game_button.ButtonType.PAGEBUTTON,
-                  onPressed: _endGame,
-                  text: 'End Game')),
+          _stopwatch.elapsedMilliseconds > 120000
+              ? GameMapChild(
+                  right: 30,
+                  bottom: 55,
+                  align: Alignment.center,
+                  child: Transform.rotate(
+                    angle: -pi / 8,
+                    child: Container(
+                      height: 30,
+                      width: 200,
+                      child: Slider(
+                        divisions: 2,
+                        label: _sliderValue.round().toString(),
+                        onChanged: (newVal) => setState(() {
+                          _sliderValue = newVal;
+                        }),
+                        min: 1,
+                        max: 3,
+                        value: _sliderValue,
+                      ),
+                    ),
+                  ),
+                )
+              : Container(),
+          _stopwatch.elapsedMilliseconds > 150000
+              ? GameMapChild(
+                  align: Alignment.topLeft,
+                  left: 7,
+                  top: 7,
+                  child: game_button.ScoutingButton(
+                      style: game_button.ButtonStyle.RAISED,
+                      type: game_button.ButtonType.PAGEBUTTON,
+                      onPressed: _finishGame,
+                      text: 'Finish Game'))
+              : Container(),
         ],
         sideWidgets: [
           Expanded(
