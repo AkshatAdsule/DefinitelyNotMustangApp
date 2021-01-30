@@ -9,9 +9,21 @@ class GameAction {
     this._y,
   );
   //for push, timeStamp is at the beginning of the push
-  GameAction.push(this._action,this._timeStamp, this._x, this._y, this._endX, this._endY, this._pushTime);
-    //_action = ActionType.PUSH;
-  
+  GameAction.push(this._action, this._timeStamp, this._x, this._y, this._endX,
+      this._endY, this._pushTime);
+  //_action = ActionType.PUSH;
+
+  String toString() {
+    return "Type" +
+        _action.toString() +
+        "; Duration: " +
+        _timeStamp.toString() +
+        "; Location: (" +
+        _x.toString() +
+        ", " +
+        _y.toString() +
+        ")";
+  }
 
   double get timeStamp => _timeStamp;
   double get x => _x;
@@ -31,7 +43,6 @@ class GameAction {
       'pushTime': _pushTime,
       'actionType': _action.toString(),
     };
-
   }
 
   GameAction.fromJson(Map<String, dynamic> data) {
@@ -47,6 +58,7 @@ class GameAction {
 }
 
 enum ActionType {
+  TEST,
   FOUL_REG,
   FOUL_TECH,
   FOUL_YELLOW,
