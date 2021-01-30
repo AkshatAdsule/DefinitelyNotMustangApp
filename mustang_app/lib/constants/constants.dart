@@ -28,6 +28,11 @@ class Constants {
   static const double numRows = 8;
 
   //OFFENSE ANALYSIS
+  static const double autonMillisecondLength = 15000;
+  static const double crossInitiationLineValue = 5;
+  static const double lowShotAutonValue = 2;
+  static const double outerShotAutonValue = 4;
+  static const double innerShotAutonValue = 6;
   static const double lowShotValue = 1;
   static const double outerShotValue = 2;
   static const double innerShotValue = 3;
