@@ -58,7 +58,6 @@ class _MapScoutingState extends State<MapScouting> {
   @override
   Widget build(BuildContext context) {
     Widget scoutingMode;
-
     if (_onOffense) {
       scoutingMode = OffenseScouting(
         toggleMode: this.toggleMode,
@@ -74,16 +73,18 @@ class _MapScoutingState extends State<MapScouting> {
     return Scaffold(
       appBar: Header(context, 'Map Scouting'),
       body: Container(
-        child: BlurOverlay(
-          background: scoutingMode,
-          text: Text('Start'),
-          onEnd: () {
-            setState(() {
-              _startedScouting = true;
-              _stopwatch.start();
-            });
-          },
-        ),
+        child: !_startedScouting
+            ? BlurOverlay(
+                background: scoutingMode,
+                text: Text('Start'),
+                onEnd: () {
+                  setState(() {
+                    _startedScouting = true;
+                    _stopwatch.start();
+                  });
+                },
+              )
+            : scoutingMode,
       ),
       bottomNavigationBar: BottomNavBar(context),
     );
