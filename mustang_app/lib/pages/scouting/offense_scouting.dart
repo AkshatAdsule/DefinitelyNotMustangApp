@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/exports/pages.dart';
 import 'dart:math';
 import '../../components/game_action.dart';
@@ -36,14 +37,19 @@ class _OffenseScoutingState extends State<OffenseScouting> {
     _stopwatch = stopwatch;
   }
 
-  /*
-  void addAction(String id) {
-    int now = 111; //TODO: change this to acutal time
-    MapLocation newLoc = new MapLocation();
-    shots.add(new GameAction(ActionType.YASS, 22, -1, -1));
-    print(shots);
+  // /*
+  void addAction(ActionType type) {
+    int now = _stopwatch.elapsedMilliseconds;
+    // MapLocation newLoc = new MapLocation();
+    int x = ZoneGrid.x; //x location
+    int y = ZoneGrid.y; //y location
+    GameAction action =
+        new GameAction(type, now.toDouble(), x.toDouble(), y.toDouble());
+    shots.add(action);
+    print(action);
   }
-*/
+
+  // */
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -58,7 +64,9 @@ class _OffenseScoutingState extends State<OffenseScouting> {
               child: IconButton(
                 icon: Icon(Icons.undo),
                 color: Colors.white,
-                onPressed: () {},
+                onPressed: () {
+                  addAction(ActionType.OTHER_WHEEL_COLOR);
+                },
               ),
             ),
           ),
@@ -133,22 +141,25 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                           game_button.ScoutingButton(
                               style: game_button.ButtonStyle.RAISED,
                               type: game_button.ButtonType.MAKE,
-                              onPressed: () {},
-                              id: '@out_make',
+                              onPressed: () {
+                                addAction(ActionType.SHOT_OUTER);
+                              },
                               text: 'Out'),
                           game_button.ScoutingButton(
                               style: game_button.ButtonStyle.RAISED,
                               type: game_button.ButtonType.MAKE,
-                              onPressed: () {},
-                              id: '@in',
+                              onPressed: () {
+                                addAction(ActionType.SHOT_INNER);
+                              },
                               text: 'In'),
                         ],
                       ),
                       game_button.ScoutingButton(
                           style: game_button.ButtonStyle.RAISED,
                           type: game_button.ButtonType.MISS,
-                          onPressed: () {},
-                          id: '@out_miss',
+                          onPressed: () {
+                            addAction(ActionType.MISSED_OUTER);
+                          },
                           text: ''),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -156,14 +167,16 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                           game_button.ScoutingButton(
                               style: game_button.ButtonStyle.RAISED,
                               type: game_button.ButtonType.MAKE,
-                              onPressed: () {},
-                              id: '@low_make',
+                              onPressed: () {
+                                addAction(ActionType.SHOT_LOW);
+                              },
                               text: 'Low'),
                           game_button.ScoutingButton(
                               style: game_button.ButtonStyle.RAISED,
                               type: game_button.ButtonType.MISS,
-                              onPressed: () {},
-                              id: '@low_miss',
+                              onPressed: () {
+                                addAction(ActionType.MISSED_LOW);
+                              },
                               text: '')
                         ],
                       ),
