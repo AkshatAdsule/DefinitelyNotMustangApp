@@ -57,12 +57,14 @@ class _ZoneGridState extends State<ZoneGrid> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     gradient: _hasSelected && _selectedX == j && _selectedY == i
-                        ? LinearGradient(
-                            begin: Alignment.bottomLeft,
-                            end: Alignment.topRight,
+                        ? RadialGradient(
+                            // center: ,
+                            // begin: Alignment.bottomLeft,
+                            // end: Alignment.topRight,
                             colors: [
-                                Colors.blue.shade100.withOpacity(0.9),
-                                Colors.green.shade100.withOpacity(0.9),
+                                Colors.green,
+                                Colors.green, //.withOpacity(0.9),
+                                Colors.lightGreenAccent.withOpacity(0.9),
                               ])
                         : null),
                 key: Key("($j,$i)"),
