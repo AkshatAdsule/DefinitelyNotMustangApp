@@ -1,9 +1,7 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/game_action.dart';
 import '../backend/team_data_analyzer.dart';
-
 import 'package:mustang_app/constants/constants.dart';
 
 class Analyzer extends StatefulWidget {
@@ -21,13 +19,10 @@ class Analyzer extends StatefulWidget {
 class _AnalyzerState extends State<Analyzer> {
   bool _initialized = false, _hasAnalysis = true;
   String _teamNum, _driveBase;
-  //double _totalDefActionTime, _totalQualGameTime;
   
-  var _allMatches;
-  //for testing if data needs to be collected again or not - if same then don't
-  int _oldAllMatchLength = 0, _totalNumGames = 0;
+  var _allMatches; //array that holds everything
+  int _oldAllMatchLength = 0, _totalNumGames = 0;   //for testing if data needs to be collected again or not - if same then don't
   //array for each type of action, has all instances of that action for all games
-  //FOR NOW ONLY ARRAY LENGTH OF EACH IS USEFUL BUT AFTER FOR LIKE COMMON ZONE AND TIMES N STUFF
   List<GameAction> _foul_reg = [], _foul_tech = [], _foul_yellow = [], _foul_red = [], _foul_disabled = [], _foul_disqual = [],
       _shot_low = [], _shot_outer = [], _shot_inner = [], _missed_low = [], _missed_outer = [],
       _other_climb = [], _other_climb_miss = [], _other_wheel_position = [], _other_wheel_color = [],
@@ -53,20 +48,18 @@ class _AnalyzerState extends State<Analyzer> {
       return;
     }
     //initialize all vars
-
-      var action1 = new GameAction(ActionType.FOUL_REG, 2, 3, 4);
-      var action1a = new GameAction(ActionType.FOUL_TECH, 2, 4, 4);
-      var action1b = new GameAction(ActionType.SHOT_LOW, 5, 0, 13);
-
-      var action2 = new GameAction(ActionType.SHOT_INNER, 6, 15, 1);
-      var action3 = new GameAction(ActionType.PREV_SHOT, 10, 13, 9);
-      var action4 = new GameAction(ActionType.MISSED_OUTER, 15, 2, 4);
-      var action4a = new GameAction(ActionType.MISSED_OUTER, 16, 1, 4);
-      var action5 = new GameAction(ActionType.OTHER_CLIMB_MISS, 19, 3, 3);
-      var action6 = new GameAction(ActionType.SHOT_LOW, 30, 0, 13);
-      var action7 = new GameAction(ActionType.SHOT_INNER, 39, 5, 2);
-      var action8 = new GameAction(ActionType.SHOT_OUTER, 40, 8, 12);
-      var action9 = new GameAction.push(ActionType.PUSH, 44, 10, 5, 8, 4, 3);
+      var action1 = new GameAction(ActionType.FOUL_REG, 2000, 3, 4);
+      var action1a = new GameAction(ActionType.FOUL_TECH, 2000, 4, 4);
+      var action1b = new GameAction(ActionType.SHOT_LOW, 5000, 0, 13);
+      var action2 = new GameAction(ActionType.SHOT_INNER, 6000, 15, 1);
+      var action3 = new GameAction(ActionType.PREV_SHOT, 10000, 13, 9);
+      var action4 = new GameAction(ActionType.MISSED_OUTER, 15000, 2, 4);
+      var action4a = new GameAction(ActionType.MISSED_OUTER, 16000, 1, 4);
+      var action5 = new GameAction(ActionType.OTHER_CLIMB_MISS, 19000, 3, 3);
+      var action6 = new GameAction(ActionType.SHOT_LOW, 30000, 0, 13);
+      var action7 = new GameAction(ActionType.SHOT_INNER, 39000, 5, 2);
+      var action8 = new GameAction(ActionType.SHOT_OUTER, 40000, 8, 12);
+      var action9 = new GameAction.push(ActionType.PUSH, 44000, 10, 5, 8, 4, 3);
 
       var matchArray1 = [action1, action1a, action1b, action2, action3];
       var matchArray2 = [action4, action4a, action5, action6];
@@ -90,32 +83,21 @@ class _AnalyzerState extends State<Analyzer> {
       _collectData();
     }
 
-    
-    //new
     String fouls = "";
-    if (_foul_reg.length > 0){
-      fouls += "Reg Fouls: " + _foul_reg.length.toString();
-    }
-    if (_foul_tech.length > 0){
-      fouls += " Tech Fouls: " + _foul_tech.length.toString();
-    }
-    if (_foul_yellow.length > 0){
-      fouls += " Yellow Fouls: " + _foul_yellow.length.toString();
-    }
-    if (_foul_red.length > 0){
-      fouls += " Red Fouls: " + _foul_red.length.toString();
-    }
-    if (_foul_disabled.length > 0){
-      fouls += " Disabled Fouls: " + _foul_disabled.length.toString();
-    }
-    if (_foul_disqual.length > 0){
-      fouls += " Disqual Fouls: " + _foul_disqual.length.toString();
-    }
+    if (_foul_reg.length > 0){fouls += "Reg Fouls: " + _foul_reg.length.toString();}
+    if (_foul_tech.length > 0){fouls += " Tech Fouls: " + _foul_tech.length.toString();}
+    if (_foul_yellow.length > 0){fouls += " Yellow Fouls: " + _foul_yellow.length.toString();}
+    if (_foul_red.length > 0){fouls += " Red Fouls: " + _foul_red.length.toString();}
+    if (_foul_disabled.length > 0){fouls += " Disabled Fouls: " + _foul_disabled.length.toString();}
+    if (_foul_disqual.length > 0){fouls += " Disqual Fouls: " + _foul_disqual.length.toString();}
 
     return "Team: " + _teamNum
-    + "\nTotal Offense Shooting Points: " + calcTotOffenseShootingPts().round().toString()
+    //+ "\nOffense Shooting Points: " + calcTotOffenseShootingPts().round().toString()
+    + "\nOffense Shooting Points per game: " + (calcTotOffenseShootingPts()/_totalNumGames).round().toString()
     + "\nOverall Climb Accuracy: " + calcTotClimbAccuracy().round().toString() + "%"
-    + "\nTotal points prevented: " + calcTotPtsPrev().round().toString()
+    //+ "\nTotal points prevented: " + calcTotPtsPrev().round().toString()
+    + "\nPts prevented per game: " + (calcTotPtsPrev()/_totalNumGames).round().toString()
+    + "\nShot accuracy: " + calcShotAccuracy().round().toString() + "%"
     + "\n" + fouls;
   }
 
@@ -195,33 +177,38 @@ class _AnalyzerState extends State<Analyzer> {
   }
 
   double calcTotOffenseShootingPts(){
-    //TODO: HIGHER PTS FOR AUTON (time <= 15 sec)
-    
-    double _lowPts = 0.0;
+    double _lowPts = 0.0, _outerPts = 0.0, _innerPts = 0.0;
     for (int i = 0; i < _shot_low.length; i++){
-      if (_shot_low[i].timeStamp <= Constants.autonMillisecondLength){
-        _lowPts += Constants.lowShotAutonValue;
-      } 
-      else{
-        _lowPts += Constants.lowShotValue;
-      }
+      if (_shot_low[i].timeStamp <= Constants.autonMillisecondLength){_lowPts += Constants.lowShotAutonValue;} 
+      else{_lowPts += Constants.lowShotValue;}
     }
-    
-    //double _lowPts = _shot_low.length*Constants.lowShotValue;
-    double _outerPts = _shot_outer.length*Constants.outerShotValue;
-    double _innerPts = _shot_inner.length*Constants.innerShotValue;
+
+    for (int i = 0; i < _shot_outer.length; i++){
+      if (_shot_outer[i].timeStamp <= Constants.autonMillisecondLength){_outerPts += Constants.outerShotAutonValue;} 
+      else{_outerPts += Constants.outerShotValue;}
+    }
+
+    for (int i = 0; i < _shot_inner.length; i++){
+      if (_shot_inner[i].timeStamp <= Constants.autonMillisecondLength){_innerPts += Constants.innerShotAutonValue;} 
+      else{_innerPts += Constants.innerShotValue;}
+    }
+
     double _rotationControl = _other_wheel_color.length*Constants.positionControl;
     double _positionControl = _other_wheel_position.length*Constants.positionControl;
     double _climb = _other_climb.length*Constants.climbValue;
-    
     return _lowPts + _outerPts + _innerPts + _rotationControl + _positionControl + _climb;
+  }
+
+  double calcShotAccuracy(){
+    int _successfulShots = _shot_low.length + _shot_outer.length + _shot_inner.length;
+    int _missedShots = _missed_low.length + _missed_outer.length;
+    return (_successfulShots/(_successfulShots+ _missedShots))*100;
   }
 
   double calcTotClimbAccuracy(){
     double _climb = _other_climb.length*1.0;
     double _miss = _other_climb_miss.length*1.0;
     double _totalClimbAttempts = _climb + _miss;
-
     return (_climb/_totalClimbAttempts)*100.0;
   }
 
@@ -249,15 +236,12 @@ class _AnalyzerState extends State<Analyzer> {
       var _predictedDisplacement = _normalVelocity * _push[i].pushTime;
       var _actualDisplacement = calcDisplacement(_push[i].x, _push[i].y, _push[i].endX, _push[i].endY);
       var _zoneDisplacementDifference = (_predictedDisplacement - _actualDisplacement)/Constants.zoneSideLength;
-      
       _result += (_zoneDisplacementDifference * Constants.zoneDisplacementValue);
-
     }
     return _result;
   }
 
   //returns neg value if displaced in opp direction, positive if displaced in aBot's intended direction
-  //returned in feet
   double calcDisplacement(double x, double y, double endX, double endY){
     var _columnDisplacement = (endX - x)*Constants.zoneSideLength;
     var _rowDisplacement = (endY - y)*Constants.zoneSideLength;
