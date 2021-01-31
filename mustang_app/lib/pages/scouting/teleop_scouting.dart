@@ -4,6 +4,7 @@ import 'endgame_scouting.dart';
 import '../../components/header.dart';
 import '../../backend/scouting_operations.dart';
 
+// ignore: must_be_immutable
 class TeleopScouter extends StatefulWidget {
   static const String route = '/TeleopScouter';
   String _teamNumber, _matchNumber;

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import '../components/header.dart';
-import '../components/bottom_nav_bar.dart';
 import '../components/analyzer.dart';
 import '../utils/symbolplotter.dart';
 import '../backend/team_data_analyzer.dart';
 import '../components/map_scouter_key.dart';
 
+// ignore: must_be_immutable
 class MapAnalysisDisplay extends StatefulWidget {
   static const String route = '/MapAnalysisDisplay';
   String _teamNumber = '';
@@ -115,9 +114,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
           ),
         ),
       ),
-      // TODO: Make sure that bottom nav appears when the end game notes button
-      // is clicked or when the undo button is held down
-      // bottomNavigationBar: BottomNavBar(context),
     );
   }
 }

@@ -5,6 +5,7 @@ import '../../components/game_action.dart';
 import '../../components/game_map.dart';
 import '../../components/game_buttons.dart' as game_button;
 
+// ignore: must_be_immutable
 class OffenseScouting extends StatefulWidget {
   void Function() _toggleMode, _finishGame;
   Stopwatch _stopwatch;
@@ -40,19 +41,16 @@ class _OffenseScoutingState extends State<OffenseScouting> {
     _stopwatch = stopwatch;
   }
 
-  // /*
   void addAction(ActionType type) {
     int now = _stopwatch.elapsedMilliseconds;
-    // MapLocation newLoc = new MapLocation();
-    int x = ZoneGrid.x; //x location
-    int y = ZoneGrid.y; //y location
+    int x = ZoneGrid.x;
+    int y = ZoneGrid.y;
     GameAction action =
         new GameAction(type, now.toDouble(), x.toDouble(), y.toDouble());
     shots.add(action);
     print(action);
   }
 
-  // */
   @override
   Widget build(BuildContext context) {
     return Container(

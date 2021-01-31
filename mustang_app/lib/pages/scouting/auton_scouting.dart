@@ -4,6 +4,7 @@ import '../../components/header.dart';
 import 'teleop_scouting.dart';
 import '../../backend/scouting_operations.dart';
 
+// ignore: must_be_immutable
 class AutonScouter extends StatefulWidget {
   static const String route = '/AutonScouter';
   String _teamNumber, _matchNumber;

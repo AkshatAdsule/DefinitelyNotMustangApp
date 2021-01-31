@@ -4,9 +4,8 @@ import 'package:mustang_app/pages/scouting/map_scouting.dart';
 import 'pit_scouting.dart';
 import '../../components/header.dart';
 import 'auton_scouting.dart';
-import '../../components/bottom_nav_bar.dart';
 import '../../backend/scouting_operations.dart';
-import 'package:flutter/material.dart';
+
 class Scouter extends StatefulWidget {
   static const String route = '/Scouter';
 

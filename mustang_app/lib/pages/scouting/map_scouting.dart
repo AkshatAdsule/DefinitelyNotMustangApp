@@ -6,6 +6,7 @@ import '../../components/header.dart';
 import 'defense_scouting.dart';
 import 'offense_scouting.dart';
 
+// ignore: must_be_immutable
 class MapScouting extends StatefulWidget {
   static const String route = '/MapScouter';
   String _teamNumber, _matchNumber;
@@ -29,6 +30,9 @@ class _MapScoutingState extends State<MapScouting> {
     _teamNumber = teamNumber;
     _matchNumber = matchNumber;
   }
+
+  //TODO: move addAction() here, so that the match has only 1 array of actions
+  // then should use _stopGame, _teamNumber, and _matchNumber
 
   @override
   void initState() {
@@ -87,24 +91,8 @@ class _MapScoutingState extends State<MapScouting> {
             : scoutingMode,
       ),
       bottomNavigationBar: BottomNavBar(context),
+      // TODO: Make sure that bottom nav appears when the end game notes button
+      // is clicked or when the undo button is held down
     );
   }
 }
-
-// class MapLocation extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return new GestureDetector(
-//       onTap: () => print('tapped!'),
-//       onTapDown: (TapDownDetails details) => _onTapDown(details),
-//     );
-//   }
-
-//   _onTapDown(TapDownDetails details) {
-//     var x = details.globalPosition.dx;
-//     var y = details.globalPosition.dy;
-//     // or user the local position method to get the offset
-//     print(details.localPosition);
-//     print("tap down " + x.toString() + ", " + y.toString());
-//   }
-// }

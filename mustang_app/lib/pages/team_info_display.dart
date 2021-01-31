@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../constants/constants.dart';
 import '../components/header.dart';
 
+// ignore: must_be_immutable
 class TeamInfoDisplay extends StatefulWidget {
   String _team;
   static const String route = '/TeamInfoDisplay';

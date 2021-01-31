@@ -4,6 +4,7 @@ import 'match_end_scouting.dart';
 import '../../backend/scouting_operations.dart';
 import '../../components/header.dart';
 
+// ignore: must_be_immutable
 class EndgameScouter extends StatefulWidget {
   static const String route = '/EndgameScouter';
   String _teamNumber, _matchNumber;

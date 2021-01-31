@@ -25,23 +25,23 @@ class BottomNavBar extends BottomNavigationBar {
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              title: Text('Home'),
+              label: 'Home',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.calendar_today),
-              title: Text('Calendar'),
+              label: 'Calendar',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.list),
-              title: Text('Scouter'),
+              label: 'Scouter',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.search),
-              title: Text('Data'),
+              label: 'Data',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.edit),
-              title: Text('Draw'),
+              label: 'Draw',
             ),
           ],
           currentIndex: _selectedIndex,

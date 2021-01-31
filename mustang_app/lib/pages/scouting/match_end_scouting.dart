@@ -6,6 +6,7 @@ import '../../backend/scouting_operations.dart';
 import '../../components/header.dart';
 import 'post_scouter.dart';
 
+// ignore: must_be_immutable
 class MatchEndScouter extends StatefulWidget {
   static const String route = '/MatchEndScouter';
   String _teamNumber, _matchNumber;
@@ -25,7 +26,6 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
   String _matchNumber;
 
   String _matchResult;
-  bool _noAction = false;
   TextEditingController _finalCommentsController = TextEditingController();
 
   ScoutingOperations db = new ScoutingOperations();

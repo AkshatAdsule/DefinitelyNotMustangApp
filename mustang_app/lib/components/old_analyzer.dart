@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../backend/team_data_analyzer.dart';
 import 'package:mustang_app/constants/constants.dart';
 
+// ignore: must_be_immutable
 class OldAnalyzer extends StatefulWidget {
   String _teamNum;
   OldAnalyzer(String teamNum) {
