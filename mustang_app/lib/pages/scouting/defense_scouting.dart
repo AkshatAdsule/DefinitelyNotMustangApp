@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/components/game_action.dart';
+import 'package:mustang_app/components/zone_grid.dart';
 import '../../components/game_map.dart';
 
 import '../../components/game_buttons.dart' as game_button;
 
+// ignore: must_be_immutable
 class DefenseScouting extends StatefulWidget {
   void Function() _toggleMode, _finishGame;
   Stopwatch _stopwatch;
@@ -25,13 +28,73 @@ class _DefenseScoutingState extends State<DefenseScouting> {
   void Function() _toggleMode, _finishGame;
   Stopwatch _stopwatch;
 
+  List<GameAction> def = new List<GameAction>();
+
   _DefenseScoutingState(
       {void Function() toggleMode,
       void Function() finishGame,
       Stopwatch stopwatch}) {
     _toggleMode = toggleMode;
-    stopwatch = _stopwatch;
+    _stopwatch = stopwatch;
     _finishGame = finishGame;
+  }
+
+// TODO: move addAction() to map scouting
+  void addAction(ActionType type) {
+    int now = _stopwatch.elapsedMilliseconds;
+    int x = ZoneGrid.x;
+    int y = ZoneGrid.y;
+    GameAction action =
+        new GameAction(type, now.toDouble(), x.toDouble(), y.toDouble());
+    def.add(action);
+    print(action);
+  }
+
+  ActionType labelAction(String action) {
+    // TODO: Add long switch for all types
+    print(action);
+    return ActionType.TEST;
+  }
+
+  ActionType actionDeterminer(BuildContext context, String action) {
+    List<String> types = new List<String>();
+    List<FlatButton> optionButtons = new List<FlatButton>();
+
+    switch (action) {
+      case 'Foul':
+        types = ['Reg', 'Tech', 'Red', 'Yellow', 'Disabled', 'Disqual'];
+        break;
+      case 'Wheel':
+        types = ['Rotate', 'Color'];
+        break;
+      case 'Climb':
+        types = ['Make', 'Miss'];
+        break;
+    }
+
+    for (String type in types) {
+      FlatButton option = FlatButton(
+        child: Text(type),
+        onPressed: () {
+          labelAction(action + "_" + type);
+        },
+      );
+      optionButtons.add(option);
+    }
+
+    // set up the AlertDialog
+    AlertDialog popUp = AlertDialog(
+      title: Text(action),
+      actions: optionButtons,
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return popUp;
+      },
+    );
   }
 
   @override
@@ -89,7 +152,9 @@ class _DefenseScoutingState extends State<DefenseScouting> {
                   game_button.ScoutingButton(
                       style: game_button.ButtonStyle.RAISED,
                       type: game_button.ButtonType.ELEMENT,
-                      onPressed: () {},
+                      onPressed: () {
+                        // actionDeterminer(context, 'Foul');
+                      },
                       text: 'Foul'),
                 ],
               ),

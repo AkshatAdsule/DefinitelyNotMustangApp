@@ -24,6 +24,7 @@ class _ZoneGridState extends State<ZoneGrid> {
   int _selectedX = 0, _selectedY = 0;
   bool _hasSelected;
 
+  //TODO: fix x,y
   Function(int x, int y) _onTap;
   _ZoneGridState(this._onTap);
 
