@@ -112,7 +112,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
                 Image.asset('assets/croppedmap.png', fit: BoxFit.contain),
                 //shading,
                 myAnalyzer,
-                plotter,
+                //plotter,
                 MapScouterKey()
               ],
             ),

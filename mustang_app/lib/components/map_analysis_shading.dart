@@ -23,19 +23,18 @@ class _MapAnalysisShadingState extends State<MapAnalysisShading> {
   Widget build(BuildContext context) {
     //final title = 'Analysis';
 
-    return MaterialApp(
+    //return MaterialApp(
       //title: title,
-      home: Scaffold(
-        appBar: AppBar(
+      //home: Scaffold(
+        //appBar: AppBar(
           //title: Text(title),
-        ),
-        body: GridView.count(
+        //),
+         return new GridView.count(
           crossAxisCount: Constants.zoneColumns,
           children: List.generate(Constants.zoneRows*Constants.zoneColumns, (index) {
             var container = Container(
                 margin: const EdgeInsets.all(0.5),
                 color: _getColor(index),
-                //color: Colors.green[600],
                 width: 48.0,
                 height: 48.0,
                 //'Item $index',
@@ -45,8 +44,8 @@ class _MapAnalysisShadingState extends State<MapAnalysisShading> {
               child: container,
             );
           }),
-        ),  
-      ),
-    );
+        );  
+      //);
+    //);
   } 
 }
