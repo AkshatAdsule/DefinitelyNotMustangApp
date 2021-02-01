@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/components/map_analysis_shading.dart';
+import 'package:mustang_app/constants/constants.dart';
 import '../components/analyzer.dart';
 import '../utils/symbolplotter.dart';
 import '../backend/team_data_analyzer.dart';
@@ -21,14 +23,16 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
   Analyzer myAnalyzer;
   String _teamNumber;
   SymbolPlotter plotter;
-
+  MapAnalysisShading shading;
 
   _MapAnalysisDisplayState(String teamNumber) {
     myAnalyzer = new Analyzer(teamNumber);
     _teamNumber = teamNumber;
     plotter = new SymbolPlotter(_getPoints());
+    shading = new MapAnalysisShading();
   }
 
+  
   List<PlotPoint> _getPoints() {
     List<PlotPoint> points = new List<PlotPoint>();
     if (TeamDataAnalyzer.teamAverages[_teamNumber] != null &&
@@ -105,7 +109,8 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Image.asset('assets/map.png', fit: BoxFit.contain),
+                Image.asset('assets/croppedmap.png', fit: BoxFit.contain),
+                //shading,
                 myAnalyzer,
                 plotter,
                 MapScouterKey()
@@ -115,5 +120,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         ),
       ),
     );
+    
   }
 }

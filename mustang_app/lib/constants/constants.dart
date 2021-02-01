@@ -24,8 +24,6 @@ class Constants {
   static const double swerveSpeed = 10;
 
   static const double zoneSideLength = 3.3;
-  static const double numColumns = 16;
-  static const double numRows = 8;
 
   //OFFENSE ANALYSIS
   static const double autonMillisecondLength = 15000;
