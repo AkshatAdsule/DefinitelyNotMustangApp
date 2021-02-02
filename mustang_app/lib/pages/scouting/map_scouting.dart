@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/blur_overlay.dart';
+import 'package:mustang_app/components/selectable_zone_grid.dart';
+import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/exports/pages.dart';
 import '../../components/bottom_nav_bar.dart';
 import '../../components/header.dart';
@@ -25,6 +27,7 @@ class _MapScoutingState extends State<MapScouting> {
   bool _onOffense, _startedScouting, _stopGame;
   Stopwatch _stopwatch;
   String _teamNumber, _matchNumber;
+  ZoneGrid _zoneGrid;
 
   _MapScoutingState(String teamNumber, String matchNumber) {
     _teamNumber = teamNumber;
@@ -41,6 +44,8 @@ class _MapScoutingState extends State<MapScouting> {
     _startedScouting = false;
     _stopGame = false;
     _stopwatch = new Stopwatch();
+    _zoneGrid = SelectableZoneGrid(GlobalKey(), (int x, int y) {});
+    print('init state');
   }
 
   void toggleMode() {
@@ -66,11 +71,13 @@ class _MapScoutingState extends State<MapScouting> {
       scoutingMode = OffenseScouting(
         toggleMode: this.toggleMode,
         stopwatch: _stopwatch,
+        zoneGrid: _zoneGrid,
       );
     } else {
       scoutingMode = DefenseScouting(
         toggleMode: this.toggleMode,
         stopwatch: _stopwatch,
+        zoneGrid: _zoneGrid,
       );
     }
 

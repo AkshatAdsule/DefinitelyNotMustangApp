@@ -9,19 +9,25 @@ import '../../components/game_buttons.dart' as game_button;
 class OffenseScouting extends StatefulWidget {
   void Function() _toggleMode, _finishGame;
   Stopwatch _stopwatch;
+  ZoneGrid _zoneGrid;
 
   OffenseScouting(
       {void Function() toggleMode,
       void Function() finishGame,
-      Stopwatch stopwatch}) {
+      Stopwatch stopwatch,
+      ZoneGrid zoneGrid}) {
     _toggleMode = toggleMode;
     _stopwatch = stopwatch;
     _finishGame = finishGame;
+    _zoneGrid = zoneGrid;
   }
 
   @override
   _OffenseScoutingState createState() => _OffenseScoutingState(
-      toggleMode: _toggleMode, finishGame: _finishGame, stopwatch: _stopwatch);
+      toggleMode: _toggleMode,
+      finishGame: _finishGame,
+      stopwatch: _stopwatch,
+      zoneGrid: _zoneGrid);
 }
 
 class _OffenseScoutingState extends State<OffenseScouting> {
@@ -29,32 +35,40 @@ class _OffenseScoutingState extends State<OffenseScouting> {
   Stopwatch _stopwatch;
 
   double _sliderValue = 2;
-
+  ZoneGrid _zoneGrid;
   List<GameAction> shots = new List<GameAction>();
 
   _OffenseScoutingState(
       {void Function() toggleMode,
       void Function() finishGame,
-      Stopwatch stopwatch}) {
+      Stopwatch stopwatch,
+      ZoneGrid zoneGrid}) {
     _toggleMode = toggleMode;
     _finishGame = finishGame;
     _stopwatch = stopwatch;
+    _zoneGrid = zoneGrid;
   }
 
   void addAction(ActionType type) {
     int now = _stopwatch.elapsedMilliseconds;
-    int x = ZoneGrid.x;
-    int y = ZoneGrid.y;
-    GameAction action =
-        new GameAction(type, now.toDouble(), x.toDouble(), y.toDouble());
-    shots.add(action);
-    print(action);
+    int x = _zoneGrid.x;
+    int y = _zoneGrid.y;
+    bool hasSelected = _zoneGrid.hasSelected;
+    if (hasSelected) {
+      GameAction action =
+          new GameAction(type, now.toDouble(), x.toDouble(), y.toDouble());
+      shots.add(action);
+      print(action);
+    } else {
+      print('No location selected');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: GameMap(
+        zoneGrid: _zoneGrid,
         imageChildren: [
           GameMapChild(
             align: Alignment.bottomLeft,

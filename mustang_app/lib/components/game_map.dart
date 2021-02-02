@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/components/selectable_zone_grid.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/constants/constants.dart';
 
 // ignore: must_be_immutable
 class GameMap extends StatelessWidget {
   List<Widget> _imageChildren = [], _sideWidgets = [];
-  Function(int x, int y) _onTap;
   GameMap(
       {List<Widget> imageChildren = const [],
       List<Widget> sideWidgets = const [],
-      Function(int x, int y) onTap}) {
+      ZoneGrid zoneGrid}) {
     if (Constants.fieldColor == 0) {
       _imageChildren.add(Image.asset('assets/blue_field.png'));
     } else if (Constants.fieldColor == 1) {
       _imageChildren.add(Image.asset('assets/red_field.png'));
     }
-    _imageChildren.add(
-      ZoneGrid(onTap ?? (int x, int y) {}),
-    );
+    _imageChildren.add(zoneGrid ?? Container());
     _imageChildren.addAll(imageChildren);
     _sideWidgets = sideWidgets;
-    _onTap = onTap ?? (int x, int y) {};
   }
 
   // Set() location(x, y) {

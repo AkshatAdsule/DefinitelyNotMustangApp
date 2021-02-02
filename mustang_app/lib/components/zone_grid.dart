@@ -2,45 +2,60 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/constants/constants.dart';
 
 class ZoneGrid extends StatefulWidget {
-  static _ZoneGridState _zoneGridState;
+  _ZoneGridState _zoneGridState;
+  Function(int x, int y) _onTap;
+  Widget Function(
+          int x, int y, bool isSelected, double cellWidth, double cellHeight)
+      _createCell;
 
-  ZoneGrid(Function(int x, int y) onTap) {
-    _zoneGridState = _ZoneGridState(onTap);
-  }
+  ZoneGrid(
+      Key key,
+      Function(int x, int y) onTap,
+      Widget Function(int x, int y, bool isSelected, double cellWidth,
+              double cellHeight)
+          createCell)
+      : _zoneGridState = _ZoneGridState(onTap, createCell),
+        _onTap = onTap,
+        _createCell = createCell,
+        super(key: key);
 
-  static int get x {
-    return _zoneGridState.x;
-  }
+  int get x => _zoneGridState.x;
 
-  static int get y {
-    return _zoneGridState.y;
-  }
+  int get y => _zoneGridState.y;
+
+  bool get hasSelected => _zoneGridState.hasSelected;
 
   @override
-  _ZoneGridState createState() => _zoneGridState;
+  _ZoneGridState createState() {
+    _zoneGridState = _ZoneGridState(_onTap, _createCell);
+    return _zoneGridState;
+  }
 }
 
 class _ZoneGridState extends State<ZoneGrid> {
-  int _selectedX = 0, _selectedY = 0;
+  int _selectedX, _selectedY;
   bool _hasSelected;
 
-  //TODO: fix x,y
   Function(int x, int y) _onTap;
-  _ZoneGridState(this._onTap);
+  Widget Function(
+          int x, int y, bool isSelected, double cellWidth, double cellHeight)
+      _createCell;
+
+  _ZoneGridState(this._onTap, this._createCell);
 
   @override
   void initState() {
     super.initState();
     _hasSelected = false;
+    _selectedX = 0;
+    _selectedY = 0;
   }
 
-  int get x {
-    return _selectedX;
-  }
+  int get x => _selectedX;
 
-  int get y {
-    return _selectedY;
-  }
+  int get y => _selectedY;
+
+  bool get hasSelected => _hasSelected;
 
   List<TableRow> _getTableContents(double width, double height) {
     List<TableRow> tableRows = [];
@@ -63,26 +78,12 @@ class _ZoneGridState extends State<ZoneGrid> {
                   _selectedY = i;
                 });
               },
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 500),
-                curve: Curves.easeOut,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    gradient: _hasSelected && _selectedX == j && _selectedY == i
-                        ? RadialGradient(
-                            // center: ,
-                            // begin: Alignment.bottomLeft,
-                            // end: Alignment.topRight,
-                            colors: [
-                                Colors.green,
-                                Colors.green, //.withOpacity(0.9),
-                                Colors.lightGreenAccent.withOpacity(0.9),
-                              ])
-                        : null),
-                key: Key("($j,$i)"),
-                height: cellHeight,
-                width: cellWidth,
-              ),
+              child: _createCell(
+                  j,
+                  i,
+                  _hasSelected && _selectedX == j && _selectedY == i,
+                  cellWidth,
+                  cellHeight),
             ),
           ),
         );

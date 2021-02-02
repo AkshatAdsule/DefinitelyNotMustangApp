@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/game_action.dart';
+import 'package:mustang_app/components/selectable_zone_grid.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import '../../components/game_map.dart';
 
@@ -9,45 +10,58 @@ import '../../components/game_buttons.dart' as game_button;
 class DefenseScouting extends StatefulWidget {
   void Function() _toggleMode, _finishGame;
   Stopwatch _stopwatch;
+  ZoneGrid _zoneGrid;
 
   DefenseScouting(
       {void Function() toggleMode,
       void Function() finishGame,
-      Stopwatch stopwatch}) {
+      Stopwatch stopwatch,
+      ZoneGrid zoneGrid}) {
     _toggleMode = toggleMode;
     _stopwatch = stopwatch;
     _finishGame = finishGame;
+    _zoneGrid = zoneGrid;
   }
 
   @override
   _DefenseScoutingState createState() => _DefenseScoutingState(
-      toggleMode: _toggleMode, finishGame: _finishGame, stopwatch: _stopwatch);
+      toggleMode: _toggleMode,
+      finishGame: _finishGame,
+      stopwatch: _stopwatch,
+      zoneGrid: _zoneGrid);
 }
 
 class _DefenseScoutingState extends State<DefenseScouting> {
   void Function() _toggleMode, _finishGame;
   Stopwatch _stopwatch;
-
+  ZoneGrid _zoneGrid;
   List<GameAction> def = new List<GameAction>();
 
   _DefenseScoutingState(
       {void Function() toggleMode,
       void Function() finishGame,
-      Stopwatch stopwatch}) {
+      Stopwatch stopwatch,
+      ZoneGrid zoneGrid}) {
     _toggleMode = toggleMode;
     _stopwatch = stopwatch;
     _finishGame = finishGame;
+    _zoneGrid = zoneGrid;
   }
 
 // TODO: move addAction() to map scouting
   void addAction(ActionType type) {
     int now = _stopwatch.elapsedMilliseconds;
-    int x = ZoneGrid.x;
-    int y = ZoneGrid.y;
-    GameAction action =
-        new GameAction(type, now.toDouble(), x.toDouble(), y.toDouble());
-    def.add(action);
-    print(action);
+    int x = _zoneGrid.x;
+    int y = _zoneGrid.y;
+    bool hasSelected = _zoneGrid.hasSelected;
+    if (hasSelected) {
+      GameAction action =
+          new GameAction(type, now.toDouble(), x.toDouble(), y.toDouble());
+      def.add(action);
+      print(action);
+    } else {
+      print('No location selected');
+    }
   }
 
   ActionType labelAction(String action) {
@@ -99,8 +113,16 @@ class _DefenseScoutingState extends State<DefenseScouting> {
 
   @override
   Widget build(BuildContext context) {
+    print("Defense: " +
+        _zoneGrid.hasSelected.toString() +
+        " " +
+        _zoneGrid.x.toString() +
+        " " +
+        _zoneGrid.y.toString());
+
     return Container(
       child: GameMap(
+        zoneGrid: _zoneGrid,
         imageChildren: [
           GameMapChild(
             align: Alignment.bottomLeft,
