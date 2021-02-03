@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
 
   Route<dynamic> _onGenerateRoute(RouteSettings settings) {
     Map<String, dynamic> args = settings.arguments;
-    switch(settings.name) {
+    switch (settings.name) {
       case Calendar.route:
         return MaterialPageRoute(
           builder: (context) => Calendar(),
@@ -22,35 +22,13 @@ class MyApp extends StatelessWidget {
           builder: (context) => Scouter(),
           settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
         );
-      case AutonScouter.route:
-        return MaterialPageRoute(
-          builder: (context) => AutonScouter(
-            teamNumber: args['teamNumber'],
-            matchNumber: args['matchNumber'],
-          ),
-          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
-        );
-      case TeleopScouter.route:
-        return MaterialPageRoute(
-          builder: (context) => TeleopScouter(
-            teamNumber: args['teamNumber'],
-            matchNumber: args['matchNumber'],
-          ),
-          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
-        );
-      case EndgameScouter.route:
-        return MaterialPageRoute(
-          builder: (context) => EndgameScouter(
-            teamNumber: args['teamNumber'],
-            matchNumber: args['matchNumber'],
-          ),
-          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
-        );
       case MatchEndScouter.route:
         return MaterialPageRoute(
           builder: (context) => MatchEndScouter(
             teamNumber: args['teamNumber'],
             matchNumber: args['matchNumber'],
+            actions: args['actions'],
+            allianceColor: args['allianceColor'],
           ),
           settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
         );
@@ -62,7 +40,7 @@ class MyApp extends StatelessWidget {
       case MapAnalysisDisplay.route:
         return MaterialPageRoute(
           builder: (context) => MapAnalysisDisplay(
-            teamNumber: args['teamNumber'], 
+            teamNumber: args['teamNumber'],
           ),
           settings: rotationSettings(settings, ScreenOrientation.landscapeOnly),
         );
@@ -88,7 +66,11 @@ class MyApp extends StatelessWidget {
         );
       case MapScouting.route:
         return MaterialPageRoute(
-          builder: (context) => MapScouting(),
+          builder: (context) => MapScouting(
+            allianceColor: args['allianceColor'],
+            teamNumber: args['teamNumber'],
+            matchNumber: args['matchNumber'],
+          ),
           settings: rotationSettings(settings, ScreenOrientation.landscapeOnly),
         );
       default:

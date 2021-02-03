@@ -8,13 +8,19 @@ class GameAction {
     this._x,
     this._y,
   );
+
+  GameAction.other(this._action, this._timeStamp) {
+    _x = -1;
+    _y = -1;
+  }
+
   //for push, timeStamp is at the beginning of the push
   GameAction.push(this._action, this._timeStamp, this._x, this._y, this._endX,
       this._endY, this._pushTime);
   //_action = ActionType.PUSH;
 
   String toString() {
-    return "Type" +
+    return "Type: " +
         _action.toString() +
         "; Duration: " +
         _timeStamp.toString() +
@@ -55,6 +61,18 @@ class GameAction {
     _action = ActionType.values
         .firstWhere((element) => element.toString() == data['actionType']);
   }
+
+  static ActionType stringToActionType(String str) {
+    print("String: " + str);
+    ActionType action = ActionType.values
+        .firstWhere((e) => e.toString() == 'ActionType.' + str);
+    print("Enum:" + action.toString());
+    return action;
+  }
+
+  static bool requiresLocation(ActionType type) {
+    return !(type.toString().contains("OTHER"));
+  }
 }
 
 enum ActionType {
@@ -73,8 +91,8 @@ enum ActionType {
   OTHER_CLIMB,
   OTHER_CLIMB_MISS,
   OTHER_WHEEL_POSITION,
-  OTHER_WHEEL_COLOR,
+  OTHER_WHEEL_ROTATION,
   PREV_SHOT,
   PREV_INTAKE,
-  PUSH
+  PUSH,
 }

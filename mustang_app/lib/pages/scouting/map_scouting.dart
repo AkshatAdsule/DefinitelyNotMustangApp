@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mustang_app/components/blur_overlay.dart';
+import 'package:mustang_app/components/game_action.dart';
+import 'package:mustang_app/components/selectable_zone_grid.dart';
+import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/exports/pages.dart';
 import '../../components/bottom_nav_bar.dart';
 import '../../components/header.dart';
@@ -9,38 +13,55 @@ import 'offense_scouting.dart';
 // ignore: must_be_immutable
 class MapScouting extends StatefulWidget {
   static const String route = '/MapScouter';
-  String _teamNumber, _matchNumber;
+  String _teamNumber, _matchNumber, _allianceColor;
 
-  MapScouting({String teamNumber, String matchNumber}) {
+  MapScouting({String teamNumber, String matchNumber, String allianceColor}) {
     _teamNumber = teamNumber;
     _matchNumber = matchNumber;
+    _allianceColor = allianceColor;
   }
 
   @override
   _MapScoutingState createState() =>
-      _MapScoutingState(_teamNumber, _matchNumber);
+      _MapScoutingState(_teamNumber, _matchNumber, _allianceColor);
 }
 
 class _MapScoutingState extends State<MapScouting> {
-  bool _onOffense, _startedScouting, _stopGame;
+  bool _onOffense, _startedScouting;
   Stopwatch _stopwatch;
-  String _teamNumber, _matchNumber;
+  String _teamNumber, _matchNumber, _allianceColor;
+  ZoneGrid _zoneGrid;
+  List<GameAction> _actions;
+  OffenseScouting offenseScouting;
+  DefenseScouting defenseScouting;
 
-  _MapScoutingState(String teamNumber, String matchNumber) {
-    _teamNumber = teamNumber;
-    _matchNumber = matchNumber;
-  }
-
-  //TODO: move addAction() here, so that the match has only 1 array of actions
-  // then should use _stopGame, _teamNumber, and _matchNumber
+  _MapScoutingState(this._teamNumber, this._matchNumber, this._allianceColor);
 
   @override
   void initState() {
     super.initState();
     _onOffense = true;
     _startedScouting = false;
-    _stopGame = false;
     _stopwatch = new Stopwatch();
+    _zoneGrid = SelectableZoneGrid(GlobalKey(), (int x, int y) {});
+    _actions = [];
+    offenseScouting = OffenseScouting(
+      key: GlobalKey(),
+      toggleMode: this.toggleMode,
+      stopwatch: _stopwatch,
+      zoneGrid: _zoneGrid,
+      finishGame: this.finishGame,
+      addAction: this.addAction,
+      undo: this.undo,
+    );
+    defenseScouting = DefenseScouting(
+      toggleMode: this.toggleMode,
+      stopwatch: _stopwatch,
+      zoneGrid: _zoneGrid,
+      finishGame: this.finishGame,
+      addAction: this.addAction,
+      undo: this.undo,
+    );
   }
 
   void toggleMode() {
@@ -49,8 +70,37 @@ class _MapScoutingState extends State<MapScouting> {
     });
   }
 
-  void endGame() {
-    _stopGame = true;
+  void addAction(ActionType type) {
+    int now = _stopwatch.elapsedMilliseconds;
+    int x = _zoneGrid.x;
+    int y = _zoneGrid.y;
+    bool hasSelected = _zoneGrid.hasSelected;
+    GameAction action;
+    if (hasSelected) {
+      action = new GameAction(type, now.toDouble(), x.toDouble(), y.toDouble());
+    } else if (!GameAction.requiresLocation(type)) {
+      action = GameAction.other(type, now.toDouble());
+    } else {
+      print('No location selected');
+      return;
+    }
+    _actions.add(action);
+    print(action);
+  }
+
+  void finishGame(BuildContext context) {
+    Navigator.pushNamed(context, MatchEndScouter.route, arguments: {
+      'teamNumber': _teamNumber,
+      'matchNumber': _matchNumber,
+      'actions': _actions,
+      'allianceColor': _allianceColor,
+    });
+  }
+
+  void undo() {
+    if (_actions.length > 0) {
+      _actions.removeLast();
+    }
   }
 
   @override
@@ -61,17 +111,13 @@ class _MapScoutingState extends State<MapScouting> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
     Widget scoutingMode;
     if (_onOffense) {
-      scoutingMode = OffenseScouting(
-        toggleMode: this.toggleMode,
-        stopwatch: _stopwatch,
-      );
+      scoutingMode = offenseScouting;
     } else {
-      scoutingMode = DefenseScouting(
-        toggleMode: this.toggleMode,
-        stopwatch: _stopwatch,
-      );
+      scoutingMode = defenseScouting;
     }
 
     return Scaffold(

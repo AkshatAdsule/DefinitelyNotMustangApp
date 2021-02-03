@@ -7,54 +7,78 @@ import '../../components/game_buttons.dart' as game_button;
 
 // ignore: must_be_immutable
 class OffenseScouting extends StatefulWidget {
-  void Function() _toggleMode, _finishGame;
+  void Function() _toggleMode, _undo;
+  void Function(BuildContext context) _finishGame;
+  void Function(ActionType type) _addAction;
   Stopwatch _stopwatch;
+  ZoneGrid _zoneGrid;
 
-  OffenseScouting(
-      {void Function() toggleMode,
-      void Function() finishGame,
-      Stopwatch stopwatch}) {
-    _toggleMode = toggleMode;
-    _stopwatch = stopwatch;
-    _finishGame = finishGame;
-  }
+  OffenseScouting({
+    Key key,
+    void Function() toggleMode,
+    void Function() undo,
+    void Function(BuildContext context) finishGame,
+    void Function(ActionType type) addAction,
+    Stopwatch stopwatch,
+    ZoneGrid zoneGrid,
+  })  : _toggleMode = toggleMode,
+        _stopwatch = stopwatch,
+        _finishGame = finishGame,
+        _zoneGrid = zoneGrid,
+        _addAction = addAction,
+        _undo = undo,
+        super(key: key);
 
   @override
   _OffenseScoutingState createState() => _OffenseScoutingState(
-      toggleMode: _toggleMode, finishGame: _finishGame, stopwatch: _stopwatch);
+      toggleMode: _toggleMode,
+      finishGame: _finishGame,
+      stopwatch: _stopwatch,
+      zoneGrid: _zoneGrid,
+      addAction: _addAction,
+      undo: _undo);
 }
 
 class _OffenseScoutingState extends State<OffenseScouting> {
-  void Function() _toggleMode, _finishGame;
+  void Function() _toggleMode, _undo;
+  void Function(BuildContext context) _finishGame;
+  void Function(ActionType type) _addAction;
+
   Stopwatch _stopwatch;
 
-  double _sliderValue = 2;
+  double _sliderValue;
+  bool _completedRotationControl, _completedPositionControl;
 
-  List<GameAction> shots = new List<GameAction>();
+  ZoneGrid _zoneGrid;
 
   _OffenseScoutingState(
       {void Function() toggleMode,
-      void Function() finishGame,
-      Stopwatch stopwatch}) {
+      void Function() undo,
+      void Function(BuildContext context) finishGame,
+      void Function(ActionType type) addAction,
+      Stopwatch stopwatch,
+      ZoneGrid zoneGrid}) {
     _toggleMode = toggleMode;
     _finishGame = finishGame;
     _stopwatch = stopwatch;
+    _zoneGrid = zoneGrid;
+    _addAction = addAction;
+    _undo = undo;
   }
 
-  void addAction(ActionType type) {
-    int now = _stopwatch.elapsedMilliseconds;
-    int x = ZoneGrid.x;
-    int y = ZoneGrid.y;
-    GameAction action =
-        new GameAction(type, now.toDouble(), x.toDouble(), y.toDouble());
-    shots.add(action);
-    print(action);
+  @override
+  void initState() {
+    super.initState();
+    _sliderValue = 2;
+    _completedRotationControl = false;
+    _completedPositionControl = false;
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: GameMap(
+        zoneGrid: _zoneGrid,
         imageChildren: [
           GameMapChild(
             align: Alignment.bottomLeft,
@@ -65,26 +89,39 @@ class _OffenseScoutingState extends State<OffenseScouting> {
               child: IconButton(
                 icon: Icon(Icons.undo),
                 color: Colors.white,
-                onPressed: () {
-                  addAction(ActionType.OTHER_WHEEL_COLOR);
-                },
+                onPressed: () => _undo(),
               ),
             ),
           ),
-          GameMapChild(
-              right: 65,
-              bottom: 17.5,
-              align: Alignment.bottomCenter,
-              child: CircleAvatar(
-                backgroundColor: Colors.green,
-                child: IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.donut_large,
-                    color: Colors.white,
-                  ),
-                ),
-              )),
+          _completedRotationControl && _completedPositionControl
+              ? Container()
+              : GameMapChild(
+                  right: 65,
+                  bottom: 17.5,
+                  align: Alignment.bottomCenter,
+                  child: CircleAvatar(
+                    backgroundColor:
+                        !_completedRotationControl ? Colors.green : Colors.blue,
+                    child: IconButton(
+                      onPressed: () {
+                        if (_completedRotationControl) {
+                          _addAction(ActionType.OTHER_WHEEL_ROTATION);
+                          setState(() {
+                            _completedRotationControl = true;
+                          });
+                        } else {
+                          _addAction(ActionType.OTHER_WHEEL_POSITION);
+                          setState(() {
+                            _completedPositionControl = true;
+                          });
+                        }
+                      },
+                      icon: Icon(
+                        Icons.donut_large,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )),
           _stopwatch.elapsedMilliseconds > 120000
               ? GameMapChild(
                   right: 30,
@@ -117,7 +154,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                   child: game_button.ScoutingButton(
                       style: game_button.ButtonStyle.RAISED,
                       type: game_button.ButtonType.PAGEBUTTON,
-                      onPressed: _finishGame,
+                      onPressed: () => _finishGame(context),
                       text: 'Finish Game'))
               : Container(),
         ],
@@ -147,14 +184,14 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                               style: game_button.ButtonStyle.RAISED,
                               type: game_button.ButtonType.MAKE,
                               onPressed: () {
-                                addAction(ActionType.SHOT_OUTER);
+                                _addAction(ActionType.SHOT_OUTER);
                               },
                               text: 'Out'),
                           game_button.ScoutingButton(
                               style: game_button.ButtonStyle.RAISED,
                               type: game_button.ButtonType.MAKE,
                               onPressed: () {
-                                addAction(ActionType.SHOT_INNER);
+                                _addAction(ActionType.SHOT_INNER);
                               },
                               text: 'In'),
                         ],
@@ -163,7 +200,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                           style: game_button.ButtonStyle.RAISED,
                           type: game_button.ButtonType.MISS,
                           onPressed: () {
-                            addAction(ActionType.MISSED_OUTER);
+                            _addAction(ActionType.MISSED_OUTER);
                           },
                           text: ''),
                       Row(
@@ -173,14 +210,14 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                               style: game_button.ButtonStyle.RAISED,
                               type: game_button.ButtonType.MAKE,
                               onPressed: () {
-                                addAction(ActionType.SHOT_LOW);
+                                _addAction(ActionType.SHOT_LOW);
                               },
                               text: 'Low'),
                           game_button.ScoutingButton(
                               style: game_button.ButtonStyle.RAISED,
                               type: game_button.ButtonType.MISS,
                               onPressed: () {
-                                addAction(ActionType.MISSED_LOW);
+                                _addAction(ActionType.MISSED_LOW);
                               },
                               text: '')
                         ],

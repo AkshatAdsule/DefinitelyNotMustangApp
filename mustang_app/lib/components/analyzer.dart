@@ -47,7 +47,7 @@ class _AnalyzerState extends State<Analyzer> {
       _otherClimb = [],
       _otherClimbMiss = [],
       _otherWheelPosition = [],
-      _otherWheelColor = [],
+      _otherWheelRotation = [],
       _prevShot = [],
       _prevIntake = [],
       _push = [];
@@ -229,9 +229,9 @@ class _AnalyzerState extends State<Analyzer> {
               _otherWheelPosition.add(_currentGameAction);
             }
             break;
-          case ActionType.OTHER_WHEEL_COLOR:
+          case ActionType.OTHER_WHEEL_ROTATION:
             {
-              _otherWheelColor.add(_currentGameAction);
+              _otherWheelRotation.add(_currentGameAction);
             }
             break;
           case ActionType.PREV_SHOT:
@@ -272,7 +272,7 @@ class _AnalyzerState extends State<Analyzer> {
     _otherClimb = [];
     _otherClimbMiss = [];
     _otherWheelPosition = [];
-    _otherWheelColor = [];
+    _otherWheelRotation = [];
     _prevShot = [];
     _prevIntake = [];
     _push = [];
@@ -305,7 +305,7 @@ class _AnalyzerState extends State<Analyzer> {
     }
 
     double _rotationControl =
-        _otherWheelColor.length * Constants.positionControl;
+        _otherWheelRotation.length * Constants.positionControl;
     double _positionControl =
         _otherWheelPosition.length * Constants.positionControl;
     double _climb = _otherClimb.length * Constants.climbValue;
