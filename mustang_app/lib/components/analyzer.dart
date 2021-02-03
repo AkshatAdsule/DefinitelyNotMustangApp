@@ -8,7 +8,7 @@ import 'package:mustang_app/constants/constants.dart';
 // ignore: must_be_immutable
 class Analyzer extends StatefulWidget {
   String _teamNum;
-
+  Map<int, int> ptsAtZone;
   Analyzer(String teamNum) {
     _teamNum = teamNum;
   }
@@ -17,6 +17,10 @@ class Analyzer extends StatefulWidget {
     return _AnalyzerState(
       _teamNum,
     );
+  }
+
+  double calcPtsAtZoneMapDisplay(double x, double y) { 
+        return _AnalyzerState(_teamNum).calcPtsAtZone(x, y);
   }
 }
 
@@ -70,15 +74,15 @@ class _AnalyzerState extends State<Analyzer> {
     //initialize all vars
     var action1 = new GameAction(ActionType.FOUL_REG, 2000, 3, 4);
     var action1a = new GameAction(ActionType.FOUL_TECH, 2000, 4, 4);
-    var action1b = new GameAction(ActionType.SHOT_LOW, 5000, 0, 13);
+    var action1b = new GameAction(ActionType.SHOT_LOW, 5000, 0, 2);
     var action2 = new GameAction(ActionType.SHOT_INNER, 6000, 15, 1);
-    var action3 = new GameAction(ActionType.PREV_SHOT, 10000, 13, 9);
+    var action3 = new GameAction(ActionType.PREV_SHOT, 10000, 13, 5);
     var action4 = new GameAction(ActionType.MISSED_OUTER, 15000, 2, 4);
     var action4a = new GameAction(ActionType.MISSED_OUTER, 16000, 1, 4);
     var action5 = new GameAction(ActionType.OTHER_CLIMB_MISS, 19000, 3, 3);
-    var action6 = new GameAction(ActionType.SHOT_LOW, 30000, 0, 13);
+    var action6 = new GameAction(ActionType.SHOT_LOW, 30000, 0, 5);
     var action7 = new GameAction(ActionType.SHOT_INNER, 39000, 5, 2);
-    var action8 = new GameAction(ActionType.SHOT_OUTER, 40000, 8, 12);
+    var action8 = new GameAction(ActionType.SHOT_OUTER, 40000, 8, 4);
     var action9 = new GameAction.push(ActionType.PUSH, 44000, 10, 5, 8, 4, 3);
 
     var matchArray1 = [action1, action1a, action1b, action2, action3];
@@ -397,6 +401,24 @@ class _AnalyzerState extends State<Analyzer> {
     double _yellowPtsLost = _foulYellow.length * Constants.techFoul;
     double _redPtsLost = _foulRed.length * Constants.redCard;
     return _regPtsLost + _techPtsLost + _yellowPtsLost + _redPtsLost;
+  }
+
+  //for map display, takes in a zone and returns offense pts scored there
+  double calcPtsAtZone(double x, double y){
+    debugPrint("_shotLow.length: " + _shotLow.length.toString());
+    
+    double totalPoints = 0;
+    for (int i = 0; i < _shotLow.length; i++){
+      
+      if (_shotLow[i].x == x && _shotLow[i].y == y){
+        debugPrint("_shotLow[i].x == x && _shotLow[i].y == y was called");
+        if (_shotLow[i].timeStamp <= 15){ totalPoints += Constants.lowShotAutonValue;}
+        else { totalPoints += Constants.lowShotValue;}
+
+      }
+    }
+
+    return totalPoints;
   }
 
   @override

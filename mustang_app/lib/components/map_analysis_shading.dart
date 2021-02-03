@@ -14,7 +14,7 @@ class _MapAnalysisShadingState extends State<MapAnalysisShading> {
 
   Color _getColor(int zoneNum){
     if (zoneNum == 2){
-      return Colors.pink[600];
+      return Colors.transparent;
     }
     return Colors.blue[600];
   }
