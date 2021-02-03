@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mustang_app/components/game_action.dart';
 import '../constants/constants.dart';
-import 'team_data_analyzer.dart';
 
 class ScoutingOperations {
   List<String> teamnames = new List<String>();

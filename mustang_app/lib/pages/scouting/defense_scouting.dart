@@ -78,7 +78,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
       FlatButton option = FlatButton(
         child: Text(type),
         onPressed: () {
-          _addAction(GameAction.labelAction(
+          _addAction(GameAction.stringToActionType(
               action.toUpperCase() + "_" + type.toUpperCase()));
           Navigator.pop(context);
         },
@@ -88,7 +88,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
     // set up the AlertDialog
     AlertDialog popUp = AlertDialog(
       title: Text(action),
-      content: Text('hello'),
+      content: Text('type'),
       actions: optionButtons,
     );
 

@@ -37,9 +37,6 @@ class _MapScoutingState extends State<MapScouting> {
 
   _MapScoutingState(this._teamNumber, this._matchNumber, this._allianceColor);
 
-  //TODO: move addAction() here, so that the match has only 1 array of actions
-  // then should use _stopGame, _teamNumber, and _matchNumber
-
   @override
   void initState() {
     super.initState();
@@ -78,14 +75,17 @@ class _MapScoutingState extends State<MapScouting> {
     int x = _zoneGrid.x;
     int y = _zoneGrid.y;
     bool hasSelected = _zoneGrid.hasSelected;
-    if (hasSelected || !GameAction.requiresLocation(type)) {
-      GameAction action =
-          new GameAction(type, now.toDouble(), x.toDouble(), y.toDouble());
-      _actions.add(action);
-      print(action);
+    GameAction action;
+    if (hasSelected) {
+      action = new GameAction(type, now.toDouble(), x.toDouble(), y.toDouble());
+    } else if (!GameAction.requiresLocation(type)) {
+      action = GameAction.other(type, now.toDouble());
     } else {
       print('No location selected');
+      return;
     }
+    _actions.add(action);
+    print(action);
   }
 
   void finishGame(BuildContext context) {

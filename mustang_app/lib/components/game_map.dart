@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mustang_app/components/selectable_zone_grid.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/constants/constants.dart';
 
@@ -19,10 +18,6 @@ class GameMap extends StatelessWidget {
     _imageChildren.addAll(imageChildren);
     _sideWidgets = sideWidgets;
   }
-
-  // Set() location(x, y) {
-  //   return [x, y];
-  // }
 
   @override
   Widget build(BuildContext context) {
