@@ -54,7 +54,11 @@ class _OffenseScoutingState extends State<OffenseScouting> {
     int x = _zoneGrid.x;
     int y = _zoneGrid.y;
     bool hasSelected = _zoneGrid.hasSelected;
-    if (hasSelected) {
+    if (hasSelected || type.toString().contains("OTHER")) {
+      if (!hasSelected) {
+        x = -1;
+        y = -1;
+      }
       GameAction action =
           new GameAction(type, now.toDouble(), x.toDouble(), y.toDouble());
       shots.add(action);
@@ -62,6 +66,35 @@ class _OffenseScoutingState extends State<OffenseScouting> {
     } else {
       print('No location selected');
     }
+  }
+
+  ActionType actionDeterminer(BuildContext context, String action) {
+    List<String> types = ['Position', 'Color'];
+    List<FlatButton> optionButtons = new List<FlatButton>();
+
+    for (String type in types) {
+      FlatButton option = FlatButton(
+        child: Text(type),
+        onPressed: () {
+          addAction(GameAction.labelAction(
+              "OTHER_" + action.toUpperCase() + "_" + type.toUpperCase()));
+          Navigator.pop(context);
+        },
+      );
+      optionButtons.add(option);
+    }
+
+    // set up the AlertDialog
+    AlertDialog popUp =
+        AlertDialog(title: Text(action), actions: optionButtons);
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return popUp;
+      },
+    );
   }
 
   @override
@@ -79,9 +112,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
               child: IconButton(
                 icon: Icon(Icons.undo),
                 color: Colors.white,
-                onPressed: () {
-                  addAction(ActionType.OTHER_WHEEL_COLOR);
-                },
+                onPressed: () {},
               ),
             ),
           ),
@@ -92,7 +123,9 @@ class _OffenseScoutingState extends State<OffenseScouting> {
               child: CircleAvatar(
                 backgroundColor: Colors.green,
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    actionDeterminer(context, "Wheel");
+                  },
                   icon: Icon(
                     Icons.donut_large,
                     color: Colors.white,

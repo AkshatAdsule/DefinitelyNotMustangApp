@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/game_action.dart';
-import 'package:mustang_app/components/selectable_zone_grid.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import '../../components/game_map.dart';
 
@@ -58,39 +57,30 @@ class _DefenseScoutingState extends State<DefenseScouting> {
       GameAction action =
           new GameAction(type, now.toDouble(), x.toDouble(), y.toDouble());
       def.add(action);
-      print(action);
+      print("addAction: " + action.toString());
     } else {
       print('No location selected');
     }
   }
 
-  ActionType labelAction(String action) {
-    // TODO: Add long switch for all types
-    print(action);
-    return ActionType.TEST;
-  }
-
   ActionType actionDeterminer(BuildContext context, String action) {
-    List<String> types = new List<String>();
+    List<String> types = [
+      'Reg',
+      'Tech',
+      'Red',
+      'Yellow',
+      'Disabled',
+      'Disqual'
+    ];
     List<FlatButton> optionButtons = new List<FlatButton>();
-
-    switch (action) {
-      case 'Foul':
-        types = ['Reg', 'Tech', 'Red', 'Yellow', 'Disabled', 'Disqual'];
-        break;
-      case 'Wheel':
-        types = ['Rotate', 'Color'];
-        break;
-      case 'Climb':
-        types = ['Make', 'Miss'];
-        break;
-    }
 
     for (String type in types) {
       FlatButton option = FlatButton(
         child: Text(type),
         onPressed: () {
-          labelAction(action + "_" + type);
+          addAction(GameAction.labelAction(
+              action.toUpperCase() + "_" + type.toUpperCase()));
+          Navigator.pop(context);
         },
       );
       optionButtons.add(option);
@@ -164,7 +154,9 @@ class _DefenseScoutingState extends State<DefenseScouting> {
                   game_button.ScoutingButton(
                       style: game_button.ButtonStyle.RAISED,
                       type: game_button.ButtonType.ELEMENT,
-                      onPressed: () {},
+                      onPressed: () {
+                        addAction(ActionType.PREV_INTAKE);
+                      },
                       text: 'Prevent Intake'),
                   game_button.ScoutingButton(
                       style: game_button.ButtonStyle.RAISED,
@@ -175,7 +167,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
                       style: game_button.ButtonStyle.RAISED,
                       type: game_button.ButtonType.ELEMENT,
                       onPressed: () {
-                        // actionDeterminer(context, 'Foul');
+                        actionDeterminer(context, 'Foul');
                       },
                       text: 'Foul'),
                 ],
