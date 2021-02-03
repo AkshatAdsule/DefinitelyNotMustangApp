@@ -48,9 +48,6 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        'ALLIANCE COLOR: $_allianceColor\nTEAM NUMBER: $_teamNumber\nMATCH NUMBER: $_matchNumber\n');
-    _actions.forEach((element) => print(element.toString()));
     return Scaffold(
         appBar: Header(
           context,

@@ -87,14 +87,12 @@ class _OffenseScoutingState extends State<OffenseScouting> {
     if (_stopwatch.elapsedMilliseconds <= 120000) {
       _endgameTimer = new Timer(
           Duration(milliseconds: 120000 - _stopwatch.elapsedMilliseconds), () {
-        print('callback 1');
         setState(() {});
       });
     }
     if (_stopwatch.elapsedMilliseconds <= 150000) {
       _endTimer = new Timer(
           Duration(milliseconds: 150000 - _stopwatch.elapsedMilliseconds), () {
-        print('callback 2');
         setState(() {});
       });
     }
@@ -109,7 +107,6 @@ class _OffenseScoutingState extends State<OffenseScouting> {
 
   @override
   Widget build(BuildContext context) {
-    print("render: " + _stopwatch.elapsedMilliseconds.toString());
     return Container(
       child: GameMap(
         zoneGrid: _zoneGrid,

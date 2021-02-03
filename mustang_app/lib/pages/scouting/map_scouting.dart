@@ -46,9 +46,6 @@ class _MapScoutingState extends State<MapScouting> {
     _zoneGrid = SelectableZoneGrid(GlobalKey(), (int x, int y) {});
     _actions = [];
     _sliderLastChanged = 0;
-    // offenseScouting =
-    // defenseScouting =
-    print('Timer start');
   }
 
   void toggleMode() {

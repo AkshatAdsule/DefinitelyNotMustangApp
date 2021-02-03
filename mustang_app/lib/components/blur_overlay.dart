@@ -16,8 +16,8 @@ class _BlurOverlayState extends State<BlurOverlay> {
   final Widget background, overlay;
   final void Function() onEnd;
   final Text text;
-  final Duration duration = Duration(milliseconds: 500);
-  final Curve curve = Curves.ease;
+  final Duration duration = Duration(milliseconds: 200);
+  final Curve curve = Curves.linear;
   bool _unlocked, _animating;
   double _targetValue;
 
@@ -56,47 +56,40 @@ class _BlurOverlayState extends State<BlurOverlay> {
               });
             },
           ),
-
-          AnimatedOpacity(
-            opacity: _animating ? 0 : 1,
+          AnimatedContainer(
             duration: duration,
             curve: curve,
-            child: Container(
-              decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 30,
-                        offset: Offset(2, 2))
-                  ],
-                  gradient: LinearGradient(
+            decoration: BoxDecoration(
+              gradient: _animating
+                  ? null
+                  : LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        Colors.white.withOpacity(0.2),
-                        Colors.white.withOpacity(0.5),
+                        Colors.white12,
+                        Colors.white12,
                       ],
                       stops: [
                         0.0,
                         1.0,
-                      ])),
-              child: !_animating
-                  ? Center(
-                      child: RaisedButton(
-                        color: Colors.red.shade900,
-                        onPressed: () {
-                          setState(() {
-                            _targetValue = 0;
-                            _animating = true;
-                          });
-                        },
-                        child: text,
-                      ),
-                    )
-                  : Container(),
+                      ],
+                    ),
             ),
-          )
-          // )
+            child: !_animating
+                ? Center(
+                    child: RaisedButton(
+                      color: Colors.red.shade900,
+                      onPressed: () {
+                        setState(() {
+                          _targetValue = 0;
+                          _animating = true;
+                        });
+                      },
+                      child: text,
+                    ),
+                  )
+                : Container(),
+          ),
         ],
       );
     } else {
