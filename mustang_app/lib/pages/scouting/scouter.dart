@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/components/bottom_nav_bar.dart';
 import 'package:mustang_app/constants/constants.dart';
 import 'package:mustang_app/pages/scouting/map_scouting.dart';
 import 'pit_scouting.dart';
@@ -18,7 +19,7 @@ class _ScouterState extends State<Scouter> {
   TextEditingController _teamNumberController = TextEditingController();
   TextEditingController _matchNumberController = TextEditingController();
   TextEditingController _namesController = new TextEditingController();
-  String _allianceColor = "Blue Alliance";
+  String _allianceColor = "Blue";
   int _allianceNum = 0;
 
   bool _showError = false;
@@ -60,7 +61,8 @@ class _ScouterState extends State<Scouter> {
         } else {
           Navigator.pushNamed(context, MapScouting.route, arguments: {
             'teamNumber': _teamNumberController.text,
-            'matchNumber': _matchNumberController.text
+            'matchNumber': _matchNumberController.text,
+            'allianceColor': _allianceColor,
           });
         }
       },
@@ -89,176 +91,180 @@ class _ScouterState extends State<Scouter> {
 
   @override
   Widget build(BuildContext context) {
-    String _allianceColor;
     return Scaffold(
-        appBar: Header(
-          context,
-          'Pre Game Notes',
+      appBar: Header(
+        context,
+        'Pre Game Notes',
+      ),
+      body: ListView(children: <Widget>[
+        Container(
+          padding: EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 15),
+          child: TextField(
+            controller: _teamNumberController,
+            decoration: InputDecoration(
+              labelText: 'Team Number',
+              errorText: _showError ? 'Team number is required' : null,
+              border: OutlineInputBorder(),
+            ),
+          ),
         ),
-        body: ListView(children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 15),
-            child: TextField(
-              controller: _teamNumberController,
-              decoration: InputDecoration(
-                labelText: 'Team Number',
-                errorText: _showError ? 'Team number is required' : null,
-                border: OutlineInputBorder(),
-              ),
+        Container(
+          padding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
+          child: TextField(
+            controller: _matchNumberController,
+            decoration: InputDecoration(
+              labelText: 'Match Number',
+              border: OutlineInputBorder(),
             ),
           ),
-          Container(
-            padding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
-            child: TextField(
-              controller: _matchNumberController,
-              decoration: InputDecoration(
-                labelText: 'Match Number',
-                border: OutlineInputBorder(),
-              ),
+        ),
+        Container(
+          padding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
+          child: TextField(
+            controller: _namesController,
+            decoration: InputDecoration(
+              labelText: 'Name',
+              border: OutlineInputBorder(),
             ),
           ),
-          Container(
-            padding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
-            child: TextField(
-              controller: _namesController,
-              decoration: InputDecoration(
-                labelText: 'Name',
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(8.0),
-            child: new Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    new Radio(
-                        value: 0,
-                        groupValue: _allianceNum,
-                        onChanged: (int value) {
-                          setState(() {
-                            _allianceNum = value;
-                            Constants.fieldColor = value;
-                          });
-                        }),
-                    new Text(
-                      'Blue Alliance',
-                      style: new TextStyle(fontSize: 16.0),
-                    ),
-                    new Radio(
-                        value: 1,
-                        groupValue: _allianceNum,
-                        onChanged: (int value) {
-                          setState(() {
-                            _allianceNum = value;
-                            Constants.fieldColor = value;
-                            debugPrint(Constants.fieldColor.toString());
-                          });
-                        }),
-                    new Text(
-                      'Red Alliance',
-                      style: new TextStyle(
-                        fontSize: 16.0,
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  padding:
-                      EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
-                  child: new Builder(
-                    builder: (BuildContext buildContext) => RaisedButton(
-                      color: Colors.green,
-                      onPressed: () {
+        ),
+        Container(
+          padding: EdgeInsets.all(8.0),
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new Radio(
+                      value: 0,
+                      groupValue: _allianceNum,
+                      onChanged: (int value) {
                         setState(() {
-                          if (_teamNumberController.text.isEmpty) {
-                            Scaffold.of(buildContext).showSnackBar(SnackBar(
-                              content: Text("Enter a team number"),
-                            ));
-                            return;
-                          } else if (_namesController.text.isEmpty) {
-                            Scaffold.of(buildContext).showSnackBar(SnackBar(
-                              content: Text("Enter a name"),
-                            ));
-                            return;
-                          }
-                          db
-                              .doesPitDataExist(_teamNumberController.text)
-                              .then((onValue) {
-                            if (onValue) {
-                              showAlertDialog(context, true);
-                            } else {
-                              Navigator.pushNamed(context, PitScouter.route,
-                                  arguments: {
-                                    'teamNumber': _teamNumberController.text,
-                                  });
-                            }
-                          });
+                          _allianceNum = value;
+                          _allianceColor = 'Blue';
+                          Constants.fieldColor = value;
                         });
-                      },
-                      padding: EdgeInsets.all(15),
-                      child: Text(
-                        'Pit Scouting',
-                        style: TextStyle(fontSize: 20, color: Colors.white),
-                      ),
+                      }),
+                  new Text(
+                    'Blue Alliance',
+                    style: new TextStyle(fontSize: 16.0),
+                  ),
+                  new Radio(
+                      value: 1,
+                      groupValue: _allianceNum,
+                      onChanged: (int value) {
+                        setState(() {
+                          _allianceNum = value;
+                          _allianceColor = 'Red';
+
+                          Constants.fieldColor = value;
+                          debugPrint(Constants.fieldColor.toString());
+                        });
+                      }),
+                  new Text(
+                    'Red Alliance',
+                    style: new TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding:
+                    EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
+                child: new Builder(
+                  builder: (BuildContext buildContext) => RaisedButton(
+                    color: Colors.green,
+                    onPressed: () {
+                      setState(() {
+                        if (_teamNumberController.text.isEmpty) {
+                          Scaffold.of(buildContext).showSnackBar(SnackBar(
+                            content: Text("Enter a team number"),
+                          ));
+                          return;
+                        } else if (_namesController.text.isEmpty) {
+                          Scaffold.of(buildContext).showSnackBar(SnackBar(
+                            content: Text("Enter a name"),
+                          ));
+                          return;
+                        }
+                        db
+                            .doesPitDataExist(_teamNumberController.text)
+                            .then((onValue) {
+                          if (onValue) {
+                            showAlertDialog(context, true);
+                          } else {
+                            Navigator.pushNamed(context, PitScouter.route,
+                                arguments: {
+                                  'teamNumber': _teamNumberController.text,
+                                });
+                          }
+                        });
+                      });
+                    },
+                    padding: EdgeInsets.all(15),
+                    child: Text(
+                      'Pit Scouting',
+                      style: TextStyle(fontSize: 20, color: Colors.white),
                     ),
                   ),
                 ),
-                Container(
-                  padding:
-                      EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
-                  child: new Builder(
-                    builder: (BuildContext buildContext) => new RaisedButton(
-                      color: Colors.green,
-                      onPressed: () {
-                        setState(() {
-                          if (_teamNumberController.text.isEmpty) {
-                            Scaffold.of(buildContext).showSnackBar(SnackBar(
-                              content: Text("Enter a team number"),
-                            ));
-                            return;
-                          } else if (_matchNumberController.text.isEmpty) {
-                            Scaffold.of(buildContext).showSnackBar(SnackBar(
-                              content: Text("Enter a match number"),
-                            ));
-                            return;
-                          } else if (_namesController.text.isEmpty) {
-                            Scaffold.of(buildContext).showSnackBar(SnackBar(
-                              content: Text("Enter a name"),
-                            ));
-                            return;
+              ),
+              Container(
+                padding:
+                    EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
+                child: new Builder(
+                  builder: (BuildContext buildContext) => new RaisedButton(
+                    color: Colors.green,
+                    onPressed: () {
+                      setState(() {
+                        if (_teamNumberController.text.isEmpty) {
+                          Scaffold.of(buildContext).showSnackBar(SnackBar(
+                            content: Text("Enter a team number"),
+                          ));
+                          return;
+                        } else if (_matchNumberController.text.isEmpty) {
+                          Scaffold.of(buildContext).showSnackBar(SnackBar(
+                            content: Text("Enter a match number"),
+                          ));
+                          return;
+                        } else if (_namesController.text.isEmpty) {
+                          Scaffold.of(buildContext).showSnackBar(SnackBar(
+                            content: Text("Enter a name"),
+                          ));
+                          return;
+                        }
+                        db
+                            .doesMatchDataExist(_teamNumberController.text,
+                                _matchNumberController.text)
+                            .then((onValue) {
+                          if (onValue) {
+                            showAlertDialog(context, false);
+                          } else {
+                            Navigator.pushNamed(context, MapScouting.route,
+                                arguments: {
+                                  'teamNumber': _teamNumberController.text,
+                                  'matchNumber': _matchNumberController.text,
+                                  'allianceColor': _allianceColor,
+                                });
                           }
-                          db
-                              .doesMatchDataExist(_teamNumberController.text,
-                                  _matchNumberController.text)
-                              .then((onValue) {
-                            if (onValue) {
-                              showAlertDialog(context, false);
-                            } else {
-                              Navigator.pushNamed(context, MapScouting.route,
-                                  arguments: {
-                                    'teamNumber': _teamNumberController.text,
-                                    'matchNumber': _matchNumberController.text
-                                  });
-                            }
-                          });
                         });
-                      },
-                      padding: EdgeInsets.all(15),
-                      child: Text(
-                        'Match Scouting',
-                        style: TextStyle(fontSize: 20, color: Colors.white),
-                      ),
+                      });
+                    },
+                    padding: EdgeInsets.all(15),
+                    child: Text(
+                      'Match Scouting',
+                      style: TextStyle(fontSize: 20, color: Colors.white),
                     ),
                   ),
                 ),
-              ],
-            ),
-            //bottomNavigationBar: BottomNavBar(context),
-          )
-        ]));
+              ),
+            ],
+          ),
+        )
+      ]),
+      bottomNavigationBar: BottomNavBar(context),
+    );
   }
 }

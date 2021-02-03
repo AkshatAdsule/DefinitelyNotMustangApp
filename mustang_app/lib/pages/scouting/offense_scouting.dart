@@ -7,23 +7,26 @@ import '../../components/game_buttons.dart' as game_button;
 
 // ignore: must_be_immutable
 class OffenseScouting extends StatefulWidget {
-  void Function() _toggleMode;
+  void Function() _toggleMode, _undo;
   void Function(BuildContext context) _finishGame;
   void Function(ActionType type) _addAction;
   Stopwatch _stopwatch;
   ZoneGrid _zoneGrid;
 
-  OffenseScouting(
-      {void Function() toggleMode,
-      void Function(BuildContext context) finishGame,
-      void Function(ActionType type) addAction,
-      Stopwatch stopwatch,
-      ZoneGrid zoneGrid}) {
+  OffenseScouting({
+    void Function() toggleMode,
+    void Function() undo,
+    void Function(BuildContext context) finishGame,
+    void Function(ActionType type) addAction,
+    Stopwatch stopwatch,
+    ZoneGrid zoneGrid,
+  }) {
     _toggleMode = toggleMode;
     _stopwatch = stopwatch;
     _finishGame = finishGame;
     _zoneGrid = zoneGrid;
     _addAction = addAction;
+    _undo = undo;
   }
 
   @override
@@ -32,22 +35,25 @@ class OffenseScouting extends StatefulWidget {
       finishGame: _finishGame,
       stopwatch: _stopwatch,
       zoneGrid: _zoneGrid,
-      addAction: _addAction);
+      addAction: _addAction,
+      undo: _undo);
 }
 
 class _OffenseScoutingState extends State<OffenseScouting> {
-  void Function() _toggleMode;
+  void Function() _toggleMode, _undo;
   void Function(BuildContext context) _finishGame;
   void Function(ActionType type) _addAction;
 
   Stopwatch _stopwatch;
 
-  double _sliderValue = 2;
+  double _sliderValue;
+  bool _completedRotationControl, _completedPositionControl;
+
   ZoneGrid _zoneGrid;
-  List<GameAction> shots = new List<GameAction>();
 
   _OffenseScoutingState(
       {void Function() toggleMode,
+      void Function() undo,
       void Function(BuildContext context) finishGame,
       void Function(ActionType type) addAction,
       Stopwatch stopwatch,
@@ -57,35 +63,15 @@ class _OffenseScoutingState extends State<OffenseScouting> {
     _stopwatch = stopwatch;
     _zoneGrid = zoneGrid;
     _addAction = addAction;
+    _undo = undo;
   }
 
-  ActionType actionDeterminer(BuildContext context, String action) {
-    List<String> types = ['Position', 'Color'];
-    List<FlatButton> optionButtons = new List<FlatButton>();
-
-    for (String type in types) {
-      FlatButton option = FlatButton(
-        child: Text(type),
-        onPressed: () {
-          _addAction(GameAction.labelAction(
-              "OTHER_" + action.toUpperCase() + "_" + type.toUpperCase()));
-          Navigator.pop(context);
-        },
-      );
-      optionButtons.add(option);
-    }
-
-    // set up the AlertDialog
-    AlertDialog popUp =
-        AlertDialog(title: Text(action), actions: optionButtons);
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return popUp;
-      },
-    );
+  @override
+  void initState() {
+    super.initState();
+    _sliderValue = 2;
+    _completedRotationControl = false;
+    _completedPositionControl = false;
   }
 
   @override
@@ -103,28 +89,39 @@ class _OffenseScoutingState extends State<OffenseScouting> {
               child: IconButton(
                 icon: Icon(Icons.undo),
                 color: Colors.white,
-                onPressed: () {
-                  _addAction(ActionType.OTHER_WHEEL_COLOR);
-                },
+                onPressed: () => _undo(),
               ),
             ),
           ),
-          GameMapChild(
-              right: 65,
-              bottom: 17.5,
-              align: Alignment.bottomCenter,
-              child: CircleAvatar(
-                backgroundColor: Colors.green,
-                child: IconButton(
-                  onPressed: () {
-                    actionDeterminer(context, "Wheel");
-                  },
-                  icon: Icon(
-                    Icons.donut_large,
-                    color: Colors.white,
-                  ),
-                ),
-              )),
+          _completedRotationControl && _completedPositionControl
+              ? Container()
+              : GameMapChild(
+                  right: 65,
+                  bottom: 17.5,
+                  align: Alignment.bottomCenter,
+                  child: CircleAvatar(
+                    backgroundColor:
+                        !_completedRotationControl ? Colors.green : Colors.blue,
+                    child: IconButton(
+                      onPressed: () {
+                        if (_completedRotationControl) {
+                          _addAction(ActionType.OTHER_WHEEL_ROTATION);
+                          setState(() {
+                            _completedRotationControl = true;
+                          });
+                        } else {
+                          _addAction(ActionType.OTHER_WHEEL_POSITION);
+                          setState(() {
+                            _completedPositionControl = true;
+                          });
+                        }
+                      },
+                      icon: Icon(
+                        Icons.donut_large,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )),
           _stopwatch.elapsedMilliseconds > 120000
               ? GameMapChild(
                   right: 30,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/game_action.dart';
 import 'package:mustang_app/components/zone_grid.dart';
+import 'package:mustang_app/utils/orientation_helpers.dart';
 import '../../components/game_map.dart';
-
 import '../../components/game_buttons.dart' as game_button;
 
 // ignore: must_be_immutable
@@ -10,12 +10,13 @@ class DefenseScouting extends StatefulWidget {
   void Function(BuildContext context) _finishGame;
   void Function(ActionType type) _addAction;
 
-  void Function() _toggleMode;
+  void Function() _toggleMode, _undo;
   Stopwatch _stopwatch;
   ZoneGrid _zoneGrid;
 
   DefenseScouting(
       {void Function() toggleMode,
+      void Function() undo,
       void Function(BuildContext context) finishGame,
       void Function(ActionType type) addAction,
       Stopwatch stopwatch,
@@ -25,6 +26,7 @@ class DefenseScouting extends StatefulWidget {
     _finishGame = finishGame;
     _zoneGrid = zoneGrid;
     _addAction = addAction;
+    _undo = undo;
   }
 
   @override
@@ -33,32 +35,35 @@ class DefenseScouting extends StatefulWidget {
       finishGame: _finishGame,
       stopwatch: _stopwatch,
       zoneGrid: _zoneGrid,
-      addAction: _addAction);
+      addAction: _addAction,
+      undo: _undo);
 }
 
 class _DefenseScoutingState extends State<DefenseScouting> {
-  void Function() _toggleMode;
+  void Function() _toggleMode, _undo;
   void Function(BuildContext context) _finishGame;
   void Function(ActionType type) _addAction;
 
   Stopwatch _stopwatch;
   ZoneGrid _zoneGrid;
-  List<GameAction> _actions = new List<GameAction>();
 
-  _DefenseScoutingState(
-      {void Function() toggleMode,
-      void Function(BuildContext context) finishGame,
-      void Function(ActionType type) addAction,
-      Stopwatch stopwatch,
-      ZoneGrid zoneGrid}) {
+  _DefenseScoutingState({
+    void Function() toggleMode,
+    void Function() undo,
+    void Function(BuildContext context) finishGame,
+    void Function(ActionType type) addAction,
+    Stopwatch stopwatch,
+    ZoneGrid zoneGrid,
+  }) {
     _toggleMode = toggleMode;
     _stopwatch = stopwatch;
     _finishGame = finishGame;
     _zoneGrid = zoneGrid;
     _addAction = addAction;
+    _undo = undo;
   }
 
-  ActionType actionDeterminer(BuildContext context, String action) {
+  void actionDeterminer(BuildContext context, String action) {
     List<String> types = [
       'Reg',
       'Tech',
@@ -80,19 +85,18 @@ class _DefenseScoutingState extends State<DefenseScouting> {
       );
       optionButtons.add(option);
     }
-
     // set up the AlertDialog
     AlertDialog popUp = AlertDialog(
       title: Text(action),
+      content: Text('hello'),
       actions: optionButtons,
     );
 
     // show the dialog
     showDialog(
+      routeSettings: RouteSettings(arguments: ScreenOrientation.landscapeOnly),
       context: context,
-      builder: (BuildContext context) {
-        return popUp;
-      },
+      child: popUp,
     );
   }
 
@@ -111,7 +115,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
               child: IconButton(
                 icon: Icon(Icons.undo),
                 color: Colors.white,
-                onPressed: () {},
+                onPressed: () => _undo(),
               ),
             ),
           ),
@@ -121,10 +125,12 @@ class _DefenseScoutingState extends State<DefenseScouting> {
                   left: 7,
                   top: 7,
                   child: game_button.ScoutingButton(
-                      style: game_button.ButtonStyle.RAISED,
-                      type: game_button.ButtonType.PAGEBUTTON,
-                      onPressed: () => _finishGame(context),
-                      text: 'Finish Game'))
+                    style: game_button.ButtonStyle.RAISED,
+                    type: game_button.ButtonType.PAGEBUTTON,
+                    onPressed: () => _finishGame(context),
+                    text: 'Finish Game',
+                  ),
+                )
               : Container()
         ],
         sideWidgets: [
@@ -135,29 +141,33 @@ class _DefenseScoutingState extends State<DefenseScouting> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   game_button.ScoutingButton(
-                      style: game_button.ButtonStyle.RAISED,
-                      type: game_button.ButtonType.TOGGLE,
-                      onPressed: _toggleMode,
-                      text: 'Offense'),
+                    style: game_button.ButtonStyle.RAISED,
+                    type: game_button.ButtonType.TOGGLE,
+                    onPressed: _toggleMode,
+                    text: 'Offense',
+                  ),
                   game_button.ScoutingButton(
-                      style: game_button.ButtonStyle.RAISED,
-                      type: game_button.ButtonType.ELEMENT,
-                      onPressed: () {
-                        _addAction(ActionType.PREV_INTAKE);
-                      },
-                      text: 'Prevent Intake'),
+                    style: game_button.ButtonStyle.RAISED,
+                    type: game_button.ButtonType.ELEMENT,
+                    onPressed: () {
+                      _addAction(ActionType.PREV_INTAKE);
+                    },
+                    text: 'Prevent Intake',
+                  ),
                   game_button.ScoutingButton(
-                      style: game_button.ButtonStyle.RAISED,
-                      type: game_button.ButtonType.ELEMENT,
-                      onPressed: () {},
-                      text: 'Push'),
+                    style: game_button.ButtonStyle.RAISED,
+                    type: game_button.ButtonType.ELEMENT,
+                    onPressed: () {},
+                    text: 'Push',
+                  ),
                   game_button.ScoutingButton(
-                      style: game_button.ButtonStyle.RAISED,
-                      type: game_button.ButtonType.ELEMENT,
-                      onPressed: () {
-                        actionDeterminer(context, 'Foul');
-                      },
-                      text: 'Foul'),
+                    style: game_button.ButtonStyle.RAISED,
+                    type: game_button.ButtonType.ELEMENT,
+                    onPressed: () {
+                      actionDeterminer(context, 'Foul');
+                    },
+                    text: 'Foul',
+                  ),
                 ],
               ),
             ),

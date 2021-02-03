@@ -63,6 +63,18 @@ class GameAction {
     print(action.toString());
     return action;
   }
+
+  static bool requiresLocation(ActionType type) {
+    switch (type) {
+      case ActionType.OTHER_CLIMB:
+      case ActionType.OTHER_CLIMB_MISS:
+      case ActionType.OTHER_WHEEL_ROTATION:
+      case ActionType.OTHER_WHEEL_POSITION:
+        return false;
+      default:
+        return true;
+    }
+  }
 }
 
 enum ActionType {
@@ -81,7 +93,7 @@ enum ActionType {
   OTHER_CLIMB,
   OTHER_CLIMB_MISS,
   OTHER_WHEEL_POSITION,
-  OTHER_WHEEL_COLOR,
+  OTHER_WHEEL_ROTATION,
   PREV_SHOT,
   PREV_INTAKE,
   PUSH,

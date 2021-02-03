@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mustang_app/components/blur_overlay.dart';
 import 'package:mustang_app/components/game_action.dart';
 import 'package:mustang_app/components/selectable_zone_grid.dart';
@@ -30,6 +31,8 @@ class _MapScoutingState extends State<MapScouting> {
   String _teamNumber, _matchNumber;
   ZoneGrid _zoneGrid;
   List<GameAction> _actions;
+  OffenseScouting offenseScouting;
+  DefenseScouting defenseScouting;
 
   _MapScoutingState(String teamNumber, String matchNumber) {
     _teamNumber = teamNumber;
@@ -47,6 +50,22 @@ class _MapScoutingState extends State<MapScouting> {
     _stopwatch = new Stopwatch();
     _zoneGrid = SelectableZoneGrid(GlobalKey(), (int x, int y) {});
     _actions = [];
+    offenseScouting = OffenseScouting(
+      toggleMode: this.toggleMode,
+      stopwatch: _stopwatch,
+      zoneGrid: _zoneGrid,
+      finishGame: this.finishGame,
+      addAction: this.addAction,
+      undo: this.undo,
+    );
+    defenseScouting = DefenseScouting(
+      toggleMode: this.toggleMode,
+      stopwatch: _stopwatch,
+      zoneGrid: _zoneGrid,
+      finishGame: this.finishGame,
+      addAction: this.addAction,
+      undo: this.undo,
+    );
   }
 
   void toggleMode() {
@@ -60,7 +79,7 @@ class _MapScoutingState extends State<MapScouting> {
     int x = _zoneGrid.x;
     int y = _zoneGrid.y;
     bool hasSelected = _zoneGrid.hasSelected;
-    if (hasSelected) {
+    if (hasSelected || !GameAction.requiresLocation(type)) {
       GameAction action =
           new GameAction(type, now.toDouble(), x.toDouble(), y.toDouble());
       _actions.add(action);
@@ -78,6 +97,12 @@ class _MapScoutingState extends State<MapScouting> {
     });
   }
 
+  void undo() {
+    if (_actions.length > 0) {
+      _actions.removeLast();
+    }
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -86,23 +111,13 @@ class _MapScoutingState extends State<MapScouting> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
     Widget scoutingMode;
     if (_onOffense) {
-      scoutingMode = OffenseScouting(
-        toggleMode: this.toggleMode,
-        stopwatch: _stopwatch,
-        zoneGrid: _zoneGrid,
-        finishGame: this.finishGame,
-        addAction: this.addAction,
-      );
+      scoutingMode = offenseScouting;
     } else {
-      scoutingMode = DefenseScouting(
-        toggleMode: this.toggleMode,
-        stopwatch: _stopwatch,
-        zoneGrid: _zoneGrid,
-        finishGame: this.finishGame,
-        addAction: this.addAction,
-      );
+      scoutingMode = defenseScouting;
     }
 
     return Scaffold(
