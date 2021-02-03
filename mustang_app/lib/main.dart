@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
             teamNumber: args['teamNumber'],
             matchNumber: args['matchNumber'],
             actions: args['actions'],
+            allianceColor: args['allianceColor'],
           ),
           settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
         );
@@ -65,7 +66,11 @@ class MyApp extends StatelessWidget {
         );
       case MapScouting.route:
         return MaterialPageRoute(
-          builder: (context) => MapScouting(),
+          builder: (context) => MapScouting(
+            allianceColor: args['allianceColor'],
+            teamNumber: args['teamNumber'],
+            matchNumber: args['matchNumber'],
+          ),
           settings: rotationSettings(settings, ScreenOrientation.landscapeOnly),
         );
       default:

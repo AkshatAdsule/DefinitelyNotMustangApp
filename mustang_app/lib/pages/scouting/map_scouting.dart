@@ -13,31 +13,29 @@ import 'offense_scouting.dart';
 // ignore: must_be_immutable
 class MapScouting extends StatefulWidget {
   static const String route = '/MapScouter';
-  String _teamNumber, _matchNumber;
+  String _teamNumber, _matchNumber, _allianceColor;
 
-  MapScouting({String teamNumber, String matchNumber}) {
+  MapScouting({String teamNumber, String matchNumber, String allianceColor}) {
     _teamNumber = teamNumber;
     _matchNumber = matchNumber;
+    _allianceColor = allianceColor;
   }
 
   @override
   _MapScoutingState createState() =>
-      _MapScoutingState(_teamNumber, _matchNumber);
+      _MapScoutingState(_teamNumber, _matchNumber, _allianceColor);
 }
 
 class _MapScoutingState extends State<MapScouting> {
   bool _onOffense, _startedScouting;
   Stopwatch _stopwatch;
-  String _teamNumber, _matchNumber;
+  String _teamNumber, _matchNumber, _allianceColor;
   ZoneGrid _zoneGrid;
   List<GameAction> _actions;
   OffenseScouting offenseScouting;
   DefenseScouting defenseScouting;
 
-  _MapScoutingState(String teamNumber, String matchNumber) {
-    _teamNumber = teamNumber;
-    _matchNumber = matchNumber;
-  }
+  _MapScoutingState(this._teamNumber, this._matchNumber, this._allianceColor);
 
   //TODO: move addAction() here, so that the match has only 1 array of actions
   // then should use _stopGame, _teamNumber, and _matchNumber
@@ -51,6 +49,7 @@ class _MapScoutingState extends State<MapScouting> {
     _zoneGrid = SelectableZoneGrid(GlobalKey(), (int x, int y) {});
     _actions = [];
     offenseScouting = OffenseScouting(
+      key: GlobalKey(),
       toggleMode: this.toggleMode,
       stopwatch: _stopwatch,
       zoneGrid: _zoneGrid,
@@ -94,6 +93,7 @@ class _MapScoutingState extends State<MapScouting> {
       'teamNumber': _teamNumber,
       'matchNumber': _matchNumber,
       'actions': _actions,
+      'allianceColor': _allianceColor,
     });
   }
 

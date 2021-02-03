@@ -14,20 +14,20 @@ class OffenseScouting extends StatefulWidget {
   ZoneGrid _zoneGrid;
 
   OffenseScouting({
+    Key key,
     void Function() toggleMode,
     void Function() undo,
     void Function(BuildContext context) finishGame,
     void Function(ActionType type) addAction,
     Stopwatch stopwatch,
     ZoneGrid zoneGrid,
-  }) {
-    _toggleMode = toggleMode;
-    _stopwatch = stopwatch;
-    _finishGame = finishGame;
-    _zoneGrid = zoneGrid;
-    _addAction = addAction;
-    _undo = undo;
-  }
+  })  : _toggleMode = toggleMode,
+        _stopwatch = stopwatch,
+        _finishGame = finishGame,
+        _zoneGrid = zoneGrid,
+        _addAction = addAction,
+        _undo = undo,
+        super(key: key);
 
   @override
   _OffenseScoutingState createState() => _OffenseScoutingState(

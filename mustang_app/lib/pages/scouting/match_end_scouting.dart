@@ -10,23 +10,26 @@ import 'post_scouter.dart';
 // ignore: must_be_immutable
 class MatchEndScouter extends StatefulWidget {
   static const String route = '/MatchEndScouter';
-  String _teamNumber, _matchNumber;
+  String _teamNumber, _matchNumber, _allianceColor;
   List<GameAction> _actions;
   MatchEndScouter(
-      {String teamNumber, String matchNumber, List<GameAction> actions}) {
+      {String teamNumber,
+      String matchNumber,
+      List<GameAction> actions,
+      String allianceColor}) {
     _teamNumber = teamNumber;
     _matchNumber = matchNumber;
     _actions = actions;
+    _allianceColor = allianceColor;
   }
 
   @override
-  _MatchEndScouterState createState() =>
-      _MatchEndScouterState(_teamNumber, _matchNumber, _actions);
+  _MatchEndScouterState createState() => _MatchEndScouterState(
+      _teamNumber, _matchNumber, _allianceColor, _actions);
 }
 
 class _MatchEndScouterState extends State<MatchEndScouter> {
-  String _teamNumber;
-  String _matchNumber;
+  String _teamNumber, _matchNumber, _allianceColor;
   List<GameAction> _actions;
   String _matchResult;
   TextEditingController _finalCommentsController = TextEditingController();
@@ -34,11 +37,7 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
   ScoutingOperations db = new ScoutingOperations();
 
   _MatchEndScouterState(
-      String teamNumber, String matchNumber, List<GameAction> actions) {
-    _teamNumber = teamNumber;
-    _matchNumber = matchNumber;
-    _actions = actions;
-  }
+      this._teamNumber, this._matchNumber, this._allianceColor, this._actions);
 
   void _finishGame(BuildContext context) {
     db.updateMatchData(_teamNumber, _matchNumber, _actions,
@@ -49,6 +48,9 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        'ALLIANCE COLOR: $_allianceColor\nTEAM NUMBER: $_teamNumber\nMATCH NUMBER: $_matchNumber\n');
+    _actions.forEach((element) => print(element.toString()));
     return Scaffold(
         appBar: Header(
           context,
