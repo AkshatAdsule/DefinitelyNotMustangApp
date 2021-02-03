@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/map_analysis_shading.dart';
+import 'package:mustang_app/constants/constants.dart';
 import '../components/analyzer.dart';
 import '../utils/symbolplotter.dart';
 import '../backend/team_data_analyzer.dart';
