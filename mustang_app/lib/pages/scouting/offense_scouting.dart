@@ -59,6 +59,35 @@ class _OffenseScoutingState extends State<OffenseScouting> {
     _addAction = addAction;
   }
 
+  ActionType actionDeterminer(BuildContext context, String action) {
+    List<String> types = ['Position', 'Color'];
+    List<FlatButton> optionButtons = new List<FlatButton>();
+
+    for (String type in types) {
+      FlatButton option = FlatButton(
+        child: Text(type),
+        onPressed: () {
+          addAction(GameAction.labelAction(
+              "OTHER_" + action.toUpperCase() + "_" + type.toUpperCase()));
+          Navigator.pop(context);
+        },
+      );
+      optionButtons.add(option);
+    }
+
+    // set up the AlertDialog
+    AlertDialog popUp =
+        AlertDialog(title: Text(action), actions: optionButtons);
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return popUp;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -87,7 +116,9 @@ class _OffenseScoutingState extends State<OffenseScouting> {
               child: CircleAvatar(
                 backgroundColor: Colors.green,
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    actionDeterminer(context, "Wheel");
+                  },
                   icon: Icon(
                     Icons.donut_large,
                     color: Colors.white,

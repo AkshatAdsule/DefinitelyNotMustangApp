@@ -14,7 +14,7 @@ class GameAction {
   //_action = ActionType.PUSH;
 
   String toString() {
-    return "Type" +
+    return "Type: " +
         _action.toString() +
         "; Duration: " +
         _timeStamp.toString() +
@@ -55,6 +55,14 @@ class GameAction {
     _action = ActionType.values
         .firstWhere((element) => element.toString() == data['actionType']);
   }
+
+  static ActionType labelAction(String str) {
+    print("preLabel:" + str);
+    ActionType action = ActionType.values
+        .firstWhere((e) => e.toString() == 'ActionType.' + str);
+    print(action.toString());
+    return action;
+  }
 }
 
 enum ActionType {
@@ -76,5 +84,5 @@ enum ActionType {
   OTHER_WHEEL_COLOR,
   PREV_SHOT,
   PREV_INTAKE,
-  PUSH
+  PUSH,
 }
