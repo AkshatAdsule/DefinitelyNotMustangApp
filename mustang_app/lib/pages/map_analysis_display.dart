@@ -32,7 +32,36 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
     shading = new MapAnalysisShading();
   }
 
-  
+   Color _getColor(int zoneNum, Analyzer myAnalyzer){
+
+    double y = zoneToY(zoneNum);
+    double x = zoneToX(zoneNum);
+    if (x == 0 && y == 2){
+      debugPrint("zone: " + zoneNum.toString() + " ptsAtZone: " + myAnalyzer.calcPtsAtZoneMapDisplay(x, y).toString() + ", (" + x.toString() + ", " + y.toString()+ ")");
+    }
+    //debugPrint("zone: " + zoneNum.toString() + ", y: " + y.toString() + ", x: " + x.toString());
+
+    double ptsAtZone = myAnalyzer.calcPtsAtZoneMapDisplay(x, y);
+    //if (ptsAtZone == 0){
+    //  return Colors.transparent;
+    //}
+
+    return Colors.blue[600];
+    
+  }
+  //zones start at 0, see miro but climb up, no sense of columns or row so need to convert
+  double zoneToX(int zone){
+    return zone - (zoneToY(zone)*Constants.zoneColumns);
+  }
+  double zoneToY(int zone){
+    double y = 0;
+    while (zone >= Constants.zoneColumns){
+      zone-=Constants.zoneColumns;
+      y++;
+    }
+    return y;
+  }
+
   List<PlotPoint> _getPoints() {
     List<PlotPoint> points = new List<PlotPoint>();
     if (TeamDataAnalyzer.teamAverages[_teamNumber] != null &&
@@ -100,6 +129,27 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
 
   @override
   Widget build(BuildContext context) {
+   var container = null;
+    //return new GridView.count(
+    GridView.count(
+
+          crossAxisCount: Constants.zoneColumns,
+          children: List.generate(Constants.zoneRows*Constants.zoneColumns, (index) {
+            //var container = Container(
+             container = Container(
+                margin: const EdgeInsets.all(0.5),
+                color: _getColor(index, myAnalyzer),
+                width: 48.0,
+                height: 48.0,
+                //'Item $index',
+                //style: Theme.of(context).textTheme.headline2,
+              );
+            //return Center(
+            //  child: container
+            //);
+          }),
+        );  
+
     return Scaffold(
       body: Container(
         // height: MediaQuery.of(context).size.height,
@@ -111,15 +161,18 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
               children: <Widget>[
                 Image.asset('assets/croppedmap.png', fit: BoxFit.contain),
                 //shading,
+                //container,
                 myAnalyzer,
-                //plotter,
-                MapScouterKey()
+                plotter,
+               MapScouterKey()
               ],
             ),
           ),
         ),
       ),
     );
+
+     
     
   }
 }

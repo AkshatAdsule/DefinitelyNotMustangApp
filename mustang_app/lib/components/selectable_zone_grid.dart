@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './zone_grid.dart';
 
+// ignore: must_be_immutable
 class SelectableZoneGrid extends ZoneGrid {
   SelectableZoneGrid(Key key, Function(int x, int y) onTap)
       : super(key, onTap, (int x, int y, bool isSelected, double cellWidth,

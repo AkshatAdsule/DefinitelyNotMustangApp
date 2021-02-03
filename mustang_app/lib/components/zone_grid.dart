@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/constants/constants.dart';
 
+// ignore: must_be_immutable
 class ZoneGrid extends StatefulWidget {
   _ZoneGridState _zoneGridState;
   Function(int x, int y) _onTap;

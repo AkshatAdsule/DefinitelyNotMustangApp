@@ -8,6 +8,12 @@ class GameAction {
     this._x,
     this._y,
   );
+
+  GameAction.other(this._action, this._timeStamp) {
+    _x = -1;
+    _y = -1;
+  }
+
   //for push, timeStamp is at the beginning of the push
   GameAction.push(this._action, this._timeStamp, this._x, this._y, this._endX,
       this._endY, this._pushTime);
@@ -56,24 +62,16 @@ class GameAction {
         .firstWhere((element) => element.toString() == data['actionType']);
   }
 
-  static ActionType labelAction(String str) {
-    print("preLabel:" + str);
+  static ActionType stringToActionType(String str) {
+    print("String: " + str);
     ActionType action = ActionType.values
         .firstWhere((e) => e.toString() == 'ActionType.' + str);
-    print(action.toString());
+    print("Enum:" + action.toString());
     return action;
   }
 
   static bool requiresLocation(ActionType type) {
-    switch (type) {
-      case ActionType.OTHER_CLIMB:
-      case ActionType.OTHER_CLIMB_MISS:
-      case ActionType.OTHER_WHEEL_ROTATION:
-      case ActionType.OTHER_WHEEL_POSITION:
-        return false;
-      default:
-        return true;
-    }
+    return !(type.toString().contains("OTHER"));
   }
 }
 
