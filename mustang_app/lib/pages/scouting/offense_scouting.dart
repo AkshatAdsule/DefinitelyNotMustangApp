@@ -67,7 +67,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
       FlatButton option = FlatButton(
         child: Text(type),
         onPressed: () {
-          addAction(GameAction.labelAction(
+          _addAction(GameAction.labelAction(
               "OTHER_" + action.toUpperCase() + "_" + type.toUpperCase()));
           Navigator.pop(context);
         },

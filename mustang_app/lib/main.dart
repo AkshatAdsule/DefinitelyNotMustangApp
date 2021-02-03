@@ -22,30 +22,6 @@ class MyApp extends StatelessWidget {
           builder: (context) => Scouter(),
           settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
         );
-      case AutonScouter.route:
-        return MaterialPageRoute(
-          builder: (context) => AutonScouter(
-            teamNumber: args['teamNumber'],
-            matchNumber: args['matchNumber'],
-          ),
-          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
-        );
-      case TeleopScouter.route:
-        return MaterialPageRoute(
-          builder: (context) => TeleopScouter(
-            teamNumber: args['teamNumber'],
-            matchNumber: args['matchNumber'],
-          ),
-          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
-        );
-      case EndgameScouter.route:
-        return MaterialPageRoute(
-          builder: (context) => EndgameScouter(
-            teamNumber: args['teamNumber'],
-            matchNumber: args['matchNumber'],
-          ),
-          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
-        );
       case MatchEndScouter.route:
         return MaterialPageRoute(
           builder: (context) => MatchEndScouter(

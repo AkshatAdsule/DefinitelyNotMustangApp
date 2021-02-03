@@ -73,7 +73,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
       FlatButton option = FlatButton(
         child: Text(type),
         onPressed: () {
-          addAction(GameAction.labelAction(
+          _addAction(GameAction.labelAction(
               action.toUpperCase() + "_" + type.toUpperCase()));
           Navigator.pop(context);
         },
@@ -143,7 +143,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
                       style: game_button.ButtonStyle.RAISED,
                       type: game_button.ButtonType.ELEMENT,
                       onPressed: () {
-                        addAction(ActionType.PREV_INTAKE);
+                        _addAction(ActionType.PREV_INTAKE);
                       },
                       text: 'Prevent Intake'),
                   game_button.ScoutingButton(
