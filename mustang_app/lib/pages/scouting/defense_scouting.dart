@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/game_action.dart';
 import 'package:mustang_app/components/zone_grid.dart';
@@ -10,13 +12,15 @@ class DefenseScouting extends StatefulWidget {
   void Function(BuildContext context) _finishGame;
   void Function(ActionType type) _addAction;
 
-  void Function() _toggleMode, _undo;
+  void Function() _toggleMode;
+  GameAction Function() _undo;
+
   Stopwatch _stopwatch;
   ZoneGrid _zoneGrid;
 
   DefenseScouting(
       {void Function() toggleMode,
-      void Function() undo,
+      GameAction Function() undo,
       void Function(BuildContext context) finishGame,
       void Function(ActionType type) addAction,
       Stopwatch stopwatch,
@@ -40,16 +44,19 @@ class DefenseScouting extends StatefulWidget {
 }
 
 class _DefenseScoutingState extends State<DefenseScouting> {
-  void Function() _toggleMode, _undo;
+  void Function() _toggleMode;
+  GameAction Function() _undo;
+
   void Function(BuildContext context) _finishGame;
   void Function(ActionType type) _addAction;
 
   Stopwatch _stopwatch;
   ZoneGrid _zoneGrid;
+  Timer _endTimer;
 
   _DefenseScoutingState({
     void Function() toggleMode,
-    void Function() undo,
+    GameAction Function() undo,
     void Function(BuildContext context) finishGame,
     void Function(ActionType type) addAction,
     Stopwatch stopwatch,
@@ -61,6 +68,22 @@ class _DefenseScoutingState extends State<DefenseScouting> {
     _zoneGrid = zoneGrid;
     _addAction = addAction;
     _undo = undo;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (_stopwatch.elapsedMilliseconds <= 120000) {
+      _endTimer = new Timer(
+          Duration(milliseconds: 150000 - _stopwatch.elapsedMilliseconds),
+          () => setState(() {}));
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _endTimer.cancel();
   }
 
   void actionDeterminer(BuildContext context, String action) {

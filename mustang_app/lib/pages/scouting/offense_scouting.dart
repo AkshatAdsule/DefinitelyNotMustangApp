@@ -4,30 +4,35 @@ import 'dart:math';
 import '../../components/game_action.dart';
 import '../../components/game_map.dart';
 import '../../components/game_buttons.dart' as game_button;
+import 'dart:async';
 
 // ignore: must_be_immutable
 class OffenseScouting extends StatefulWidget {
-  void Function() _toggleMode, _undo;
+  void Function() _toggleMode;
+  GameAction Function() _undo;
   void Function(BuildContext context) _finishGame;
   void Function(ActionType type) _addAction;
+  void Function(int millisecondsElapsed) _setClimb;
   Stopwatch _stopwatch;
   ZoneGrid _zoneGrid;
 
   OffenseScouting({
-    Key key,
     void Function() toggleMode,
-    void Function() undo,
+    GameAction Function() undo,
+    void Function(int millisecondsElapsed) setClimb,
     void Function(BuildContext context) finishGame,
     void Function(ActionType type) addAction,
     Stopwatch stopwatch,
     ZoneGrid zoneGrid,
-  })  : _toggleMode = toggleMode,
-        _stopwatch = stopwatch,
-        _finishGame = finishGame,
-        _zoneGrid = zoneGrid,
-        _addAction = addAction,
-        _undo = undo,
-        super(key: key);
+  }) {
+    _toggleMode = toggleMode;
+    _stopwatch = stopwatch;
+    _finishGame = finishGame;
+    _zoneGrid = zoneGrid;
+    _addAction = addAction;
+    _undo = undo;
+    _setClimb = setClimb;
+  }
 
   @override
   _OffenseScoutingState createState() => _OffenseScoutingState(
@@ -36,24 +41,30 @@ class OffenseScouting extends StatefulWidget {
       stopwatch: _stopwatch,
       zoneGrid: _zoneGrid,
       addAction: _addAction,
-      undo: _undo);
+      undo: _undo,
+      setClimb: _setClimb);
 }
 
 class _OffenseScoutingState extends State<OffenseScouting> {
-  void Function() _toggleMode, _undo;
+  void Function() _toggleMode;
+  GameAction Function() _undo;
+
   void Function(BuildContext context) _finishGame;
+  void Function(int millisecondsElapsed) _setClimb;
+
   void Function(ActionType type) _addAction;
 
   Stopwatch _stopwatch;
 
   double _sliderValue;
   bool _completedRotationControl, _completedPositionControl;
-
+  Timer _endgameTimer, _endTimer;
   ZoneGrid _zoneGrid;
 
   _OffenseScoutingState(
       {void Function() toggleMode,
-      void Function() undo,
+      GameAction Function() undo,
+      void Function(int millisecondsElapsed) setClimb,
       void Function(BuildContext context) finishGame,
       void Function(ActionType type) addAction,
       Stopwatch stopwatch,
@@ -64,6 +75,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
     _zoneGrid = zoneGrid;
     _addAction = addAction;
     _undo = undo;
+    _setClimb = setClimb;
   }
 
   @override
@@ -72,10 +84,32 @@ class _OffenseScoutingState extends State<OffenseScouting> {
     _sliderValue = 2;
     _completedRotationControl = false;
     _completedPositionControl = false;
+    if (_stopwatch.elapsedMilliseconds <= 120000) {
+      _endgameTimer = new Timer(
+          Duration(milliseconds: 120000 - _stopwatch.elapsedMilliseconds), () {
+        print('callback 1');
+        setState(() {});
+      });
+    }
+    if (_stopwatch.elapsedMilliseconds <= 150000) {
+      _endTimer = new Timer(
+          Duration(milliseconds: 150000 - _stopwatch.elapsedMilliseconds), () {
+        print('callback 2');
+        setState(() {});
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _endTimer.cancel();
+    _endgameTimer.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
+    print("render: " + _stopwatch.elapsedMilliseconds.toString());
     return Container(
       child: GameMap(
         zoneGrid: _zoneGrid,
@@ -89,7 +123,21 @@ class _OffenseScoutingState extends State<OffenseScouting> {
               child: IconButton(
                 icon: Icon(Icons.undo),
                 color: Colors.white,
-                onPressed: () => _undo(),
+                onPressed: () {
+                  GameAction action = _undo();
+                  if (action == null) {
+                    return;
+                  }
+                  if (action.action == ActionType.OTHER_WHEEL_ROTATION) {
+                    setState(() {
+                      _completedRotationControl = false;
+                    });
+                  } else if (action.action == ActionType.OTHER_WHEEL_POSITION) {
+                    setState(() {
+                      _completedPositionControl = false;
+                    });
+                  }
+                },
               ),
             ),
           ),
@@ -104,7 +152,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                         !_completedRotationControl ? Colors.green : Colors.blue,
                     child: IconButton(
                       onPressed: () {
-                        if (_completedRotationControl) {
+                        if (!_completedRotationControl) {
                           _addAction(ActionType.OTHER_WHEEL_ROTATION);
                           setState(() {
                             _completedRotationControl = true;
@@ -122,7 +170,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                       ),
                     ),
                   )),
-          _stopwatch.elapsedMilliseconds > 120000
+          _stopwatch.elapsedMilliseconds >= 120000
               ? GameMapChild(
                   right: 30,
                   bottom: 55,
@@ -137,6 +185,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                         label: _sliderValue.round().toString(),
                         onChanged: (newVal) => setState(() {
                           _sliderValue = newVal;
+                          _setClimb(_stopwatch.elapsedMilliseconds);
                         }),
                         min: 1,
                         max: 3,
@@ -146,7 +195,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                   ),
                 )
               : Container(),
-          _stopwatch.elapsedMilliseconds > 150000
+          _stopwatch.elapsedMilliseconds >= 150000
               ? GameMapChild(
                   align: Alignment.topLeft,
                   left: 7,
@@ -154,7 +203,9 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                   child: game_button.ScoutingButton(
                       style: game_button.ButtonStyle.RAISED,
                       type: game_button.ButtonType.PAGEBUTTON,
-                      onPressed: () => _finishGame(context),
+                      onPressed: () {
+                        _finishGame(context);
+                      },
                       text: 'Finish Game'))
               : Container(),
         ],

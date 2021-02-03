@@ -10,7 +10,6 @@ import '../../components/header.dart';
 import 'defense_scouting.dart';
 import 'offense_scouting.dart';
 
-// ignore: must_be_immutable
 class MapScouting extends StatefulWidget {
   static const String route = '/MapScouter';
   String _teamNumber, _matchNumber, _allianceColor;
@@ -34,6 +33,7 @@ class _MapScoutingState extends State<MapScouting> {
   List<GameAction> _actions;
   OffenseScouting offenseScouting;
   DefenseScouting defenseScouting;
+  int _sliderLastChanged;
 
   _MapScoutingState(this._teamNumber, this._matchNumber, this._allianceColor);
 
@@ -48,23 +48,10 @@ class _MapScoutingState extends State<MapScouting> {
     _stopwatch = new Stopwatch();
     _zoneGrid = SelectableZoneGrid(GlobalKey(), (int x, int y) {});
     _actions = [];
-    offenseScouting = OffenseScouting(
-      key: GlobalKey(),
-      toggleMode: this.toggleMode,
-      stopwatch: _stopwatch,
-      zoneGrid: _zoneGrid,
-      finishGame: this.finishGame,
-      addAction: this.addAction,
-      undo: this.undo,
-    );
-    defenseScouting = DefenseScouting(
-      toggleMode: this.toggleMode,
-      stopwatch: _stopwatch,
-      zoneGrid: _zoneGrid,
-      finishGame: this.finishGame,
-      addAction: this.addAction,
-      undo: this.undo,
-    );
+    _sliderLastChanged = 0;
+    // offenseScouting =
+    // defenseScouting =
+    print('Timer start');
   }
 
   void toggleMode() {
@@ -88,7 +75,19 @@ class _MapScoutingState extends State<MapScouting> {
     }
   }
 
+  void setClimb(int millisecondsElapsed) {
+    _sliderLastChanged = millisecondsElapsed;
+  }
+
   void finishGame(BuildContext context) {
+    _actions.add(
+      GameAction(
+        ActionType.OTHER_CLIMB,
+        _sliderLastChanged.toDouble(),
+        _zoneGrid.x.toDouble(),
+        _zoneGrid.y.toDouble(),
+      ),
+    );
     Navigator.pushNamed(context, MatchEndScouter.route, arguments: {
       'teamNumber': _teamNumber,
       'matchNumber': _matchNumber,
@@ -97,10 +96,11 @@ class _MapScoutingState extends State<MapScouting> {
     });
   }
 
-  void undo() {
+  GameAction undo() {
     if (_actions.length > 0) {
-      _actions.removeLast();
+      return _actions.removeLast();
     }
+    return null;
   }
 
   @override
@@ -115,9 +115,24 @@ class _MapScoutingState extends State<MapScouting> {
         [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
     Widget scoutingMode;
     if (_onOffense) {
-      scoutingMode = offenseScouting;
+      scoutingMode = OffenseScouting(
+        toggleMode: this.toggleMode,
+        stopwatch: _stopwatch,
+        zoneGrid: _zoneGrid,
+        finishGame: this.finishGame,
+        addAction: this.addAction,
+        undo: this.undo,
+        setClimb: this.setClimb,
+      );
     } else {
-      scoutingMode = defenseScouting;
+      scoutingMode = DefenseScouting(
+        toggleMode: this.toggleMode,
+        stopwatch: _stopwatch,
+        zoneGrid: _zoneGrid,
+        finishGame: this.finishGame,
+        addAction: this.addAction,
+        undo: this.undo,
+      );
     }
 
     return Scaffold(
