@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/blur_overlay.dart';
+import 'package:mustang_app/components/game_action.dart';
 import 'package:mustang_app/components/selectable_zone_grid.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/exports/pages.dart';
@@ -24,10 +25,11 @@ class MapScouting extends StatefulWidget {
 }
 
 class _MapScoutingState extends State<MapScouting> {
-  bool _onOffense, _startedScouting, _stopGame;
+  bool _onOffense, _startedScouting;
   Stopwatch _stopwatch;
   String _teamNumber, _matchNumber;
   ZoneGrid _zoneGrid;
+  List<GameAction> _actions;
 
   _MapScoutingState(String teamNumber, String matchNumber) {
     _teamNumber = teamNumber;
@@ -42,10 +44,9 @@ class _MapScoutingState extends State<MapScouting> {
     super.initState();
     _onOffense = true;
     _startedScouting = false;
-    _stopGame = false;
     _stopwatch = new Stopwatch();
     _zoneGrid = SelectableZoneGrid(GlobalKey(), (int x, int y) {});
-    print('init state');
+    _actions = [];
   }
 
   void toggleMode() {
@@ -54,8 +55,27 @@ class _MapScoutingState extends State<MapScouting> {
     });
   }
 
-  void endGame() {
-    _stopGame = true;
+  void addAction(ActionType type) {
+    int now = _stopwatch.elapsedMilliseconds;
+    int x = _zoneGrid.x;
+    int y = _zoneGrid.y;
+    bool hasSelected = _zoneGrid.hasSelected;
+    if (hasSelected) {
+      GameAction action =
+          new GameAction(type, now.toDouble(), x.toDouble(), y.toDouble());
+      _actions.add(action);
+      print(action);
+    } else {
+      print('No location selected');
+    }
+  }
+
+  void finishGame(BuildContext context) {
+    Navigator.pushNamed(context, MatchEndScouter.route, arguments: {
+      'teamNumber': _teamNumber,
+      'matchNumber': _matchNumber,
+      'actions': _actions,
+    });
   }
 
   @override
@@ -72,12 +92,16 @@ class _MapScoutingState extends State<MapScouting> {
         toggleMode: this.toggleMode,
         stopwatch: _stopwatch,
         zoneGrid: _zoneGrid,
+        finishGame: this.finishGame,
+        addAction: this.addAction,
       );
     } else {
       scoutingMode = DefenseScouting(
         toggleMode: this.toggleMode,
         stopwatch: _stopwatch,
         zoneGrid: _zoneGrid,
+        finishGame: this.finishGame,
+        addAction: this.addAction,
       );
     }
 

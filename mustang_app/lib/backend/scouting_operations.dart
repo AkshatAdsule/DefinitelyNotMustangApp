@@ -250,14 +250,19 @@ class ScoutingOperations {
     return actions.map((action) => action.toJson());
   }
 
-  void updateMatchData(
-      String teamNumber, String matchNumber, List<GameAction> actions) async {
+  Future<void> updateMatchData(
+      String teamNumber, String matchNumber, List<GameAction> actions,
+      {String matchResult, String finalComments}) async {
     await Constants.db
         .collection('teams')
         .document(teamNumber)
         .collection('matches')
         .document(matchNumber)
-        .updateData({'actions': convertActionsToJson(actions)});
+        .updateData({
+      'actions': convertActionsToJson(actions),
+      'finalComments': finalComments,
+      'matchResult': matchResult
+    });
   }
 
   Future<void> updateMatchDataSummary(

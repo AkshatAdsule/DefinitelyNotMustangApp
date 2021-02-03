@@ -7,19 +7,23 @@ import '../../components/game_buttons.dart' as game_button;
 
 // ignore: must_be_immutable
 class OffenseScouting extends StatefulWidget {
-  void Function() _toggleMode, _finishGame;
+  void Function() _toggleMode;
+  void Function(BuildContext context) _finishGame;
+  void Function(ActionType type) _addAction;
   Stopwatch _stopwatch;
   ZoneGrid _zoneGrid;
 
   OffenseScouting(
       {void Function() toggleMode,
-      void Function() finishGame,
+      void Function(BuildContext context) finishGame,
+      void Function(ActionType type) addAction,
       Stopwatch stopwatch,
       ZoneGrid zoneGrid}) {
     _toggleMode = toggleMode;
     _stopwatch = stopwatch;
     _finishGame = finishGame;
     _zoneGrid = zoneGrid;
+    _addAction = addAction;
   }
 
   @override
@@ -27,11 +31,15 @@ class OffenseScouting extends StatefulWidget {
       toggleMode: _toggleMode,
       finishGame: _finishGame,
       stopwatch: _stopwatch,
-      zoneGrid: _zoneGrid);
+      zoneGrid: _zoneGrid,
+      addAction: _addAction);
 }
 
 class _OffenseScoutingState extends State<OffenseScouting> {
-  void Function() _toggleMode, _finishGame;
+  void Function() _toggleMode;
+  void Function(BuildContext context) _finishGame;
+  void Function(ActionType type) _addAction;
+
   Stopwatch _stopwatch;
 
   double _sliderValue = 2;
@@ -40,28 +48,15 @@ class _OffenseScoutingState extends State<OffenseScouting> {
 
   _OffenseScoutingState(
       {void Function() toggleMode,
-      void Function() finishGame,
+      void Function(BuildContext context) finishGame,
+      void Function(ActionType type) addAction,
       Stopwatch stopwatch,
       ZoneGrid zoneGrid}) {
     _toggleMode = toggleMode;
     _finishGame = finishGame;
     _stopwatch = stopwatch;
     _zoneGrid = zoneGrid;
-  }
-
-  void addAction(ActionType type) {
-    int now = _stopwatch.elapsedMilliseconds;
-    int x = _zoneGrid.x;
-    int y = _zoneGrid.y;
-    bool hasSelected = _zoneGrid.hasSelected;
-    if (hasSelected) {
-      GameAction action =
-          new GameAction(type, now.toDouble(), x.toDouble(), y.toDouble());
-      shots.add(action);
-      print(action);
-    } else {
-      print('No location selected');
-    }
+    _addAction = addAction;
   }
 
   @override
@@ -80,7 +75,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                 icon: Icon(Icons.undo),
                 color: Colors.white,
                 onPressed: () {
-                  addAction(ActionType.OTHER_WHEEL_COLOR);
+                  _addAction(ActionType.OTHER_WHEEL_COLOR);
                 },
               ),
             ),
@@ -131,7 +126,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                   child: game_button.ScoutingButton(
                       style: game_button.ButtonStyle.RAISED,
                       type: game_button.ButtonType.PAGEBUTTON,
-                      onPressed: _finishGame,
+                      onPressed: () => _finishGame(context),
                       text: 'Finish Game'))
               : Container(),
         ],
@@ -161,14 +156,14 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                               style: game_button.ButtonStyle.RAISED,
                               type: game_button.ButtonType.MAKE,
                               onPressed: () {
-                                addAction(ActionType.SHOT_OUTER);
+                                _addAction(ActionType.SHOT_OUTER);
                               },
                               text: 'Out'),
                           game_button.ScoutingButton(
                               style: game_button.ButtonStyle.RAISED,
                               type: game_button.ButtonType.MAKE,
                               onPressed: () {
-                                addAction(ActionType.SHOT_INNER);
+                                _addAction(ActionType.SHOT_INNER);
                               },
                               text: 'In'),
                         ],
@@ -177,7 +172,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                           style: game_button.ButtonStyle.RAISED,
                           type: game_button.ButtonType.MISS,
                           onPressed: () {
-                            addAction(ActionType.MISSED_OUTER);
+                            _addAction(ActionType.MISSED_OUTER);
                           },
                           text: ''),
                       Row(
@@ -187,14 +182,14 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                               style: game_button.ButtonStyle.RAISED,
                               type: game_button.ButtonType.MAKE,
                               onPressed: () {
-                                addAction(ActionType.SHOT_LOW);
+                                _addAction(ActionType.SHOT_LOW);
                               },
                               text: 'Low'),
                           game_button.ScoutingButton(
                               style: game_button.ButtonStyle.RAISED,
                               type: game_button.ButtonType.MISS,
                               onPressed: () {
-                                addAction(ActionType.MISSED_LOW);
+                                _addAction(ActionType.MISSED_LOW);
                               },
                               text: '')
                         ],

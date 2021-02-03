@@ -1,6 +1,7 @@
 // import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:mustang_app/components/game_action.dart';
 
 import '../../backend/scouting_operations.dart';
 import '../../components/header.dart';
@@ -10,32 +11,40 @@ import 'post_scouter.dart';
 class MatchEndScouter extends StatefulWidget {
   static const String route = '/MatchEndScouter';
   String _teamNumber, _matchNumber;
-
-  MatchEndScouter({String teamNumber, String matchNumber}) {
+  List<GameAction> _actions;
+  MatchEndScouter(
+      {String teamNumber, String matchNumber, List<GameAction> actions}) {
     _teamNumber = teamNumber;
     _matchNumber = matchNumber;
+    _actions = actions;
   }
 
   @override
   _MatchEndScouterState createState() =>
-      _MatchEndScouterState(_teamNumber, _matchNumber);
+      _MatchEndScouterState(_teamNumber, _matchNumber, _actions);
 }
 
 class _MatchEndScouterState extends State<MatchEndScouter> {
   String _teamNumber;
   String _matchNumber;
-
+  List<GameAction> _actions;
   String _matchResult;
   TextEditingController _finalCommentsController = TextEditingController();
 
   ScoutingOperations db = new ScoutingOperations();
 
   _MatchEndScouterState(
-    teamNumber,
-    matchNumber,
-  ) {
+      String teamNumber, String matchNumber, List<GameAction> actions) {
     _teamNumber = teamNumber;
     _matchNumber = matchNumber;
+    _actions = actions;
+  }
+
+  void _finishGame(BuildContext context) {
+    db.updateMatchData(_teamNumber, _matchNumber, _actions,
+        finalComments: _finalCommentsController.text,
+        matchResult: _matchResult);
+    Navigator.pushNamed(context, PostScouter.route);
   }
 
   @override
@@ -100,13 +109,7 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
                   EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
               child: RaisedButton(
                   color: Colors.green,
-                  onPressed: () {
-                    db.updateMatchDataEnd(_teamNumber, _matchNumber,
-                        fouls: 0, //TODO: change back to how it was
-                        finalComments: _finalCommentsController.text,
-                        matchResult: _matchResult);
-                    Navigator.pushNamed(context, PostScouter.route);
-                  },
+                  onPressed: () => _finishGame(context),
                   padding: EdgeInsets.all(15),
                   child: Text(
                     'Submit',
