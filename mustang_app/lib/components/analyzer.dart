@@ -405,19 +405,81 @@ class _AnalyzerState extends State<Analyzer> {
 
   //for map display, takes in a zone and returns offense pts scored there
   double calcPtsAtZone(double x, double y){
-    debugPrint("_shotLow.length: " + _shotLow.length.toString());
+    //BASICALLY NEED TO CALL ALL OF THIS SO THAT THE STUFF GETS INITIALIZED CAUSE IT'S NOT HAPPENENING AT OTHER PLACES
+    //initialize all vars
+    var action1 = new GameAction(ActionType.FOUL_REG, 2000, 3, 4);
+    var action1a = new GameAction(ActionType.FOUL_TECH, 2000, 4, 4);
+    var action1b = new GameAction(ActionType.SHOT_LOW, 5000, 0, 2);
+    var action2 = new GameAction(ActionType.SHOT_INNER, 6000, 15, 1);
+    var action3 = new GameAction(ActionType.PREV_SHOT, 10000, 13, 5);
+    var action4 = new GameAction(ActionType.MISSED_OUTER, 15000, 2, 4);
+    var action4a = new GameAction(ActionType.MISSED_OUTER, 16000, 1, 4);
+    var action5 = new GameAction(ActionType.OTHER_CLIMB_MISS, 19000, 3, 3);
+    var action6 = new GameAction(ActionType.SHOT_LOW, 30000, 0, 5);
+    var action7 = new GameAction(ActionType.SHOT_INNER, 39000, 5, 2);
+    var action8 = new GameAction(ActionType.SHOT_OUTER, 40000, 8, 4);
+    var action9 = new GameAction.push(ActionType.PUSH, 44000, 10, 5, 8, 4, 3);
+    var action10 = new GameAction(ActionType.SHOT_OUTER, 45000, 5, 4);
+    var action11 = new GameAction(ActionType.SHOT_LOW, 46000, 13, 7);
+
+
+
+    var matchArray1 = [action1, action1a, action1b, action2, action3];
+    var matchArray2 = [action4, action4a, action5, action6];
+    var matchArray3 = [action7, action8, action9, action10, action11];
+
+    //FINALARRAY IS WHAT WILL BE PASSED INTO THE ANALYZER
+    var finalArray = [matchArray1, matchArray2, matchArray3];
+    _allMatches = finalArray;
+        _driveBase = "tank";
+    _initialized = true;
+
+//needs to be called to initialize
+    String random = getReport();
     
     double totalPoints = 0;
-    for (int i = 0; i < _shotLow.length; i++){
-      
-      if (_shotLow[i].x == x && _shotLow[i].y == y){
-        debugPrint("_shotLow[i].x == x && _shotLow[i].y == y was called");
-        if (_shotLow[i].timeStamp <= 15){ totalPoints += Constants.lowShotAutonValue;}
-        else { totalPoints += Constants.lowShotValue;}
 
+    for (int i = 0; i < _allMatches.length; i++){
+      //inside each array of actions
+      for (int j = 0; j < _allMatches[i].length; j++){
+        //low shot
+        if (_allMatches[i][j].action == ActionType.SHOT_LOW){
+          if (_allMatches[i][j].x == x && _allMatches[i][j].y == y){
+            if (_allMatches[i][j].timeStamp <= 15){ totalPoints += Constants.lowShotAutonValue;}
+            else { totalPoints += Constants.lowShotValue;}
+          }
+        }
+
+        //outer shot
+        if (_allMatches[i][j].action == ActionType.SHOT_OUTER){          
+          if (_allMatches[i][j].x == x && _allMatches[i][j].y == y){
+            if (_allMatches[i][j].timeStamp <= 15){ totalPoints += Constants.outerShotAutonValue;}
+            else { totalPoints += Constants.outerShotValue;}
+          }
+          
+        }
+        
+        //inner shot
+        if (_allMatches[i][j].action == ActionType.SHOT_INNER){          
+          if (_allMatches[i][j].x == x && _allMatches[i][j].y == y){
+            if (_allMatches[i][j].timeStamp <= 15){ totalPoints += Constants.innerShotAutonValue;}
+            else { totalPoints += Constants.innerShotValue;}
+          }
+          
+        }
+
+        
       }
     }
-
+    /*
+    for (int i = 0; i < _shotLow.length; i++){
+      if (_shotLow[i].x == x && _shotLow[i].y == y){
+        //debugPrint("_shotLow[i].x == x && _shotLow[i].y == y was called");
+        if (_shotLow[i].timeStamp <= 15){ totalPoints += Constants.lowShotAutonValue;}
+        else { totalPoints += Constants.lowShotValue;}
+      }
+    }
+*/
     return totalPoints;
   }
 

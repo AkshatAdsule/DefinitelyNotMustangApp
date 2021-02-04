@@ -1,18 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/components/analyzer.dart';
 import 'package:mustang_app/constants/constants.dart';
 
 class MapAnalysisShading extends StatefulWidget {
   static const String route = './MapAnalysisShading';
+  Analyzer _myAnalyzer;
+  MapAnalysisShading({Analyzer myAnalyzer
+  }){
+    _myAnalyzer = myAnalyzer;
+  }
 
+  @override
+  _MapAnalysisShadingState createState() => _MapAnalysisShadingState(
+      myAnalyzer: _myAnalyzer);
+}
+/*
   @override
   State<StatefulWidget> createState() {
     return new _MapAnalysisShadingState();
   }
-}
+  */
+
 
 class _MapAnalysisShadingState extends State<MapAnalysisShading> {
+  Analyzer _myAnalyzer;
+_MapAnalysisShadingState({Analyzer myAnalyzer}){
+    _myAnalyzer = myAnalyzer;
+}
 
-  Color _getColor(int zoneNum){
+Color _getColor(int zoneNum){
+  debugPrint("GET COLOR WAS CALLED");
+  debugPrint("index: " + zoneNum.toString());
     if (zoneNum == 2){
       return Colors.transparent;
     }
@@ -31,7 +49,9 @@ class _MapAnalysisShadingState extends State<MapAnalysisShading> {
         //),
          return new GridView.count(
           crossAxisCount: Constants.zoneColumns,
-          children: List.generate(Constants.zoneRows*Constants.zoneColumns, (index) {
+          //children: List.generate(Constants.zoneRows*Constants.zoneColumns, (index) {
+           children: List.generate(128, (index) {
+
             var container = Container(
                 margin: const EdgeInsets.all(0.5),
                 color: _getColor(index),

@@ -41,4 +41,7 @@ class Constants {
 
   static int zoneRows = 8;
   static int zoneColumns = 16;
+
+  //MAP ANALYSIS
+  static const int shadingPointDifference = 2;
 }
