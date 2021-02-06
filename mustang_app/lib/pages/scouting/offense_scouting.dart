@@ -61,8 +61,10 @@ class _OffenseScoutingState extends State<OffenseScouting> {
   Stopwatch _stopwatch;
   String _allianceColor;
   double _sliderValue;
-  bool _completedRotationControl, _completedPositionControl;
-  Timer _endgameTimer, _endTimer;
+  bool _completedRotationControl,
+      _completedPositionControl,
+      _crossedInitiationLine;
+  Timer _endgameTimer, _endTimer, _teleopTimer;
   ZoneGrid _zoneGrid;
 
   _OffenseScoutingState({
@@ -91,6 +93,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
     _sliderValue = 2;
     _completedRotationControl = false;
     _completedPositionControl = false;
+    _crossedInitiationLine = false;
     if (_stopwatch.elapsedMilliseconds <= 120000) {
       _endgameTimer = new Timer(
           Duration(milliseconds: 120000 - _stopwatch.elapsedMilliseconds), () {
@@ -103,6 +106,12 @@ class _OffenseScoutingState extends State<OffenseScouting> {
         setState(() {});
       });
     }
+    if (_stopwatch.elapsedMilliseconds <= 15000) {
+      _teleopTimer = new Timer(
+          Duration(milliseconds: 15000 - _stopwatch.elapsedMilliseconds), () {
+        setState(() {});
+      });
+    }
   }
 
   @override
@@ -110,6 +119,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
     super.dispose();
     _endTimer.cancel();
     _endgameTimer.cancel();
+    _teleopTimer.cancel();
   }
 
   @override
@@ -133,14 +143,24 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                   if (action == null) {
                     return;
                   }
-                  if (action.action == ActionType.OTHER_WHEEL_ROTATION) {
-                    setState(() {
-                      _completedRotationControl = false;
-                    });
-                  } else if (action.action == ActionType.OTHER_WHEEL_POSITION) {
-                    setState(() {
-                      _completedPositionControl = false;
-                    });
+                  switch (action.action) {
+                    case ActionType.OTHER_WHEEL_ROTATION:
+                      setState(() {
+                        _completedRotationControl = false;
+                      });
+                      break;
+                    case ActionType.OTHER_WHEEL_POSITION:
+                      setState(() {
+                        _completedPositionControl = false;
+                      });
+                      break;
+                    case ActionType.OTHER_CROSSED_INITIATION_LINE:
+                      setState(() {
+                        _crossedInitiationLine = false;
+                      });
+                      break;
+                    default:
+                      break;
                   }
                 },
               ),
@@ -196,6 +216,23 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                         max: 3,
                         value: _sliderValue,
                       ),
+                    ),
+                  ),
+                )
+              : Container(),
+          (_stopwatch.elapsedMilliseconds <= 15000 && !_crossedInitiationLine)
+              ? GameMapChild(
+                  align: Alignment.center,
+                  child: CircleAvatar(
+                    child: IconButton(
+                      icon: Icon(Icons.check, color: Colors.white),
+                      color: Colors.green,
+                      onPressed: () {
+                        _addAction(ActionType.OTHER_CROSSED_INITIATION_LINE);
+                        setState(() {
+                          _crossedInitiationLine = true;
+                        });
+                      },
                     ),
                   ),
                 )
