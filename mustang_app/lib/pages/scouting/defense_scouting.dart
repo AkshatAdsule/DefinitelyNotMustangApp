@@ -18,19 +18,23 @@ class DefenseScouting extends StatefulWidget {
   Stopwatch _stopwatch;
   ZoneGrid _zoneGrid;
 
+  String _allianceColor;
+
   DefenseScouting(
       {void Function() toggleMode,
       GameAction Function() undo,
       void Function(BuildContext context) finishGame,
       void Function(ActionType type) addAction,
       Stopwatch stopwatch,
-      ZoneGrid zoneGrid}) {
+      ZoneGrid zoneGrid,
+      String allianceColor}) {
     _toggleMode = toggleMode;
     _stopwatch = stopwatch;
     _finishGame = finishGame;
     _zoneGrid = zoneGrid;
     _addAction = addAction;
     _undo = undo;
+    _allianceColor = allianceColor;
   }
 
   @override
@@ -40,7 +44,8 @@ class DefenseScouting extends StatefulWidget {
       stopwatch: _stopwatch,
       zoneGrid: _zoneGrid,
       addAction: _addAction,
-      undo: _undo);
+      undo: _undo,
+      allianceColor: _allianceColor);
 }
 
 class _DefenseScoutingState extends State<DefenseScouting> {
@@ -53,6 +58,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
   Stopwatch _stopwatch;
   ZoneGrid _zoneGrid;
   Timer _endTimer;
+  String _allianceColor;
 
   _DefenseScoutingState({
     void Function() toggleMode,
@@ -61,6 +67,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
     void Function(ActionType type) addAction,
     Stopwatch stopwatch,
     ZoneGrid zoneGrid,
+    String allianceColor,
   }) {
     _toggleMode = toggleMode;
     _stopwatch = stopwatch;
@@ -68,6 +75,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
     _zoneGrid = zoneGrid;
     _addAction = addAction;
     _undo = undo;
+    _allianceColor = allianceColor;
   }
 
   @override
@@ -127,6 +135,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
   Widget build(BuildContext context) {
     return Container(
       child: GameMap(
+        allianceColor: _allianceColor,
         zoneGrid: _zoneGrid,
         imageChildren: [
           GameMapChild(

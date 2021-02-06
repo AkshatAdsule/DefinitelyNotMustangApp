@@ -5,13 +5,15 @@ import 'package:mustang_app/constants/constants.dart';
 // ignore: must_be_immutable
 class GameMap extends StatelessWidget {
   List<Widget> _imageChildren = [], _sideWidgets = [];
-  GameMap(
-      {List<Widget> imageChildren = const [],
-      List<Widget> sideWidgets = const [],
-      ZoneGrid zoneGrid}) {
-    if (Constants.fieldColor == 0) {
+  GameMap({
+    List<Widget> imageChildren = const [],
+    List<Widget> sideWidgets = const [],
+    ZoneGrid zoneGrid,
+    String allianceColor,
+  }) {
+    if (allianceColor.toUpperCase() == "BLUE") {
       _imageChildren.add(Image.asset('assets/blue_field.png'));
-    } else if (Constants.fieldColor == 1) {
+    } else if (allianceColor.toUpperCase() == "RED") {
       _imageChildren.add(Image.asset('assets/red_field.png'));
     }
     _imageChildren.add(zoneGrid ?? Container());

@@ -120,6 +120,7 @@ class _MapScoutingState extends State<MapScouting> {
         addAction: this.addAction,
         undo: this.undo,
         setClimb: this.setClimb,
+        allianceColor: _allianceColor,
       );
     } else {
       scoutingMode = DefenseScouting(
@@ -129,6 +130,7 @@ class _MapScoutingState extends State<MapScouting> {
         finishGame: this.finishGame,
         addAction: this.addAction,
         undo: this.undo,
+        allianceColor: _allianceColor,
       );
     }
 

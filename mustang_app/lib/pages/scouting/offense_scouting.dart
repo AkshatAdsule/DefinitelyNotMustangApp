@@ -15,6 +15,7 @@ class OffenseScouting extends StatefulWidget {
   void Function(int millisecondsElapsed) _setClimb;
   Stopwatch _stopwatch;
   ZoneGrid _zoneGrid;
+  String _allianceColor;
 
   OffenseScouting({
     void Function() toggleMode,
@@ -24,6 +25,7 @@ class OffenseScouting extends StatefulWidget {
     void Function(ActionType type) addAction,
     Stopwatch stopwatch,
     ZoneGrid zoneGrid,
+    String allianceColor,
   }) {
     _toggleMode = toggleMode;
     _stopwatch = stopwatch;
@@ -32,6 +34,7 @@ class OffenseScouting extends StatefulWidget {
     _addAction = addAction;
     _undo = undo;
     _setClimb = setClimb;
+    _allianceColor = allianceColor;
   }
 
   @override
@@ -42,7 +45,8 @@ class OffenseScouting extends StatefulWidget {
       zoneGrid: _zoneGrid,
       addAction: _addAction,
       undo: _undo,
-      setClimb: _setClimb);
+      setClimb: _setClimb,
+      allianceColor: _allianceColor);
 }
 
 class _OffenseScoutingState extends State<OffenseScouting> {
@@ -55,20 +59,22 @@ class _OffenseScoutingState extends State<OffenseScouting> {
   void Function(ActionType type) _addAction;
 
   Stopwatch _stopwatch;
-
+  String _allianceColor;
   double _sliderValue;
   bool _completedRotationControl, _completedPositionControl;
   Timer _endgameTimer, _endTimer;
   ZoneGrid _zoneGrid;
 
-  _OffenseScoutingState(
-      {void Function() toggleMode,
-      GameAction Function() undo,
-      void Function(int millisecondsElapsed) setClimb,
-      void Function(BuildContext context) finishGame,
-      void Function(ActionType type) addAction,
-      Stopwatch stopwatch,
-      ZoneGrid zoneGrid}) {
+  _OffenseScoutingState({
+    void Function() toggleMode,
+    GameAction Function() undo,
+    void Function(int millisecondsElapsed) setClimb,
+    void Function(BuildContext context) finishGame,
+    void Function(ActionType type) addAction,
+    Stopwatch stopwatch,
+    ZoneGrid zoneGrid,
+    String allianceColor,
+  }) {
     _toggleMode = toggleMode;
     _finishGame = finishGame;
     _stopwatch = stopwatch;
@@ -76,6 +82,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
     _addAction = addAction;
     _undo = undo;
     _setClimb = setClimb;
+    _allianceColor = allianceColor;
   }
 
   @override
@@ -109,6 +116,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
   Widget build(BuildContext context) {
     return Container(
       child: GameMap(
+        allianceColor: _allianceColor,
         zoneGrid: _zoneGrid,
         imageChildren: [
           GameMapChild(
