@@ -83,6 +83,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
   @override
   void dispose() {
     super.dispose();
+    print("ended timer");
     _endTimer.cancel();
   }
 
