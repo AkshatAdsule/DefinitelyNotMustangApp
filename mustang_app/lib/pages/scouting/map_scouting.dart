@@ -150,7 +150,7 @@ class _MapScoutingState extends State<MapScouting> {
               )
             : scoutingMode,
       ),
-      bottomNavigationBar: BottomNavBar(context),
+      // bottomNavigationBar: BottomNavBar(context),
       // TODO: Make sure that bottom nav appears when the end game notes button
       // is clicked or when the undo button is held down
     );
