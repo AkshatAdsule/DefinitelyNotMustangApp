@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/components/game_map.dart';
 import 'package:mustang_app/components/header.dart';
 import 'package:mustang_app/components/map_analysis_shading.dart';
+import 'package:mustang_app/components/map_shading_key.dart';
+import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/constants/constants.dart';
 import '../components/analyzer.dart';
 import '../utils/symbolplotter.dart';
@@ -33,21 +36,30 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
     //shading = new MapAnalysisShading();
   }
 
-   Color _getColor(int zoneNum){
+  Color _getColor(int zoneNum) {
     double y = zoneToY(zoneNum);
     double x = zoneToX(zoneNum);
     //debugPrint("zone: " + zoneNum.toString() + " ptsAtZone: " + myAnalyzer.calcPtsAtZoneMapDisplay(x, y).toString() + ", (" + x.toString() + ", " + y.toString()+ ")");
 
     double ptsAtZone = myAnalyzer.calcPtsAtZoneMapDisplay(x, y);
-    double increment = 600/Constants.shadingPointDifference;
+    double increment = 600 / Constants.shadingPointDifference;
 
     double multiple = 0;
-    for (double i = ptsAtZone; i > 0; i-= Constants.shadingPointDifference){
-      multiple ++;
+    for (double i = ptsAtZone; i > 0; i -= Constants.shadingPointDifference) {
+      multiple++;
     }
-    if (multiple > 0){
-      debugPrint("multiple: " + multiple.toString() + " zone: " + zoneNum.toString() + " ptsAtZone: " + myAnalyzer.calcPtsAtZoneMapDisplay(x, y).toString() + ", (" + x.toString() + ", " + y.toString()+ ")");
-
+    if (multiple > 0) {
+      debugPrint("multiple: " +
+          multiple.toString() +
+          " zone: " +
+          zoneNum.toString() +
+          " ptsAtZone: " +
+          myAnalyzer.calcPtsAtZoneMapDisplay(x, y).toString() +
+          ", (" +
+          x.toString() +
+          ", " +
+          y.toString() +
+          ")");
     }
     /*
     if (ptsAtZone == 0){
@@ -60,23 +72,22 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
       return Colors.green[600];
     }
 */
-    double value = increment*multiple;
-    if (value > 0){
-    debugPrint("value: " + value.toString());
-
+    double value = increment * multiple;
+    if (value > 0) {
+      debugPrint("value: " + value.toString());
     }
     return Colors.green[value.toInt()];
+  }
 
-    
-  }
   //zones start at 0, see miro but climb up, no sense of columns or row so need to convert
-  double zoneToX(int zone){
-    return zone - (zoneToY(zone)*Constants.zoneColumns);
+  double zoneToX(int zone) {
+    return zone - (zoneToY(zone) * Constants.zoneColumns);
   }
-  double zoneToY(int zone){
+
+  double zoneToY(int zone) {
     double y = 0;
-    while (zone >= Constants.zoneColumns){
-      zone-=Constants.zoneColumns;
+    while (zone >= Constants.zoneColumns) {
+      zone -= Constants.zoneColumns;
       y++;
     }
     return y;
@@ -152,33 +163,42 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
     //Widget buttonGrid = MapAnalysisShading(myAnalyzer);
     Widget buttonGrid = MapAnalysisShading();
 
-    
-   var container = null;
-    return new GridView.count(
-      
-    //GridView.count(
+    var container = null;
+    //return new GridView.count(
 
-          crossAxisCount: Constants.zoneColumns,
-          children: List.generate(Constants.zoneRows*Constants.zoneColumns, (index) {
-            //var container = Container(
-            //container = Container(
-             container = Container(
+    GridView.count(
+      crossAxisCount: Constants.zoneColumns,
+      children:
+          List.generate(Constants.zoneRows * Constants.zoneColumns, (index) {
+        //var container = Container(
+        //container = Container(
+        container = Container(
+          margin: const EdgeInsets.all(0.5),
+          //color: _getColor(index, myAnalyzer),
+          //color: _getColor(index),
+          color: Colors.green[600],
+          width: 48.0,
+          height: 48.0,
+          //'Item $index',
+          //style: Theme.of(context).textTheme.headline2,
+        );
+        return Center(child: container);
+      }),
+    );
 
-                margin: const EdgeInsets.all(0.5),
-                //color: _getColor(index, myAnalyzer),
-                color: _getColor(index),
-                width: 48.0,
-                height: 48.0,
-                //'Item $index',
-                //style: Theme.of(context).textTheme.headline2,
-              );
-            return Center(
-              child: container
-            );
-          }),
-        );  
+    ZoneGrid grid = ZoneGrid(GlobalKey(), (int x, int y) {},
+        (int x, int y, bool isSelected, double cellWidth, double cellHeight) {
+      return Container(
+        width: cellWidth,
+        height: cellHeight,
+        decoration: BoxDecoration(color: Colors.green[600]),
+        child: Spacer(),
+      );
+    });
 
-/*
+    GameMap gameMap =
+        GameMap(imageChildren: [], sideWidgets: [], zoneGrid: grid);
+
     return Scaffold(
       appBar: Header(context, 'Analysis'),
       body: Container(
@@ -190,20 +210,20 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 //Image.asset('assets/croppedmap.png', fit: BoxFit.contain),
+
+                gameMap,
                 //shading,
-                buttonGrid,
+                //buttonGrid,
                 //container,
-                //myAnalyzer,
-                //plotter,
-               //MapScouterKey()
+                myAnalyzer,
+                plotter,
+                MapScouterKey(),
+                MapShadingKey(),
               ],
             ),
           ),
         ),
       ),
     );
-
-     */
-    
   }
 }
