@@ -9,7 +9,7 @@ class GameMap extends StatelessWidget {
     List<Widget> imageChildren = const [],
     List<Widget> sideWidgets = const [],
     ZoneGrid zoneGrid,
-    String allianceColor,
+    String allianceColor = "blue",
   }) {
     if (allianceColor.toUpperCase() == "BLUE") {
       _imageChildren.add(Image.asset('assets/blue_field.png'));
