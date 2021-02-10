@@ -18,6 +18,7 @@ class PitScouter extends StatefulWidget {
 class _PitScouterState extends State<PitScouter> {
   ScoutingOperations db = new ScoutingOperations();
   String _teamNumber;
+  DriveBase _driveBase;
   TextEditingController _notes = new TextEditingController();
   bool _inner = false,
       _outer = false,
@@ -27,6 +28,7 @@ class _PitScouterState extends State<PitScouter> {
       _climb = false,
       _leveller = false;
   String _drivebaseType = "";
+  String _driveBaseTest = "Drive Base";
 
   _PitScouterState(teamNumber) {
     _teamNumber = teamNumber;
@@ -39,16 +41,57 @@ class _PitScouterState extends State<PitScouter> {
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
+              DropdownButton<String>(
+                value: _driveBaseTest,
+                icon: Icon(Icons.arrow_downward),
+                iconSize: 24,
+                elevation: 16,
+                style: TextStyle(color: Colors.green),
+                underline: Container(
+                  height: 2,
+                  color: Colors.green,
+                ),
+                onChanged: (String newValue) {
+                  setState(() {
+                    switch (newValue) {
+                      case "Tank": { _driveBase = DriveBase.TANK; }
+                      break;
+                      case "Omni": { _driveBase = DriveBase.OMNI; }
+                      break;
+                      case "WestCoast": { _driveBase = DriveBase.WESTCOAST; }
+                      break;
+                      case "Mecanum": { _driveBase = DriveBase.MECANUM; }
+                      break;
+                      case "Swerve": { _driveBase = DriveBase.SWERVE; }
+                      break;
+                    }
+                    //_driveBaseTest = newValue;
+                  });
+                },
+                items: <String>['Drive Base', 'Tank', 'Omni', 'WestCoast', 'Mecanum', 'Swerve']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                //items: null, onChanged: null
+              ),
+              //old drive base setup
+              /*
               Container(
                 alignment: Alignment.center,
                 padding: EdgeInsets.only(
                   bottom: 10,
                 ),
+                
                 child: Text(
-                  'Drivebase Type:',
-                  style: TextStyle(fontSize: 20),
-                ),
+                    'Drivebase Type:',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                
               ),
+              
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -80,6 +123,7 @@ class _PitScouterState extends State<PitScouter> {
                   ),
                 ],
               ),
+              */
               Text(
                 'Shooting Capability',
                 style: TextStyle(fontSize: 20),
@@ -228,10 +272,13 @@ class _PitScouterState extends State<PitScouter> {
                   ),
                 ),
               ),
+
+              
               RaisedButton(
                 onPressed: () {
                   db.updatePitScouting(_teamNumber,
-                      drivebaseType: _drivebaseType,
+                      //drivebaseType: _drivebaseType,
+                      drivebaseType: _driveBase.toString(),
                       inner: _inner,
                       outer: _outer,
                       bottom: _bottom,
@@ -253,8 +300,11 @@ class _PitScouterState extends State<PitScouter> {
                 color: Colors.green,
                 padding: EdgeInsets.all(15),
               ),
+              
             ],
           ),
         ));
   }
 }
+
+enum DriveBase { TANK, OMNI, WESTCOAST, MECANUM, SWERVE }

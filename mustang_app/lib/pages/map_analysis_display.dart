@@ -27,7 +27,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
   Analyzer myAnalyzer;
   String _teamNumber;
   SymbolPlotter plotter;
-  MapAnalysisShading shading;
+  //MapAnalysisShading shading;
 
   _MapAnalysisDisplayState(String teamNumber) {
     myAnalyzer = new Analyzer(teamNumber);
@@ -39,6 +39,9 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
   Color _getColor(int x, int y) {
     //debugPrint("zone: " + zoneNum.toString() + " ptsAtZone: " + myAnalyzer.calcPtsAtZoneMapDisplay(x, y).toString() + ", (" + x.toString() + ", " + y.toString()+ ")");
     double ptsAtZone = myAnalyzer.calcPtsAtZoneMapDisplay( x.toDouble(), y.toDouble());
+    if (ptsAtZone == 0){
+      return Colors.transparent;
+    }
 
     double multiple = 0;
     for (double i = ptsAtZone; i > 0; i -= Constants.shadingPointDifference) {
@@ -49,50 +52,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
     if (value > 0) {
       debugPrint("value: " + value.toString());
     }
-    return Colors.green[value.toInt()];
-  }
-
-  Color _getColorZoneNum(int zoneNum) {
-    double y = zoneToY(zoneNum);
-    double x = zoneToX(zoneNum);
-    //debugPrint("zone: " + zoneNum.toString() + " ptsAtZone: " + myAnalyzer.calcPtsAtZoneMapDisplay(x, y).toString() + ", (" + x.toString() + ", " + y.toString()+ ")");
-
-    double ptsAtZone = myAnalyzer.calcPtsAtZoneMapDisplay(x, y);
-    double increment = 600 / Constants.shadingPointDifference;
-
-    double multiple = 0;
-    for (double i = ptsAtZone; i > 0; i -= Constants.shadingPointDifference) {
-      multiple++;
-    }
-    if (multiple > 0) {
-      debugPrint("multiple: " +
-          multiple.toString() +
-          " zone: " +
-          zoneNum.toString() +
-          " ptsAtZone: " +
-          myAnalyzer.calcPtsAtZoneMapDisplay(x, y).toString() +
-          ", (" +
-          x.toString() +
-          ", " +
-          y.toString() +
-          ")");
-    }
-    /*
-    if (ptsAtZone == 0){
-      return Colors.transparent;
-    }
-    else if (ptsAtZone < 3){
-      return Colors.green[300];
-    }
-    else{
-      return Colors.green[600];
-    }
-*/
-    double value = increment * multiple;
-    if (value > 0) {
-      debugPrint("value: " + value.toString());
-    }
-    return Colors.green[value.toInt()];
+    return Colors.green[value.toInt()].withOpacity(0.75);
   }
 
   //zones start at 0, see miro but climb up, no sense of columns or row so need to convert
@@ -177,11 +137,11 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
   @override
   Widget build(BuildContext context) {
     //Widget buttonGrid = MapAnalysisShading(myAnalyzer);
-    Widget buttonGrid = MapAnalysisShading();
+    //Widget buttonGrid = MapAnalysisShading();
 
+    /*
     var container = null;
     //return new GridView.count(
-
     GridView.count(
       crossAxisCount: Constants.zoneColumns,
       children:
@@ -201,7 +161,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         return Center(child: container);
       }),
     );
-
+*/
     ZoneGrid grid = ZoneGrid(GlobalKey(), (int x, int y) {},
         (int x, int y, bool isSelected, double cellWidth, double cellHeight) {
       return Container(
@@ -209,7 +169,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         height: cellHeight,
         //decoration: BoxDecoration(color: Colors.green[600]),
         decoration: BoxDecoration(color: _getColor(x, y)),
-
         child: Spacer(),
       );
     });
@@ -227,12 +186,11 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 //Image.asset('assets/croppedmap.png', fit: BoxFit.contain),
-
-                gameMap,
                 //shading,
                 //buttonGrid,
                 //container,
                 myAnalyzer,
+                gameMap,
                 //plotter,
                 //MapScouterKey(),
                 MapShadingKey(),

@@ -5,6 +5,7 @@ import 'package:mustang_app/components/game_action.dart';
 import '../backend/team_data_analyzer.dart';
 import 'package:mustang_app/constants/constants.dart';
 
+
 // ignore: must_be_immutable
 class Analyzer extends StatefulWidget {
   String _teamNum;
@@ -423,9 +424,6 @@ class _AnalyzerState extends State<Analyzer> {
     var action11 = new GameAction(ActionType.SHOT_LOW, 46000, 13, 7);
     var action12 = new GameAction(ActionType.SHOT_INNER, 46500, 0, 0);
 
-
-
-
     var matchArray1 = [action1, action1a, action1b, action2, action3];
     var matchArray2 = [action4, action4a, action5, action6];
     var matchArray3 = [action7, action8, action9, action10, action11, action12];
@@ -438,7 +436,7 @@ class _AnalyzerState extends State<Analyzer> {
 
 //needs to be called to initialize
     String random = getReport();
-    
+    debugPrint("all matches: " + _allMatches.toString());
     double totalPoints = 0;
 
     for (int i = 0; i < _allMatches.length; i++){
@@ -482,6 +480,7 @@ class _AnalyzerState extends State<Analyzer> {
       }
     }
 */
+  
     return totalPoints;
   }
 
