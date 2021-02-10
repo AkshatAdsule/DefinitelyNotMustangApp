@@ -36,7 +36,23 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
     //shading = new MapAnalysisShading();
   }
 
-  Color _getColor(int zoneNum) {
+  Color _getColor(int x, int y) {
+    //debugPrint("zone: " + zoneNum.toString() + " ptsAtZone: " + myAnalyzer.calcPtsAtZoneMapDisplay(x, y).toString() + ", (" + x.toString() + ", " + y.toString()+ ")");
+    double ptsAtZone = myAnalyzer.calcPtsAtZoneMapDisplay( x.toDouble(), y.toDouble());
+
+    double multiple = 0;
+    for (double i = ptsAtZone; i > 0; i -= Constants.shadingPointDifference) {
+      multiple++;
+    }
+
+    double value = Constants.colorIncrement * multiple;
+    if (value > 0) {
+      debugPrint("value: " + value.toString());
+    }
+    return Colors.green[value.toInt()];
+  }
+
+  Color _getColorZoneNum(int zoneNum) {
     double y = zoneToY(zoneNum);
     double x = zoneToX(zoneNum);
     //debugPrint("zone: " + zoneNum.toString() + " ptsAtZone: " + myAnalyzer.calcPtsAtZoneMapDisplay(x, y).toString() + ", (" + x.toString() + ", " + y.toString()+ ")");
@@ -191,13 +207,14 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
       return Container(
         width: cellWidth,
         height: cellHeight,
-        decoration: BoxDecoration(color: Colors.green[600]),
+        //decoration: BoxDecoration(color: Colors.green[600]),
+        decoration: BoxDecoration(color: _getColor(x, y)),
+
         child: Spacer(),
       );
     });
 
-    GameMap gameMap =
-        GameMap(imageChildren: [], sideWidgets: [], zoneGrid: grid);
+    GameMap gameMap = GameMap(imageChildren: [], sideWidgets: [], zoneGrid: grid);
 
     return Scaffold(
       appBar: Header(context, 'Analysis'),
@@ -216,8 +233,8 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
                 //buttonGrid,
                 //container,
                 myAnalyzer,
-                plotter,
-                MapScouterKey(),
+                //plotter,
+                //MapScouterKey(),
                 MapShadingKey(),
               ],
             ),

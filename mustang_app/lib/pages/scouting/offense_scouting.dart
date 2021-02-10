@@ -279,7 +279,26 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                               style: game_button.ButtonStyle.RAISED,
                               type: game_button.ButtonType.MAKE,
                               onPressed: () {
-                                _addAction(ActionType.SHOT_OUTER, context);
+                                _addAction(ActionType.INTAKE);
+                              },
+                              text: 'Intake'),
+                          game_button.ScoutingButton(
+                              style: game_button.ButtonStyle.RAISED,
+                              type: game_button.ButtonType.MISS,
+                              onPressed: () {
+                                _addAction(ActionType.MISSED_INTAKE, context);
+                              },
+                              text: '')
+                        ],
+                      ),
+                      Wrap(
+                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          game_button.ScoutingButton(
+                              style: game_button.ButtonStyle.RAISED,
+                              type: game_button.ButtonType.MAKE,
+                              onPressed: () {
+                                _addAction(ActionType.SHOT_OUTE, context);
                               },
                               text: 'Out'),
                           game_button.ScoutingButton(

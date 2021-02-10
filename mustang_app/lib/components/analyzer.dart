@@ -421,12 +421,14 @@ class _AnalyzerState extends State<Analyzer> {
     var action9 = new GameAction.push(ActionType.PUSH, 44000, 10, 5, 8, 4, 3);
     var action10 = new GameAction(ActionType.SHOT_OUTER, 45000, 5, 4);
     var action11 = new GameAction(ActionType.SHOT_LOW, 46000, 13, 7);
+    var action12 = new GameAction(ActionType.SHOT_INNER, 46500, 0, 0);
+
 
 
 
     var matchArray1 = [action1, action1a, action1b, action2, action3];
     var matchArray2 = [action4, action4a, action5, action6];
-    var matchArray3 = [action7, action8, action9, action10, action11];
+    var matchArray3 = [action7, action8, action9, action10, action11, action12];
 
     //FINALARRAY IS WHAT WILL BE PASSED INTO THE ANALYZER
     var finalArray = [matchArray1, matchArray2, matchArray3];
