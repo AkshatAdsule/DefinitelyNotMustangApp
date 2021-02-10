@@ -48,25 +48,6 @@ class _MapScoutingState extends State<MapScouting> {
 
     _actions = [];
     _sliderLastChanged = 0;
-    // offenseScouting = OffenseScouting(
-    //   toggleMode: this.toggleMode,
-    //   stopwatch: _stopwatch,
-    //   zoneGrid: _zoneGrid,
-    //   finishGame: this.finishGame,
-    //   addAction: this.addAction,
-    //   undo: this.undo,
-    //   setClimb: this.setClimb,
-    //   allianceColor: _allianceColor,
-    // );
-    // defenseScouting = DefenseScouting(
-    //   toggleMode: this.toggleMode,
-    //   stopwatch: _stopwatch,
-    //   zoneGrid: _zoneGrid,
-    //   finishGame: this.finishGame,
-    //   addAction: this.addAction,
-    //   undo: this.undo,
-    //   allianceColor: _allianceColor,
-    // );
   }
 
   void toggleMode() {
@@ -99,6 +80,7 @@ class _MapScoutingState extends State<MapScouting> {
   }
 
   void setClimb(int millisecondsElapsed) {
+    print('SLIDER LAST CHANGED $millisecondsElapsed');
     _sliderLastChanged = millisecondsElapsed;
   }
 
@@ -106,7 +88,7 @@ class _MapScoutingState extends State<MapScouting> {
     _actions.add(
       GameAction(
         ActionType.OTHER_CLIMB,
-        _sliderLastChanged.toDouble(),
+        _sliderLastChanged.toDouble() ?? 120000,
         _offenseZoneGrid.x.toDouble(),
         _offenseZoneGrid.y.toDouble(),
       ),
@@ -175,7 +157,7 @@ class _MapScoutingState extends State<MapScouting> {
               )
             : scoutingMode,
       ),
-      bottomNavigationBar: BottomNavBar(context),
+      // bottomNavigationBar: BottomNavBar(context),
       // TODO: Make sure that bottom nav appears when the end game notes button
       // is clicked or when the undo button is held down
     );

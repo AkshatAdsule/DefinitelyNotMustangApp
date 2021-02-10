@@ -255,93 +255,98 @@ class _OffenseScoutingState extends State<OffenseScouting> {
         ],
         sideWidgets: [
           Expanded(
-            child: Column(children: [
-              game_button.ScoutingButton(
-                  style: game_button.ButtonStyle.RAISED,
-                  type: game_button.ButtonType.TOGGLE,
-                  onPressed: _toggleMode,
-                  text: 'Defense'),
-              Expanded(
-                child: Container(
-                  alignment: Alignment.bottomRight,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/goal_cropped.jpg'),
-                        fit: BoxFit.fitHeight),
-                  ),
-                  child: Wrap(
-                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            child: Container(
+              decoration: BoxDecoration(color: Colors.grey),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  game_button.ScoutingButton(
+                      style: game_button.ButtonStyle.RAISED,
+                      type: game_button.ButtonType.TOGGLE,
+                      onPressed: _toggleMode,
+                      text: 'Defense'),
+                  // Expanded(
+                  //   child: Container(
+                  //     alignment: Alignment.bottomRight,
+                  //     decoration: BoxDecoration(
+                  //       image: DecorationImage(
+                  //           image: AssetImage('assets/goal_cropped.jpg'),
+                  //           fit: BoxFit.fitHeight),
+                  //     ),
+                  //     child: Column(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //       children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Wrap(
-                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          game_button.ScoutingButton(
-                              style: game_button.ButtonStyle.RAISED,
-                              type: game_button.ButtonType.MAKE,
-                              onPressed: () {
-                                _addAction(ActionType.INTAKE);
-                              },
-                              text: 'Intake'),
-                          game_button.ScoutingButton(
-                              style: game_button.ButtonStyle.RAISED,
-                              type: game_button.ButtonType.MISS,
-                              onPressed: () {
-                                _addAction(ActionType.MISSED_INTAKE, context);
-                              },
-                              text: '')
-                        ],
-                      ),
-                      Wrap(
-                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          game_button.ScoutingButton(
-                              style: game_button.ButtonStyle.RAISED,
-                              type: game_button.ButtonType.MAKE,
-                              onPressed: () {
-                                _addAction(ActionType.SHOT_OUTE, context);
-                              },
-                              text: 'Out'),
-                          game_button.ScoutingButton(
-                              style: game_button.ButtonStyle.RAISED,
-                              type: game_button.ButtonType.MAKE,
-                              onPressed: () {
-                                _addAction(ActionType.SHOT_INNER, context);
-                              },
-                              text: 'In'),
-                        ],
-                      ),
+                      game_button.ScoutingButton(
+                          style: game_button.ButtonStyle.RAISED,
+                          type: game_button.ButtonType.MAKE,
+                          onPressed: () {
+                            _addAction(ActionType.INTAKE, context);
+                          },
+                          text: 'Intake'),
                       game_button.ScoutingButton(
                           style: game_button.ButtonStyle.RAISED,
                           type: game_button.ButtonType.MISS,
                           onPressed: () {
-                            _addAction(ActionType.MISSED_OUTER, context);
+                            _addAction(ActionType.MISSED_INTAKE, context);
                           },
-                          text: ''),
-                      Wrap(
-                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          game_button.ScoutingButton(
-                              style: game_button.ButtonStyle.RAISED,
-                              type: game_button.ButtonType.MAKE,
-                              onPressed: () {
-                                _addAction(ActionType.SHOT_LOW, context);
-                              },
-                              text: 'Low'),
-                          game_button.ScoutingButton(
-                              style: game_button.ButtonStyle.RAISED,
-                              type: game_button.ButtonType.MISS,
-                              onPressed: () {
-                                _addAction(ActionType.MISSED_LOW, context);
-                              },
-                              text: '')
-                        ],
-                      ),
+                          text: '')
                     ],
                   ),
-                ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      game_button.ScoutingButton(
+                          style: game_button.ButtonStyle.RAISED,
+                          type: game_button.ButtonType.MAKE,
+                          onPressed: () {
+                            _addAction(ActionType.SHOT_OUTER, context);
+                          },
+                          text: 'Out'),
+                      game_button.ScoutingButton(
+                          style: game_button.ButtonStyle.RAISED,
+                          type: game_button.ButtonType.MAKE,
+                          onPressed: () {
+                            _addAction(ActionType.SHOT_INNER, context);
+                          },
+                          text: 'In'),
+                    ],
+                  ),
+                  game_button.ScoutingButton(
+                      style: game_button.ButtonStyle.RAISED,
+                      type: game_button.ButtonType.MISS,
+                      onPressed: () {
+                        _addAction(ActionType.MISSED_OUTER, context);
+                      },
+                      text: ''),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      game_button.ScoutingButton(
+                          style: game_button.ButtonStyle.RAISED,
+                          type: game_button.ButtonType.MAKE,
+                          onPressed: () {
+                            _addAction(ActionType.SHOT_LOW, context);
+                          },
+                          text: 'Low'),
+                      game_button.ScoutingButton(
+                          style: game_button.ButtonStyle.RAISED,
+                          type: game_button.ButtonType.MISS,
+                          onPressed: () {
+                            _addAction(ActionType.MISSED_LOW, context);
+                          },
+                          text: '')
+                    ],
+                  ),
+                ],
               ),
-            ]),
-          )
+            ),
+          ),
+          //     ),
+          //   ],),
+          // )
         ],
       ),
     );
