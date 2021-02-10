@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/components/analyzer.dart';
 import 'package:mustang_app/constants/constants.dart';
 
+// ignore: must_be_immutable
 class MapAnalysisShading extends StatefulWidget {
   static const String route = './MapAnalysisShading';
   Analyzer _myAnalyzer;

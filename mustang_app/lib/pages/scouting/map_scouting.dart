@@ -60,7 +60,14 @@ class _MapScoutingState extends State<MapScouting> {
     });
   }
 
+  var numPrev = [0, 0];
+  ActionType currType;
+
   void addAction(ActionType type, BuildContext context) {
+    if (type != currType) {
+      numPrev.clear();
+    }
+    currType = type;
     int now = _stopwatch.elapsedMilliseconds;
     int x = _onOffense ? _offenseZoneGrid.x : _defenseZoneGrid.x;
     int y = _onOffense ? _offenseZoneGrid.y : _defenseZoneGrid.y;
