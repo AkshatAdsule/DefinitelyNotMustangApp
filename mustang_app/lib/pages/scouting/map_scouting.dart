@@ -29,7 +29,7 @@ class _MapScoutingState extends State<MapScouting> {
   bool _onOffense, _startedScouting;
   Stopwatch _stopwatch;
   String _teamNumber, _matchNumber, _allianceColor;
-  ZoneGrid _zoneGrid;
+  ZoneGrid _offenseZoneGrid, _defenseZoneGrid;
   List<GameAction> _actions;
   OffenseScouting offenseScouting;
   DefenseScouting defenseScouting;
@@ -43,9 +43,30 @@ class _MapScoutingState extends State<MapScouting> {
     _onOffense = true;
     _startedScouting = false;
     _stopwatch = new Stopwatch();
-    _zoneGrid = SelectableZoneGrid(GlobalKey(), (int x, int y) {});
+    _offenseZoneGrid = SelectableZoneGrid(UniqueKey(), (int x, int y) {});
+    _defenseZoneGrid = SelectableZoneGrid(UniqueKey(), (int x, int y) {});
+
     _actions = [];
     _sliderLastChanged = 0;
+    // offenseScouting = OffenseScouting(
+    //   toggleMode: this.toggleMode,
+    //   stopwatch: _stopwatch,
+    //   zoneGrid: _zoneGrid,
+    //   finishGame: this.finishGame,
+    //   addAction: this.addAction,
+    //   undo: this.undo,
+    //   setClimb: this.setClimb,
+    //   allianceColor: _allianceColor,
+    // );
+    // defenseScouting = DefenseScouting(
+    //   toggleMode: this.toggleMode,
+    //   stopwatch: _stopwatch,
+    //   zoneGrid: _zoneGrid,
+    //   finishGame: this.finishGame,
+    //   addAction: this.addAction,
+    //   undo: this.undo,
+    //   allianceColor: _allianceColor,
+    // );
   }
 
   void toggleMode() {
@@ -54,18 +75,23 @@ class _MapScoutingState extends State<MapScouting> {
     });
   }
 
-  void addAction(ActionType type) {
+  void addAction(ActionType type, BuildContext context) {
     int now = _stopwatch.elapsedMilliseconds;
-    int x = _zoneGrid.x;
-    int y = _zoneGrid.y;
-    bool hasSelected = _zoneGrid.hasSelected;
+    int x = _onOffense ? _offenseZoneGrid.x : _defenseZoneGrid.x;
+    int y = _onOffense ? _offenseZoneGrid.y : _defenseZoneGrid.y;
+    bool hasSelected = _onOffense
+        ? _offenseZoneGrid.hasSelected
+        : _defenseZoneGrid.hasSelected;
     GameAction action;
-    if (hasSelected) {
+    if (hasSelected && GameAction.requiresLocation(type)) {
       action = new GameAction(type, now.toDouble(), x.toDouble(), y.toDouble());
     } else if (!GameAction.requiresLocation(type)) {
       action = GameAction.other(type, now.toDouble());
     } else {
-      print('No location selected');
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text("No location selected"),
+        duration: Duration(milliseconds: 1500),
+      ));
       return;
     }
     _actions.add(action);
@@ -81,8 +107,8 @@ class _MapScoutingState extends State<MapScouting> {
       GameAction(
         ActionType.OTHER_CLIMB,
         _sliderLastChanged.toDouble(),
-        _zoneGrid.x.toDouble(),
-        _zoneGrid.y.toDouble(),
+        _offenseZoneGrid.x.toDouble(),
+        _offenseZoneGrid.y.toDouble(),
       ),
     );
     Navigator.pushNamed(context, MatchEndScouter.route, arguments: {
@@ -108,31 +134,30 @@ class _MapScoutingState extends State<MapScouting> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
-    Widget scoutingMode;
-    if (_onOffense) {
-      scoutingMode = OffenseScouting(
-        toggleMode: this.toggleMode,
-        stopwatch: _stopwatch,
-        zoneGrid: _zoneGrid,
-        finishGame: this.finishGame,
-        addAction: this.addAction,
-        undo: this.undo,
-        setClimb: this.setClimb,
-        allianceColor: _allianceColor,
-      );
-    } else {
-      scoutingMode = DefenseScouting(
-        toggleMode: this.toggleMode,
-        stopwatch: _stopwatch,
-        zoneGrid: _zoneGrid,
-        finishGame: this.finishGame,
-        addAction: this.addAction,
-        undo: this.undo,
-        allianceColor: _allianceColor,
-      );
-    }
+    Widget scoutingMode = IndexedStack(
+      index: _onOffense ? 0 : 1,
+      children: [
+        OffenseScouting(
+          toggleMode: this.toggleMode,
+          stopwatch: _stopwatch,
+          zoneGrid: _offenseZoneGrid,
+          finishGame: this.finishGame,
+          addAction: this.addAction,
+          undo: this.undo,
+          setClimb: this.setClimb,
+          allianceColor: _allianceColor,
+        ),
+        DefenseScouting(
+          toggleMode: this.toggleMode,
+          stopwatch: _stopwatch,
+          zoneGrid: _defenseZoneGrid,
+          finishGame: this.finishGame,
+          addAction: this.addAction,
+          undo: this.undo,
+          allianceColor: _allianceColor,
+        ),
+      ],
+    );
 
     return Scaffold(
       appBar: Header(context, 'Map Scouting'),

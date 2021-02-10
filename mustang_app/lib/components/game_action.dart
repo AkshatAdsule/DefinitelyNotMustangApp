@@ -39,6 +39,13 @@ class GameAction {
   double get pushTime => _pushTime;
   ActionType get action => _action;
 
+  set x(double x) => _x = x;
+  set y(double y) => _y = y;
+  set endX(double endX) => _endX = endX;
+  set endY(double endY) => _endY = endY;
+  set pushTime(double pushTime) => _pushTime = pushTime;
+  set action(ActionType action) => _action = action;
+
   Map<String, dynamic> toJson() {
     return {
       'timeStamp': _timeStamp,
@@ -95,5 +102,7 @@ enum ActionType {
   PREV_SHOT,
   PREV_INTAKE,
   PUSH,
-  OTHER_CROSSED_INITIATION_LINE
+  OTHER_CROSSED_INITIATION_LINE,
+  OTHER_PARKED,
+  OTHER_LEVELLED,
 }

@@ -29,22 +29,25 @@ class ScoutingOperations {
   }
 
   List<Map<String, dynamic>> convertActionsToJson(List<GameAction> actions) {
-    return actions.map((action) => action.toJson());
+    return actions.map((action) => action.toJson()).toList();
   }
 
   Future<void> updateMatchData(
       String teamNumber, String matchNumber, List<GameAction> actions,
-      {String matchResult, String finalComments}) async {
+      {String matchResult, String finalComments, String allianceColor}) async {
+    print('teamNumber: $teamNumber');
+    print('matchNumber: $matchNumber');
     await Constants.db
         .collection('teams')
         .document(teamNumber)
         .collection('matches')
         .document(matchNumber)
-        .updateData({
+        .setData({
       'actions': convertActionsToJson(actions),
       'finalComments': finalComments,
-      'matchResult': matchResult
-    });
+      'matchResult': matchResult,
+      'allianceColor': allianceColor,
+    }).then((value) => print('finish'));
   }
 
   Future<bool> doesPitDataExist(String teamNumber) async {
