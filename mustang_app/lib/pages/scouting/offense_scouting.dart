@@ -131,9 +131,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
         zoneGrid: _zoneGrid,
         imageChildren: [
           GameMapChild(
-            align: Alignment.bottomLeft,
-            left: 7,
-            bottom: 7,
+            align: Alignment(-0.97, 0.77),
             child: CircleAvatar(
               backgroundColor: Colors.green,
               child: IconButton(
@@ -172,7 +170,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
               : GameMapChild(
                   right: 65,
                   bottom: 17.5,
-                  align: Alignment.bottomCenter,
+                  align: Alignment(-0.14, 0.73),
                   child: CircleAvatar(
                     backgroundColor:
                         !_completedRotationControl ? Colors.green : Colors.blue,
@@ -198,9 +196,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                   )),
           _stopwatch.elapsedMilliseconds >= 120000
               ? GameMapChild(
-                  right: 30,
-                  bottom: 55,
-                  align: Alignment.center,
+                  align: Alignment(-0.07, -0.17),
                   child: Transform.rotate(
                     angle: -pi / 8,
                     child: Container(
@@ -223,7 +219,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
               : Container(),
           (_stopwatch.elapsedMilliseconds <= 15000 && !_crossedInitiationLine)
               ? GameMapChild(
-                  align: Alignment.center,
+                  align: Alignment(0, 0),
                   child: CircleAvatar(
                     child: IconButton(
                       icon: Icon(Icons.check, color: Colors.white),
@@ -241,9 +237,7 @@ class _OffenseScoutingState extends State<OffenseScouting> {
               : Container(),
           _stopwatch.elapsedMilliseconds >= 150000
               ? GameMapChild(
-                  align: Alignment.topLeft,
-                  left: 7,
-                  top: 7,
+                  align: Alignment(-0.97, -0.82),
                   child: game_button.ScoutingButton(
                       style: game_button.ButtonStyle.RAISED,
                       type: game_button.ButtonType.PAGEBUTTON,
@@ -253,101 +247,97 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                       text: 'Finish Game'))
               : Container(),
         ],
-        sideWidgets: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(color: Colors.grey),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  game_button.ScoutingButton(
-                      style: game_button.ButtonStyle.RAISED,
-                      type: game_button.ButtonType.TOGGLE,
-                      onPressed: _toggleMode,
-                      text: 'Defense'),
-                  // Expanded(
-                  //   child: Container(
-                  //     alignment: Alignment.bottomRight,
-                  //     decoration: BoxDecoration(
-                  //       image: DecorationImage(
-                  //           image: AssetImage('assets/goal_cropped.jpg'),
-                  //           fit: BoxFit.fitHeight),
-                  //     ),
-                  //     child: Column(
-                  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //       children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      game_button.ScoutingButton(
-                          style: game_button.ButtonStyle.RAISED,
-                          type: game_button.ButtonType.MAKE,
-                          onPressed: () {
-                            _addAction(ActionType.INTAKE, context);
-                          },
-                          text: 'Intake'),
-                      game_button.ScoutingButton(
-                          style: game_button.ButtonStyle.RAISED,
-                          type: game_button.ButtonType.MISS,
-                          onPressed: () {
-                            _addAction(ActionType.MISSED_INTAKE, context);
-                          },
-                          text: '')
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      game_button.ScoutingButton(
-                          style: game_button.ButtonStyle.RAISED,
-                          type: game_button.ButtonType.MAKE,
-                          onPressed: () {
-                            _addAction(ActionType.SHOT_OUTER, context);
-                          },
-                          text: 'Out'),
-                      game_button.ScoutingButton(
-                          style: game_button.ButtonStyle.RAISED,
-                          type: game_button.ButtonType.MAKE,
-                          onPressed: () {
-                            _addAction(ActionType.SHOT_INNER, context);
-                          },
-                          text: 'In'),
-                    ],
-                  ),
-                  game_button.ScoutingButton(
-                      style: game_button.ButtonStyle.RAISED,
-                      type: game_button.ButtonType.MISS,
-                      onPressed: () {
-                        _addAction(ActionType.MISSED_OUTER, context);
-                      },
-                      text: ''),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      game_button.ScoutingButton(
-                          style: game_button.ButtonStyle.RAISED,
-                          type: game_button.ButtonType.MAKE,
-                          onPressed: () {
-                            _addAction(ActionType.SHOT_LOW, context);
-                          },
-                          text: 'Low'),
-                      game_button.ScoutingButton(
-                          style: game_button.ButtonStyle.RAISED,
-                          type: game_button.ButtonType.MISS,
-                          onPressed: () {
-                            _addAction(ActionType.MISSED_LOW, context);
-                          },
-                          text: '')
-                    ],
-                  ),
-                ],
+        sideWidget: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Flexible(
+                flex: 1,
+                child: game_button.ScoutingButton(
+                    style: game_button.ButtonStyle.RAISED,
+                    type: game_button.ButtonType.TOGGLE,
+                    onPressed: _toggleMode,
+                    text: 'Defense'),
               ),
-            ),
+              Flexible(
+                flex: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    game_button.ScoutingButton(
+                        style: game_button.ButtonStyle.RAISED,
+                        type: game_button.ButtonType.MAKE,
+                        onPressed: () {
+                          _addAction(ActionType.INTAKE, context);
+                        },
+                        text: 'Intake'),
+                    game_button.ScoutingButton(
+                        style: game_button.ButtonStyle.RAISED,
+                        type: game_button.ButtonType.MISS,
+                        onPressed: () {
+                          _addAction(ActionType.MISSED_INTAKE, context);
+                        },
+                        text: '')
+                  ],
+                ),
+              ),
+              Flexible(
+                flex: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    game_button.ScoutingButton(
+                        style: game_button.ButtonStyle.RAISED,
+                        type: game_button.ButtonType.MAKE,
+                        onPressed: () {
+                          _addAction(ActionType.SHOT_OUTER, context);
+                        },
+                        text: 'Out'),
+                    game_button.ScoutingButton(
+                        style: game_button.ButtonStyle.RAISED,
+                        type: game_button.ButtonType.MAKE,
+                        onPressed: () {
+                          _addAction(ActionType.SHOT_INNER, context);
+                        },
+                        text: 'In'),
+                  ],
+                ),
+              ),
+              Flexible(
+                flex: 1,
+                child: game_button.ScoutingButton(
+                    style: game_button.ButtonStyle.RAISED,
+                    type: game_button.ButtonType.MISS,
+                    onPressed: () {
+                      _addAction(ActionType.MISSED_OUTER, context);
+                    },
+                    text: ''),
+              ),
+              Flexible(
+                flex: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    game_button.ScoutingButton(
+                        style: game_button.ButtonStyle.RAISED,
+                        type: game_button.ButtonType.MAKE,
+                        onPressed: () {
+                          _addAction(ActionType.SHOT_LOW, context);
+                        },
+                        text: 'Low'),
+                    game_button.ScoutingButton(
+                        style: game_button.ButtonStyle.RAISED,
+                        type: game_button.ButtonType.MISS,
+                        onPressed: () {
+                          _addAction(ActionType.MISSED_LOW, context);
+                        },
+                        text: '')
+                  ],
+                ),
+              ),
+            ],
           ),
-          //     ),
-          //   ],),
-          // )
-        ],
+        ),
       ),
     );
   }

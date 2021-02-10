@@ -4,21 +4,21 @@ import 'package:mustang_app/constants/constants.dart';
 
 // ignore: must_be_immutable
 class GameMap extends StatelessWidget {
-  List<Widget> _imageChildren = [], _sideWidgets = [];
+  List<Widget> _imageChildren = [];
+  Widget _sideWidget;
+  String _allianceColor;
+  ZoneGrid _zoneGrid;
+
   GameMap({
     List<Widget> imageChildren = const [],
-    List<Widget> sideWidgets = const [],
+    Widget sideWidget,
     ZoneGrid zoneGrid,
     String allianceColor = "blue",
   }) {
-    if (allianceColor.toUpperCase() == "BLUE") {
-      _imageChildren.add(Image.asset('assets/blue_field.png'));
-    } else if (allianceColor.toUpperCase() == "RED") {
-      _imageChildren.add(Image.asset('assets/red_field.png'));
-    }
-    _imageChildren.add(zoneGrid ?? Container());
     _imageChildren.addAll(imageChildren);
-    _sideWidgets = sideWidgets;
+    _sideWidget = sideWidget;
+    _zoneGrid = zoneGrid;
+    _allianceColor = allianceColor;
   }
 
   @override
@@ -26,12 +26,23 @@ class GameMap extends StatelessWidget {
     return Container(
         child: Row(
       children: [
-        Container(
-          child: Stack(children: [
-            ..._imageChildren,
-          ]),
+        Flexible(
+          flex: 7,
+          child: Stack(
+            alignment: Alignment.centerLeft,
+            children: [
+              Image.asset(_allianceColor.toUpperCase() == "BLUE"
+                  ? 'assets/blue_field.png'
+                  : 'assets/red_field.png'),
+              _zoneGrid ?? Container(),
+              ..._imageChildren,
+            ],
+          ),
         ),
-        ..._sideWidgets
+        Flexible(
+          child: _sideWidget ?? Container(),
+          flex: _sideWidget != null ? 3 : 0,
+        ),
       ],
     ));
   }
@@ -53,14 +64,9 @@ class GameMapChild extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    return Positioned.fill(
-        left: left,
-        right: right,
-        top: top,
-        bottom: bottom,
-        child: Align(
-          alignment: align,
-          child: child,
-        ));
+    return Align(
+      alignment: align,
+      child: child,
+    );
   }
 }

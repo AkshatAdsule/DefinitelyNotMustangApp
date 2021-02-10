@@ -142,9 +142,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
         zoneGrid: _zoneGrid,
         imageChildren: [
           GameMapChild(
-            align: Alignment.bottomLeft,
-            left: 7,
-            bottom: 7,
+            align: Alignment(-0.97, 0.77),
             child: CircleAvatar(
               backgroundColor: Colors.green,
               child: IconButton(
@@ -156,9 +154,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
           ),
           _stopwatch.elapsedMilliseconds > 150000
               ? GameMapChild(
-                  align: Alignment.topLeft,
-                  left: 7,
-                  top: 7,
+                  align: Alignment(-0.97, -0.82),
                   child: game_button.ScoutingButton(
                     style: game_button.ButtonStyle.RAISED,
                     type: game_button.ButtonType.PAGEBUTTON,
@@ -168,46 +164,69 @@ class _DefenseScoutingState extends State<DefenseScouting> {
                 )
               : Container()
         ],
-        sideWidgets: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(color: Colors.grey),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  game_button.ScoutingButton(
-                    style: game_button.ButtonStyle.RAISED,
-                    type: game_button.ButtonType.TOGGLE,
-                    onPressed: _toggleMode,
-                    text: 'Offense',
-                  ),
-                  game_button.ScoutingButton(
-                    style: game_button.ButtonStyle.RAISED,
-                    type: game_button.ButtonType.ELEMENT,
-                    onPressed: () {
-                      _addAction(ActionType.PREV_INTAKE, context);
-                    },
-                    text: 'Prevent Intake',
-                  ),
-                  game_button.ScoutingButton(
-                    style: game_button.ButtonStyle.RAISED,
-                    type: game_button.ButtonType.ELEMENT,
-                    onPressed: () {},
-                    text: 'Push',
-                  ),
-                  game_button.ScoutingButton(
-                    style: game_button.ButtonStyle.RAISED,
-                    type: game_button.ButtonType.ELEMENT,
-                    onPressed: () {
-                      actionDeterminer(context, 'Foul');
-                    },
-                    text: 'Foul',
-                  ),
-                ],
+        sideWidget: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Flexible(
+                flex: 1,
+                child: Row(
+                  children: [
+                    game_button.ScoutingButton(
+                      style: game_button.ButtonStyle.RAISED,
+                      type: game_button.ButtonType.TOGGLE,
+                      onPressed: _toggleMode,
+                      text: 'Offense',
+                    ),
+                  ],
+                ),
               ),
-            ),
-          )
-        ],
+              Flexible(
+                flex: 1,
+                child: Row(
+                  children: [
+                    game_button.ScoutingButton(
+                      style: game_button.ButtonStyle.RAISED,
+                      type: game_button.ButtonType.ELEMENT,
+                      onPressed: () {
+                        _addAction(ActionType.PREV_INTAKE, context);
+                      },
+                      text: 'Prevent Intake',
+                    ),
+                  ],
+                ),
+              ),
+              Flexible(
+                flex: 1,
+                child: Row(
+                  children: [
+                    game_button.ScoutingButton(
+                      style: game_button.ButtonStyle.RAISED,
+                      type: game_button.ButtonType.ELEMENT,
+                      onPressed: () {},
+                      text: 'Push',
+                    ),
+                  ],
+                ),
+              ),
+              Flexible(
+                flex: 1,
+                child: Row(
+                  children: [
+                    game_button.ScoutingButton(
+                      style: game_button.ButtonStyle.RAISED,
+                      type: game_button.ButtonType.ELEMENT,
+                      onPressed: () {
+                        actionDeterminer(context, 'Foul');
+                      },
+                      text: 'Foul',
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
