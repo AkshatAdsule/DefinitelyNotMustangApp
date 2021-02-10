@@ -10,7 +10,7 @@ import '../../components/game_buttons.dart' as game_button;
 // ignore: must_be_immutable
 class DefenseScouting extends StatefulWidget {
   void Function(BuildContext context) _finishGame;
-  void Function(ActionType type) _addAction;
+  void Function(ActionType type, BuildContext context) _addAction;
 
   void Function() _toggleMode;
   GameAction Function() _undo;
@@ -21,13 +21,15 @@ class DefenseScouting extends StatefulWidget {
   String _allianceColor;
 
   DefenseScouting(
-      {void Function() toggleMode,
+      {Key key,
+      void Function() toggleMode,
       GameAction Function() undo,
       void Function(BuildContext context) finishGame,
-      void Function(ActionType type) addAction,
+      void Function(ActionType type, BuildContext context) addAction,
       Stopwatch stopwatch,
       ZoneGrid zoneGrid,
-      String allianceColor}) {
+      String allianceColor})
+      : super(key: key) {
     _toggleMode = toggleMode;
     _stopwatch = stopwatch;
     _finishGame = finishGame;
@@ -53,8 +55,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
   GameAction Function() _undo;
 
   void Function(BuildContext context) _finishGame;
-  void Function(ActionType type) _addAction;
-
+  void Function(ActionType type, BuildContext context) _addAction;
   Stopwatch _stopwatch;
   ZoneGrid _zoneGrid;
   Timer _endTimer;
@@ -64,7 +65,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
     void Function() toggleMode,
     GameAction Function() undo,
     void Function(BuildContext context) finishGame,
-    void Function(ActionType type) addAction,
+    void Function(ActionType type, BuildContext context) addAction,
     Stopwatch stopwatch,
     ZoneGrid zoneGrid,
     String allianceColor,
@@ -91,7 +92,6 @@ class _DefenseScoutingState extends State<DefenseScouting> {
   @override
   void dispose() {
     super.dispose();
-    print("ended timer");
     _endTimer.cancel();
   }
 
@@ -110,8 +110,10 @@ class _DefenseScoutingState extends State<DefenseScouting> {
       FlatButton option = FlatButton(
         child: Text(type),
         onPressed: () {
-          _addAction(GameAction.stringToActionType(
-              action.toUpperCase() + "_" + type.toUpperCase()));
+          _addAction(
+              GameAction.stringToActionType(
+                  action.toUpperCase() + "_" + type.toUpperCase()),
+              context);
           Navigator.pop(context);
         },
       );
@@ -183,7 +185,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
                     style: game_button.ButtonStyle.RAISED,
                     type: game_button.ButtonType.ELEMENT,
                     onPressed: () {
-                      _addAction(ActionType.PREV_INTAKE);
+                      _addAction(ActionType.PREV_INTAKE, context);
                     },
                     text: 'Prevent Intake',
                   ),
