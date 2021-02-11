@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/constants/constants.dart';
+//import 'package:mustang_app/constants/constants.dart';
 
 class MapShadingKey extends StatefulWidget {
   @override
@@ -10,14 +11,15 @@ class MapShadingKey extends StatefulWidget {
 
 class _MapShadingKeyState extends State<MapShadingKey> {
   double iconSize = 65;
-  List<Color> incrementColor = new List();
-
+  //List<Color> incrementColor = new List();
+  /*
   void _setColorList() {
     for (int i = 1; Constants.colorIncrement.toInt() * i <= 600; i++) {
       incrementColor.add(Colors.green[Constants.colorIncrement.toInt() * i]);
     }
   }
-
+  */
+  /*
   List _getTextList() {
     List<Text> result = new List();
     for (int i = 0; i < 5; i += Constants.shadingPointDifference) {
@@ -33,11 +35,12 @@ class _MapShadingKeyState extends State<MapShadingKey> {
     }
     return result;
   }
+  */
 
   @override
   Widget build(BuildContext context) {
-    _setColorList();
-    List<Text> text = _getTextList();
+    //_setColorList();
+    //List<Text> text = _getTextList();
     return Container(
       margin: EdgeInsets.all(10),
       child: Row(
@@ -65,7 +68,9 @@ class _MapShadingKeyState extends State<MapShadingKey> {
                         BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
                     alignment: Alignment.center,
                     child: Text(
-                      "0 pts                                                         100 pts",
+                      Constants.minPtValuePerZone.toString() + 
+                      " pts                                                         " +
+                      Constants.maxPtValuePerZone.toString() + " pts",
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.white),
                     ),

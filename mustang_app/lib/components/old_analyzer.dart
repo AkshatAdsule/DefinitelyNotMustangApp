@@ -120,7 +120,7 @@ class _OldAnalyzerState extends State<OldAnalyzer> {
       var _zoneDisplacementDifference = (_predictedDisplacement - _actualDisplacement)/Constants.zoneSideLength;
       
       _result += (_zoneDisplacementDifference * Constants.zoneDisplacementValue);
-      debugPrint("smth here: " +  _result.toString());
+      //debugPrint("smth here: " +  _result.toString());
     }
     return _result;
   }

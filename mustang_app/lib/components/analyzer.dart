@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/game_action.dart';
@@ -9,15 +10,13 @@ import 'package:mustang_app/constants/constants.dart';
 // ignore: must_be_immutable
 class Analyzer extends StatefulWidget {
   String _teamNum;
-  Map<int, int> ptsAtZone;
+  //Map<int, int> ptsAtZone;
   Analyzer(String teamNum) {
     _teamNum = teamNum;
   }
   @override
   State<StatefulWidget> createState() {
-    return _AnalyzerState(
-      _teamNum,
-    );
+    return _AnalyzerState(_teamNum);
   }
 
   double calcPtsAtZoneMapDisplay(double x, double y) { 
@@ -30,9 +29,9 @@ class _AnalyzerState extends State<Analyzer> {
   String _teamNum, _driveBase;
 
   var _allMatches; //array that holds everything
-  int _oldAllMatchLength = 0,
-      _totalNumGames =
-          0; //for testing if data needs to be collected again or not - if same then don't
+  int _oldAllMatchLength = 0;
+  //for testing if data needs to be collected again or not - if same then don't
+  int _totalNumGames = 0; 
   //array for each type of action, has all instances of that action for all games
   List<GameAction> _foulReg = [],
       _foulTech = [],
@@ -92,6 +91,15 @@ class _AnalyzerState extends State<Analyzer> {
 
     //FINALARRAY IS WHAT WILL BE PASSED INTO THE ANALYZER
     var finalArray = [matchArray1, matchArray2, matchArray3];
+    //List<DocumentSnapshot> Function(String teamNumber) _matches = TeamDataAnalyzer.getMatchDocs;
+    //debugPrint("match docs: " + _matches.toString());
+    //var match1 = TeamDataAnalyzer.getMatchActions(_teamNum, "1");
+    //debugPrint("match1: " + TeamDataAnalyzer.getMatchActions(_teamNum, "1").toString());
+    //var match2 = TeamDataAnalyzer.getMatchActions(_teamNum, "2");
+    //var match3 = TeamDataAnalyzer.getMatchActions(_teamNum, "3");
+
+    //_allMatches = [match1, match2, match3];
+
     _allMatches = finalArray;
     //_collectData();
 
@@ -436,7 +444,7 @@ class _AnalyzerState extends State<Analyzer> {
 
 //needs to be called to initialize
     String random = getReport();
-    debugPrint("all matches: " + _allMatches.toString());
+    //debugPrint("all matches: " + _allMatches.toString());
     double totalPoints = 0;
 
     for (int i = 0; i < _allMatches.length; i++){
