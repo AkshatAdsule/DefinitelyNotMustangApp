@@ -14,6 +14,7 @@ class Analyzer extends StatefulWidget {
   Analyzer(String teamNum) {
     _teamNum = teamNum;
   }
+
   @override
   State<StatefulWidget> createState() {
     return _AnalyzerState(_teamNum);
@@ -21,6 +22,9 @@ class Analyzer extends StatefulWidget {
 
   double calcPtsAtZoneMapDisplay(double x, double y) { 
         return _AnalyzerState(_teamNum).calcPtsAtZone(x, y);
+  }
+  int totalNumGames(){
+    return _AnalyzerState(_teamNum).totalNumGames;
   }
 }
 
@@ -31,7 +35,7 @@ class _AnalyzerState extends State<Analyzer> {
   var _allMatches; //array that holds everything
   int _oldAllMatchLength = 0;
   //for testing if data needs to be collected again or not - if same then don't
-  int _totalNumGames = 0; 
+  int _totalNumGames = 1; 
   //array for each type of action, has all instances of that action for all games
   List<GameAction> _foulReg = [],
       _foulTech = [],
@@ -491,6 +495,9 @@ class _AnalyzerState extends State<Analyzer> {
   
     return totalPoints;
   }
+
+  int get totalNumGames => _totalNumGames;
+
 
   @override
   Widget build(BuildContext context) {

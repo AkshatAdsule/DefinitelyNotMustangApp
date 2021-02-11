@@ -62,8 +62,8 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
   }
 
   int _getColorValue(int x, int y) {
-    double ptsAtZone =
-        myAnalyzer.calcPtsAtZoneMapDisplay(x.toDouble(), y.toDouble());
+    double totalNumGames = myAnalyzer.totalNumGames().toDouble();
+    double ptsAtZone = myAnalyzer.calcPtsAtZoneMapDisplay(x.toDouble(), y.toDouble())/totalNumGames;
     return ((ptsAtZone / Constants.maxPtValuePerZone) * 600).toInt();
   }
 

@@ -69,8 +69,8 @@ class _MapShadingKeyState extends State<MapShadingKey> {
                     alignment: Alignment.center,
                     child: Text(
                       Constants.minPtValuePerZone.toString() + 
-                      " pts                                                         " +
-                      Constants.maxPtValuePerZone.toString() + " pts",
+                      " total pts                                            " +
+                      Constants.maxPtValuePerZone.toString() + " total pts",
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.white),
                     ),
