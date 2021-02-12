@@ -62,7 +62,7 @@ class _MapScoutingState extends State<MapScouting> {
   var numPrev = [0, 0];
   ActionType currType;
 
-  void addAction(ActionType type, BuildContext context) {
+  int addAction(ActionType type, BuildContext context) {
     if (type != currType) {
       numPrev.clear();
     }
@@ -83,10 +83,11 @@ class _MapScoutingState extends State<MapScouting> {
         content: Text("No location selected"),
         duration: Duration(milliseconds: 1500),
       ));
-      return;
+      return -1;
     }
     _actions.add(action);
     print(action);
+    return 0;
   }
 
   void setClimb(int millisecondsElapsed) {

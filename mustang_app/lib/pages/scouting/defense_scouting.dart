@@ -55,11 +55,12 @@ class _DefenseScoutingState extends State<DefenseScouting> {
   GameAction Function() _undo;
 
   void Function(BuildContext context) _finishGame;
-  void Function(ActionType type, BuildContext context) _addAction;
+  int Function(ActionType type, BuildContext context) _addAction;
   Stopwatch _stopwatch;
   ZoneGrid _zoneGrid;
   Timer _endTimer;
   String _allianceColor;
+  bool _pushTextStart = false;
 
   _DefenseScoutingState({
     void Function() toggleMode,
@@ -203,8 +204,22 @@ class _DefenseScoutingState extends State<DefenseScouting> {
                     game_button.ScoutingButton(
                       style: game_button.ButtonStyle.RAISED,
                       type: game_button.ButtonType.ELEMENT,
-                      onPressed: () {},
-                      text: 'Push',
+                      onPressed: () {
+                        if (_pushTextStart) {
+                          _addAction(ActionType.PUSH_END, context) != -1
+                              ? setState(() {
+                                  _pushTextStart = false;
+                                })
+                              : () {};
+                        } else {
+                          _addAction(ActionType.PUSH_START, context) != -1
+                              ? setState(() {
+                                  _pushTextStart = true;
+                                })
+                              : () {};
+                        }
+                      },
+                      text: !_pushTextStart ? "Push Start" : "Push End",
                     ),
                   ],
                 ),
