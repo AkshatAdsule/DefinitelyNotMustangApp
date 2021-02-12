@@ -63,7 +63,9 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
 
   int _getColorValue(int x, int y) {
     double totalNumGames = myAnalyzer.totalNumGames().toDouble();
-    double ptsAtZone = myAnalyzer.calcPtsAtZoneMapDisplay(x.toDouble(), y.toDouble())/totalNumGames;
+    double ptsAtZone =
+        myAnalyzer.calcPtsAtZoneMapDisplay(x.toDouble(), y.toDouble()) /
+            totalNumGames;
     return ((ptsAtZone / Constants.maxPtValuePerZone) * 600).toInt();
   }
 
@@ -83,6 +85,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
 
   @override
   Widget build(BuildContext context) {
+    String switchText = "Accuracy Map"; //other option is "Point Map"
     ZoneGrid grid = ZoneGrid(GlobalKey(), (int x, int y) {},
         (int x, int y, bool isSelected, double cellWidth, double cellHeight) {
       return Container(
@@ -107,6 +110,41 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
             children: <Widget>[
               //Image.asset('assets/croppedmap.png', fit: BoxFit.contain),
               myAnalyzer,
+              RaisedButton(
+                onPressed: () {
+                  debugPrint("ON PRESSED");
+                  if (switchText == "Accuracy Map"){
+                    switchText = "Point Map";
+                    debugPrint(switchText);
+                  }
+                  if (switchText == "Point Map"){
+                    switchText = "Accuracy Map";
+                    debugPrint(switchText);                    
+                  }
+                },
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(80.0)),
+                padding: EdgeInsets.all(0.0),
+                child: Ink(
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.green[50], Colors.green[600]],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                      borderRadius: BorderRadius.circular(80.0)),
+                  child: Container(
+                    constraints:
+                        BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
+                    alignment: Alignment.center,
+                    child: Text(
+                      switchText,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
               gameMap,
               //plotter,
               //MapScouterKey(),
