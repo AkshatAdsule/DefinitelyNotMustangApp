@@ -31,6 +31,11 @@ class ScoutingButton extends StatelessWidget {
       case ButtonType.TOGGLE:
         color = Colors.green.shade700;
         break;
+      case ButtonType.COUNTER:
+        color = Colors.yellow;
+        borderWidth = 2;
+        borderColor = Colors.black45;
+        break;
       default:
         break;
     }
@@ -63,6 +68,7 @@ class ScoutingButton extends StatelessWidget {
           color: color,
           onPressed: this.onPressed,
           child: Text(text),
+          minWidth: 20,
         );
         break;
       default:
@@ -73,4 +79,4 @@ class ScoutingButton extends StatelessWidget {
 
 enum ButtonStyle { RAISED, OUTLINED, FLAT }
 
-enum ButtonType { MAKE, MISS, PAGEBUTTON, ELEMENT, TOGGLE }
+enum ButtonType { MAKE, MISS, PAGEBUTTON, ELEMENT, TOGGLE, COUNTER }

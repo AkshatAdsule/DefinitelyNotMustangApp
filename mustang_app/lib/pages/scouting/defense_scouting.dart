@@ -61,6 +61,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
   Timer _endTimer;
   String _allianceColor;
   bool _pushTextStart = false;
+  var _prev = [0, 0];
 
   _DefenseScoutingState({
     void Function() toggleMode,
@@ -190,10 +191,45 @@ class _DefenseScoutingState extends State<DefenseScouting> {
                       style: game_button.ButtonStyle.RAISED,
                       type: game_button.ButtonType.ELEMENT,
                       onPressed: () {
-                        _addAction(ActionType.PREV_INTAKE, context);
+                        _addAction(ActionType.PREV_INTAKE, context) == 0
+                            ? setState(() {
+                                _prev[0]++;
+                                _prev[1] = 0;
+                              })
+                            : () {};
                       },
                       text: 'Prevent Intake',
                     ),
+                    game_button.ScoutingButton(
+                        style: game_button.ButtonStyle.FLAT,
+                        type: game_button.ButtonType.COUNTER,
+                        onPressed: () {},
+                        text: _prev[0].toString()),
+                  ],
+                ),
+              ),
+              Flexible(
+                flex: 1,
+                child: Row(
+                  children: [
+                    game_button.ScoutingButton(
+                      style: game_button.ButtonStyle.RAISED,
+                      type: game_button.ButtonType.ELEMENT,
+                      onPressed: () {
+                        _addAction(ActionType.PREV_INTAKE, context) == 0
+                            ? setState(() {
+                                _prev[1]++;
+                                _prev[0] = 0;
+                              })
+                            : () {};
+                      },
+                      text: 'Prevent Shot',
+                    ),
+                    game_button.ScoutingButton(
+                        style: game_button.ButtonStyle.FLAT,
+                        type: game_button.ButtonType.COUNTER,
+                        onPressed: () {},
+                        text: _prev[1].toString()),
                   ],
                 ),
               ),
@@ -218,6 +254,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
                                 })
                               : () {};
                         }
+                        _prev.clear();
                       },
                       text: !_pushTextStart ? "Push Start" : "Push End",
                     ),
@@ -233,6 +270,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
                       type: game_button.ButtonType.ELEMENT,
                       onPressed: () {
                         actionDeterminer(context, 'Foul');
+                        _prev.clear();
                       },
                       text: 'Foul',
                     ),
