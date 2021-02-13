@@ -54,7 +54,8 @@ class _AnalyzerState extends State<Analyzer> {
       _otherWheelRotation = [],
       _prevShot = [],
       _prevIntake = [],
-      _push = [];
+      _pushStart = [],
+      _pushEnd = [];
 
   _AnalyzerState(String teamNum) {
     _teamNum = teamNum;
@@ -87,17 +88,20 @@ class _AnalyzerState extends State<Analyzer> {
     var action6 = new GameAction(ActionType.SHOT_LOW, 30000, 0, 5);
     var action7 = new GameAction(ActionType.SHOT_INNER, 39000, 5, 2);
     var action8 = new GameAction(ActionType.SHOT_OUTER, 40000, 8, 4);
-    var action9 = new GameAction.push(ActionType.PUSH, 44000, 10, 5, 8, 4, 3);
+    //var action9 = new GameAction.push(ActionType.PUSH, 44000, 10, 5, 8, 4, 3);
+    var action9 = new GameAction(ActionType.PUSH_START, 40005, 8, 4);
+    var action10= new GameAction(ActionType.PUSH_END, 40005, 8, 4);
+
 
     var matchArray1 = [action1, action1a, action1b, action2, action3];
     var matchArray2 = [action4, action4a, action5, action6];
-    var matchArray3 = [action7, action8, action9];
+    var matchArray3 = [action7, action8, action9, action10];
 
     //FINALARRAY IS WHAT WILL BE PASSED INTO THE ANALYZER
     var finalArray = [matchArray1, matchArray2, matchArray3];
     //List<DocumentSnapshot> Function(String teamNumber) _matches = TeamDataAnalyzer.getMatchDocs;
     //debugPrint("match docs: " + _matches.toString());
-    //var match1 = TeamDataAnalyzer.getMatchActions(_teamNum, "1");
+    //var match1 = TeamDataAnalyzer.getMatchActions(0000.toString(), 111.toString());
     //debugPrint("match1: " + TeamDataAnalyzer.getMatchActions(_teamNum, "1").toString());
     //var match2 = TeamDataAnalyzer.getMatchActions(_teamNum, "2");
     //var match3 = TeamDataAnalyzer.getMatchActions(_teamNum, "3");
@@ -257,9 +261,14 @@ class _AnalyzerState extends State<Analyzer> {
               _prevIntake.add(_currentGameAction);
             }
             break;
-          case ActionType.PUSH:
+           case ActionType.PUSH_START:
             {
-              _push.add(_currentGameAction);
+              _pushStart.add(_currentGameAction);
+            }
+            break;
+            case ActionType.PUSH_END:
+            {
+              _pushEnd.add(_currentGameAction);
             }
             break;
           default:
@@ -288,7 +297,8 @@ class _AnalyzerState extends State<Analyzer> {
     _otherWheelRotation = [];
     _prevShot = [];
     _prevIntake = [];
-    _push = [];
+    _pushStart = [];
+    _pushEnd = [];
   }
 
   double calcTotOffenseShootingPts() {
@@ -431,17 +441,17 @@ class _AnalyzerState extends State<Analyzer> {
     var action6 = new GameAction(ActionType.SHOT_LOW, 30000, 0, 5);
     var action7 = new GameAction(ActionType.SHOT_INNER, 39000, 5, 2);
     var action8 = new GameAction(ActionType.SHOT_OUTER, 40000, 8, 4);
-    var action9 = new GameAction.push(ActionType.PUSH, 44000, 10, 5, 8, 4, 3);
+    //var action9 = new GameAction.push(ActionType.PUSH, 44000, 10, 5, 8, 4, 3);
     var action10 = new GameAction(ActionType.SHOT_OUTER, 45000, 5, 4);
     var action11 = new GameAction(ActionType.SHOT_LOW, 46000, 13, 7);
     var action12 = new GameAction(ActionType.SHOT_INNER, 46500, 0, 0);
 
     var matchArray1 = [action1, action1a, action1b, action2, action3];
     var matchArray2 = [action4, action4a, action5, action6];
-    var matchArray3 = [action7, action8, action9, action10, action11, action12];
+    //var matchArray3 = [action7, action8, action9, action10, action11, action12];
 
     //FINALARRAY IS WHAT WILL BE PASSED INTO THE ANALYZER
-    var finalArray = [matchArray1, matchArray2, matchArray3];
+    var finalArray = [matchArray1, matchArray2];
     _allMatches = finalArray;
         _driveBase = "tank";
     _initialized = true;

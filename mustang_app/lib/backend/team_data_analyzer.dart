@@ -106,7 +106,7 @@ class TeamDataAnalyzer {
 
   static List<GameAction> getMatchActions(
       String teamNumber, String matchNumber) {
-    return _matches.map((match) => GameAction.fromJson(match.data));
+    return _matches.map((match) => GameAction.fromJson(match.data)).toList();
   }
 
   static void _updateTeamNumbers() async {

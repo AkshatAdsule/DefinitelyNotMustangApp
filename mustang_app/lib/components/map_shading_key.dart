@@ -58,7 +58,7 @@ class _MapShadingKeyState extends State<MapShadingKey> {
                 child: Ink(
                   decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Colors.green[50], Colors.green[600]],
+                        colors: [Colors.green[100], Colors.green[600]],
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                       ),
