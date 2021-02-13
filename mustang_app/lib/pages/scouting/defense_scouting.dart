@@ -191,12 +191,11 @@ class _DefenseScoutingState extends State<DefenseScouting> {
                       style: game_button.ButtonStyle.RAISED,
                       type: game_button.ButtonType.ELEMENT,
                       onPressed: () {
-                        _addAction(ActionType.PREV_INTAKE, context) == 0
-                            ? setState(() {
-                                _prev[0]++;
-                                _prev[1] = 0;
-                              })
-                            : () {};
+                        if (_addAction(ActionType.PREV_INTAKE, context) == 0)
+                          setState(() {
+                            _prev[0]++;
+                            _prev[1] = 0;
+                          });
                       },
                       text: 'Prevent Intake',
                     ),
@@ -216,12 +215,11 @@ class _DefenseScoutingState extends State<DefenseScouting> {
                       style: game_button.ButtonStyle.RAISED,
                       type: game_button.ButtonType.ELEMENT,
                       onPressed: () {
-                        _addAction(ActionType.PREV_INTAKE, context) == 0
-                            ? setState(() {
-                                _prev[1]++;
-                                _prev[0] = 0;
-                              })
-                            : () {};
+                        if (_addAction(ActionType.PREV_INTAKE, context) == 0)
+                          setState(() {
+                            _prev[1]++;
+                            _prev[0] = 0;
+                          });
                       },
                       text: 'Prevent Shot',
                     ),
@@ -242,17 +240,15 @@ class _DefenseScoutingState extends State<DefenseScouting> {
                       type: game_button.ButtonType.ELEMENT,
                       onPressed: () {
                         if (_pushTextStart) {
-                          _addAction(ActionType.PUSH_END, context) != -1
-                              ? setState(() {
-                                  _pushTextStart = false;
-                                })
-                              : () {};
+                          if (_addAction(ActionType.PUSH_END, context) != -1)
+                            setState(() {
+                              _pushTextStart = false;
+                            });
                         } else {
-                          _addAction(ActionType.PUSH_START, context) != -1
-                              ? setState(() {
-                                  _pushTextStart = true;
-                                })
-                              : () {};
+                          if (_addAction(ActionType.PUSH_START, context) != -1)
+                            setState(() {
+                              _pushTextStart = true;
+                            });
                         }
                         _prev.clear();
                       },

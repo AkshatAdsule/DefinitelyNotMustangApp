@@ -270,28 +270,6 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                         style: game_button.ButtonStyle.RAISED,
                         type: game_button.ButtonType.MAKE,
                         onPressed: () {
-                          _addAction(ActionType.INTAKE, context);
-                        },
-                        text: 'Intake'),
-                    game_button.ScoutingButton(
-                        style: game_button.ButtonStyle.RAISED,
-                        type: game_button.ButtonType.MISS,
-                        onPressed: () {
-                          _addAction(ActionType.MISSED_INTAKE, context);
-                        },
-                        text: '')
-                  ],
-                ),
-              ),
-              Flexible(
-                flex: 1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    game_button.ScoutingButton(
-                        style: game_button.ButtonStyle.RAISED,
-                        type: game_button.ButtonType.MAKE,
-                        onPressed: () {
                           _addAction(ActionType.SHOT_OUTER, context);
                         },
                         text: 'Out'),
@@ -332,6 +310,28 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                         type: game_button.ButtonType.MISS,
                         onPressed: () {
                           _addAction(ActionType.MISSED_LOW, context);
+                        },
+                        text: '')
+                  ],
+                ),
+              ),
+              Flexible(
+                flex: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    game_button.ScoutingButton(
+                        style: game_button.ButtonStyle.RAISED,
+                        type: game_button.ButtonType.MAKE,
+                        onPressed: () {
+                          _addAction(ActionType.INTAKE, context);
+                        },
+                        text: 'Intake'),
+                    game_button.ScoutingButton(
+                        style: game_button.ButtonStyle.RAISED,
+                        type: game_button.ButtonType.MISS,
+                        onPressed: () {
+                          _addAction(ActionType.MISSED_INTAKE, context);
                         },
                         text: '')
                   ],
