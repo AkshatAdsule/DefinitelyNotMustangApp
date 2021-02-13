@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/team.dart';
 import 'post_scouter.dart';
 import '../../components/header.dart';
-import '../../backend/database_operations.dart';
+import '../../backend/scouting_operations.dart';
 
 class PitScouter extends StatefulWidget {
   static const String route = '/PitScouter';
@@ -296,7 +296,7 @@ class _PitScouterState extends State<PitScouter> {
 
               RaisedButton(
                 onPressed: () {
-                  DatabaseOperations.setTeamData(
+                  ScoutingOperations.setTeamData(
                     Team(
                       _teamNumber,
                       _driveBase.toString(),

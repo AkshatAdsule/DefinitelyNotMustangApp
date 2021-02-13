@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mustang_app/backend/database_operations.dart';
 import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/backend/team.dart';
+import 'package:mustang_app/backend/team_service.dart';
 import 'package:mustang_app/components/bottom_nav_bar.dart';
 import '../components/header.dart';
 
-// ignore: must_be_immutable
+//TODO: IMPLEMENT THIS CLASS WITH PROVIDER
 class TeamInfoDisplay extends StatefulWidget {
   String _teamNumber;
   static const String route = '/TeamInfoDisplay';
@@ -24,23 +24,41 @@ class _TeamInfoDisplayState extends State<TeamInfoDisplay> {
   List<String> _matches = [];
   Team _team;
   List<Match> _matchData = [];
+  TeamService _teamService;
 
-  _TeamInfoDisplayState(String team) {
-    _teamNumber = team;
+  _TeamInfoDisplayState(String teamNumber) {
+    _teamNumber = teamNumber;
+    _teamService = TeamService();
   }
 
   @override
   void initState() {
     super.initState();
-    _matchData = DatabaseOperations.getMatches(_teamNumber);
-    _team = DatabaseOperations.getTeam(_teamNumber);
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: Header(context, _teamNumber),
-      body: Container(),
+      body: Column(children: [
+        StreamBuilder<Team>(
+          stream: _teamService.streamTeam(_teamNumber),
+          builder: (context, snapshot) {
+            if (snapshot.data == null) {
+              return Container();
+            }
+            return Container();
+          },
+        ),
+        StreamBuilder<List<Match>>(
+            stream: _teamService.streamMatches(_teamNumber),
+            builder: (context, snapshot) {
+              if (snapshot.data == null) {
+                return Container();
+              }
+              return Container();
+            })
+      ]),
       bottomNavigationBar: BottomNavBar(context),
     );
   }

@@ -22,31 +22,35 @@ class Team {
       this._hasClimber,
       this._hasLeveller);
 
-  Team.fromSnapshot(DocumentSnapshot snapshot) {
+  factory Team.fromSnapshot(DocumentSnapshot snapshot) {
     Map<String, dynamic> data = snapshot.data;
-    _teamNumber = snapshot.documentID;
-    _drivebaseType = data['drivebaseType'];
-    _notes = data['notes'];
-    _innerPort = data['innerPort'];
-    _outerPort = data['outerPort'];
-    _teamNumber = data['bottomPort'];
-    _rotationControl = data['rotationControl'];
-    _positionControl = data['positionControl'];
-    _hasLeveller = data['leveller'];
-    _hasClimber = data['climber'];
+    return Team(
+      snapshot.documentID,
+      data['drivebaseType'],
+      data['notes'],
+      data['innerPort'],
+      data['outerPort'],
+      data['bottomPort'],
+      data['rotationControl'],
+      data['positionControl'],
+      data['climber'],
+      data['leveller'],
+    );
   }
 
-  Team.fromJson(Map<String, dynamic> data) {
-    _teamNumber = data['teamNumber'];
-    _drivebaseType = data['drivebaseType'];
-    _notes = data['notes'];
-    _innerPort = data['innerPort'];
-    _outerPort = data['outerPort'];
-    _teamNumber = data['bottomPort'];
-    _rotationControl = data['rotationControl'];
-    _positionControl = data['positionControl'];
-    _hasLeveller = data['leveller'];
-    _hasClimber = data['climber'];
+  factory Team.fromJson(Map<String, dynamic> data) {
+    return Team(
+      data['teamNumber'],
+      data['drivebaseType'],
+      data['notes'],
+      data['innerPort'],
+      data['outerPort'],
+      data['bottomPort'],
+      data['rotationControl'],
+      data['positionControl'],
+      data['climber'],
+      data['leveller'],
+    );
   }
 
   Map<String, dynamic> toJson() {

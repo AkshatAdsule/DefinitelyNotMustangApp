@@ -80,7 +80,6 @@ class _MapScoutingState extends State<MapScouting> {
   }
 
   void setClimb(int millisecondsElapsed) {
-    print('SLIDER LAST CHANGED $millisecondsElapsed');
     _sliderLastChanged = millisecondsElapsed;
   }
 

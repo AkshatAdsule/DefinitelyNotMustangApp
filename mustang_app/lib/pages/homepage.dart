@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
 import '../components/header.dart';
 import '../components/bottom_nav_bar.dart';
-import '../backend/database_operations.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage() {
-    if (!DatabaseOperations.initialized) {
-      DatabaseOperations.init();
-    }
-  }
   @override
   State<StatefulWidget> createState() {
     return HomePageState();

@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import '../backend/database_operations.dart';
+import '../backend/scouting_operations.dart';
 import 'package:mustang_app/constants/constants.dart';
 
 // ignore: must_be_immutable

@@ -8,26 +8,27 @@ class Match {
   Match(this._matchNumber, this._teamNumber, this._allianceColor,
       this._matchResult, this._notes, this._actions);
 
-  Match.fromJson(Map<String, dynamic> data) {
-    _matchNumber = data['matchNumber'];
-    _teamNumber = data['teamNumber'];
-    _notes = data['finalComments'];
-    _allianceColor = data['allianceColor'];
-    _matchResult = data['matchResult'];
-    _actions =
-        data['actions'].map((action) => GameAction.fromJson(action)).toList();
+  factory Match.fromJson(Map<String, dynamic> data) {
+    return Match(
+      data['matchNumber'],
+      data['teamNumber'],
+      data['allianceColor'],
+      data['matchResult'],
+      data['finalComments'],
+      data['actions'].map((action) => GameAction.fromJson(action)).toList(),
+    );
   }
 
-  Match.fromSnapshot(DocumentSnapshot snapshot) {
-    print(snapshot.data['teamNumber']);
+  factory Match.fromSnapshot(DocumentSnapshot snapshot) {
     Map<String, dynamic> data = snapshot.data;
-    _matchNumber = snapshot.documentID;
-    _teamNumber = data['teamNumber'];
-    _notes = data['finalComments'];
-    _allianceColor = data['allianceColor'];
-    _matchResult = data['matchResult'];
-    _actions =
-        data['actions'].map((action) => GameAction.fromJson(action)).toList();
+    return Match(
+      snapshot.documentID,
+      data['teamNumber'],
+      data['allianceColor'],
+      data['matchResult'],
+      data['finalComments'],
+      data['actions'].map((action) => GameAction.fromJson(action)).toList(),
+    );
   }
 
   Map<String, dynamic> toJson() {
