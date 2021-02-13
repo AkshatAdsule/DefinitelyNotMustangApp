@@ -2,35 +2,17 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/game_action.dart';
+import 'package:mustang_app/backend/match.dart';
+import 'package:mustang_app/backend/team.dart';
+import 'package:mustang_app/backend/team_service.dart';
 import 'package:mustang_app/constants/constants.dart';
 
 // ignore: must_be_immutable
-class Analyzer extends StatefulWidget {
-  String _teamNum;
-  //Map<int, int> ptsAtZone;
-  Analyzer(String teamNum) {
-    _teamNum = teamNum;
-  }
-
-  @override
-  State<StatefulWidget> createState() {
-    return _AnalyzerState(_teamNum);
-  }
-
-  double calcPtsAtZoneMapDisplay(double x, double y) {
-    return _AnalyzerState(_teamNum).calcPtsAtZone(x, y);
-  }
-
-  int totalNumGames() {
-    return _AnalyzerState(_teamNum).totalNumGames;
-  }
-}
-
-class _AnalyzerState extends State<Analyzer> {
+class Analyzer {
   bool _initialized = false, _hasAnalysis = true;
-  String _teamNum, _driveBase;
-
-  var _allMatches; //array that holds everything
+  String _teamNum = '', _driveBase = 'tank';
+  TeamService _teamService = TeamService();
+  List<Match> _allMatches = []; //array that holds everything
   int _oldAllMatchLength = 0;
   //for testing if data needs to be collected again or not - if same then don't
   int _totalNumGames = 1;
@@ -55,59 +37,23 @@ class _AnalyzerState extends State<Analyzer> {
       _pushStart = [],
       _pushEnd = [];
 
-  _AnalyzerState(String teamNum) {
+  Analyzer(String teamNum) {
     _teamNum = teamNum;
   }
 
-  void initState() {
-    super.initState();
-    if (_teamNum.isEmpty) {
-      return;
-    }
-    //default is tank
-    /*
-    if (_driveBase == null){
-      _driveBase = "tank";
-    }
-    */
-    //initialize all vars
-    var action1 = new GameAction(ActionType.FOUL_REG, 2000, 3, 4);
-    var action1a = new GameAction(ActionType.FOUL_TECH, 2000, 4, 4);
-    var action1b = new GameAction(ActionType.SHOT_LOW, 5000, 0, 2);
-    var action2 = new GameAction(ActionType.SHOT_INNER, 6000, 15, 1);
-    var action3 = new GameAction(ActionType.PREV_SHOT, 10000, 13, 5);
-    var action4 = new GameAction(ActionType.MISSED_OUTER, 15000, 2, 4);
-    var action4a = new GameAction(ActionType.MISSED_OUTER, 16000, 1, 4);
-    var action5 = new GameAction(ActionType.OTHER_CLIMB_MISS, 19000, 3, 3);
-    var action6 = new GameAction(ActionType.SHOT_LOW, 30000, 0, 5);
-    var action7 = new GameAction(ActionType.SHOT_INNER, 39000, 5, 2);
-    var action8 = new GameAction(ActionType.SHOT_OUTER, 40000, 8, 4);
-    //var action9 = new GameAction.push(ActionType.PUSH, 44000, 10, 5, 8, 4, 3);
-    var action9 = new GameAction(ActionType.PUSH_START, 40005, 8, 4);
-    var action10= new GameAction(ActionType.PUSH_END, 40005, 8, 4);
+  bool get initialized => _initialized;
 
-
-    var matchArray1 = [action1, action1a, action1b, action2, action3];
-    var matchArray2 = [action4, action4a, action5, action6];
-    var matchArray3 = [action7, action8, action9, action10];
-
-    //FINALARRAY IS WHAT WILL BE PASSED INTO THE ANALYZER
-    var finalArray = [matchArray1, matchArray2, matchArray3];
-    //List<DocumentSnapshot> Function(String teamNumber) _matches = TeamDataAnalyzer.getMatchDocs;
-    //debugPrint("match docs: " + _matches.toString());
-    //var match1 = TeamDataAnalyzer.getMatchActions(0000.toString(), 111.toString());
-    //debugPrint("match1: " + TeamDataAnalyzer.getMatchActions(_teamNum, "1").toString());
-    //var match2 = TeamDataAnalyzer.getMatchActions(_teamNum, "2");
-    //var match3 = TeamDataAnalyzer.getMatchActions(_teamNum, "3");
-
-    //_allMatches = [match1, match2, match3];
-
-    _allMatches = finalArray;
-    //_collectData();
-
-    _driveBase = "tank";
+  Future<void> init() async {
+    Team team = await _teamService.getTeam(_teamNum);
+    List<Match> matches = await _teamService.getMatches(_teamNum);
+    _driveBase = team.drivebaseType;
+    _allMatches = matches;
     _initialized = true;
   }
+
+  double calcPtsAtZoneMapDisplay(double x, double y) => calcPtsAtZone(x, y);
+
+  int totalNumGames() => _totalNumGames;
 
   String getReport() {
     //TEST TO SEE IF DATA RLY NEEDS TO BE COLLECTED!!
@@ -162,113 +108,47 @@ class _AnalyzerState extends State<Analyzer> {
     _totalNumGames = _allMatches.length;
     //goes thru all matches
     for (int i = 0; i < _totalNumGames; i++) {
-      var _currentMatch = _allMatches.elementAt(i);
-      //goes thru each action in the match
-      for (int j = 0; j < _currentMatch.length; j++) {
-        GameAction _currentGameAction = _currentMatch[j];
-        ActionType _currentAction = _currentGameAction.action;
+      Match _currentMatch = _allMatches[i];
+      List<GameAction> actions = _currentMatch.actions;
 
-        //fill up each array of actions
-        switch (_currentAction) {
-          case ActionType.FOUL_REG:
-            {
-              _foulReg.add(_currentGameAction);
-            }
-            break;
-          case ActionType.FOUL_TECH:
-            {
-              _foulTech.add(_currentGameAction);
-            }
-            break;
-          case ActionType.FOUL_YELLOW:
-            {
-              _foulYellow.add(_currentGameAction);
-            }
-            break;
-          case ActionType.FOUL_RED:
-            {
-              _foulRed.add(_currentGameAction);
-            }
-            break;
-          case ActionType.FOUL_DISABLED:
-            {
-              _foulDisabled.add(_currentGameAction);
-            }
-            break;
-          case ActionType.FOUL_DISQUAL:
-            {
-              _foulDisqual.add(_currentGameAction);
-            }
-            break;
-          case ActionType.SHOT_LOW:
-            {
-              _shotLow.add(_currentGameAction);
-            }
-            break;
-          case ActionType.SHOT_OUTER:
-            {
-              _shotOuter.add(_currentGameAction);
-            }
-            break;
-          case ActionType.SHOT_INNER:
-            {
-              _shotInner.add(_currentGameAction);
-            }
-            break;
-          case ActionType.MISSED_LOW:
-            {
-              _missedLow.add(_currentGameAction);
-            }
-            break;
-          case ActionType.MISSED_OUTER:
-            {
-              _missedOuter.add(_currentGameAction);
-            }
-            break;
-          case ActionType.OTHER_CLIMB:
-            {
-              _otherClimb.add(_currentGameAction);
-            }
-            break;
-          case ActionType.OTHER_CLIMB_MISS:
-            {
-              _otherClimbMiss.add(_currentGameAction);
-            }
-            break;
-          case ActionType.OTHER_WHEEL_POSITION:
-            {
-              _otherWheelPosition.add(_currentGameAction);
-            }
-            break;
-          case ActionType.OTHER_WHEEL_ROTATION:
-            {
-              _otherWheelRotation.add(_currentGameAction);
-            }
-            break;
-          case ActionType.PREV_SHOT:
-            {
-              _prevShot.add(_currentGameAction);
-            }
-            break;
-          case ActionType.PREV_INTAKE:
-            {
-              _prevIntake.add(_currentGameAction);
-            }
-            break;
-           case ActionType.PUSH_START:
-            {
-              _pushStart.add(_currentGameAction);
-            }
-            break;
-            case ActionType.PUSH_END:
-            {
-              _pushEnd.add(_currentGameAction);
-            }
-            break;
-          default:
-            break;
-        }
-      }
+      _foulReg.addAll(
+          actions.where((element) => element.action == ActionType.FOUL_REG));
+      _foulTech.addAll(
+          actions.where((element) => element.action == ActionType.FOUL_TECH));
+      _foulYellow.addAll(
+          actions.where((element) => element.action == ActionType.FOUL_YELLOW));
+      _foulRed.addAll(
+          actions.where((element) => element.action == ActionType.FOUL_RED));
+      _foulDisabled.addAll(actions
+          .where((element) => element.action == ActionType.FOUL_DISABLED));
+      _foulDisqual.addAll(actions
+          .where((element) => element.action == ActionType.FOUL_DISQUAL));
+      _shotInner.addAll(
+          actions.where((element) => element.action == ActionType.SHOT_INNER));
+      _shotOuter.addAll(
+          actions.where((element) => element.action == ActionType.SHOT_OUTER));
+      _shotLow.addAll(
+          actions.where((element) => element.action == ActionType.SHOT_LOW));
+      _missedLow.addAll(
+          actions.where((element) => element.action == ActionType.MISSED_LOW));
+      _missedOuter.addAll(actions
+          .where((element) => element.action == ActionType.MISSED_OUTER));
+      _otherClimb.addAll(
+          actions.where((element) => element.action == ActionType.OTHER_CLIMB));
+      _otherClimbMiss.addAll(actions
+          .where((element) => element.action == ActionType.OTHER_CLIMB_MISS));
+      _otherWheelRotation.addAll(actions.where(
+          (element) => element.action == ActionType.OTHER_WHEEL_ROTATION));
+      _otherWheelPosition.addAll(actions.where(
+          (element) => element.action == ActionType.OTHER_WHEEL_POSITION));
+      _prevIntake.addAll(
+          actions.where((element) => element.action == ActionType.PREV_INTAKE));
+      _prevShot.addAll(
+          actions.where((element) => element.action == ActionType.PREV_SHOT));
+      _pushStart.addAll(
+          actions.where((element) => element.action == ActionType.PUSH_START));
+      _pushEnd.addAll(
+          actions.where((element) => element.action == ActionType.PUSH_END));
     }
   }
 
@@ -345,6 +225,9 @@ class _AnalyzerState extends State<Analyzer> {
     double _climb = _otherClimb.length * 1.0;
     double _miss = _otherClimbMiss.length * 1.0;
     double _totalClimbAttempts = _climb + _miss;
+    if (_totalClimbAttempts == 0) {
+      return 0;
+    }
     return (_climb / _totalClimbAttempts) * 100.0;
   }
 
@@ -424,46 +307,19 @@ class _AnalyzerState extends State<Analyzer> {
 
   //for map display, takes in a zone and returns offense pts scored there
   double calcPtsAtZone(double x, double y) {
-    //BASICALLY NEED TO CALL ALL OF THIS SO THAT THE STUFF GETS INITIALIZED CAUSE IT'S NOT HAPPENENING AT OTHER PLACES
-    //initialize all vars
-    var action1 = new GameAction(ActionType.FOUL_REG, 2000, 3, 4);
-    var action1a = new GameAction(ActionType.FOUL_TECH, 2000, 4, 4);
-    var action1b = new GameAction(ActionType.SHOT_LOW, 5000, 0, 2);
-    var action2 = new GameAction(ActionType.SHOT_INNER, 6000, 15, 1);
-    var action3 = new GameAction(ActionType.PREV_SHOT, 10000, 13, 5);
-    var action4 = new GameAction(ActionType.MISSED_OUTER, 15000, 2, 4);
-    var action4a = new GameAction(ActionType.MISSED_OUTER, 16000, 1, 4);
-    var action5 = new GameAction(ActionType.OTHER_CLIMB_MISS, 19000, 3, 3);
-    var action6 = new GameAction(ActionType.SHOT_LOW, 30000, 0, 5);
-    var action7 = new GameAction(ActionType.SHOT_INNER, 39000, 5, 2);
-    var action8 = new GameAction(ActionType.SHOT_OUTER, 40000, 8, 4);
-    //var action9 = new GameAction.push(ActionType.PUSH, 44000, 10, 5, 8, 4, 3);
-    var action10 = new GameAction(ActionType.SHOT_OUTER, 45000, 5, 4);
-    var action11 = new GameAction(ActionType.SHOT_LOW, 46000, 13, 7);
-    var action12 = new GameAction(ActionType.SHOT_INNER, 46500, 0, 0);
-
-    var matchArray1 = [action1, action1a, action1b, action2, action3];
-    var matchArray2 = [action4, action4a, action5, action6];
-    //var matchArray3 = [action7, action8, action9, action10, action11, action12];
-
-    //FINALARRAY IS WHAT WILL BE PASSED INTO THE ANALYZER
-    var finalArray = [matchArray1, matchArray2];
-    _allMatches = finalArray;
-    _driveBase = "tank";
-    _initialized = true;
-
 //needs to be called to initialize
-    String random = getReport();
+    // String random = getReport();
     //debugPrint("all matches: " + _allMatches.toString());
     double totalPoints = 0;
 
     for (int i = 0; i < _allMatches.length; i++) {
       //inside each array of actions
-      for (int j = 0; j < _allMatches[i].length; j++) {
+      for (int j = 0; j < _allMatches[i].actions.length; j++) {
         //low shot
-        if (_allMatches[i][j].action == ActionType.SHOT_LOW) {
-          if (_allMatches[i][j].x == x && _allMatches[i][j].y == y) {
-            if (_allMatches[i][j].timeStamp <= 15) {
+        GameAction currentAction = _allMatches[i].actions[j];
+        if (currentAction.action == ActionType.SHOT_LOW) {
+          if (currentAction.x == x && currentAction.y == y) {
+            if (currentAction.timeStamp <= 15) {
               totalPoints += Constants.lowShotAutonValue;
             } else {
               totalPoints += Constants.lowShotValue;
@@ -472,9 +328,9 @@ class _AnalyzerState extends State<Analyzer> {
         }
 
         //outer shot
-        if (_allMatches[i][j].action == ActionType.SHOT_OUTER) {
-          if (_allMatches[i][j].x == x && _allMatches[i][j].y == y) {
-            if (_allMatches[i][j].timeStamp <= 15) {
+        if (currentAction.action == ActionType.SHOT_OUTER) {
+          if (currentAction.x == x && currentAction.y == y) {
+            if (currentAction.timeStamp <= 15) {
               totalPoints += Constants.outerShotAutonValue;
             } else {
               totalPoints += Constants.outerShotValue;
@@ -483,9 +339,9 @@ class _AnalyzerState extends State<Analyzer> {
         }
 
         //inner shot
-        if (_allMatches[i][j].action == ActionType.SHOT_INNER) {
-          if (_allMatches[i][j].x == x && _allMatches[i][j].y == y) {
-            if (_allMatches[i][j].timeStamp <= 15) {
+        if (currentAction.action == ActionType.SHOT_INNER) {
+          if (currentAction.x == x && currentAction.y == y) {
+            if (currentAction.timeStamp <= 15) {
               totalPoints += Constants.innerShotAutonValue;
             } else {
               totalPoints += Constants.innerShotValue;
@@ -505,26 +361,5 @@ class _AnalyzerState extends State<Analyzer> {
 */
 
     return totalPoints;
-  }
-
-  int get totalNumGames => _totalNumGames;
-
-  @override
-  Widget build(BuildContext context) {
-    if (!_hasAnalysis) {
-      return Text('No Analysis For This Team :(');
-    } else if (_initialized) {
-      return Text(this.getReport());
-    } else if (_teamNum.isEmpty) {
-      return Text('Error! No Team Number Entered');
-    } else {
-      return Text('Loading...');
-    }
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(IterableProperty<GameAction>('_foulTech', _foulTech));
   }
 }

@@ -10,12 +10,16 @@ class Match {
 
   factory Match.fromJson(Map<String, dynamic> data) {
     return Match(
-      data['matchNumber'],
-      data['teamNumber'],
-      data['allianceColor'],
-      data['matchResult'],
-      data['finalComments'],
-      data['actions'].map((action) => GameAction.fromJson(action)).toList(),
+      data['matchNumber'] ?? '',
+      data['teamNumber'] ?? '',
+      data['allianceColor'] ?? 'blue',
+      data['matchResult'] ?? 'Lose',
+      data['finalComments'] ?? '',
+      data['actions'] != null
+          ? data['actions']
+              .map((action) => GameAction.fromJson(action))
+              .toList()
+          : [],
     );
   }
 
@@ -23,11 +27,15 @@ class Match {
     Map<String, dynamic> data = snapshot.data;
     return Match(
       snapshot.documentID,
-      data['teamNumber'],
-      data['allianceColor'],
-      data['matchResult'],
-      data['finalComments'],
-      data['actions'].map((action) => GameAction.fromJson(action)).toList(),
+      data['teamNumber'] ?? '',
+      data['allianceColor'] ?? 'blue',
+      data['matchResult'] ?? 'Lose',
+      data['finalComments'] ?? '',
+      data['actions'] != null
+          ? List<dynamic>.of(data['actions'])
+              .map((e) => GameAction.fromJson(Map<String, dynamic>.from(e)))
+              .toList()
+          : [],
     );
   }
 

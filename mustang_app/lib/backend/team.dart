@@ -26,30 +26,30 @@ class Team {
     Map<String, dynamic> data = snapshot.data;
     return Team(
       snapshot.documentID,
-      data['drivebaseType'],
-      data['notes'],
-      data['innerPort'],
-      data['outerPort'],
-      data['bottomPort'],
-      data['rotationControl'],
-      data['positionControl'],
-      data['climber'],
-      data['leveller'],
+      data['drivebaseType'] ?? 'tank',
+      data['notes'] ?? '',
+      data['innerPort'] ?? false,
+      data['outerPort'] ?? false,
+      data['bottomPort'] ?? false,
+      data['rotationControl'] ?? false,
+      data['positionControl'] ?? false,
+      data['climber'] ?? false,
+      data['leveller'] ?? false,
     );
   }
 
   factory Team.fromJson(Map<String, dynamic> data) {
     return Team(
-      data['teamNumber'],
-      data['drivebaseType'],
-      data['notes'],
-      data['innerPort'],
-      data['outerPort'],
-      data['bottomPort'],
-      data['rotationControl'],
-      data['positionControl'],
-      data['climber'],
-      data['leveller'],
+      data['teamNumber'] ?? '',
+      data['drivebaseType'] ?? 'tank',
+      data['notes'] ?? '',
+      data['innerPort'] ?? false,
+      data['outerPort'] ?? false,
+      data['bottomPort'] ?? false,
+      data['rotationControl'] ?? false,
+      data['positionControl'] ?? false,
+      data['climber'] ?? false,
+      data['leveller'] ?? false,
     );
   }
 

@@ -30,6 +30,11 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
     //shading = new MapAnalysisShading();
   }
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   //returns number out of 600 for color, depending on ptsAtZone
   Color _getColor(int x, int y) {
     int colorValue = _getColorValue(x, y);
@@ -85,6 +90,10 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
 
   @override
   Widget build(BuildContext context) {
+    if (!myAnalyzer.initialized) {
+      myAnalyzer.init().then((value) => setState(() {}));
+    }
+
     String switchText = "Accuracy Map"; //other option is "Point Map"
     ZoneGrid grid = ZoneGrid(GlobalKey(), (int x, int y) {},
         (int x, int y, bool isSelected, double cellWidth, double cellHeight) {
@@ -109,17 +118,16 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               //Image.asset('assets/croppedmap.png', fit: BoxFit.contain),
-              myAnalyzer,
               RaisedButton(
                 onPressed: () {
                   debugPrint("ON PRESSED");
-                  if (switchText == "Accuracy Map"){
+                  if (switchText == "Accuracy Map") {
                     switchText = "Point Map";
                     debugPrint(switchText);
                   }
-                  if (switchText == "Point Map"){
+                  if (switchText == "Point Map") {
                     switchText = "Accuracy Map";
-                    debugPrint(switchText);                    
+                    debugPrint(switchText);
                   }
                 },
                 shape: RoundedRectangleBorder(

@@ -14,6 +14,17 @@ class TeamService {
         .get());
   }
 
+  Future<List<Match>> getMatches(String teamNumber) async {
+    QuerySnapshot matchData = await _db
+        .collection(_year)
+        .document('info')
+        .collection('teams')
+        .document(teamNumber)
+        .collection('matches')
+        .getDocuments();
+    return matchData.documents.map((e) => Match.fromSnapshot(e)).toList();
+  }
+
   Stream<Team> streamTeam(String teamNumber) {
     return _db
         .collection(_year)
