@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mustang_app/components/game_action.dart';
+import 'package:mustang_app/backend/game_action.dart';
 import 'package:mustang_app/constants/constants.dart';
 
 // ignore: must_be_immutable

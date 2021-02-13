@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mustang_app/components/game_action.dart';
+import 'package:mustang_app/backend/game_action.dart';
+import 'package:mustang_app/backend/match.dart';
+import 'package:mustang_app/backend/team.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
@@ -10,30 +12,65 @@ class DatabaseOperations {
   static bool _initialized = false;
   static List<String> _teamNumbers = [];
   static String _year;
-  static List<DocumentSnapshot> _teams = [];
-  static List<DocumentSnapshot> _matches = [];
+  static List<Team> _teams = [];
+  static List<Match> _matches = [];
   static Firestore _db = Firestore.instance;
+  static StreamSubscription<QuerySnapshot> _teamListener, _matchListener;
 
   static Future<void> init() async {
     _year = DateTime.now().year.toString();
-    _teams = (await _db.collection('teams').getDocuments()).documents;
-    _matches = (await _db.collectionGroup('matches').getDocuments()).documents;
+    List<DocumentSnapshot> teamDocs =
+        (await _db.collection('teams-$_year').getDocuments()).documents;
+    List<DocumentSnapshot> matchDocs = (await _db
+            .collectionGroup('matches')
+            .where('year', isEqualTo: _year)
+            .getDocuments())
+        .documents;
+
+    _teams = _convertTeamsFromSnapshot(teamDocs);
+    _matches = _convertMatchesFromSnapshot(matchDocs);
     _updateTeamNumbers();
     _initialized = true;
-    _db.collection('teams').snapshots().listen((event) {
-      _teams = event.documents;
+
+    _teamListener = _db.collection('teams-$_year').snapshots().listen((event) {
+      _teams = _convertTeamsFromSnapshot(event.documents);
       _updateTeamNumbers();
     });
-    _db.collectionGroup('matches').snapshots().listen((event) {
-      _matches = event.documents;
+    _matchListener = _db
+        .collectionGroup('matches')
+        .where('year', isEqualTo: _year)
+        .snapshots()
+        .listen((event) {
+      _matches = _convertMatchesFromSnapshot(event.documents);
       _updateTeamNumbers();
     });
   }
 
+  static Future<void> tempInit() async {
+    _year = DateTime.now().year.toString();
+    WriteBatch batch = _db.batch();
+    List<DocumentSnapshot> matchDocs =
+        (await _db.collectionGroup('matches').getDocuments()).documents;
+    matchDocs.forEach((element) {
+      batch.updateData(element.reference, {'year': _year});
+    });
+    await batch.commit();
+  }
+
+  static void stopListening() {
+    _teamListener.cancel();
+    _matchListener.cancel();
+  }
+
   static Future<void> refresh() async {
     _initialized = false;
-    _teams = (await _db.collection('teams').getDocuments()).documents;
-    _matches = (await _db.collectionGroup('matches').getDocuments()).documents;
+    _teams = _convertTeamsFromSnapshot(
+        (await _db.collection('teams-$_year').getDocuments()).documents);
+    _matches = _convertMatchesFromSnapshot((await _db
+            .collectionGroup('matches')
+            .where('year', isEqualTo: _year)
+            .getDocuments())
+        .documents);
     _updateTeamNumbers();
     _initialized = true;
   }
@@ -50,32 +87,32 @@ class DatabaseOperations {
     return _teamNumbers;
   }
 
-  static List<DocumentSnapshot> get teamDocs {
+  static List<Team> get teamDocs {
     return _teams;
   }
 
-  static List<DocumentSnapshot> get matchDocs {
+  static List<Match> get matchDocs {
     return _matches;
   }
 
-  static DocumentSnapshot getTeamDoc(String teamNumber) {
+  static Team getTeam(String teamNumber) {
     return _teams
-        .where((element) => element.documentID == teamNumber)
+        .where((element) => element.teamNumber == teamNumber)
         .toList()
         .first;
   }
 
-  static List<DocumentSnapshot> getMatchDocs(String teamNumber) {
+  static List<Match> getMatches(String teamNumber) {
     return _matches
-        .where((element) => element.data['teamNumber'] == teamNumber)
+        .where((element) => element.teamNumber == teamNumber)
         .toList();
   }
 
-  static DocumentSnapshot getMatch(String teamNumber, String matchNumber) {
+  static Match getMatch(String teamNumber, String matchNumber) {
     return _matches
         .where((element) =>
-            element.data['teamNumber'] == teamNumber &&
-            element.documentID == matchNumber)
+            element.teamNumber == teamNumber &&
+            element.matchNumber == matchNumber)
         .toList()
         .first;
   }
@@ -84,22 +121,17 @@ class DatabaseOperations {
       String teamNumber, String matchNumber) {
     return _matches
         .where((match) =>
-            match.data['teamNumber'] == teamNumber &&
-            match.documentID == matchNumber)
+            match.teamNumber == teamNumber && match.matchNumber == matchNumber)
         .first
-        .data['actions']
-        .map((action) => GameAction.fromJson(action))
-        .toList();
+        .actions;
   }
 
   static Map<String, List<GameAction>> getAllMatchActions(String teamNumber) {
-    List<DocumentSnapshot> matches =
-        _matches.where((element) => element.data['teamNumber'] == teamNumber);
+    List<Match> matches =
+        _matches.where((element) => element.teamNumber == teamNumber);
     Map<String, List<GameAction>> mapActions = {};
     matches.forEach((match) {
-      mapActions[match.documentID] = match.data['actions']
-          .map((action) => GameAction.fromJson(action))
-          .toList();
+      mapActions[match.matchNumber] = match.actions;
     });
     return mapActions;
   }
@@ -107,63 +139,41 @@ class DatabaseOperations {
   static void _updateTeamNumbers() {
     List<String> numbers = [];
     _teams.forEach((team) {
-      numbers.add(team.documentID);
+      numbers.add(team.teamNumber);
     });
     _teamNumbers = numbers;
   }
 
-  static Future<void> updatePitScouting(String teamNumber,
-      {bool inner,
-      outer,
-      bottom,
-      rotation,
-      position,
-      climb,
-      leveller,
-      String notes,
-      drivebaseType}) async {
-    await _db.collection('teams-$_year').document(teamNumber).updateData({
-      'driveBaseType': drivebaseType,
-      'innerPort': inner,
-      'outerPort': outer,
-      'bottomPort': bottom,
-      'rotationControl': rotation,
-      'positionControl': position,
-      'climber': climb,
-      'leveller': leveller,
-      'notes': notes
-    });
-  }
-
-  static List<Map<String, dynamic>> _convertActionsToJson(
-      List<GameAction> actions) {
-    return actions.map((action) => action.toJson()).toList();
-  }
-
-  static Future<void> updateMatchData(
-      String teamNumber, String matchNumber, List<GameAction> actions,
-      {String matchResult, String finalComments, String allianceColor}) async {
+  static Future<void> setTeamData(Team team) async {
     await _db
         .collection('teams-$_year')
-        .document(teamNumber)
-        .collection('matches')
-        .document(matchNumber)
-        .setData({
-      'actions': _convertActionsToJson(actions),
-      'finalComments': finalComments,
-      'matchResult': matchResult,
-      'allianceColor': allianceColor,
-      'teamNumber': teamNumber,
-    });
+        .document(team.teamNumber)
+        .updateData(team.toJson());
   }
 
-  static bool doesPitDataExist(String teamNumber) {
-    DocumentSnapshot team =
-        _teams.where((team) => team.documentID == teamNumber).first;
+  static List<Team> _convertTeamsFromSnapshot(List<DocumentSnapshot> snaps) {
+    return snaps.map((e) => Team.fromSnapshot(e)).toList();
+  }
+
+  static List<Match> _convertMatchesFromSnapshot(List<DocumentSnapshot> snaps) {
+    return snaps.map((e) => Match.fromSnapshot(e)).toList();
+  }
+
+  static Future<void> setMatchData(Match match) async {
+    await _db
+        .collection('teams-$_year')
+        .document(match.teamNumber)
+        .collection('matches')
+        .document(match.matchNumber)
+        .setData(match.toJson());
+  }
+
+  static bool doesTeamDataExist(String teamNumber) {
+    Team team = _teams.where((team) => team.teamNumber == teamNumber).first;
 
     if (team == null) {
       return false;
-    } else if (team.data == null) {
+    } else if (team.teamNumber == "") {
       return false;
     } else {
       return true;
@@ -171,14 +181,13 @@ class DatabaseOperations {
   }
 
   static bool doesMatchDataExist(String teamNumber, String matchNumber) {
-    DocumentSnapshot match = _matches
+    Match match = _matches
         .where((match) =>
-            match.data['teamNumber'] == teamNumber &&
-            match.documentID == matchNumber)
+            match.teamNumber == teamNumber && match.matchNumber == matchNumber)
         .first;
     if (match == null) {
       return false;
-    } else if (match.data == null) {
+    } else if (match.matchNumber == "") {
       return false;
     } else {
       return true;
@@ -192,7 +201,7 @@ class DatabaseOperations {
     Map<String, Map<String, dynamic>> data = {};
     final Firestore _db = Firestore.instance;
     StorageReference ref = FirebaseStorage.instance.ref().child('_db.json');
-    QuerySnapshot teams = await _db.collection('teams').getDocuments();
+    QuerySnapshot teams = await _db.collection('teams-$_year').getDocuments();
     teams.documents.forEach((doc) async {
       data[doc.documentID] = {};
       data[doc.documentID]['Match Scouting'] =

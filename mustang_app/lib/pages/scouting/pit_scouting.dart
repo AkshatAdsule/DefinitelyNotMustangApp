@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/backend/team.dart';
 import 'post_scouter.dart';
 import '../../components/header.dart';
 import '../../backend/database_operations.dart';
@@ -295,17 +296,20 @@ class _PitScouterState extends State<PitScouter> {
 
               RaisedButton(
                 onPressed: () {
-                  DatabaseOperations.updatePitScouting(_teamNumber,
-                      //drivebaseType: _drivebaseType,
-                      drivebaseType: _driveBase.toString(),
-                      inner: _inner,
-                      outer: _outer,
-                      bottom: _bottom,
-                      rotation: _rotation,
-                      position: _position,
-                      climb: _climb,
-                      leveller: _leveller,
-                      notes: _notes.text);
+                  DatabaseOperations.setTeamData(
+                    Team(
+                      _teamNumber,
+                      _driveBase.toString(),
+                      _notes.text,
+                      _inner,
+                      _outer,
+                      _bottom,
+                      _rotation,
+                      _position,
+                      _climb,
+                      _leveller,
+                    ),
+                  );
                   Navigator.pushNamed(context, PostScouter.route);
                   // Navigator.pushNamed(context, TeleopScouter.route);
                 },

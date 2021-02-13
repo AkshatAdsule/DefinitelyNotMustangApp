@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:mustang_app/components/game_action.dart';
+import 'package:mustang_app/backend/game_action.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/utils/orientation_helpers.dart';
 import '../../components/game_map.dart';

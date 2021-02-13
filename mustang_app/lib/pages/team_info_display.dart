@@ -1,142 +1,47 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/database_operations.dart';
+import 'package:mustang_app/backend/match.dart';
+import 'package:mustang_app/backend/team.dart';
+import 'package:mustang_app/components/bottom_nav_bar.dart';
 import '../components/header.dart';
 
 // ignore: must_be_immutable
 class TeamInfoDisplay extends StatefulWidget {
-  String _team;
+  String _teamNumber;
   static const String route = '/TeamInfoDisplay';
   TeamInfoDisplay({String teamNumber}) {
-    _team = teamNumber;
+    _teamNumber = teamNumber;
   }
 
   @override
   State<StatefulWidget> createState() {
-    return _TeamInfoDisplayState(_team);
+    return _TeamInfoDisplayState(_teamNumber);
   }
 }
 
 class _TeamInfoDisplayState extends State<TeamInfoDisplay> {
-  String _team;
+  String _teamNumber;
   List<String> _matches = [];
-  Map<dynamic, dynamic> _pitData = {};
-  List<Map<dynamic, dynamic>> _matchData = [];
+  Team _team;
+  List<Match> _matchData = [];
 
   _TeamInfoDisplayState(String team) {
-    _team = team;
-    getData().then((onValue) {
-      setState(() {});
-    });
+    _teamNumber = team;
   }
 
-  Future<void> getData() async {
-    List<DocumentSnapshot> matchData = DatabaseOperations.getMatchDocs(_team);
-
-    matchData.forEach((f) {
-      _matches.add(f.documentID);
-      Map<String, dynamic> data = f.data;
-      data.removeWhere((key, value) => !(value is Map));
-      _matchData.add(data);
-    });
-
-    DocumentSnapshot data = DatabaseOperations.getTeamDoc(_team);
-    _pitData = data.data;
+  @override
+  void initState() {
+    super.initState();
+    _matchData = DatabaseOperations.getMatches(_teamNumber);
+    _team = DatabaseOperations.getTeam(_teamNumber);
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: Header(context, _team),
-      body: ListView(
-        children: <Widget>[
-          (_matchData.isEmpty)
-              ? (ListTile(
-                  title: Text(
-                    'No Matches Yet',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ))
-              : (ExpansionTile(
-                  title: Text("Match Data"),
-                  children: <Widget>[
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: _matchData.length,
-                      itemBuilder: (context, index) => ExpansionTile(
-                        title: Text(_matches[index]),
-                        children: <Widget>[
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: _matchData[index].length,
-                            itemBuilder: (context, index2) => ExpansionTile(
-                              title: Text(_matchData[index]
-                                  .keys
-                                  .toList()[index2]
-                                  .toString()),
-                              children: <Widget>[
-                                ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: _matchData[index]
-                                      .values
-                                      .toList()[index2]
-                                      .length,
-                                  itemBuilder: (context, index3) => ListTile(
-                                      title: Text(_matchData[index]
-                                              .values
-                                              .toList()[index2]
-                                              .keys
-                                              .toList()[index3]
-                                              .toString() +
-                                          ": " +
-                                          _matchData[index]
-                                              .values
-                                              .toList()[index2]
-                                              .values
-                                              .toList()[index3]
-                                              .toString())),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                )),
-          (_pitData.isEmpty)
-              ? (ListTile(
-                  title: Text(
-                    'No Pit Data Yet',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ))
-              : (ExpansionTile(
-                  title: Text("Pit Scouting"),
-                  children: <Widget>[
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: _pitData.length,
-                      itemBuilder: (context, index) => ListTile(
-                        title: Text(
-                          _pitData.keys.toList()[index].toString() +
-                              ": " +
-                              _pitData.values.toList()[index].toString(),
-                        ),
-                      ),
-                    )
-                  ],
-                )),
-        ],
-      ),
+      appBar: Header(context, _teamNumber),
+      body: Container(),
+      bottomNavigationBar: BottomNavBar(context),
     );
   }
 }

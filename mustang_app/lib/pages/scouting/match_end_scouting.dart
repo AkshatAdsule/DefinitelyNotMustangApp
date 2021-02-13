@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/bottom_nav_bar.dart';
-import 'package:mustang_app/components/game_action.dart';
-
+import 'package:mustang_app/backend/game_action.dart';
+import '../../backend/match.dart';
 import '../../backend/database_operations.dart';
 import '../../components/header.dart';
 import 'post_scouter.dart';
@@ -70,10 +70,8 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
       default:
         break;
     }
-    DatabaseOperations.updateMatchData(_teamNumber, _matchNumber, _actions,
-        finalComments: _finalCommentsController.text,
-        matchResult: _matchResult,
-        allianceColor: _allianceColor);
+    DatabaseOperations.setMatchData(new Match(_matchNumber, _teamNumber,
+        _allianceColor, _matchResult, _finalCommentsController.text, _actions));
     Navigator.pushNamed(context, PostScouter.route);
   }
 

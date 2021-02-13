@@ -188,7 +188,7 @@ class _ScouterState extends State<Scouter> {
                           ));
                           return;
                         }
-                        bool onValue = DatabaseOperations.doesPitDataExist(
+                        bool onValue = DatabaseOperations.doesTeamDataExist(
                             _teamNumberController.text);
 
                         if (onValue) {

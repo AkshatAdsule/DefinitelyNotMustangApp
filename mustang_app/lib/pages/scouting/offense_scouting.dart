@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'dart:math';
-import '../../components/game_action.dart';
+import '../../backend/game_action.dart';
 import '../../components/game_map.dart';
 import '../../components/game_buttons.dart' as game_button;
 import 'dart:async';
