@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Constants {
-  static Firestore db = Firestore.instance;
-
   //not a constant but needs to be accessible
   static int fieldColor = 0;
 
@@ -44,8 +42,7 @@ class Constants {
 
   //MAP ANALYSIS
   static const int shadingPointDifference = 2;
-  static const double colorIncrement = 600/shadingPointDifference;
+  static const double colorIncrement = 600 / shadingPointDifference;
   static const int minPtValuePerZone = 0;
   static const int maxPtValuePerZone = 5;
-
 }

@@ -1,12 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mustang_app/backend/user_service.dart';
 import 'exports/pages.dart';
 import 'utils/orientation_helpers.dart';
+import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-
   final _observer = NavigatorObserverWithOrientation();
 
   Route<dynamic> _onGenerateRoute(RouteSettings settings) {
@@ -80,14 +82,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Mustang App',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
+    return MultiProvider(
+      providers: [
+        StreamProvider<FirebaseUser>.value(
+            value: FirebaseAuth.instance.onAuthStateChanged),
+      ],
+      child: MaterialApp(
+        title: 'Mustang App',
+        theme: ThemeData(
+          primarySwatch: Colors.green,
+        ),
+        home: HomePage(),
+        navigatorObservers: [_observer],
+        onGenerateRoute: (settings) => _onGenerateRoute(settings),
       ),
-      home: HomePage(),
-      navigatorObservers: [_observer],
-      onGenerateRoute: (settings) => _onGenerateRoute(settings),
     );
   }
 }

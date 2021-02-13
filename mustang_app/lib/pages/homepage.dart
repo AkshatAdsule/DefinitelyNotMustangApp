@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
 import '../components/header.dart';
 import '../components/bottom_nav_bar.dart';
-import '../backend/team_data_analyzer.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage() {
-    if (!TeamDataAnalyzer.initialized) {
-      TeamDataAnalyzer.init();
-    }
-  }
   @override
   State<StatefulWidget> createState() {
     return HomePageState();

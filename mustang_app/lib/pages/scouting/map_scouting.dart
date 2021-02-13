@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:mustang_app/components/analyzer.dart';
 import 'package:mustang_app/components/blur_overlay.dart';
-import 'package:mustang_app/components/game_action.dart';
-import 'package:mustang_app/components/game_map.dart';
-import 'package:mustang_app/components/map_shading_key.dart';
+import 'package:mustang_app/backend/game_action.dart';
 import 'package:mustang_app/components/selectable_zone_grid.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/exports/pages.dart';
-import '../../components/bottom_nav_bar.dart';
 import '../../components/header.dart';
 import 'defense_scouting.dart';
 import 'offense_scouting.dart';
@@ -85,7 +80,6 @@ class _MapScoutingState extends State<MapScouting> {
   }
 
   void setClimb(int millisecondsElapsed) {
-    print('SLIDER LAST CHANGED $millisecondsElapsed');
     _sliderLastChanged = millisecondsElapsed;
   }
 

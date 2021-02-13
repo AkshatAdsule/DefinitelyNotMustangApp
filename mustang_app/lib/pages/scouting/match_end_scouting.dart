@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/bottom_nav_bar.dart';
-import 'package:mustang_app/components/game_action.dart';
-
+import 'package:mustang_app/backend/game_action.dart';
+import '../../backend/match.dart';
 import '../../backend/scouting_operations.dart';
 import '../../components/header.dart';
 import 'post_scouter.dart';
@@ -35,7 +35,6 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
   String _matchResult, _endState;
   TextEditingController _finalCommentsController = TextEditingController();
   bool _brokeDown;
-  ScoutingOperations db = new ScoutingOperations();
 
   _MatchEndScouterState(
       this._teamNumber, this._matchNumber, this._allianceColor, this._actions);
@@ -71,10 +70,8 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
       default:
         break;
     }
-    db.updateMatchData(_teamNumber, _matchNumber, _actions,
-        finalComments: _finalCommentsController.text,
-        matchResult: _matchResult,
-        allianceColor: _allianceColor);
+    ScoutingOperations.setMatchData(new Match(_matchNumber, _teamNumber,
+        _allianceColor, _matchResult, _finalCommentsController.text, _actions));
     Navigator.pushNamed(context, PostScouter.route);
   }
 

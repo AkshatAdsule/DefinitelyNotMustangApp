@@ -27,6 +27,7 @@ dependencies:
   path_provider:
   firebase_storage:
   flutter_native_splash:
+  provider:
 
   flutter:
     sdk: flutter

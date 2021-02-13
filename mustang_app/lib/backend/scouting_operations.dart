@@ -1,78 +1,55 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mustang_app/components/game_action.dart';
-import '../constants/constants.dart';
+import 'package:mustang_app/backend/match.dart';
+import 'package:mustang_app/backend/team.dart';
 
 class ScoutingOperations {
-  List<String> teamnames = new List<String>();
-
-  Future<void> updatePitScouting(String teamNumber,
-      {bool inner,
-      outer,
-      bottom,
-      rotation,
-      position,
-      climb,
-      leveller,
-      String notes,
-      drivebaseType}) async {
-    await Constants.db.collection('teams').document(teamNumber).updateData({
-      'driveBaseType': drivebaseType,
-      'innerPort': inner,
-      'outerPort': outer,
-      'bottomPort': bottom,
-      'rotationControl': rotation,
-      'positionControl': position,
-      'climber': climb,
-      'leveller': leveller,
-      'notes': notes
-    });
+  static Firestore _db = Firestore.instance;
+  static final String _year = DateTime.now().year.toString();
+  static final CollectionReference _teamsRef =
+      _db.collection(_year).document('info').collection('teams');
+  static Future<void> setTeamData(Team team) async {
+    await _teamsRef.document(team.teamNumber).updateData(team.toJson());
   }
 
-  List<Map<String, dynamic>> convertActionsToJson(List<GameAction> actions) {
-    return actions.map((action) => action.toJson()).toList();
-  }
-
-  Future<void> updateMatchData(
-      String teamNumber, String matchNumber, List<GameAction> actions,
-      {String matchResult, String finalComments, String allianceColor}) async {
-    print('teamNumber: $teamNumber');
-    print('matchNumber: $matchNumber');
-    await Constants.db
-        .collection('teams')
-        .document(teamNumber)
+  static Future<void> setMatchData(Match match) async {
+    await _teamsRef
+        .document(match.teamNumber)
         .collection('matches')
-        .document(matchNumber)
-        .setData({
-      'actions': convertActionsToJson(actions),
-      'finalComments': finalComments,
-      'matchResult': matchResult,
-      'allianceColor': allianceColor,
-    }).then((value) => print('finish'));
+        .document(match.matchNumber)
+        .setData(match.toJson());
   }
 
-  Future<bool> doesPitDataExist(String teamNumber) async {
-    DocumentSnapshot onValue =
-        await Constants.db.collection('teams').document(teamNumber).get();
-
-    if (onValue == null) {
+  static Future<bool> doesTeamDataExist(String teamNumber) async {
+    DocumentSnapshot snap = await _teamsRef.document(teamNumber).get();
+    if (snap == null || snap.data == null) {
       return false;
-    } else if (onValue.data == null) {
+    }
+    Team team = Team.fromSnapshot(snap);
+
+    if (team == null) {
+      return false;
+    } else if (team.teamNumber == "") {
       return false;
     } else {
       return true;
     }
   }
 
-  Future<bool> doesMatchDataExist(String teamNumber, String matchNumber) async {
-    DocumentSnapshot onValue = await Constants.db
-        .collection('teams')
+  static Future<bool> doesMatchDataExist(
+      String teamNumber, String matchNumber) async {
+    DocumentSnapshot snap = await _teamsRef
         .document(teamNumber)
         .collection('matches')
         .document(matchNumber)
         .get();
-    if (onValue == null) {
+    if (snap == null || snap.data == null) {
       return false;
-    } else if (onValue.data == null) {
+    }
+    Match match = Match.fromSnapshot(snap);
+    if (match == null) {
+      return false;
+    } else if (match.matchNumber == "") {
       return false;
     } else {
       return true;

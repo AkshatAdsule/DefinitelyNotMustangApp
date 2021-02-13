@@ -23,7 +23,6 @@ class _ScouterState extends State<Scouter> {
   int _allianceNum = 0;
 
   bool _showError = false;
-  ScoutingOperations db = new ScoutingOperations();
   /*
    _handleRadioValueChange (String color){
     setState(() {
@@ -189,10 +188,10 @@ class _ScouterState extends State<Scouter> {
                           ));
                           return;
                         }
-                        db
-                            .doesPitDataExist(_teamNumberController.text)
-                            .then((onValue) {
-                          if (onValue) {
+                        ScoutingOperations.doesTeamDataExist(
+                                _teamNumberController.text)
+                            .then((exists) {
+                          if (exists) {
                             showAlertDialog(context, true);
                           } else {
                             Navigator.pushNamed(context, PitScouter.route,
@@ -235,11 +234,11 @@ class _ScouterState extends State<Scouter> {
                           ));
                           return;
                         }
-                        db
-                            .doesMatchDataExist(_teamNumberController.text,
+                        ScoutingOperations.doesMatchDataExist(
+                                _teamNumberController.text,
                                 _matchNumberController.text)
-                            .then((onValue) {
-                          if (onValue) {
+                            .then((exists) {
+                          if (exists) {
                             showAlertDialog(context, false);
                           } else {
                             Navigator.pushNamed(context, MapScouting.route,

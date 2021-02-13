@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/backend/team.dart';
 import 'post_scouter.dart';
 import '../../components/header.dart';
 import '../../backend/scouting_operations.dart';
@@ -16,7 +17,6 @@ class PitScouter extends StatefulWidget {
 }
 
 class _PitScouterState extends State<PitScouter> {
-  ScoutingOperations db = new ScoutingOperations();
   String _teamNumber;
   DriveBase _driveBase;
   TextEditingController _notes = new TextEditingController();
@@ -54,22 +54,43 @@ class _PitScouterState extends State<PitScouter> {
                 onChanged: (String newValue) {
                   setState(() {
                     switch (newValue) {
-                      case "Tank": { _driveBase = DriveBase.TANK; }
-                      break;
-                      case "Omni": { _driveBase = DriveBase.OMNI; }
-                      break;
-                      case "WestCoast": { _driveBase = DriveBase.WESTCOAST; }
-                      break;
-                      case "Mecanum": { _driveBase = DriveBase.MECANUM; }
-                      break;
-                      case "Swerve": { _driveBase = DriveBase.SWERVE; }
-                      break;
+                      case "Tank":
+                        {
+                          _driveBase = DriveBase.TANK;
+                        }
+                        break;
+                      case "Omni":
+                        {
+                          _driveBase = DriveBase.OMNI;
+                        }
+                        break;
+                      case "WestCoast":
+                        {
+                          _driveBase = DriveBase.WESTCOAST;
+                        }
+                        break;
+                      case "Mecanum":
+                        {
+                          _driveBase = DriveBase.MECANUM;
+                        }
+                        break;
+                      case "Swerve":
+                        {
+                          _driveBase = DriveBase.SWERVE;
+                        }
+                        break;
                     }
                     //_driveBaseTest = newValue;
                   });
                 },
-                items: <String>['Drive Base', 'Tank', 'Omni', 'WestCoast', 'Mecanum', 'Swerve']
-                    .map<DropdownMenuItem<String>>((String value) {
+                items: <String>[
+                  'Drive Base',
+                  'Tank',
+                  'Omni',
+                  'WestCoast',
+                  'Mecanum',
+                  'Swerve'
+                ].map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
@@ -273,20 +294,22 @@ class _PitScouterState extends State<PitScouter> {
                 ),
               ),
 
-              
               RaisedButton(
                 onPressed: () {
-                  db.updatePitScouting(_teamNumber,
-                      //drivebaseType: _drivebaseType,
-                      drivebaseType: _driveBase.toString(),
-                      inner: _inner,
-                      outer: _outer,
-                      bottom: _bottom,
-                      rotation: _rotation,
-                      position: _position,
-                      climb: _climb,
-                      leveller: _leveller,
-                      notes: _notes.text);
+                  ScoutingOperations.setTeamData(
+                    Team(
+                      _teamNumber,
+                      _driveBase.toString(),
+                      _notes.text,
+                      _inner,
+                      _outer,
+                      _bottom,
+                      _rotation,
+                      _position,
+                      _climb,
+                      _leveller,
+                    ),
+                  );
                   Navigator.pushNamed(context, PostScouter.route);
                   // Navigator.pushNamed(context, TeleopScouter.route);
                 },
@@ -300,7 +323,6 @@ class _PitScouterState extends State<PitScouter> {
                 color: Colors.green,
                 padding: EdgeInsets.all(15),
               ),
-              
             ],
           ),
         ));

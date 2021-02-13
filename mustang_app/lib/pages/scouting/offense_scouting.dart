@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'dart:math';
-import '../../components/game_action.dart';
+import '../../backend/game_action.dart';
 import '../../components/game_map.dart';
 import '../../components/game_buttons.dart' as game_button;
 import 'dart:async';
@@ -270,28 +270,6 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                         style: game_button.ButtonStyle.RAISED,
                         type: game_button.ButtonType.MAKE,
                         onPressed: () {
-                          _addAction(ActionType.INTAKE, context);
-                        },
-                        text: 'Intake'),
-                    game_button.ScoutingButton(
-                        style: game_button.ButtonStyle.RAISED,
-                        type: game_button.ButtonType.MISS,
-                        onPressed: () {
-                          _addAction(ActionType.MISSED_INTAKE, context);
-                        },
-                        text: '')
-                  ],
-                ),
-              ),
-              Flexible(
-                flex: 1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    game_button.ScoutingButton(
-                        style: game_button.ButtonStyle.RAISED,
-                        type: game_button.ButtonType.MAKE,
-                        onPressed: () {
                           _addAction(ActionType.SHOT_OUTER, context);
                         },
                         text: 'Out'),
@@ -332,6 +310,28 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                         type: game_button.ButtonType.MISS,
                         onPressed: () {
                           _addAction(ActionType.MISSED_LOW, context);
+                        },
+                        text: '')
+                  ],
+                ),
+              ),
+              Flexible(
+                flex: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    game_button.ScoutingButton(
+                        style: game_button.ButtonStyle.RAISED,
+                        type: game_button.ButtonType.MAKE,
+                        onPressed: () {
+                          _addAction(ActionType.INTAKE, context);
+                        },
+                        text: 'Intake'),
+                    game_button.ScoutingButton(
+                        style: game_button.ButtonStyle.RAISED,
+                        type: game_button.ButtonType.MISS,
+                        onPressed: () {
+                          _addAction(ActionType.MISSED_INTAKE, context);
                         },
                         text: '')
                   ],

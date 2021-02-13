@@ -1,147 +1,65 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../constants/constants.dart';
+import 'package:mustang_app/backend/match.dart';
+import 'package:mustang_app/backend/team.dart';
+import 'package:mustang_app/backend/team_service.dart';
+import 'package:mustang_app/components/bottom_nav_bar.dart';
 import '../components/header.dart';
 
-// ignore: must_be_immutable
+//TODO: IMPLEMENT THIS CLASS WITH PROVIDER
 class TeamInfoDisplay extends StatefulWidget {
-  String _team;
+  String _teamNumber;
   static const String route = '/TeamInfoDisplay';
   TeamInfoDisplay({String teamNumber}) {
-    _team = teamNumber;
+    _teamNumber = teamNumber;
   }
 
   @override
   State<StatefulWidget> createState() {
-    return _TeamInfoDisplayState(_team);
+    return _TeamInfoDisplayState(_teamNumber);
   }
 }
 
 class _TeamInfoDisplayState extends State<TeamInfoDisplay> {
-  String _team;
+  String _teamNumber;
   List<String> _matches = [];
-  Map<dynamic, dynamic> _pitData = {};
-  List<Map<dynamic, dynamic>> _matchData = [];
+  Team _team;
+  List<Match> _matchData = [];
+  TeamService _teamService;
 
-  _TeamInfoDisplayState(String team) {
-    _team = team;
-    getData().then((onValue) {
-      setState(() {});
-    });
+  _TeamInfoDisplayState(String teamNumber) {
+    _teamNumber = teamNumber;
+    _teamService = TeamService();
   }
 
-  Future<void> getData() async {
-    QuerySnapshot matchData = await Constants.db
-        .collection('teams')
-        .document(_team)
-        .collection('matches')
-        .getDocuments();
-
-    matchData.documents.forEach((f) {
-      _matches.add(f.documentID);
-      Map<String, dynamic> data = f.data;
-      data.removeWhere((key, value) => !(value is Map));
-      _matchData.add(data);
-    });
-
-    DocumentSnapshot data =
-        await Constants.db.collection('teams').document(_team).get();
-    _pitData = data.data;
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: Header(context, _team),
-      body: ListView(
-        children: <Widget>[
-          (_matchData.isEmpty)
-              ? (ListTile(
-                  title: Text(
-                    'No Matches Yet',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ))
-              : (ExpansionTile(
-                  title: Text("Match Data"),
-                  children: <Widget>[
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: _matchData.length,
-                      itemBuilder: (context, index) => ExpansionTile(
-                        title: Text(_matches[index]),
-                        children: <Widget>[
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: _matchData[index].length,
-                            itemBuilder: (context, index2) => ExpansionTile(
-                              title: Text(_matchData[index]
-                                  .keys
-                                  .toList()[index2]
-                                  .toString()),
-                              children: <Widget>[
-                                ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: _matchData[index]
-                                      .values
-                                      .toList()[index2]
-                                      .length,
-                                  itemBuilder: (context, index3) => ListTile(
-                                      title: Text(_matchData[index]
-                                              .values
-                                              .toList()[index2]
-                                              .keys
-                                              .toList()[index3]
-                                              .toString() +
-                                          ": " +
-                                          _matchData[index]
-                                              .values
-                                              .toList()[index2]
-                                              .values
-                                              .toList()[index3]
-                                              .toString())),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                )),
-          (_pitData.isEmpty)
-              ? (ListTile(
-                  title: Text(
-                    'No Pit Data Yet',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ))
-              : (ExpansionTile(
-                  title: Text("Pit Scouting"),
-                  children: <Widget>[
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: _pitData.length,
-                      itemBuilder: (context, index) => ListTile(
-                        title: Text(
-                          _pitData.keys.toList()[index].toString() +
-                              ": " +
-                              _pitData.values.toList()[index].toString(),
-                        ),
-                      ),
-                    )
-                  ],
-                )),
-        ],
-      ),
+      appBar: Header(context, _teamNumber),
+      body: Column(children: [
+        StreamBuilder<Team>(
+          stream: _teamService.streamTeam(_teamNumber),
+          builder: (context, snapshot) {
+            if (snapshot.data == null) {
+              return Container();
+            }
+            return Container();
+          },
+        ),
+        StreamBuilder<List<Match>>(
+            stream: _teamService.streamMatches(_teamNumber),
+            builder: (context, snapshot) {
+              if (snapshot.data == null) {
+                return Container();
+              }
+              return Container();
+            })
+      ]),
+      bottomNavigationBar: BottomNavBar(context),
     );
   }
 }
