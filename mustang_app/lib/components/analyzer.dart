@@ -383,6 +383,7 @@ class _AnalyzerState extends State<Analyzer> {
       _normalVelocity = Constants.swerveSpeed;
     }
 
+/*
     for (int i = 0; i < _push.length; i++) {
       var _predictedDisplacement = _normalVelocity * _push[i].pushTime;
       var _actualDisplacement = calcDisplacement(
@@ -393,6 +394,7 @@ class _AnalyzerState extends State<Analyzer> {
       _result +=
           (_zoneDisplacementDifference * Constants.zoneDisplacementValue);
     }
+    */
     return _result;
   }
 
