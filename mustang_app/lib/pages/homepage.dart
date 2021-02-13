@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../components/header.dart';
 import '../components/bottom_nav_bar.dart';
-import '../backend/team_data_analyzer.dart';
+import '../backend/database_operations.dart';
 
 class HomePage extends StatefulWidget {
   HomePage() {
-    if (!TeamDataAnalyzer.initialized) {
-      TeamDataAnalyzer.init();
+    if (!DatabaseOperations.initialized) {
+      DatabaseOperations.init();
     }
   }
   @override

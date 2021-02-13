@@ -4,7 +4,7 @@ import 'package:mustang_app/constants/constants.dart';
 import 'package:mustang_app/pages/scouting/map_scouting.dart';
 import 'pit_scouting.dart';
 import '../../components/header.dart';
-import '../../backend/scouting_operations.dart';
+import '../../backend/database_operations.dart';
 
 class Scouter extends StatefulWidget {
   static const String route = '/Scouter';
@@ -23,7 +23,6 @@ class _ScouterState extends State<Scouter> {
   int _allianceNum = 0;
 
   bool _showError = false;
-  ScoutingOperations db = new ScoutingOperations();
   /*
    _handleRadioValueChange (String color){
     setState(() {
@@ -189,18 +188,17 @@ class _ScouterState extends State<Scouter> {
                           ));
                           return;
                         }
-                        db
-                            .doesPitDataExist(_teamNumberController.text)
-                            .then((onValue) {
-                          if (onValue) {
-                            showAlertDialog(context, true);
-                          } else {
-                            Navigator.pushNamed(context, PitScouter.route,
-                                arguments: {
-                                  'teamNumber': _teamNumberController.text,
-                                });
-                          }
-                        });
+                        bool onValue = DatabaseOperations.doesPitDataExist(
+                            _teamNumberController.text);
+
+                        if (onValue) {
+                          showAlertDialog(context, true);
+                        } else {
+                          Navigator.pushNamed(context, PitScouter.route,
+                              arguments: {
+                                'teamNumber': _teamNumberController.text,
+                              });
+                        }
                       });
                     },
                     padding: EdgeInsets.all(15),
@@ -235,21 +233,19 @@ class _ScouterState extends State<Scouter> {
                           ));
                           return;
                         }
-                        db
-                            .doesMatchDataExist(_teamNumberController.text,
-                                _matchNumberController.text)
-                            .then((onValue) {
-                          if (onValue) {
-                            showAlertDialog(context, false);
-                          } else {
-                            Navigator.pushNamed(context, MapScouting.route,
-                                arguments: {
-                                  'teamNumber': _teamNumberController.text,
-                                  'matchNumber': _matchNumberController.text,
-                                  'allianceColor': _allianceColor,
-                                });
-                          }
-                        });
+                        bool onValue = DatabaseOperations.doesMatchDataExist(
+                            _teamNumberController.text,
+                            _matchNumberController.text);
+                        if (onValue) {
+                          showAlertDialog(context, false);
+                        } else {
+                          Navigator.pushNamed(context, MapScouting.route,
+                              arguments: {
+                                'teamNumber': _teamNumberController.text,
+                                'matchNumber': _matchNumberController.text,
+                                'allianceColor': _allianceColor,
+                              });
+                        }
                       });
                     },
                     padding: EdgeInsets.all(15),

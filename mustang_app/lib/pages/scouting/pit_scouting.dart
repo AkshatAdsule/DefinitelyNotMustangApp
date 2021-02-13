@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'post_scouter.dart';
 import '../../components/header.dart';
-import '../../backend/scouting_operations.dart';
+import '../../backend/database_operations.dart';
 
 class PitScouter extends StatefulWidget {
   static const String route = '/PitScouter';
@@ -16,7 +16,6 @@ class PitScouter extends StatefulWidget {
 }
 
 class _PitScouterState extends State<PitScouter> {
-  ScoutingOperations db = new ScoutingOperations();
   String _teamNumber;
   DriveBase _driveBase;
   TextEditingController _notes = new TextEditingController();
@@ -54,22 +53,43 @@ class _PitScouterState extends State<PitScouter> {
                 onChanged: (String newValue) {
                   setState(() {
                     switch (newValue) {
-                      case "Tank": { _driveBase = DriveBase.TANK; }
-                      break;
-                      case "Omni": { _driveBase = DriveBase.OMNI; }
-                      break;
-                      case "WestCoast": { _driveBase = DriveBase.WESTCOAST; }
-                      break;
-                      case "Mecanum": { _driveBase = DriveBase.MECANUM; }
-                      break;
-                      case "Swerve": { _driveBase = DriveBase.SWERVE; }
-                      break;
+                      case "Tank":
+                        {
+                          _driveBase = DriveBase.TANK;
+                        }
+                        break;
+                      case "Omni":
+                        {
+                          _driveBase = DriveBase.OMNI;
+                        }
+                        break;
+                      case "WestCoast":
+                        {
+                          _driveBase = DriveBase.WESTCOAST;
+                        }
+                        break;
+                      case "Mecanum":
+                        {
+                          _driveBase = DriveBase.MECANUM;
+                        }
+                        break;
+                      case "Swerve":
+                        {
+                          _driveBase = DriveBase.SWERVE;
+                        }
+                        break;
                     }
                     //_driveBaseTest = newValue;
                   });
                 },
-                items: <String>['Drive Base', 'Tank', 'Omni', 'WestCoast', 'Mecanum', 'Swerve']
-                    .map<DropdownMenuItem<String>>((String value) {
+                items: <String>[
+                  'Drive Base',
+                  'Tank',
+                  'Omni',
+                  'WestCoast',
+                  'Mecanum',
+                  'Swerve'
+                ].map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
@@ -273,10 +293,9 @@ class _PitScouterState extends State<PitScouter> {
                 ),
               ),
 
-              
               RaisedButton(
                 onPressed: () {
-                  db.updatePitScouting(_teamNumber,
+                  DatabaseOperations.updatePitScouting(_teamNumber,
                       //drivebaseType: _drivebaseType,
                       drivebaseType: _driveBase.toString(),
                       inner: _inner,
@@ -300,7 +319,6 @@ class _PitScouterState extends State<PitScouter> {
                 color: Colors.green,
                 padding: EdgeInsets.all(15),
               ),
-              
             ],
           ),
         ));

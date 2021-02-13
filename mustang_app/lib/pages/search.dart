@@ -3,7 +3,7 @@ import '../components/header.dart';
 import 'map_analysis_display.dart';
 import '../components/bottom_nav_bar.dart';
 import 'team_info_display.dart';
-import '../backend/team_data_analyzer.dart';
+import '../backend/database_operations.dart';
 
 class SearchPage extends StatefulWidget {
   static const String route = './Search';
@@ -20,7 +20,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
-    List<String> allTeams = TeamDataAnalyzer.teamNumbers;
+    List<String> allTeams = DatabaseOperations.teamNumbers;
     setState(() {
       teams = allTeams;
       tempSearchStore = allTeams;
@@ -94,7 +94,6 @@ class _SearchPageState extends State<SearchPage> {
         context,
         'Search Data',
       ),
-
       body: ListView(
         children: <Widget>[
           Padding(

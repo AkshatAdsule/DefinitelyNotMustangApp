@@ -1,11 +1,8 @@
 import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/game_action.dart';
-import '../backend/team_data_analyzer.dart';
 import 'package:mustang_app/constants/constants.dart';
-
 
 // ignore: must_be_immutable
 class Analyzer extends StatefulWidget {
@@ -20,10 +17,11 @@ class Analyzer extends StatefulWidget {
     return _AnalyzerState(_teamNum);
   }
 
-  double calcPtsAtZoneMapDisplay(double x, double y) { 
-        return _AnalyzerState(_teamNum).calcPtsAtZone(x, y);
+  double calcPtsAtZoneMapDisplay(double x, double y) {
+    return _AnalyzerState(_teamNum).calcPtsAtZone(x, y);
   }
-  int totalNumGames(){
+
+  int totalNumGames() {
     return _AnalyzerState(_teamNum).totalNumGames;
   }
 }
@@ -35,7 +33,7 @@ class _AnalyzerState extends State<Analyzer> {
   var _allMatches; //array that holds everything
   int _oldAllMatchLength = 0;
   //for testing if data needs to be collected again or not - if same then don't
-  int _totalNumGames = 1; 
+  int _totalNumGames = 1;
   //array for each type of action, has all instances of that action for all games
   List<GameAction> _foulReg = [],
       _foulTech = [],
@@ -71,10 +69,6 @@ class _AnalyzerState extends State<Analyzer> {
       _driveBase = "tank";
     }
     */
-    _hasAnalysis = TeamDataAnalyzer.getTeamDoc(_teamNum)['hasAnalysis'];
-    if (!_hasAnalysis) {
-      return;
-    }
     //initialize all vars
     var action1 = new GameAction(ActionType.FOUL_REG, 2000, 3, 4);
     var action1a = new GameAction(ActionType.FOUL_TECH, 2000, 4, 4);
@@ -417,7 +411,7 @@ class _AnalyzerState extends State<Analyzer> {
   }
 
   //for map display, takes in a zone and returns offense pts scored there
-  double calcPtsAtZone(double x, double y){
+  double calcPtsAtZone(double x, double y) {
     //BASICALLY NEED TO CALL ALL OF THIS SO THAT THE STUFF GETS INITIALIZED CAUSE IT'S NOT HAPPENENING AT OTHER PLACES
     //initialize all vars
     var action1 = new GameAction(ActionType.FOUL_REG, 2000, 3, 4);
@@ -443,7 +437,7 @@ class _AnalyzerState extends State<Analyzer> {
     //FINALARRAY IS WHAT WILL BE PASSED INTO THE ANALYZER
     var finalArray = [matchArray1, matchArray2, matchArray3];
     _allMatches = finalArray;
-        _driveBase = "tank";
+    _driveBase = "tank";
     _initialized = true;
 
 //needs to be called to initialize
@@ -451,36 +445,41 @@ class _AnalyzerState extends State<Analyzer> {
     //debugPrint("all matches: " + _allMatches.toString());
     double totalPoints = 0;
 
-    for (int i = 0; i < _allMatches.length; i++){
+    for (int i = 0; i < _allMatches.length; i++) {
       //inside each array of actions
-      for (int j = 0; j < _allMatches[i].length; j++){
+      for (int j = 0; j < _allMatches[i].length; j++) {
         //low shot
-        if (_allMatches[i][j].action == ActionType.SHOT_LOW){
-          if (_allMatches[i][j].x == x && _allMatches[i][j].y == y){
-            if (_allMatches[i][j].timeStamp <= 15){ totalPoints += Constants.lowShotAutonValue;}
-            else { totalPoints += Constants.lowShotValue;}
+        if (_allMatches[i][j].action == ActionType.SHOT_LOW) {
+          if (_allMatches[i][j].x == x && _allMatches[i][j].y == y) {
+            if (_allMatches[i][j].timeStamp <= 15) {
+              totalPoints += Constants.lowShotAutonValue;
+            } else {
+              totalPoints += Constants.lowShotValue;
+            }
           }
         }
 
         //outer shot
-        if (_allMatches[i][j].action == ActionType.SHOT_OUTER){          
-          if (_allMatches[i][j].x == x && _allMatches[i][j].y == y){
-            if (_allMatches[i][j].timeStamp <= 15){ totalPoints += Constants.outerShotAutonValue;}
-            else { totalPoints += Constants.outerShotValue;}
+        if (_allMatches[i][j].action == ActionType.SHOT_OUTER) {
+          if (_allMatches[i][j].x == x && _allMatches[i][j].y == y) {
+            if (_allMatches[i][j].timeStamp <= 15) {
+              totalPoints += Constants.outerShotAutonValue;
+            } else {
+              totalPoints += Constants.outerShotValue;
+            }
           }
-          
-        }
-        
-        //inner shot
-        if (_allMatches[i][j].action == ActionType.SHOT_INNER){          
-          if (_allMatches[i][j].x == x && _allMatches[i][j].y == y){
-            if (_allMatches[i][j].timeStamp <= 15){ totalPoints += Constants.innerShotAutonValue;}
-            else { totalPoints += Constants.innerShotValue;}
-          }
-          
         }
 
-        
+        //inner shot
+        if (_allMatches[i][j].action == ActionType.SHOT_INNER) {
+          if (_allMatches[i][j].x == x && _allMatches[i][j].y == y) {
+            if (_allMatches[i][j].timeStamp <= 15) {
+              totalPoints += Constants.innerShotAutonValue;
+            } else {
+              totalPoints += Constants.innerShotValue;
+            }
+          }
+        }
       }
     }
     /*
@@ -492,12 +491,11 @@ class _AnalyzerState extends State<Analyzer> {
       }
     }
 */
-  
+
     return totalPoints;
   }
 
   int get totalNumGames => _totalNumGames;
-
 
   @override
   Widget build(BuildContext context) {

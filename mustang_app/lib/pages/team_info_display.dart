@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../constants/constants.dart';
+import 'package:mustang_app/backend/database_operations.dart';
 import '../components/header.dart';
 
 // ignore: must_be_immutable
@@ -31,21 +31,16 @@ class _TeamInfoDisplayState extends State<TeamInfoDisplay> {
   }
 
   Future<void> getData() async {
-    QuerySnapshot matchData = await Constants.db
-        .collection('teams')
-        .document(_team)
-        .collection('matches')
-        .getDocuments();
+    List<DocumentSnapshot> matchData = DatabaseOperations.getMatchDocs(_team);
 
-    matchData.documents.forEach((f) {
+    matchData.forEach((f) {
       _matches.add(f.documentID);
       Map<String, dynamic> data = f.data;
       data.removeWhere((key, value) => !(value is Map));
       _matchData.add(data);
     });
 
-    DocumentSnapshot data =
-        await Constants.db.collection('teams').document(_team).get();
+    DocumentSnapshot data = DatabaseOperations.getTeamDoc(_team);
     _pitData = data.data;
   }
 
