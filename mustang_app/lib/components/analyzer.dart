@@ -266,18 +266,14 @@ class Analyzer {
       _normalVelocity = Constants.swerveSpeed;
     }
 
-/*
-    for (int i = 0; i < _push.length; i++) {
-      var _predictedDisplacement = _normalVelocity * _push[i].pushTime;
-      var _actualDisplacement = calcDisplacement(
-          _push[i].x, _push[i].y, _push[i].endX, _push[i].endY);
-      var _zoneDisplacementDifference =
-          (_predictedDisplacement - _actualDisplacement) /
-              Constants.zoneSideLength;
-      _result +=
-          (_zoneDisplacementDifference * Constants.zoneDisplacementValue);
+    for (int i = 0; i < _pushStart.length; i++) {
+
+      var _actualDisplacement = calcDisplacement(_pushStart[i].x, _pushStart[i].y, _pushEnd[i].x, _pushEnd[i].y);
+      var _pushTimeSeconds = (_pushEnd[i].timeStamp - _pushStart[i].timeStamp)/1000;
+      var _predictedDisplacement = _normalVelocity * _pushTimeSeconds;
+      var _zoneDisplacementDifference = (_predictedDisplacement - _actualDisplacement)/Constants.zoneSideLength;
+      _result += (_zoneDisplacementDifference * Constants.zoneDisplacementValue);
     }
-    */
     return _result;
   }
 

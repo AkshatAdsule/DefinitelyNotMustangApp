@@ -1,6 +1,6 @@
 class GameAction {
   //end row, end column, push time are only for push, will be null most of time
-  double _timeStamp, _x, _y, _endX, _endY, _pushTime;
+  double _timeStamp, _x, _y, _pushTime;
   ActionType _action;
   GameAction(
     this._action,
@@ -34,15 +34,11 @@ class GameAction {
   double get timeStamp => _timeStamp;
   double get x => _x;
   double get y => _y;
-  double get endX => _endX;
-  double get endY => _endY;
   double get pushTime => _pushTime;
   ActionType get action => _action;
 
   set x(double x) => _x = x;
   set y(double y) => _y = y;
-  set endX(double endX) => _endX = endX;
-  set endY(double endY) => _endY = endY;
   set pushTime(double pushTime) => _pushTime = pushTime;
   set action(ActionType action) => _action = action;
 
@@ -51,8 +47,6 @@ class GameAction {
       'timeStamp': _timeStamp,
       'x': _x,
       'y': _y,
-      'endX': _endX,
-      'endY': _endY,
       'pushTime': _pushTime,
       'actionType': _action.toString(),
     };
@@ -62,8 +56,6 @@ class GameAction {
     _x = data['x'];
     _y = data['y'];
     _timeStamp = data['timeStamp'];
-    _endX = data['endX'];
-    _endY = data['endY'];
     _pushTime = data['pushTime'];
     _action = ActionType.values
         .firstWhere((element) => element.toString() == data['actionType']);
