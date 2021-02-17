@@ -43,6 +43,6 @@ class Constants {
   //MAP ANALYSIS
   static const int shadingPointDifference = 2;
   static const double colorIncrement = 600 / shadingPointDifference;
-  static const int minPtValuePerZone = 0;
-  static const int maxPtValuePerZone = 5;
+  static const int minPtValuePerZonePerGame = 0;
+  static const int maxPtValuePerZonePerGame = 5;
 }
