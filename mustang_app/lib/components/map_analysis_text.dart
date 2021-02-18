@@ -30,12 +30,29 @@ class _MapAnalysisTextState extends State<MapAnalysisText> {
                 margin: EdgeInsets.only(left: 20, right: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  
+                  
                   children: [
-                    Text(myAnalyzer.getReport(),
+                    
+                    
+                    Text(
+                      myAnalyzer.getReport(),
+                      //textDirection: TextDirection.ltr,
                         style: TextStyle(
                             color: Colors.grey[800],
                             fontWeight: FontWeight.bold,
-                            fontSize: 14))
+                            fontSize: 14,
+                            /*
+                            background: Paint()
+                            ..strokeWidth = 30.0
+                            ..color = Colors.grey
+             ..style = PaintingStyle.stroke
+        ..strokeJoin = StrokeJoin.round),
+        */
+                            backgroundColor: Colors.green[300],
+                            height: 2,
+                            )
+                    )       
                   ],
                 )),
           ]),
