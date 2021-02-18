@@ -9,22 +9,16 @@ import '../../components/game_buttons.dart' as game_button;
 
 // ignore: must_be_immutable
 class DefenseScouting extends StatefulWidget {
-  void Function(BuildContext context) _finishGame;
   void Function(ActionType type, BuildContext context) _addAction;
-
   void Function() _toggleMode;
-  GameAction Function() _undo;
 
   Stopwatch _stopwatch;
   ZoneGrid _zoneGrid;
-
   String _allianceColor;
 
   DefenseScouting(
       {Key key,
       void Function() toggleMode,
-      GameAction Function() undo,
-      void Function(BuildContext context) finishGame,
       void Function(ActionType type, BuildContext context) addAction,
       Stopwatch stopwatch,
       ZoneGrid zoneGrid,
@@ -32,29 +26,23 @@ class DefenseScouting extends StatefulWidget {
       : super(key: key) {
     _toggleMode = toggleMode;
     _stopwatch = stopwatch;
-    _finishGame = finishGame;
     _zoneGrid = zoneGrid;
     _addAction = addAction;
-    _undo = undo;
     _allianceColor = allianceColor;
   }
 
   @override
   _DefenseScoutingState createState() => _DefenseScoutingState(
       toggleMode: _toggleMode,
-      finishGame: _finishGame,
       stopwatch: _stopwatch,
       zoneGrid: _zoneGrid,
       addAction: _addAction,
-      undo: _undo,
       allianceColor: _allianceColor);
 }
 
 class _DefenseScoutingState extends State<DefenseScouting> {
   void Function() _toggleMode;
-  GameAction Function() _undo;
 
-  void Function(BuildContext context) _finishGame;
   int Function(ActionType type, BuildContext context) _addAction;
   Stopwatch _stopwatch;
   ZoneGrid _zoneGrid;
@@ -65,8 +53,6 @@ class _DefenseScoutingState extends State<DefenseScouting> {
 
   _DefenseScoutingState({
     void Function() toggleMode,
-    GameAction Function() undo,
-    void Function(BuildContext context) finishGame,
     void Function(ActionType type, BuildContext context) addAction,
     Stopwatch stopwatch,
     ZoneGrid zoneGrid,
@@ -74,10 +60,8 @@ class _DefenseScoutingState extends State<DefenseScouting> {
   }) {
     _toggleMode = toggleMode;
     _stopwatch = stopwatch;
-    _finishGame = finishGame;
     _zoneGrid = zoneGrid;
     _addAction = addAction;
-    _undo = undo;
     _allianceColor = allianceColor;
   }
 
@@ -142,30 +126,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
       child: GameMap(
         allianceColor: _allianceColor,
         zoneGrid: _zoneGrid,
-        imageChildren: [
-          GameMapChild(
-            align: Alignment(-0.97, 0.77),
-            child: CircleAvatar(
-              backgroundColor: Colors.green,
-              child: IconButton(
-                icon: Icon(Icons.undo),
-                color: Colors.white,
-                onPressed: () => _undo(),
-              ),
-            ),
-          ),
-          _stopwatch.elapsedMilliseconds > 150000
-              ? GameMapChild(
-                  align: Alignment(-0.97, -0.82),
-                  child: game_button.ScoutingButton(
-                    style: game_button.ButtonStyle.RAISED,
-                    type: game_button.ButtonType.PAGEBUTTON,
-                    onPressed: () => _finishGame(context),
-                    text: 'Finish Game',
-                  ),
-                )
-              : Container()
-        ],
+        imageChildren: [],
         sideWidget: Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

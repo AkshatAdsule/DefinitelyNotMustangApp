@@ -11,53 +11,61 @@ import 'dart:async';
 // ignore: must_be_immutable
 class OffenseScouting extends StatefulWidget {
   void Function() _toggleMode;
-  GameAction Function() _undo;
-  void Function(BuildContext context) _finishGame;
   void Function(ActionType type, BuildContext context) _addAction;
   void Function(int millisecondsElapsed) _setClimb;
   Stopwatch _stopwatch;
   ZoneGrid _zoneGrid;
   String _allianceColor;
+  bool _completedRotationControl;
+  bool _completedPositionControl;
+  bool _crossedInitiationLine;
 
-  OffenseScouting({
-    void Function() toggleMode,
-    GameAction Function() undo,
-    void Function(int millisecondsElapsed) setClimb,
-    void Function(BuildContext context) finishGame,
-    void Function(ActionType type, BuildContext context) addAction,
-    Stopwatch stopwatch,
-    ZoneGrid zoneGrid,
-    String allianceColor,
-  }) {
+  OffenseScouting(
+      {void Function() toggleMode,
+      void Function(int millisecondsElapsed) setClimb,
+      void Function(ActionType type, BuildContext context) addAction,
+      Stopwatch stopwatch,
+      ZoneGrid zoneGrid,
+      String allianceColor,
+      bool completedRotationControl,
+      bool completedPositionControl,
+      bool crossedInitiationLine}) {
     _toggleMode = toggleMode;
     _stopwatch = stopwatch;
-    _finishGame = finishGame;
     _zoneGrid = zoneGrid;
     _addAction = addAction;
-    _undo = undo;
     _setClimb = setClimb;
     _allianceColor = allianceColor;
+    _completedRotationControl = completedRotationControl;
+    _completedPositionControl = completedPositionControl;
+    _crossedInitiationLine = crossedInitiationLine;
   }
+
+  void setRotationControl(bool completed) =>
+      _completedRotationControl = completed;
+
+  void setPositionControl(bool completed) =>
+      _completedRotationControl = completed;
+
+  void setInitiationLine(bool crossed) => _completedRotationControl = crossed;
 
   @override
   _OffenseScoutingState createState() => _OffenseScoutingState(
-      toggleMode: _toggleMode,
-      finishGame: _finishGame,
-      stopwatch: _stopwatch,
-      zoneGrid: _zoneGrid,
-      addAction: _addAction,
-      undo: _undo,
-      setClimb: _setClimb,
-      allianceColor: _allianceColor);
+        toggleMode: _toggleMode,
+        stopwatch: _stopwatch,
+        zoneGrid: _zoneGrid,
+        addAction: _addAction,
+        setClimb: _setClimb,
+        allianceColor: _allianceColor,
+        completedRotationControl: _completedRotationControl,
+        completedPositionControl: _completedPositionControl,
+        crossedInitiationLine: _crossedInitiationLine,
+      );
 }
 
 class _OffenseScoutingState extends State<OffenseScouting> {
   void Function() _toggleMode;
-  GameAction Function() _undo;
-
-  void Function(BuildContext context) _finishGame;
   void Function(int millisecondsElapsed) _setClimb;
-
   void Function(ActionType type, BuildContext context) _addAction;
 
   Stopwatch _stopwatch;
@@ -71,23 +79,33 @@ class _OffenseScoutingState extends State<OffenseScouting> {
 
   _OffenseScoutingState({
     void Function() toggleMode,
-    GameAction Function() undo,
     void Function(int millisecondsElapsed) setClimb,
-    void Function(BuildContext context) finishGame,
     void Function(ActionType type, BuildContext context) addAction,
     Stopwatch stopwatch,
     ZoneGrid zoneGrid,
     String allianceColor,
+    bool completedRotationControl,
+    bool completedPositionControl,
+    bool crossedInitiationLine,
   }) {
     _toggleMode = toggleMode;
-    _finishGame = finishGame;
     _stopwatch = stopwatch;
     _zoneGrid = zoneGrid;
     _addAction = addAction;
-    _undo = undo;
     _setClimb = setClimb;
     _allianceColor = allianceColor;
+    _completedRotationControl = completedRotationControl;
+    _completedPositionControl = completedPositionControl;
+    _crossedInitiationLine = crossedInitiationLine;
   }
+
+  void setRotationControl(bool completed) =>
+      _completedRotationControl = completed;
+
+  void setPositionControl(bool completed) =>
+      _completedRotationControl = completed;
+
+  void setInitiationLine(bool crossed) => _completedRotationControl = crossed;
 
   @override
   void initState() {
@@ -132,41 +150,6 @@ class _OffenseScoutingState extends State<OffenseScouting> {
         allianceColor: _allianceColor,
         zoneGrid: _zoneGrid,
         imageChildren: [
-          GameMapChild(
-            align: Alignment(-0.97, 0.77),
-            child: CircleAvatar(
-              backgroundColor: Colors.green,
-              child: IconButton(
-                icon: Icon(Icons.undo),
-                color: Colors.white,
-                onPressed: () {
-                  GameAction action = _undo();
-                  if (action == null) {
-                    return;
-                  }
-                  switch (action.action) {
-                    case ActionType.OTHER_WHEEL_ROTATION:
-                      setState(() {
-                        _completedRotationControl = false;
-                      });
-                      break;
-                    case ActionType.OTHER_WHEEL_POSITION:
-                      setState(() {
-                        _completedPositionControl = false;
-                      });
-                      break;
-                    case ActionType.OTHER_CROSSED_INITIATION_LINE:
-                      setState(() {
-                        _crossedInitiationLine = false;
-                      });
-                      break;
-                    default:
-                      break;
-                  }
-                },
-              ),
-            ),
-          ),
           _completedRotationControl && _completedPositionControl
               ? Container()
               : GameMapChild(
@@ -236,17 +219,6 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                     ),
                   ),
                 )
-              : Container(),
-          _stopwatch.elapsedMilliseconds >= 150000
-              ? GameMapChild(
-                  align: Alignment(-0.97, -0.82),
-                  child: game_button.ScoutingButton(
-                      style: game_button.ButtonStyle.RAISED,
-                      type: game_button.ButtonType.PAGEBUTTON,
-                      onPressed: () {
-                        _finishGame(context);
-                      },
-                      text: 'Finish Game'))
               : Container(),
         ],
         sideWidget: Container(

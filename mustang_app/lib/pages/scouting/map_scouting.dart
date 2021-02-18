@@ -7,6 +7,7 @@ import 'package:mustang_app/exports/pages.dart';
 import '../../components/header.dart';
 import 'defense_scouting.dart';
 import 'offense_scouting.dart';
+import '../../components/game_buttons.dart' as game_button;
 
 class MapScouting extends StatefulWidget {
   static const String route = '/MapScouter';
@@ -122,9 +123,7 @@ class _MapScoutingState extends State<MapScouting> {
           toggleMode: this.toggleMode,
           stopwatch: _stopwatch,
           zoneGrid: _offenseZoneGrid,
-          finishGame: this.finishGame,
           addAction: this.addAction,
-          undo: this.undo,
           setClimb: this.setClimb,
           allianceColor: _allianceColor,
         ),
@@ -132,16 +131,58 @@ class _MapScoutingState extends State<MapScouting> {
           toggleMode: this.toggleMode,
           stopwatch: _stopwatch,
           zoneGrid: _defenseZoneGrid,
-          finishGame: this.finishGame,
           addAction: this.addAction,
-          undo: this.undo,
           allianceColor: _allianceColor,
         ),
       ],
     );
 
+    Widget _undoButton = Container(
+        margin: EdgeInsets.only(
+          right: 10,
+        ),
+        child: game_button.ScoutingButton(
+            style: game_button.ButtonStyle.RAISED,
+            type: game_button.ButtonType.PAGEBUTTON,
+            onPressed: () => () {
+                  GameAction action = undo();
+                  if (action == null) {
+                    return;
+                  }
+                  switch (action.action) {
+                    case ActionType.OTHER_WHEEL_ROTATION:
+                      offenseScouting.setRotationControl(false);
+                      break;
+                    case ActionType.OTHER_WHEEL_POSITION:
+                      offenseScouting.setPositionControl(false);
+                      break;
+                    case ActionType.OTHER_CROSSED_INITIATION_LINE:
+                      setState(() {
+                        offenseScouting.setInitiationLine(false);
+                      });
+                      break;
+                    default:
+                      break;
+                  }
+                },
+            text: "UNDO"));
+
+    Widget _finishGameButton = _stopwatch.elapsedMilliseconds > 150000
+        ? Container(
+            margin: EdgeInsets.only(
+              right: 10,
+            ),
+            child: game_button.ScoutingButton(
+              style: game_button.ButtonStyle.RAISED,
+              type: game_button.ButtonType.ELEMENT,
+              onPressed: () => finishGame(context),
+              text: 'Finish Game',
+            ))
+        : Container();
+
     return Scaffold(
-      appBar: Header(context, 'Map Scouting'),
+      appBar: Header(context, 'Map Scouting',
+          buttons: [_undoButton, _finishGameButton]),
       body: Container(
         child: !_startedScouting
             ? BlurOverlay(
