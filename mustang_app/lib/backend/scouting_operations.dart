@@ -9,7 +9,7 @@ class ScoutingOperations {
   static final CollectionReference _teamsRef =
       _db.collection(_year).document('info').collection('teams');
   static Future<void> setTeamData(Team team) async {
-    await _teamsRef.document(team.teamNumber).updateData(team.toJson());
+    await _teamsRef.document(team.teamNumber).setData(team.toJson());
   }
 
   static Future<void> setMatchData(Match match) async {
