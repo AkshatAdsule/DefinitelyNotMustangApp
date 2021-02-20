@@ -99,14 +99,6 @@ class _OffenseScoutingState extends State<OffenseScouting> {
     _crossedInitiationLine = crossedInitiationLine;
   }
 
-  void setRotationControl(bool completed) =>
-      _completedRotationControl = completed;
-
-  void setPositionControl(bool completed) =>
-      _completedRotationControl = completed;
-
-  void setInitiationLine(bool crossed) => _completedRotationControl = crossed;
-
   @override
   void initState() {
     super.initState();
@@ -163,14 +155,14 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                       onPressed: () {
                         if (!_completedRotationControl) {
                           _addAction(ActionType.OTHER_WHEEL_ROTATION, context);
-                          setState(() {
-                            _completedRotationControl = true;
-                          });
+                          // setState(() {
+                          _completedRotationControl = true;
+                          // });
                         } else {
                           _addAction(ActionType.OTHER_WHEEL_POSITION, context);
-                          setState(() {
-                            _completedPositionControl = true;
-                          });
+                          // setState(() {
+                          _completedPositionControl = true;
+                          // });
                         }
                       },
                       icon: Icon(
@@ -212,9 +204,9 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                       onPressed: () {
                         _addAction(
                             ActionType.OTHER_CROSSED_INITIATION_LINE, context);
-                        setState(() {
-                          _crossedInitiationLine = true;
-                        });
+                        // setState(() {
+                        _crossedInitiationLine = true;
+                        // });
                       },
                     ),
                   ),

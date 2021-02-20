@@ -144,27 +144,29 @@ class _MapScoutingState extends State<MapScouting> {
         child: game_button.ScoutingButton(
             style: game_button.ButtonStyle.RAISED,
             type: game_button.ButtonType.PAGEBUTTON,
-            onPressed: () => () {
-                  GameAction action = undo();
-                  if (action == null) {
-                    return;
-                  }
-                  switch (action.action) {
-                    case ActionType.OTHER_WHEEL_ROTATION:
-                      offenseScouting.setRotationControl(false);
-                      break;
-                    case ActionType.OTHER_WHEEL_POSITION:
-                      offenseScouting.setPositionControl(false);
-                      break;
-                    case ActionType.OTHER_CROSSED_INITIATION_LINE:
-                      setState(() {
-                        offenseScouting.setInitiationLine(false);
-                      });
-                      break;
-                    default:
-                      break;
-                  }
-                },
+            onPressed: () {
+              GameAction action = undo();
+              print("no action before");
+              if (action == null) {
+                return;
+              }
+              print("Undid action:" + action.toString());
+              switch (action.action) {
+                case ActionType.OTHER_WHEEL_ROTATION:
+                  offenseScouting.setRotationControl(false);
+                  break;
+                case ActionType.OTHER_WHEEL_POSITION:
+                  offenseScouting.setPositionControl(false);
+                  break;
+                case ActionType.OTHER_CROSSED_INITIATION_LINE:
+                  setState(() {
+                    offenseScouting.setInitiationLine(false);
+                  });
+                  break;
+                default:
+                  break;
+              }
+            },
             text: "UNDO"));
 
     Widget _finishGameButton = _stopwatch.elapsedMilliseconds > 150000
