@@ -30,7 +30,7 @@ class _MapSwitchButtonState extends State<MapSwitchButton> {
               child: RaisedButton(
                 onPressed: () {
                   onToggle();
-                  debugPrint("showScoringMap: " + _showScoringMap.toString());
+                  _showScoringMap = !_showScoringMap;
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(80.0)),
