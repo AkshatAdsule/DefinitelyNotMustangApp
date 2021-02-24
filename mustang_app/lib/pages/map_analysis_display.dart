@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/components/game_map.dart';
 import 'package:mustang_app/components/header.dart';
 import 'package:mustang_app/components/map_analysis_text.dart';
-import 'package:mustang_app/components/map_shading_accuracy_key.dart';
-import 'package:mustang_app/components/map_shading_scoring_key.dart';
 import 'package:mustang_app/components/map_switch_button.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/constants/constants.dart';
@@ -26,6 +24,14 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
   Analyzer myAnalyzer;
   bool _showScoringMap = true;
   GameMap gameMap;
+  MapSwitchButton switchButton;
+
+  String _scoringText = Constants.minPtValuePerZonePerGame.toString() +
+      " total pts                                                                     " +
+      Constants.maxPtValuePerZonePerGame.toString() +
+      " total pts";
+  String _accuracyText =
+      "0%                                                                  100%";
 
   _MapAnalysisDisplayState(String teamNumber) {
     myAnalyzer = new Analyzer(teamNumber);
@@ -47,18 +53,17 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
     double ptsAtZone =
         myAnalyzer.calcPtsAtZone(x.toDouble(), y.toDouble()) / totalNumGames;
     double ptsAtZonePerGame = ptsAtZone / totalNumGames;
-    return ((ptsAtZonePerGame / Constants.maxPtValuePerZonePerGame) * 600)
+    return ((ptsAtZonePerGame / Constants.maxPtValuePerZonePerGame) * 900)
         .toInt();
   }
 
   int _getAccuracyColorValue(int x, int y) {
     double zoneAccuracyOutOf1 =
         myAnalyzer.calcShotAccuracyAtZone(x.toDouble(), y.toDouble());
-    double zoneAccuracyOutOf600 = zoneAccuracyOutOf1*600;
-    if (!zoneAccuracyOutOf600.isInfinite && !zoneAccuracyOutOf600.isNaN){
-      return (zoneAccuracyOutOf600).toInt();
-    }
-    else{
+    double zoneAccuracyOutOf900 = zoneAccuracyOutOf1 * 900;
+    if (!zoneAccuracyOutOf900.isInfinite && !zoneAccuracyOutOf900.isNaN) {
+      return (zoneAccuracyOutOf900).toInt();
+    } else {
       return 0;
     }
   }
@@ -104,7 +109,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
             BoxDecoration(color: Colors.green[_getAccuracyColorValue(x, y)]),
       );
     });
-    //GameMap gameMap;
+
     if (_showScoringMap == true) {
       gameMap =
           GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
@@ -113,23 +118,51 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
           GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
     }
 
+    switchButton = new MapSwitchButton(this.toggle, _showScoringMap);
+
     return Scaffold(
       appBar: Header(context, 'Analysis'),
       body: Container(
-        // height: MediaQuery.of(context).size.height,
         child: SingleChildScrollView(
-          // child: ConstrainedBox(
-          //   constraints: BoxConstraints(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               //Image.asset('assets/croppedmap.png', fit: BoxFit.contain),
               MapAnalysisText(myAnalyzer),
-              MapSwitchButton(this.toggle, _showScoringMap),
+              switchButton,
+
+              //i need to have it here bc otherwise it won't update showScoringMap
+              Ink(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.green[50], Colors.green[900]],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    borderRadius: BorderRadius.horizontal()),
+                child: Container(
+                  constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width,
+                      minHeight: 60.0),
+                  alignment: Alignment.center,
+                  child: Text(
+                    !(switchButton.showScoringMap)
+                        ? "Accuracy Map\n" + _accuracyText
+                        : "Scoring Map\n" + _scoringText,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.grey[800],
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        height: 1),
+                  ),
+                ),
+              ),
               gameMap,
-              //plotter,
-              MapShadingScoringKey(),
-              MapShadingAccuracyKey(),
+
+              //MapShadingKey(switchButton),
+              //MapShadingScoringKey(),
+              //MapShadingAccuracyKey(),
             ],
           ),
         ),

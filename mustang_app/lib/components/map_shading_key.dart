@@ -1,13 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/constants/constants.dart';
+import 'package:mustang_app/components/map_switch_button.dart';
 
-class MapShadingAccuracyKey extends StatefulWidget {
+class MapShadingKey extends StatefulWidget {
+  //bool _showScoringMap;
+  MapSwitchButton _switchButton;
+  MapShadingKey(this._switchButton);
+  
   @override
   State<StatefulWidget> createState() {
-    return new _MapShadingAccuracyKeyState();
+    return new _MapShadingKeyState(_switchButton);
   }
 }
 
-class _MapShadingAccuracyKeyState extends State<MapShadingAccuracyKey> {
+class _MapShadingKeyState extends State<MapShadingKey> {
+  MapSwitchButton _switchButton;
+  //bool _showScoringMap;
+  String _scoringText = Constants.minPtValuePerZonePerGame.toString() + 
+                      " total pts                                        " +
+                      Constants.maxPtValuePerZonePerGame.toString() + " total pts";
+  String _accuraracyText = "0%                                                            100%";
+
+  _MapShadingKeyState(this._switchButton);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +31,6 @@ class _MapShadingAccuracyKeyState extends State<MapShadingAccuracyKey> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            
             Container(
               height: 50.0,
               child: RaisedButton(
@@ -38,7 +51,7 @@ class _MapShadingAccuracyKeyState extends State<MapShadingAccuracyKey> {
                         BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
                     alignment: Alignment.center,
                     child: Text(
-                      "0%                                                            100%",
+                      !(_switchButton.showScoringMap) ? _accuraracyText : _scoringText,
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.white),
                     ),
@@ -46,28 +59,6 @@ class _MapShadingAccuracyKeyState extends State<MapShadingAccuracyKey> {
                 ),
               ),
             ),
-            /*
-            Container(
-              margin: EdgeInsets.only(left: 20, right: 20),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    //Icon(Icons.crop_square, size: iconSize, color: incrementColor[0]),
-                    //text[0]
-                  ]),
-            ),
-
-            Container(
-              margin: EdgeInsets.only(left: 20, right: 20),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(Icons.crop_square,
-                        size: iconSize, color: incrementColor[1]),
-                    //text[1]
-                  ]),
-            )
-            */
           ]),
     );
   }

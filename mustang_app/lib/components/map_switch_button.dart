@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 
 class MapSwitchButton extends StatefulWidget {
   void Function() onToggle;
-  bool _showScoringMap;
+  bool showScoringMap = true;
 
-  MapSwitchButton(this.onToggle, this._showScoringMap);
+  MapSwitchButton(this.onToggle, this.showScoringMap);
 
   @override
   State<StatefulWidget> createState() {
-    return new _MapSwitchButtonState(onToggle, _showScoringMap);
+    return new _MapSwitchButtonState(onToggle, showScoringMap);
   }
 }
 
 class _MapSwitchButtonState extends State<MapSwitchButton> {
   void Function() onToggle;
-  bool _showScoringMap;
+  bool showScoringMap = true;
 
-  _MapSwitchButtonState(this.onToggle, this._showScoringMap);
+  _MapSwitchButtonState(this.onToggle, this.showScoringMap);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,27 +30,30 @@ class _MapSwitchButtonState extends State<MapSwitchButton> {
               child: RaisedButton(
                 onPressed: () {
                   onToggle();
-                  _showScoringMap = !_showScoringMap;
+                  showScoringMap = !showScoringMap;
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(80.0)),
                 padding: EdgeInsets.all(0.0),
                 child: Ink(
                   decoration: BoxDecoration(
+                    color: Colors.green[300],
+                    /*
                       gradient: LinearGradient(
                         colors: [Colors.green[50], Colors.green[600]],
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                       ),
+                      */
                       borderRadius: BorderRadius.circular(80.0)),
                   child: Container(
                       constraints:
                           BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
                       alignment: Alignment.center,
                       child: Text(
-                        !_showScoringMap ? "Scoring Map" : "Accuracy Map",
+                        !widget.showScoringMap ? "Scoring Map" : "Accuracy Map",
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white, fontSize: 16),
                       )),
                 ),
               ),

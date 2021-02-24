@@ -339,10 +339,8 @@ class Analyzer {
           if (currentAction.x == x && currentAction.y == y) {
             if (currentAction.timeStamp <= 15000) {
               totalPoints += Constants.lowShotAutonValue;
-              //debugPrint("low shot auton");
             } else {
               totalPoints += Constants.lowShotValue;
-              //debugPrint("low shot teleop");
             }
           }
         }

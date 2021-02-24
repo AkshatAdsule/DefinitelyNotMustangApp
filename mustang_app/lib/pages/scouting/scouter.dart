@@ -158,7 +158,6 @@ class _ScouterState extends State<Scouter> {
                           _allianceColor = 'Red';
 
                           Constants.fieldColor = value;
-                          //debugPrint(Constants.fieldColor.toString());
                         });
                       }),
                   new Text(

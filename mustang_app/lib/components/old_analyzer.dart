@@ -146,7 +146,6 @@ class _OldAnalyzerState extends State<OldAnalyzer> {
 
       _result +=
           (_zoneDisplacementDifference * Constants.zoneDisplacementValue);
-      //debugPrint("smth here: " +  _result.toString());
     }
     return _result;
   }
