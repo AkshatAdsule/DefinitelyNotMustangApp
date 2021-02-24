@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/components/game_map.dart';
 import 'package:mustang_app/components/header.dart';
 import 'package:mustang_app/components/map_analysis_text.dart';
-import 'package:mustang_app/components/map_shading_key.dart';
+import 'package:mustang_app/components/map_shading_accuracy_key.dart';
+import 'package:mustang_app/components/map_shading_scoring_key.dart';
 import 'package:mustang_app/components/map_switch_button.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/constants/constants.dart';
@@ -23,12 +24,12 @@ class MapAnalysisDisplay extends StatefulWidget {
 
 class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
   Analyzer myAnalyzer;
-  String _teamNumber;
+  //String _teamNumber;
   //MapAnalysisShading shading;
 
   _MapAnalysisDisplayState(String teamNumber) {
     myAnalyzer = new Analyzer(teamNumber);
-    _teamNumber = teamNumber;
+    //_teamNumber = teamNumber;
     //shading = new MapAnalysisShading();
   }
 
@@ -65,9 +66,18 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
   }
   */
 
+  GameMap _getGameMap(ZoneGrid scoringGrid, ZoneGrid accuracyGrid){
+    if (MapSwitchButton().showScoringMap == true){
+            return GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
+
+    }
+    else{
+            return GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    MapSwitchButton switchButton = new MapSwitchButton();
     if (!myAnalyzer.initialized) {
       myAnalyzer.init().then((value) => setState(() {}));
     }
@@ -89,18 +99,16 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         decoration: BoxDecoration(color: Colors.green[_getAccuracyColorValue(x, y)]),
       );
     });
-
-    /*
+    debugPrint("test");
     GameMap gameMap;
-    if (switchButton.displayAccuracyMap == true){
-      gameMap = GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
-    }
-    else{
+    if (MapSwitchButton().showScoringMap == true){
       gameMap = GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
     }
-    */
-    GameMap scoringGameMap = GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
+    else{
+      gameMap = GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
+    }
 
+    GameMap scoringGameMap = GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
     GameMap accuracyGameMap = GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
 
     return Scaffold(
@@ -114,17 +122,18 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               //Image.asset('assets/croppedmap.png', fit: BoxFit.contain),
-              MapAnalysisText(myAnalyzer),
-              MapSwitchButton(),
+              //MapAnalysisText(myAnalyzer),
+              //MapSwitchButton(),
 
-              scoringGameMap,
+              //scoringGameMap,
               //gameMap,
               //WHY IS THIS NOT WORKING FLKSDFK
               //!switchButton.displayAccuracyMap ? accuracyGameMap : scoringGameMap,
-
+              //MapSwitchButton().displayAccuracyMap ? accuracyGameMap : scoringGameMap,
+             // _getGameMap(scoringGrid, accuracyGrid),
               //plotter,
-              //MapScouterKey(),
-              MapShadingKey(),
+              //MapShadingScoringKey(),
+              //MapShadingAccuracyKey(),
             ],
           ),
         ),

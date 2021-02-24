@@ -14,6 +14,7 @@ class MapAnalysisText extends StatefulWidget {
 
 class _MapAnalysisTextState extends State<MapAnalysisText> {
   Analyzer myAnalyzer;
+
   _MapAnalysisTextState(Analyzer analyzer) {
     myAnalyzer = analyzer;
   }
@@ -30,29 +31,26 @@ class _MapAnalysisTextState extends State<MapAnalysisText> {
                 margin: EdgeInsets.only(left: 20, right: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  
-                  
                   children: [
-                    
-                    
-                    Text(
-                      myAnalyzer.getReport(),
-                      //textDirection: TextDirection.ltr,
+                    Text(myAnalyzer.getReport(),
+                        textAlign: TextAlign.center,
+
+                        //textDirection: TextDirection.ltr,
                         style: TextStyle(
-                            color: Colors.grey[800],
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            /*
-                            background: Paint()
+                          color: Colors.grey[800],
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          //height = 2.0,
+
+                          background: Paint()
                             ..strokeWidth = 30.0
-                            ..color = Colors.grey
-             ..style = PaintingStyle.stroke
-        ..strokeJoin = StrokeJoin.round),
-        */
-                            backgroundColor: Colors.green[300],
-                            height: 2,
-                            )
-                    )       
+                            ..color = Colors.green[300]
+                            ..style = PaintingStyle.stroke
+                            ..strokeJoin = StrokeJoin.bevel,
+
+                          //backgroundColor: Colors.green[300],
+                          //height: 2,
+                        ))
                   ],
                 )),
           ]),

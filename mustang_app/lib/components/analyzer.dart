@@ -43,7 +43,7 @@ class Analyzer {
 
   bool get initialized => _initialized;
 
-  Future<void> init() async {
+  Future<void> init() async {    
     Team team = await _teamService.getTeam(_teamNum);
     List<Match> matches = await _teamService.getMatches(_teamNum);
     _driveBase = team.drivebaseType;
@@ -51,11 +51,12 @@ class Analyzer {
     _initialized = true;
   }
 
-  double calcPtsAtZoneMapDisplay(double x, double y) => calcPtsAtZone(x, y);
-
   int totalNumGames() => _totalNumGames;
 
   String getReport() {
+    if (!_initialized || _allMatches.length == 0){
+      return "No analysis available";
+    }
     //TEST TO SEE IF DATA RLY NEEDS TO BE COLLECTED!!
     if (_allMatches.length > _oldAllMatchLength) {
       _oldAllMatchLength = _allMatches.length;
@@ -88,16 +89,16 @@ class Analyzer {
         _teamNum
         //+ "\nOffense Shooting Points: " + calcTotOffenseShootingPts().round().toString()
         +
-        "\nShooting Pts/game: " +
+        "\nShooting pts/game: " +
         (calcTotOffenseShootingPts() / _totalNumGames).round().toString() +
         "    Climb Accuracy: " +
         calcTotClimbAccuracy().round().toString() +
         "%"
         //+ "\nTotal points prevented: " + calcTotPtsPrev().round().toString()
         +
-        "\nPts Prevented/game: " +
+        "    Points prevented/game: " +
         (calcTotPtsPrev() / _totalNumGames).round().toString() +
-        "    Shot accuracy: " +
+        "    Shot Accuracy: " +
         calcShotAccuracy().round().toString() +
         "%" +
         "\n" +
@@ -249,8 +250,8 @@ class Analyzer {
   double calcPushPtsPrev() {
     double _result = 0.0;
     //set speed
-    //TODO: fix to enum
     double _normalVelocity = 0.0;
+
     if (_driveBase.contains("tank")) {
       _normalVelocity = Constants.tankSpeed;
     }
@@ -274,10 +275,7 @@ class Analyzer {
       var _zoneDisplacementDifference = (_predictedDisplacement - _actualDisplacement)/Constants.zoneSideLength;
       _result += (_zoneDisplacementDifference * Constants.zoneDisplacementValue);
     }
-    //debugPrint("pushPtsPrev: " + _result.toString());
-    var test = _allMatches[0];
-    var testAgain = test.matchNumber;
-    //debugPrint("all matches test: " + testAgain.toString());
+
     return _result;
   }
 
@@ -329,9 +327,7 @@ class Analyzer {
     return shotsMade/(shotsMade + shotsMissed);
   }
   double calcPtsAtZone(double x, double y) {
-//needs to be called to initialize
-    // String random = getReport();
-    //debugPrint("all matches: " + _allMatches.toString());
+    //random values for testing purposes that doesn't work
     double totalPoints = 0;
 
     for (int i = 0; i < _allMatches.length; i++) {
@@ -341,10 +337,12 @@ class Analyzer {
         GameAction currentAction = _allMatches[i].actions[j];
         if (currentAction.action == ActionType.SHOT_LOW) {
           if (currentAction.x == x && currentAction.y == y) {
-            if (currentAction.timeStamp <= 15) {
+            if (currentAction.timeStamp <= 15000) {
               totalPoints += Constants.lowShotAutonValue;
+              //debugPrint("low shot auton");
             } else {
               totalPoints += Constants.lowShotValue;
+              //debugPrint("low shot teleop");
             }
           }
         }
@@ -352,7 +350,7 @@ class Analyzer {
         //outer shot
         if (currentAction.action == ActionType.SHOT_OUTER) {
           if (currentAction.x == x && currentAction.y == y) {
-            if (currentAction.timeStamp <= 15) {
+            if (currentAction.timeStamp <= 15000) {
               totalPoints += Constants.outerShotAutonValue;
             } else {
               totalPoints += Constants.outerShotValue;
@@ -363,7 +361,7 @@ class Analyzer {
         //inner shot
         if (currentAction.action == ActionType.SHOT_INNER) {
           if (currentAction.x == x && currentAction.y == y) {
-            if (currentAction.timeStamp <= 15) {
+            if (currentAction.timeStamp <= 15000) {
               totalPoints += Constants.innerShotAutonValue;
             } else {
               totalPoints += Constants.innerShotValue;
@@ -372,16 +370,7 @@ class Analyzer {
         }
       }
     }
-    /*
-    for (int i = 0; i < _shotLow.length; i++){
-      if (_shotLow[i].x == x && _shotLow[i].y == y){
-        //debugPrint("_shotLow[i].x == x && _shotLow[i].y == y was called");
-        if (_shotLow[i].timeStamp <= 15){ totalPoints += Constants.lowShotAutonValue;}
-        else { totalPoints += Constants.lowShotValue;}
-      }
-    }
-*/
-
+    
     return totalPoints;
   }
 }

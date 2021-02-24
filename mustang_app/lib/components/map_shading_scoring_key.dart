@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/constants/constants.dart';
 
-class MapSwitchButton extends StatefulWidget {
-  get showScoringMap => showScoringMap;
-
-
+class MapShadingScoringKey extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return new _MapSwitchButtonState();
+    return new _MapShadingScoringKeyState();
   }
 }
 
-class _MapSwitchButtonState extends State<MapSwitchButton> {
-  bool _showScoringMap = true;
-  get showScoringMap => _showScoringMap;
-
+class _MapShadingScoringKeyState extends State<MapShadingScoringKey> {
   @override
-  Widget build(BuildContext context) {  
+  Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(10),
       child: Row(
@@ -25,26 +20,14 @@ class _MapSwitchButtonState extends State<MapSwitchButton> {
             Container(
               height: 50.0,
               child: RaisedButton(
-                onPressed: () {
-                  if (_showScoringMap){
-                    setState((){
-                      _showScoringMap = false;
-                    });
-                  }
-                  else{
-                    setState((){
-                      _showScoringMap = true;
-                    });
-                  }
-                  debugPrint("showScoringMap: " + _showScoringMap.toString());
-                },
+                onPressed: () {},
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(80.0)),
                 padding: EdgeInsets.all(0.0),
                 child: Ink(
                   decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Colors.green[50], Colors.green[600]],
+                        colors: [Colors.green[100], Colors.green[600]],
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                       ),
@@ -54,10 +37,12 @@ class _MapSwitchButtonState extends State<MapSwitchButton> {
                         BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
                     alignment: Alignment.center,
                     child: Text(
-                        !_showScoringMap ? "Scoring Map" : "Accuracy Map",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
-                    )
+                      Constants.minPtValuePerZonePerGame.toString() + 
+                      " total pts                                        " +
+                      Constants.maxPtValuePerZonePerGame.toString() + " total pts",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ),

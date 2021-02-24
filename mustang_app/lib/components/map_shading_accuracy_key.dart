@@ -2,45 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/constants/constants.dart';
 //import 'package:mustang_app/constants/constants.dart';
 
-class MapShadingKey extends StatefulWidget {
+class MapShadingAccuracyKey extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return new _MapShadingKeyState();
+    return new _MapShadingAccuracyKeyState();
   }
 }
 
-class _MapShadingKeyState extends State<MapShadingKey> {
-  double iconSize = 65;
-  //List<Color> incrementColor = new List();
-  /*
-  void _setColorList() {
-    for (int i = 1; Constants.colorIncrement.toInt() * i <= 600; i++) {
-      incrementColor.add(Colors.green[Constants.colorIncrement.toInt() * i]);
-    }
-  }
-  */
-  /*
-  List _getTextList() {
-    List<Text> result = new List();
-    for (int i = 0; i < 5; i += Constants.shadingPointDifference) {
-      String text = i.toString() +
-          "-" +
-          (i + Constants.shadingPointDifference - 1).toString() +
-          " points";
-      result.add(Text(text,
-          style: TextStyle(
-              color: Colors.grey[800],
-              fontWeight: FontWeight.bold,
-              fontSize: 14)));
-    }
-    return result;
-  }
-  */
+class _MapShadingAccuracyKeyState extends State<MapShadingAccuracyKey> {
 
   @override
   Widget build(BuildContext context) {
-    //_setColorList();
-    //List<Text> text = _getTextList();
     return Container(
       margin: EdgeInsets.all(10),
       child: Row(
@@ -68,9 +40,7 @@ class _MapShadingKeyState extends State<MapShadingKey> {
                         BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
                     alignment: Alignment.center,
                     child: Text(
-                      Constants.minPtValuePerZonePerGame.toString() + 
-                      " total pts                                            " +
-                      Constants.maxPtValuePerZonePerGame.toString() + " total pts",
+                      "0%                                                            100%",
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.white),
                     ),
