@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../components/bottom_nav_bar.dart';
@@ -69,61 +72,109 @@ class _SketchPageState extends State<SketchPage> {
     );
   }
 
+  takescrshot() async {
+    // RenderRepaintBoundary boundary = scr.currentContext.findRenderObject();
+    // var image = await boundary.toImage();
+    // var byteData = await image.toByteData(format: ImageByteFormat.png);
+    // var pngBytes = byteData.buffer.asUint8List();
+    // print(pngBytes);
+    try {
+      print('inside');
+      RenderRepaintBoundary boundary =
+          _globalKey.currentContext.findRenderObject();
+
+      // if it needs repaint, we paint it.
+      if (boundary.debugNeedsPaint) {
+        Timer(Duration(seconds: 1), () => _capturePng());
+        return null;
+      }
+
+      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+      ByteData byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      var pngBytes = byteData.buffer.asUint8List();
+      var bs64 = base64Encode(pngBytes);
+      print(pngBytes);
+      print(bs64);
+      setState(() {});
+      return pngBytes;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  var scr = new GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     final Container sketchArea = Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/blue_field.png"),
+          fit: BoxFit.cover,
+        ),
+      ),
       margin: EdgeInsets.all(1.0),
       alignment: Alignment.topLeft,
-      color: Colors.blueGrey[50],
       child: CustomPaint(
         painter: _sketcher,
       ),
     );
 
-    return Scaffold(
-      bottomNavigationBar: BottomNavBar(context),
-      appBar: AppBar(
-        title: Text('Sketcher'),
-      ),
-      body: GestureDetector(
-        onPanUpdate: (DragUpdateDetails details) {
-          setState(() {
-            RenderBox box = context.findRenderObject();
-            Offset point = box.globalToLocal(details.globalPosition);
-            point = point.translate(0.0, -(AppBar().preferredSize.height));
-
-            points = List.from(points)..add(point);
-            _sketcher = new Sketcher(points);
-            _sketcher.setColor(currentColor);
-          });
-        },
-        onPanEnd: (DragEndDetails details) {
-          points.add(null);
-        },
-        child: sketchArea,
-      ),
-      floatingActionButton: SpeedDial(
-        animatedIcon: AnimatedIcons.menu_close,
-        backgroundColor: Colors.blue,
-        children: [
-          SpeedDialChild(
-            label: 'Clear Screen',
-            backgroundColor: Colors.red,
-            child: Icon(Icons.refresh),
-            onTap: () {
-              setState(() => points.clear());
-            },
+    return RepaintBoundary(
+        key: scr,
+        child: Scaffold(
+          bottomNavigationBar: BottomNavBar(context),
+          appBar: AppBar(
+            title: Text('Sketcher'),
           ),
-          SpeedDialChild(
-              label: 'Palette',
-              backgroundColor: Colors.red,
-              child: Icon(Icons.format_paint),
-              onTap: () {
-                showColorPicker();
-              })
-        ],
-      ),
-    );
+          body: GestureDetector(
+            onPanUpdate: (DragUpdateDetails details) {
+              setState(() {
+                RenderBox box = context.findRenderObject();
+                Offset point = box.globalToLocal(details.globalPosition);
+                point = point.translate(0.0, -(AppBar().preferredSize.height));
+
+                points = List.from(points)..add(point);
+                _sketcher = new Sketcher(points);
+                _sketcher.setColor(currentColor);
+              });
+            },
+            onPanEnd: (DragEndDetails details) {
+              points.add(null);
+            },
+            child: sketchArea,
+          ),
+          floatingActionButton: SpeedDial(
+            animatedIcon: AnimatedIcons.menu_close,
+            backgroundColor: Colors.green.shade800,
+            children: [
+              SpeedDialChild(
+                label: 'Clear Screen',
+                backgroundColor: Colors.green,
+                child: Icon(Icons.refresh),
+                onTap: () {
+                  setState(() => points.clear());
+                },
+              ),
+              SpeedDialChild(
+                  label: 'Palette',
+                  backgroundColor: Colors.green,
+                  child: Icon(Icons.format_paint),
+                  onTap: () {
+                    showColorPicker();
+                  }),
+              SpeedDialChild(
+                  label: 'Take picture',
+                  backgroundColor: Colors.green,
+                  child: Icon(Icons.camera),
+                  onTap: () {
+                    takescrshot();
+                  })
+            ],
+          ),
+        ));
   }
 }
 
