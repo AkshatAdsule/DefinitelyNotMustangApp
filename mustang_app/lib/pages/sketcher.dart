@@ -73,6 +73,7 @@ class _SketchPageState extends State<SketchPage> {
   }
 
   takescrshot() async {
+    /*
     // RenderRepaintBoundary boundary = scr.currentContext.findRenderObject();
     // var image = await boundary.toImage();
     // var byteData = await image.toByteData(format: ImageByteFormat.png);
@@ -102,6 +103,7 @@ class _SketchPageState extends State<SketchPage> {
       print(e);
       return null;
     }
+    */
   }
 
   var scr = new GlobalKey();

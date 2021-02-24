@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 
 class MapSwitchButton extends StatefulWidget {
-  get showScoringMap => showScoringMap;
+  void Function() onToggle;
+  bool _showScoringMap;
 
+  MapSwitchButton(this.onToggle, this._showScoringMap);
 
   @override
   State<StatefulWidget> createState() {
-    return new _MapSwitchButtonState();
+    return new _MapSwitchButtonState(onToggle, _showScoringMap);
   }
 }
 
 class _MapSwitchButtonState extends State<MapSwitchButton> {
-  bool _showScoringMap = true;
-  get showScoringMap => _showScoringMap;
+  void Function() onToggle;
+  bool _showScoringMap;
 
+  _MapSwitchButtonState(this.onToggle, this._showScoringMap);
   @override
-  Widget build(BuildContext context) {  
+  Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(10),
       child: Row(
@@ -26,16 +29,7 @@ class _MapSwitchButtonState extends State<MapSwitchButton> {
               height: 50.0,
               child: RaisedButton(
                 onPressed: () {
-                  if (_showScoringMap){
-                    setState((){
-                      _showScoringMap = false;
-                    });
-                  }
-                  else{
-                    setState((){
-                      _showScoringMap = true;
-                    });
-                  }
+                  onToggle();
                   debugPrint("showScoringMap: " + _showScoringMap.toString());
                 },
                 shape: RoundedRectangleBorder(
@@ -50,15 +44,14 @@ class _MapSwitchButtonState extends State<MapSwitchButton> {
                       ),
                       borderRadius: BorderRadius.circular(80.0)),
                   child: Container(
-                    constraints:
-                        BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
-                    alignment: Alignment.center,
-                    child: Text(
+                      constraints:
+                          BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
+                      alignment: Alignment.center,
+                      child: Text(
                         !_showScoringMap ? "Scoring Map" : "Accuracy Map",
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.white),
-                    )
-                  ),
+                      )),
                 ),
               ),
             ),

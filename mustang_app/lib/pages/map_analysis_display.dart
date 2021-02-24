@@ -24,6 +24,8 @@ class MapAnalysisDisplay extends StatefulWidget {
 
 class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
   Analyzer myAnalyzer;
+  bool _showScoringMap = true;
+
   //String _teamNumber;
   //MapAnalysisShading shading;
 
@@ -38,16 +40,25 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
     super.initState();
   }
 
-  int _getScoringColorValue(int x, int y) {
-    double totalNumGames = myAnalyzer.totalNumGames().toDouble();
-    double ptsAtZone = myAnalyzer.calcPtsAtZone(x.toDouble(), y.toDouble())/totalNumGames;
-    double ptsAtZonePerGame = ptsAtZone/totalNumGames;
-    return ((ptsAtZonePerGame/Constants.maxPtValuePerZonePerGame) * 600).toInt();
+  void toggle() {
+    setState(() {
+      _showScoringMap = !_showScoringMap;
+    });
   }
 
-  int _getAccuracyColorValue(int x, int y){
-    double zoneAccuracyOutOf1 = myAnalyzer.calcShotAccuracyAtZone(x.toDouble(), y.toDouble());
-    return (600*zoneAccuracyOutOf1).toInt();
+  int _getScoringColorValue(int x, int y) {
+    double totalNumGames = myAnalyzer.totalNumGames().toDouble();
+    double ptsAtZone =
+        myAnalyzer.calcPtsAtZone(x.toDouble(), y.toDouble()) / totalNumGames;
+    double ptsAtZonePerGame = ptsAtZone / totalNumGames;
+    return ((ptsAtZonePerGame / Constants.maxPtValuePerZonePerGame) * 600)
+        .toInt();
+  }
+
+  int _getAccuracyColorValue(int x, int y) {
+    double zoneAccuracyOutOf1 =
+        myAnalyzer.calcShotAccuracyAtZone(x.toDouble(), y.toDouble());
+    return (600 * zoneAccuracyOutOf1).toInt();
   }
 
   //zones start at 0, see miro but climb up, no sense of columns or row so need to convert
@@ -66,13 +77,13 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
   }
   */
 
-  GameMap _getGameMap(ZoneGrid scoringGrid, ZoneGrid accuracyGrid){
-    if (MapSwitchButton().showScoringMap == true){
-            return GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
-
-    }
-    else{
-            return GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
+  GameMap _getGameMap(ZoneGrid scoringGrid, ZoneGrid accuracyGrid) {
+    if (_showScoringMap == true) {
+      return GameMap(
+          imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
+    } else {
+      return GameMap(
+          imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
     }
   }
 
@@ -87,7 +98,8 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
       return Container(
         width: cellWidth,
         height: cellHeight,
-        decoration: BoxDecoration(color: Colors.green[_getScoringColorValue(x, y)]),
+        decoration:
+            BoxDecoration(color: Colors.green[_getScoringColorValue(x, y)]),
       );
     });
 
@@ -96,20 +108,24 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
       return Container(
         width: cellWidth,
         height: cellHeight,
-        decoration: BoxDecoration(color: Colors.green[_getAccuracyColorValue(x, y)]),
+        decoration:
+            BoxDecoration(color: Colors.green[_getAccuracyColorValue(x, y)]),
       );
     });
     debugPrint("test");
     GameMap gameMap;
-    if (MapSwitchButton().showScoringMap == true){
-      gameMap = GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
-    }
-    else{
-      gameMap = GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
+    if (_showScoringMap == true) {
+      gameMap =
+          GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
+    } else {
+      gameMap =
+          GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
     }
 
-    GameMap scoringGameMap = GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
-    GameMap accuracyGameMap = GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
+    GameMap scoringGameMap =
+        GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
+    GameMap accuracyGameMap =
+        GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
 
     return Scaffold(
       appBar: Header(context, 'Analysis'),
@@ -122,18 +138,18 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               //Image.asset('assets/croppedmap.png', fit: BoxFit.contain),
-              //MapAnalysisText(myAnalyzer),
-              //MapSwitchButton(),
+              MapAnalysisText(myAnalyzer),
+              MapSwitchButton(this.toggle, _showScoringMap),
 
               //scoringGameMap,
-              //gameMap,
+              gameMap,
               //WHY IS THIS NOT WORKING FLKSDFK
               //!switchButton.displayAccuracyMap ? accuracyGameMap : scoringGameMap,
               //MapSwitchButton().displayAccuracyMap ? accuracyGameMap : scoringGameMap,
-             // _getGameMap(scoringGrid, accuracyGrid),
+              // _getGameMap(scoringGrid, accuracyGrid),
               //plotter,
-              //MapShadingScoringKey(),
-              //MapShadingAccuracyKey(),
+              MapShadingScoringKey(),
+              MapShadingAccuracyKey(),
             ],
           ),
         ),
