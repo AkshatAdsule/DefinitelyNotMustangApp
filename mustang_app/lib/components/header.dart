@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'bottom_nav_bar.dart';
-import 'package:mustang_app/pages/scouting/map_scouting.dart';
 
 class Header extends AppBar {
   Header(BuildContext context, String text, {List<Widget> buttons})
