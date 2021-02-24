@@ -21,7 +21,6 @@ class _SketchPageState extends State<SketchPage> {
 
   _SketchPageState() {
     _sketcher = new Sketcher(points);
-    // _sketcher.setColor(Colors.black);
   }
 // ValueChanged<Color> callback
   void changeColor(Color color) {
@@ -41,20 +40,6 @@ class _SketchPageState extends State<SketchPage> {
             enableLabel: true,
             pickerAreaHeightPercent: 0.8,
           ),
-          // Use Material color picker:
-          //
-          // child: MaterialPicker(
-          //   pickerColor: pickerColor,
-          //   onColorChanged: changeColor,
-          //   enableLabel: true, // only on portrait mode
-          // ),
-          //
-          // Use Block color picker:
-          //
-          // child: BlockPicker(
-          //   pickerColor: currentColor,
-          //   onColorChanged: changeColor,
-          // ),
         ),
         actions: <Widget>[
           FlatButton(
@@ -72,41 +57,15 @@ class _SketchPageState extends State<SketchPage> {
     );
   }
 
-  takescrshot() async {
-    /*
-    // RenderRepaintBoundary boundary = scr.currentContext.findRenderObject();
-    // var image = await boundary.toImage();
-    // var byteData = await image.toByteData(format: ImageByteFormat.png);
-    // var pngBytes = byteData.buffer.asUint8List();
-    // print(pngBytes);
-    try {
-      print('inside');
-      RenderRepaintBoundary boundary =
-          _globalKey.currentContext.findRenderObject();
+  // takescrshot() async {
+  //   RenderRepaintBoundary boundary = scr.currentContext.findRenderObject();
+  //   var image = await boundary.toImage();
+  //   var byteData = await image.toByteData(format: ImageByteFormat.png);
+  //   var pngBytes = byteData.buffer.asUint8List();
+  //   print(pngBytes);
+  // }
 
-      // if it needs repaint, we paint it.
-      if (boundary.debugNeedsPaint) {
-        Timer(Duration(seconds: 1), () => _capturePng());
-        return null;
-      }
-
-      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
-      var pngBytes = byteData.buffer.asUint8List();
-      var bs64 = base64Encode(pngBytes);
-      print(pngBytes);
-      print(bs64);
-      setState(() {});
-      return pngBytes;
-    } catch (e) {
-      print(e);
-      return null;
-    }
-    */
-  }
-
-  var scr = new GlobalKey();
+  // var scr = new GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -124,59 +83,61 @@ class _SketchPageState extends State<SketchPage> {
       ),
     );
 
-    return RepaintBoundary(
-        key: scr,
-        child: Scaffold(
-          bottomNavigationBar: BottomNavBar(context),
-          appBar: AppBar(
-            title: Text('Sketcher'),
-          ),
-          body: GestureDetector(
-            onPanUpdate: (DragUpdateDetails details) {
-              setState(() {
-                RenderBox box = context.findRenderObject();
-                Offset point = box.globalToLocal(details.globalPosition);
-                point = point.translate(0.0, -(AppBar().preferredSize.height));
+    // return RepaintBoundary(
+    //     key: scr,
+    //     child:
+    return Scaffold(
+      bottomNavigationBar: BottomNavBar(context),
+      appBar: AppBar(
+        title: Text('Sketcher'),
+      ),
+      body: GestureDetector(
+        onPanUpdate: (DragUpdateDetails details) {
+          setState(() {
+            RenderBox box = context.findRenderObject();
+            Offset point = box.globalToLocal(details.globalPosition);
+            point = point.translate(0.0, -(AppBar().preferredSize.height));
 
-                points = List.from(points)..add(point);
-                _sketcher = new Sketcher(points);
-                _sketcher.setColor(currentColor);
-              });
+            points = List.from(points)..add(point);
+            _sketcher = new Sketcher(points);
+            _sketcher.setColor(currentColor);
+          });
+        },
+        onPanEnd: (DragEndDetails details) {
+          points.add(null);
+        },
+        child: sketchArea,
+      ),
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_close,
+        backgroundColor: Colors.green.shade800,
+        children: [
+          SpeedDialChild(
+            label: 'Clear Screen',
+            backgroundColor: Colors.green,
+            child: Icon(Icons.refresh),
+            onTap: () {
+              setState(() => points.clear());
             },
-            onPanEnd: (DragEndDetails details) {
-              points.add(null);
-            },
-            child: sketchArea,
           ),
-          floatingActionButton: SpeedDial(
-            animatedIcon: AnimatedIcons.menu_close,
-            backgroundColor: Colors.green.shade800,
-            children: [
-              SpeedDialChild(
-                label: 'Clear Screen',
-                backgroundColor: Colors.green,
-                child: Icon(Icons.refresh),
-                onTap: () {
-                  setState(() => points.clear());
-                },
-              ),
-              SpeedDialChild(
-                  label: 'Palette',
-                  backgroundColor: Colors.green,
-                  child: Icon(Icons.format_paint),
-                  onTap: () {
-                    showColorPicker();
-                  }),
-              SpeedDialChild(
-                  label: 'Take picture',
-                  backgroundColor: Colors.green,
-                  child: Icon(Icons.camera),
-                  onTap: () {
-                    takescrshot();
-                  })
-            ],
-          ),
-        ));
+          SpeedDialChild(
+              label: 'Palette',
+              backgroundColor: Colors.green,
+              child: Icon(Icons.format_paint),
+              onTap: () {
+                showColorPicker();
+              }),
+          SpeedDialChild(
+              label: 'Take picture',
+              backgroundColor: Colors.green,
+              child: Icon(Icons.camera),
+              onTap: () {
+                // takescrshot();
+              })
+        ],
+      ),
+      // )
+    );
   }
 }
 

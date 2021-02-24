@@ -211,7 +211,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
                               _pushTextStart = true;
                             });
                         }
-                        _prev.clear();
+                        _prev = [0, 0];
                       },
                       text: !_pushTextStart ? "Push Start" : "Push End",
                     ),
@@ -227,7 +227,7 @@ class _DefenseScoutingState extends State<DefenseScouting> {
                       type: game_button.ButtonType.ELEMENT,
                       onPressed: () {
                         actionDeterminer(context, 'Foul');
-                        _prev.clear();
+                        _prev = [0, 0];
                       },
                       text: 'Foul',
                     ),
