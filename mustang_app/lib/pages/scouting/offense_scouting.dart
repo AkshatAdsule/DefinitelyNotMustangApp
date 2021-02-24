@@ -155,14 +155,14 @@ class _OffenseScoutingState extends State<OffenseScouting> {
                       onPressed: () {
                         if (!_completedRotationControl) {
                           _addAction(ActionType.OTHER_WHEEL_ROTATION, context);
-                          // setState(() {
-                          _completedRotationControl = true;
-                          // });
+                          setState(() {
+                            _completedRotationControl = true;
+                          });
                         } else {
                           _addAction(ActionType.OTHER_WHEEL_POSITION, context);
-                          // setState(() {
-                          _completedPositionControl = true;
-                          // });
+                          setState(() {
+                            _completedPositionControl = true;
+                          });
                         }
                       },
                       icon: Icon(
