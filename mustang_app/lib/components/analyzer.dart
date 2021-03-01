@@ -43,7 +43,7 @@ class Analyzer {
 
   bool get initialized => _initialized;
 
-  Future<void> init() async {    
+  Future<void> init() async {
     Team team = await _teamService.getTeam(_teamNum);
     List<Match> matches = await _teamService.getMatches(_teamNum);
     _driveBase = team.drivebaseType;
@@ -54,7 +54,7 @@ class Analyzer {
   int totalNumGames() => _totalNumGames;
 
   String getReport() {
-    if (!_initialized || _allMatches.length == 0){
+    if (!_initialized || _allMatches.length == 0) {
       return "No analysis available";
     }
     //TEST TO SEE IF DATA RLY NEEDS TO BE COLLECTED!!
@@ -70,32 +70,28 @@ class Analyzer {
       fouls += "Reg Fouls: " + _foulReg.length.toString();
     }
     if (_foulTech.length > 0) {
-      fouls += " Tech Fouls: " + _foulTech.length.toString();
+      fouls += "    Tech Fouls: " + _foulTech.length.toString();
     }
     if (_foulYellow.length > 0) {
-      fouls += " Yellow Fouls: " + _foulYellow.length.toString();
+      fouls += "    Yellow Fouls: " + _foulYellow.length.toString();
     }
     if (_foulRed.length > 0) {
-      fouls += " Red Fouls: " + _foulRed.length.toString();
+      fouls += "    Red Fouls: " + _foulRed.length.toString();
     }
     if (_foulDisabled.length > 0) {
-      fouls += " Disabled Fouls: " + _foulDisabled.length.toString();
+      fouls += "    Disabled Fouls: " + _foulDisabled.length.toString();
     }
     if (_foulDisqual.length > 0) {
-      fouls += " Disqual Fouls: " + _foulDisqual.length.toString();
+      fouls += "    Disqual Fouls: " + _foulDisqual.length.toString();
     }
 
     return "Team: " +
-        _teamNum
-        //+ "\nOffense Shooting Points: " + calcTotOffenseShootingPts().round().toString()
-        +
+        _teamNum        +
         "\nShooting pts/game: " +
         (calcTotOffenseShootingPts() / _totalNumGames).round().toString() +
         "    Climb Accuracy: " +
         calcTotClimbAccuracy().round().toString() +
-        "%"
-        //+ "\nTotal points prevented: " + calcTotPtsPrev().round().toString()
-        +
+        "%"        +
         "    Points prevented/game: " +
         (calcTotPtsPrev() / _totalNumGames).round().toString() +
         "    Shot Accuracy: " +
@@ -219,7 +215,7 @@ class Analyzer {
     int _successfulShots =
         _shotLow.length + _shotOuter.length + _shotInner.length;
     int _missedShots = _missedLow.length + _missedOuter.length;
-    return (_successfulShots / (_successfulShots + _missedShots)) * 100;
+    return (_successfulShots / (_successfulShots + _missedShots)) * 100.0;
   }
 
   double calcTotClimbAccuracy() {
@@ -247,7 +243,66 @@ class Analyzer {
     return _prevIntake.length * Constants.intakeValue;
   }
 
+  double getBallsInBot(String matchNum, double timeStamp) {
+    double ballsInBot = 0;
+    Match match = null; //only reason it's here is to test if matchNum has a "match" in _allMatches. PUN INTENDED
+    List<GameAction> matchActions = null;
+    //find and set match
+    for (int i = 0; i < _allMatches.length; i++) {
+      if (_allMatches[i].matchNumber == matchNum) {
+        match = _allMatches[i];
+        matchActions = match.actions;
+      }
+    }
+    //matchNum does not correspond to an actual match
+    if (match == null || matchActions == null) {
+      return 0;
+    }
+
+    for (int b = 0; b < matchActions.length; b++) {
+      //add intaked balls
+      if (matchActions[b].action == ActionType.INTAKE &&
+          matchActions[b].timeStamp <= timeStamp) {
+        ballsInBot++;
+      }
+
+      //remove balls that were shot
+      if (matchActions[b].action == ActionType.SHOT_LOW ||
+          matchActions[b].action == ActionType.SHOT_OUTER ||
+          matchActions[b].action == ActionType.SHOT_INNER) {
+        if (matchActions[b].timeStamp <= timeStamp) {
+          ballsInBot--;
+        }
+      }
+    }
+
+    return ballsInBot;
+  }
+
   double calcPushPtsPrev() {
+    double result = 0;
+
+    //goes thru all matches
+    for (int i = 0; i < _allMatches.length; i++) {
+      Match _currentMatch = _allMatches[i];
+      List<GameAction> actions = _currentMatch.actions;
+      String matchNum = _currentMatch.matchNumber;
+      for (int a = 0; a < actions.length; a++) {
+        if (actions[a].action == ActionType.PUSH_START) {
+          double ballsInBot = getBallsInBot(matchNum, actions[a].timeStamp);
+          //assume immediate action is end push
+          result += calcSinglePushPtsPrev(actions[a], actions[a + 1], ballsInBot);
+        }
+      }
+    }
+    return result;
+  }
+
+  double calcSinglePushPtsPrev(GameAction pushStart, GameAction pushEnd, double ballsInBot) {
+    double zoneDisplacementValue = Constants.zoneDisplacementValue;
+    zoneDisplacementValue *= (ballsInBot / Constants.maxBallsInBot); //take balls in bot into account
+    zoneDisplacementValue *= calcShotAccuracy() / 100.0; //take shot accuracy into account, worth more if higher value
+
     double _result = 0.0;
     //set speed
     double _normalVelocity = 0.0;
@@ -268,13 +323,14 @@ class Analyzer {
       _normalVelocity = Constants.swerveSpeed;
     }
 
-    for (int i = 0; i < _pushStart.length; i++) {
-      var _actualDisplacement = calcDisplacement(_pushStart[i].x, _pushStart[i].y, _pushEnd[i].x, _pushEnd[i].y);
-      var _pushTimeSeconds = (_pushEnd[i].timeStamp - _pushStart[i].timeStamp)/1000;
-      var _predictedDisplacement = _normalVelocity * _pushTimeSeconds;
-      var _zoneDisplacementDifference = (_predictedDisplacement - _actualDisplacement)/Constants.zoneSideLength;
-      _result += (_zoneDisplacementDifference * Constants.zoneDisplacementValue);
-    }
+    var _actualDisplacement =
+        calcDisplacement(pushStart.x, pushStart.y, pushEnd.x, pushEnd.y);
+    var _pushTimeSeconds = (pushEnd.timeStamp - pushStart.timeStamp) / 1000.0;
+    var _predictedDisplacement = _normalVelocity * _pushTimeSeconds;
+    var _zoneDisplacementDifference =
+        (_predictedDisplacement - _actualDisplacement) /
+            Constants.zoneSideLength;
+    _result += (_zoneDisplacementDifference * zoneDisplacementValue);
 
     return _result;
   }
@@ -304,28 +360,32 @@ class Analyzer {
   }
 
   //for map display, takes in a zone and returns offense pts scored there
-  double calcShotAccuracyAtZone(double x, double y){
+  double calcShotAccuracyAtZone(double x, double y) {
     double shotsMade = 0;
     double shotsMissed = 0;
     for (int i = 0; i < _allMatches.length; i++) {
       //inside each array of actions
       for (int j = 0; j < _allMatches[i].actions.length; j++) {
         GameAction currentAction = _allMatches[i].actions[j];
-        if (currentAction.action == ActionType.SHOT_LOW || currentAction.action == ActionType.SHOT_OUTER || currentAction.action == ActionType.SHOT_INNER) {
+        if (currentAction.action == ActionType.SHOT_LOW ||
+            currentAction.action == ActionType.SHOT_OUTER ||
+            currentAction.action == ActionType.SHOT_INNER) {
           if (currentAction.x == x && currentAction.y == y) {
-            shotsMade ++;
+            shotsMade++;
           }
         }
 
-        if (currentAction.action == ActionType.MISSED_LOW || currentAction.action == ActionType.MISSED_OUTER) {
+        if (currentAction.action == ActionType.MISSED_LOW ||
+            currentAction.action == ActionType.MISSED_OUTER) {
           if (currentAction.x == x && currentAction.y == y) {
-            shotsMissed ++;
+            shotsMissed++;
           }
         }
       }
     }
-    return shotsMade/(shotsMade + shotsMissed);
+    return shotsMade / (shotsMade + shotsMissed);
   }
+
   double calcPtsAtZone(double x, double y) {
     //random values for testing purposes that doesn't work
     double totalPoints = 0;
@@ -368,7 +428,7 @@ class Analyzer {
         }
       }
     }
-    
+
     return totalPoints;
   }
 }

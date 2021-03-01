@@ -8,6 +8,7 @@ class Constants {
   static const double intakeValue = 1.5;
   static const double shotValue = 2; //avg of low, outer, inner
   static const double zoneDisplacementValue = 0.5;
+  static const double maxBallsInBot = 5; //ie max number of balls in bot is 5
   static const double regFoul = -3;
   static const double techFoul = -15;
   static const double yellowCard = -20;
