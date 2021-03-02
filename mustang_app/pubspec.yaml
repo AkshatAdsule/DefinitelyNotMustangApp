@@ -19,7 +19,6 @@ environment:
 dependencies:
   firebase_auth:
   firebase_core:
-  # firebase_database:
   table_calendar:
   flutter_speed_dial:
   flutter_colorpicker:
@@ -27,6 +26,7 @@ dependencies:
   path_provider:
   firebase_storage:
   flutter_native_splash:
+  google_sign_in:
   provider:
 
   flutter:
