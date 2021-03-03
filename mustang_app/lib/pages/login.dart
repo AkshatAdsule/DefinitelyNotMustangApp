@@ -21,7 +21,7 @@ class _LoginState extends State<Login> {
     super.initState();
   }
 
-  Future<AuthResult> signInWithGoogle() async {
+  Future<void> signInWithGoogle(BuildContext context) async {
     try {
       final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
 
@@ -33,7 +33,7 @@ class _LoginState extends State<Login> {
         idToken: googleAuth.idToken,
       );
 
-      AuthResult result = await _auth.signInWithCredential(credential);
+      await _auth.signInWithCredential(credential);
       Navigator.pushNamed(context, '/');
     } catch (error) {
       print('Error: $error');
@@ -43,6 +43,9 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     FirebaseUser user = Provider.of<FirebaseUser>(context);
+    if (user != null) {
+      Navigator.pushNamed(context, '/');
+    }
     return Scaffold(
       // appBar: Header(context, 'Login'),
       bottomNavigationBar: BottomNavBar(context),
@@ -60,7 +63,7 @@ class _LoginState extends State<Login> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(1),
                 ),
-                onPressed: () => signInWithGoogle(),
+                onPressed: () => signInWithGoogle(context),
                 child: Text('Sign In With Google'),
               ),
               RaisedButton(
