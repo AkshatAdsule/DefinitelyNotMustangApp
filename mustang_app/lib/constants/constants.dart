@@ -38,8 +38,8 @@ class Constants {
   static const double climbValue = 25;
   static const double endgameParkValue = 5;
 
-  static int zoneRows = 8;
-  static int zoneColumns = 16;
+  static const int zoneRows = 8;
+  static const int zoneColumns = 16;
 
   //MAP ANALYSIS
   static const int shadingPointDifference = 2;
