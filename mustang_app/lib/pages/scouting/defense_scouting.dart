@@ -114,9 +114,8 @@ class _DefenseScoutingState extends State<DefenseScouting> {
 
     // show the dialog
     showDialog(
-      routeSettings: RouteSettings(arguments: ScreenOrientation.landscapeOnly),
+      builder: (context) => popUp, routeSettings: RouteSettings(arguments: ScreenOrientation.landscapeOnly),
       context: context,
-      child: popUp,
     );
   }
 

@@ -28,8 +28,7 @@ class _SketchPageState extends State<SketchPage> {
 // raise the [showDialog] widget
   void showColorPicker() {
     showDialog(
-      context: context,
-      child: AlertDialog(
+      builder: (context) => AlertDialog(
         title: const Text('Pick a color!'),
         content: SingleChildScrollView(
           child: ColorPicker(
@@ -65,7 +64,7 @@ class _SketchPageState extends State<SketchPage> {
             },
           ),
         ],
-      ),
+      ), context: context,
     );
   }
 
