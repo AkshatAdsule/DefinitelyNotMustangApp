@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class Team {
   String _teamNumber, _drivebaseType, _notes;
@@ -23,9 +24,10 @@ class Team {
       this._hasLeveller);
 
   factory Team.fromSnapshot(DocumentSnapshot snapshot) {
-    Map<String, dynamic> data = snapshot.data;
+    Firebase.initializeApp();
+    Map<String, dynamic> data = snapshot.data();
     return Team(
-      snapshot.documentID,
+      snapshot.id,
       data['drivebaseType'] ?? 'tank',
       data['notes'] ?? '',
       data['innerPort'] ?? false,

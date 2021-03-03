@@ -45,4 +45,6 @@ class Constants {
   static const double colorIncrement = 600 / shadingPointDifference;
   static const int minPtValuePerZonePerGame = 0;
   static const int maxPtValuePerZonePerGame = 5;
+
+  static FirebaseFirestore db = FirebaseFirestore.instance;
 }

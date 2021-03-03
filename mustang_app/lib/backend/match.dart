@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:mustang_app/backend/game_action.dart';
 
 class Match {
@@ -24,9 +25,9 @@ class Match {
   }
 
   factory Match.fromSnapshot(DocumentSnapshot snapshot) {
-    Map<String, dynamic> data = snapshot.data;
+    Map<String, dynamic> data = snapshot.data();
     return Match(
-      snapshot.documentID,
+      snapshot.id,
       data['teamNumber'] ?? '',
       data['allianceColor'] ?? 'blue',
       data['matchResult'] ?? 'Lose',
@@ -34,6 +35,8 @@ class Match {
       data['actions'] != null
           ? List<dynamic>.of(data['actions'])
               .map((e) => GameAction.fromJson(Map<String, dynamic>.from(e)))
+              //Type: ActionType.OTHER_CROSSED_INITIATION_LINE; Duration: 5321.0; Location: (-1.0, -1.0)
+              //Type: ActionType.INTAKE; Duration: 9565.0; Location: (3.0, 5.0)
               .toList()
           : [],
     );

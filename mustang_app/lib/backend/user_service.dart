@@ -1,20 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mustang_app/backend/user.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 class UserService {
-  Firestore _db = Firestore.instance;
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseFirestore _db = FirebaseFirestore.instance;
+  auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
 
-  Future<User> getUser(FirebaseUser user) async {
+  Future<User> getUser(auth.User user) async {
     return User.fromSnapshot(
-        await _db.collection('users').document(user.uid).get());
+        await _db.collection('users').doc(user.uid).get());
   }
 
-  Stream<User> streamUser(FirebaseUser user) {
+  Stream<User> streamUser(User user) {
     return _db
         .collection('users')
-        .document(user.uid)
+        .doc(user.uid)
         .snapshots()
         .map((snap) => User.fromSnapshot(snap));
   }

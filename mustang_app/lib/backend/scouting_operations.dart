@@ -1,27 +1,28 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/backend/team.dart';
 
 class ScoutingOperations {
-  static Firestore _db = Firestore.instance;
+  static FirebaseFirestore _db = FirebaseFirestore.instance;
   static final String _year = DateTime.now().year.toString();
   static final CollectionReference _teamsRef =
-      _db.collection(_year).document('info').collection('teams');
+      _db.collection(_year).doc('info').collection('teams');
   static Future<void> setTeamData(Team team) async {
-    await _teamsRef.document(team.teamNumber).setData(team.toJson());
+    await _teamsRef.doc(team.teamNumber).set(team.toJson());
   }
 
   static Future<void> setMatchData(Match match) async {
     await _teamsRef
-        .document(match.teamNumber)
+        .doc(match.teamNumber)
         .collection('matches')
-        .document(match.matchNumber)
-        .setData(match.toJson());
+        .doc(match.matchNumber)
+        .set(match.toJson());
   }
 
   static Future<bool> doesTeamDataExist(String teamNumber) async {
-    DocumentSnapshot snap = await _teamsRef.document(teamNumber).get();
+    DocumentSnapshot snap = await _teamsRef.doc(teamNumber).get();
     if (snap == null || snap.data == null) {
       return false;
     }
@@ -39,9 +40,9 @@ class ScoutingOperations {
   static Future<bool> doesMatchDataExist(
       String teamNumber, String matchNumber) async {
     DocumentSnapshot snap = await _teamsRef
-        .document(teamNumber)
+        .doc(teamNumber)
         .collection('matches')
-        .document(matchNumber)
+        .doc(matchNumber)
         .get();
     if (snap == null || snap.data == null) {
       return false;
