@@ -7,7 +7,7 @@ import 'package:mustang_app/utils/getStatistics.dart';
 import 'sortTeamsScreen.dart';
 
 class InputScreen extends StatefulWidget {
-  static final String route = '/inputScreen';
+  static const String route = '/inputScreen';
   @override
   _InputScreenState createState() => _InputScreenState();
 }

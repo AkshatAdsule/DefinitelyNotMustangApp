@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mustang_app/pages/pre-event-analysis/inputScreen.dart';
 import 'exports/pages.dart';
 import 'utils/orientation_helpers.dart';
 import 'package:provider/provider.dart';
@@ -74,6 +75,8 @@ class MyApp extends StatelessWidget {
           ),
           settings: rotationSettings(settings, ScreenOrientation.landscapeOnly),
         );
+      case InputScreen.route:
+        return MaterialPageRoute(builder: (context) => InputScreen());
       default:
         return null;
     }

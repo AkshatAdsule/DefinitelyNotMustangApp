@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/pages/pre-event-analysis/inputScreen.dart';
 import '../pages/sketcher.dart';
 import '../pages/calendar.dart';
 import '../pages/scouting/scouter.dart';
@@ -11,6 +12,7 @@ class BottomNavBar extends BottomNavigationBar {
     '/',
     Calendar.route,
     Scouter.route,
+    InputScreen.route,
     SearchPage.route,
     SketchPage.route,
   ];
@@ -35,6 +37,7 @@ class BottomNavBar extends BottomNavigationBar {
               icon: Icon(Icons.list),
               label: 'Scouter',
             ),
+            BottomNavigationBarItem(icon: Icon(Icons.insert_chart_outlined), label: 'Analysis'),
             BottomNavigationBarItem(
               icon: Icon(Icons.search),
               label: 'Data',
