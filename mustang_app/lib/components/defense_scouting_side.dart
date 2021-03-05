@@ -77,6 +77,7 @@ class DefenseScoutingSide extends StatelessWidget {
           Flexible(
             flex: 1,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 game_button.ScoutingButton(
                   style: game_button.ButtonStyle.RAISED,
@@ -90,6 +91,7 @@ class DefenseScoutingSide extends StatelessWidget {
           Flexible(
             flex: 1,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 game_button.ScoutingButton(
                   style: game_button.ButtonStyle.RAISED,
@@ -111,6 +113,7 @@ class DefenseScoutingSide extends StatelessWidget {
           Flexible(
             flex: 1,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 game_button.ScoutingButton(
                   style: game_button.ButtonStyle.RAISED,
@@ -132,6 +135,7 @@ class DefenseScoutingSide extends StatelessWidget {
           Flexible(
             flex: 1,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 game_button.ScoutingButton(
                   style: game_button.ButtonStyle.RAISED,
@@ -154,6 +158,7 @@ class DefenseScoutingSide extends StatelessWidget {
           Flexible(
             flex: 1,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 game_button.ScoutingButton(
                   style: game_button.ButtonStyle.RAISED,

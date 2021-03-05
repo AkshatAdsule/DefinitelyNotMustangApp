@@ -1,8 +1,10 @@
 // import 'dart:html';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/bottom_nav_bar.dart';
 import 'package:mustang_app/backend/game_action.dart';
+import 'package:provider/provider.dart';
 import '../../backend/match.dart';
 import '../../backend/scouting_operations.dart';
 import '../../components/header.dart';
@@ -45,7 +47,7 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
   _MatchEndScouterState(this._teamNumber, this._matchNumber,
       this._allianceColor, this._actions, this._climbLocation);
 
-  void _finishGame(BuildContext context) {
+  void _finishGame(BuildContext context, FirebaseUser user) {
     if (_matchResult == null) {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text("Please select a match result"),
@@ -76,8 +78,12 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
       default:
         break;
     }
-    ScoutingOperations.setMatchData(new Match(_matchNumber, _teamNumber,
-        _allianceColor, _matchResult, _finalCommentsController.text, _actions));
+    ScoutingOperations.setMatchData(
+      new Match(_matchNumber, _teamNumber, _allianceColor, _matchResult,
+          _finalCommentsController.text, _actions),
+      user != null ? user.uid : 'Anonymous',
+      user != null ? user.displayName : 'Anonymous',
+    );
     Navigator.pushNamed(context, PostScouter.route);
   }
 
@@ -95,6 +101,8 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
 
   @override
   Widget build(BuildContext buildContext) {
+    FirebaseUser user = Provider.of<FirebaseUser>(context);
+
     return Scaffold(
       appBar: Header(
         context,
@@ -177,7 +185,7 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
                     EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
                 child: RaisedButton(
                   color: Colors.green,
-                  onPressed: () => _finishGame(context),
+                  onPressed: () => _finishGame(context, user),
                   padding: EdgeInsets.all(15),
                   child: Text(
                     'Submit',

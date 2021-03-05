@@ -18,7 +18,6 @@ class Scouter extends StatefulWidget {
 class _ScouterState extends State<Scouter> {
   TextEditingController _teamNumberController = TextEditingController();
   TextEditingController _matchNumberController = TextEditingController();
-  TextEditingController _namesController = new TextEditingController();
   String _allianceColor = "Blue";
   int _allianceNum = 0;
 
@@ -118,16 +117,6 @@ class _ScouterState extends State<Scouter> {
           ),
         ),
         Container(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
-          child: TextField(
-            controller: _namesController,
-            decoration: InputDecoration(
-              labelText: 'Name',
-              border: OutlineInputBorder(),
-            ),
-          ),
-        ),
-        Container(
           padding: EdgeInsets.all(8.0),
           child: new Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -181,11 +170,6 @@ class _ScouterState extends State<Scouter> {
                             content: Text("Enter a team number"),
                           ));
                           return;
-                        } else if (_namesController.text.isEmpty) {
-                          Scaffold.of(buildContext).showSnackBar(SnackBar(
-                            content: Text("Enter a name"),
-                          ));
-                          return;
                         }
                         ScoutingOperations.doesTeamDataExist(
                                 _teamNumberController.text)
@@ -225,11 +209,6 @@ class _ScouterState extends State<Scouter> {
                         } else if (_matchNumberController.text.isEmpty) {
                           Scaffold.of(buildContext).showSnackBar(SnackBar(
                             content: Text("Enter a match number"),
-                          ));
-                          return;
-                        } else if (_namesController.text.isEmpty) {
-                          Scaffold.of(buildContext).showSnackBar(SnackBar(
-                            content: Text("Enter a name"),
                           ));
                           return;
                         }

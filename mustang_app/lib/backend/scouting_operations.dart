@@ -12,12 +12,16 @@ class ScoutingOperations {
     await _teamsRef.document(team.teamNumber).setData(team.toJson());
   }
 
-  static Future<void> setMatchData(Match match) async {
+  static Future<void> setMatchData(
+    Match match,
+    String uid,
+    String name,
+  ) async {
     await _teamsRef
         .document(match.teamNumber)
         .collection('matches')
         .document(match.matchNumber)
-        .setData(match.toJson());
+        .setData({...match.toJson(), 'name': name, 'userId': uid});
   }
 
   static Future<bool> doesTeamDataExist(String teamNumber) async {

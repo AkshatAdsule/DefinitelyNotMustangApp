@@ -208,7 +208,6 @@ class _MapScoutingState extends State<MapScouting> {
 
   @override
   Widget build(BuildContext context) {
-    print('render: ' + _stopwatch.elapsedMilliseconds.toString());
     Widget scoutingOverlay = IndexedStack(
       index: _onOffense ? 0 : 1,
       children: [
