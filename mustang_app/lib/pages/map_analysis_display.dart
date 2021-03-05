@@ -53,8 +53,15 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
     double ptsAtZone =
         myAnalyzer.calcPtsAtZone(x.toDouble(), y.toDouble()) / totalNumGames;
     double ptsAtZonePerGame = ptsAtZone / totalNumGames;
-    return ((ptsAtZonePerGame / Constants.maxPtValuePerZonePerGame) * 900)
-        .toInt();
+    double colorValue = ((ptsAtZonePerGame / Constants.maxPtValuePerZonePerGame) * 900);
+    int a = ((colorValue/100).toInt())*100; //lower bound of 100
+    int b = ((colorValue/100).toInt() + 1) * 100; //upper bound
+    int returnVal = (colorValue - a > b - colorValue) ? b : a;
+    debugPrint("zone: (" + x.toString() + ", " + y.toString() + ")  points at zone per game: " + ptsAtZonePerGame.toString() + " color value: " + returnVal.toString());  
+    if (returnVal > 900){
+      return 900;
+    }      
+    return returnVal;
   }
 
   int _getAccuracyColorValue(int x, int y) {
@@ -62,8 +69,14 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         myAnalyzer.calcShotAccuracyAtZone(x.toDouble(), y.toDouble());
     double zoneAccuracyOutOf900 = zoneAccuracyOutOf1 * 900;
     if (!zoneAccuracyOutOf900.isInfinite && !zoneAccuracyOutOf900.isNaN) {
-      return (zoneAccuracyOutOf900).toInt();
+      int a = ((zoneAccuracyOutOf900/100).toInt())*100; //lower bound of 100
+      int b = ((zoneAccuracyOutOf900/100).toInt() + 1) * 100; //upper bound
+      int returnVal = (zoneAccuracyOutOf900 - a > b - zoneAccuracyOutOf900) ? b : a;
+      debugPrint("zone: (" + x.toString() + ", " + y.toString() + ")  accuracy out of 900: " + (zoneAccuracyOutOf900).toInt().toString());
+      return returnVal;
+      //return (zoneAccuracyOutOf900).toInt();
     } else {
+      debugPrint("accuracy is 0");
       return 0;
     }
   }
@@ -97,6 +110,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         height: cellHeight,
         decoration:
             BoxDecoration(color: Colors.green[_getScoringColorValue(x, y)]),
+            //BoxDecoration(color: Colors.green),
       );
     });
 
@@ -117,6 +131,9 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
       gameMap =
           GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
     }
+
+    GameMap scoringMap = GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
+    GameMap accuracyMap = GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
 
     switchButton = new MapSwitchButton(this.toggle, _showScoringMap);
 
@@ -158,7 +175,11 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
                   ),
                 ),
               ),
-              gameMap,
+
+              !(switchButton.showScoringMap)
+                        ? accuracyMap
+                        : scoringMap,
+              //gameMap,
 
               //MapShadingKey(switchButton),
               //MapShadingScoringKey(),
