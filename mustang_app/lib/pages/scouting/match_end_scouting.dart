@@ -13,11 +13,16 @@ class MatchEndScouter extends StatefulWidget {
   static const String route = '/MatchEndScouter';
   String _teamNumber, _matchNumber, _allianceColor;
   List<GameAction> _actions;
-  MatchEndScouter(
-      {String teamNumber,
-      String matchNumber,
-      List<GameAction> actions,
-      String allianceColor}) {
+  double _climbLocation;
+
+  MatchEndScouter({
+    String teamNumber,
+    String matchNumber,
+    List<GameAction> actions,
+    String allianceColor,
+    double climbLocation,
+  }) {
+    _climbLocation = climbLocation;
     _teamNumber = teamNumber;
     _matchNumber = matchNumber;
     _actions = actions;
@@ -26,7 +31,7 @@ class MatchEndScouter extends StatefulWidget {
 
   @override
   _MatchEndScouterState createState() => _MatchEndScouterState(
-      _teamNumber, _matchNumber, _allianceColor, _actions);
+      _teamNumber, _matchNumber, _allianceColor, _actions, _climbLocation);
 }
 
 class _MatchEndScouterState extends State<MatchEndScouter> {
@@ -35,9 +40,10 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
   String _matchResult, _endState;
   TextEditingController _finalCommentsController = TextEditingController();
   bool _brokeDown;
+  double _climbLocation;
 
-  _MatchEndScouterState(
-      this._teamNumber, this._matchNumber, this._allianceColor, this._actions);
+  _MatchEndScouterState(this._teamNumber, this._matchNumber,
+      this._allianceColor, this._actions, this._climbLocation);
 
   void _finishGame(BuildContext context) {
     if (_matchResult == null) {

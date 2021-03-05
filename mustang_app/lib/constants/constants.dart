@@ -46,4 +46,10 @@ class Constants {
   static const double colorIncrement = 600 / shadingPointDifference;
   static const int minPtValuePerZonePerGame = 0;
   static const int maxPtValuePerZonePerGame = 5;
+
+  // MAP SCOUTING
+  static const int teleopStartMillis = 15000;
+  static const int endgameStartMillis = 120000;
+  static const int matchEndMillis = 150000;
+  static const int stopwatchLagMillis = 5000;
 }

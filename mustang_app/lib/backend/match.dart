@@ -46,7 +46,7 @@ class Match {
       'finalComments': _notes,
       'allianceColor': _allianceColor,
       'matchResult': _matchResult,
-      'actions': _actions.map((e) => e.toString()).toList(),
+      'actions': _actions.map((e) => e.toJson()).toList(),
     };
   }
 

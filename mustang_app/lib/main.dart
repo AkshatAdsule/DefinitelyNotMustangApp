@@ -43,6 +43,7 @@ class MyApp extends StatelessWidget {
             matchNumber: args['matchNumber'],
             actions: args['actions'],
             allianceColor: args['allianceColor'],
+            climbLocation: args['climbLocation'],
           ),
           settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
         );

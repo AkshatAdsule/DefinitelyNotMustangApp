@@ -10,5 +10,3 @@ export '../pages/scouting/post_scouter.dart';
 export '../pages/scouting/match_end_scouting.dart';
 export '../pages/scouting/pit_scouting.dart';
 export '../pages/scouting/map_scouting.dart';
-export '../pages/scouting/offense_scouting.dart';
-export '../pages/scouting/defense_scouting.dart';
