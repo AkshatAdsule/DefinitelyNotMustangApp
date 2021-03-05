@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/backend/game_action.dart';
 import 'package:mustang_app/components/game_map.dart';
 import 'package:mustang_app/components/header.dart';
+import 'package:mustang_app/components/map_analysis_dropdown.dart';
+import 'package:mustang_app/components/map_analysis_dropdown.dart';
+import 'package:mustang_app/components/map_analysis_dropdown.dart';
 import 'package:mustang_app/components/map_analysis_text.dart';
 import 'package:mustang_app/components/map_switch_button.dart';
 import 'package:mustang_app/components/zone_grid.dart';
@@ -25,6 +29,10 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
   bool _showScoringMap = true;
   GameMap gameMap;
   MapSwitchButton switchButton;
+  ActionType _currentActionType = ActionType.SHOT_LOW;
+  GlobalKey<MapAnalysisDropdownState> _myKey = GlobalKey(); 
+      ActionType currentActionType = ActionType.SHOT_LOW;
+
 
   String _scoringText = Constants.minPtValuePerZonePerGame.toString() +
       " total pts                                                                     " +
@@ -32,6 +40,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
       " total pts";
   String _accuracyText =
       "0%                                                                  100%";
+
 
   _MapAnalysisDisplayState(String teamNumber) {
     myAnalyzer = new Analyzer(teamNumber);
@@ -58,7 +67,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
     int b = ((colorValue/100).toInt() + 1) * 100; //upper bound
     int returnVal = (colorValue - a > b - colorValue) ? b : a;
     if (returnVal > 0){
-    debugPrint("zone: (" + x.toString() + ", " + y.toString() + ")  points at zone per game: " + ptsAtZonePerGame.toString() + " color value: " + returnVal.toString());  
+    //debugPrint("zone: (" + x.toString() + ", " + y.toString() + ")  points at zone per game: " + ptsAtZonePerGame.toString() + " color value: " + returnVal.toString());  
     }
     if (returnVal > 900){
       return 900;
@@ -74,11 +83,11 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
       int a = ((zoneAccuracyOutOf900/100).toInt())*100; //lower bound of 100
       int b = ((zoneAccuracyOutOf900/100).toInt() + 1) * 100; //upper bound
       int returnVal = (zoneAccuracyOutOf900 - a > b - zoneAccuracyOutOf900) ? b : a;
-      debugPrint("zone: (" + x.toString() + ", " + y.toString() + ")  accuracy out of 900: " + (zoneAccuracyOutOf900).toInt().toString());
+      //debugPrint("zone: (" + x.toString() + ", " + y.toString() + ")  accuracy out of 900: " + (zoneAccuracyOutOf900).toInt().toString());
       return returnVal;
       //return (zoneAccuracyOutOf900).toInt();
     } else {
-      debugPrint("accuracy is 0");
+      //debugPrint("accuracy is 0");
       return 0;
     }
   }
@@ -101,6 +110,14 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
 
   @override
   Widget build(BuildContext context) {
+    MapAnalysisDropdown  dropdown =   MapAnalysisDropdown(key: _myKey,);
+    MapAnalysisDropdown drop2 = new MapAnalysisDropdown();
+    //ActionType currentAction = _myKey.currentActionType;
+    ActionType currentAction = MapAnalysisDropdownState().currentActionType;
+    //debugPrint("current action type: " + _myKey.currentState.currentActionType.toString());
+    //debugPrint("right before the one i wanna test");
+        debugPrint("current action type in display: " + currentAction.toString());
+
     if (!myAnalyzer.initialized) {
       myAnalyzer.init().then((value) => setState(() {}));
     }
@@ -138,18 +155,63 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
     GameMap accuracyMap = GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
 
     switchButton = new MapSwitchButton(this.toggle, _showScoringMap);
-
-    return Scaffold(
-      appBar: Header(context, 'Analysis'),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+    var children2 = <Widget>[
               //Image.asset('assets/croppedmap.png', fit: BoxFit.contain),
               MapAnalysisText(myAnalyzer),
               switchButton,
-
+              //drop2,
+              ListTile(
+            title: Text(
+              'Action Type',
+              textAlign: TextAlign.right,
+              style: new TextStyle(
+                fontSize: 14,
+                color: Colors.grey[800],
+                fontWeight: FontWeight.bold,
+                background: Paint()
+                            ..strokeWidth = 30.0
+                            ..color = Colors.green[300]
+                            ..style = PaintingStyle.stroke
+                            ..strokeJoin = StrokeJoin.bevel,
+              ),
+            ),
+            trailing: DropdownButton<ActionType>(
+              value: currentActionType,
+              icon: Icon(Icons.arrow_downward),
+              iconSize: 24,
+              elevation: 16,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.green[300],
+                fontWeight: FontWeight.bold
+                ),
+                
+              underline: Container(
+                height: 2,
+                color: Colors.grey[50],
+              ),
+              
+              onChanged: (ActionType actionType) {
+                setState(() {
+                  currentActionType = actionType;
+                });
+              },
+              items: <ActionType>[
+                ActionType.SHOT_LOW,
+                ActionType.SHOT_OUTER,
+                ActionType.SHOT_INNER
+              ].map<DropdownMenuItem<ActionType>>((ActionType actionType) {
+                return DropdownMenuItem<ActionType>(
+                  value: actionType,
+                  child: Center(
+                      child: Text(actionType
+                          .toString()
+                          .substring(actionType.toString().indexOf('.') + 1))),
+                );
+              }).toList(),
+            ),
+          ),
+          //accuracy is darker, scoring lighter
               //i need to have it here bc otherwise it won't update showScoringMap
               Ink(
                 decoration: BoxDecoration(
@@ -181,12 +243,20 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
               !(switchButton.showScoringMap)
                         ? accuracyMap
                         : scoringMap,
+              
               //gameMap,
 
               //MapShadingKey(switchButton),
               //MapShadingScoringKey(),
               //MapShadingAccuracyKey(),
-            ],
+            ];
+    return Scaffold(
+      appBar: Header(context, 'Analysis'),
+      body: Container(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: children2,
           ),
         ),
       ),

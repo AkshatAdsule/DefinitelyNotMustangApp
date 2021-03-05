@@ -182,7 +182,7 @@ class Analyzer {
   double calcOffenseShootingPts() {
     double _lowPts = 0.0, _outerPts = 0.0, _innerPts = 0.0;
     for (int i = 0; i < _shotLow.length; i++) {
-      debugPrint("low shot at (" + _shotLow[i].x.toString() + ", " + _shotLow[i].y.toString() + ")");
+      //debugPrint("low shot at (" + _shotLow[i].x.toString() + ", " + _shotLow[i].y.toString() + ")");
       if (_shotLow[i].timeStamp <= Constants.autonMillisecondLength) {
         _lowPts += Constants.lowShotAutonValue;
       } else {
@@ -192,7 +192,7 @@ class Analyzer {
 
     for (int i = 0; i < _shotOuter.length; i++) {
       if (_shotOuter[i].timeStamp <= Constants.autonMillisecondLength) {
-        debugPrint("outer shot at (" + _shotOuter[i].x.toString() + ", " + _shotOuter[i].y.toString() + ")");
+        //debugPrint("outer shot at (" + _shotOuter[i].x.toString() + ", " + _shotOuter[i].y.toString() + ")");
 
         _outerPts += Constants.outerShotAutonValue;
       } else {
@@ -202,7 +202,7 @@ class Analyzer {
 
     for (int i = 0; i < _shotInner.length; i++) {
       if (_shotInner[i].timeStamp <= Constants.autonMillisecondLength) {
-        debugPrint("inner shot at (" + _shotInner[i].x.toString() + ", " + _shotInner[i].y.toString() + ")");
+        //debugPrint("inner shot at (" + _shotInner[i].x.toString() + ", " + _shotInner[i].y.toString() + ")");
 
         _innerPts += Constants.innerShotAutonValue;
       } else {
