@@ -219,12 +219,20 @@ class _ScouterState extends State<Scouter> {
                           if (exists) {
                             showAlertDialog(context, false);
                           } else {
-                            Navigator.pushNamed(context, MapScouting.route,
-                                arguments: {
-                                  'teamNumber': _teamNumberController.text,
-                                  'matchNumber': _matchNumberController.text,
-                                  'allianceColor': _allianceColor,
-                                });
+                            ScoutingOperations.doesTeamDataExist(
+                                    _teamNumberController.text)
+                                .then((bool exists) {
+                              if (!exists) {
+                                ScoutingOperations.initTeamData(
+                                    _teamNumberController.text);
+                              }
+                              Navigator.pushNamed(context, MapScouting.route,
+                                  arguments: {
+                                    'teamNumber': _teamNumberController.text,
+                                    'matchNumber': _matchNumberController.text,
+                                    'allianceColor': _allianceColor,
+                                  });
+                            });
                           }
                         });
                       });

@@ -59,4 +59,8 @@ class ScoutingOperations {
       return true;
     }
   }
+
+  static Future<void> initTeamData(String teamNumber) async {
+    await _teamsRef.document(teamNumber).setData({'teamNumber': teamNumber});
+  }
 }
