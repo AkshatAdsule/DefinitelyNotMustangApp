@@ -57,6 +57,9 @@ class Analyzer {
     if (!_initialized || _allMatches.length == 0) {
       return "No analysis available";
     }
+
+    _clearAllData();
+      _collectData();
     //TEST TO SEE IF DATA RLY NEEDS TO BE COLLECTED!!
     if (_allMatches.length > _oldAllMatchLength) {
       _oldAllMatchLength = _allMatches.length;
@@ -88,16 +91,20 @@ class Analyzer {
     return "Team: " +
         _teamNum        +
         "\nShooting pts/game: " +
-        (calcTotOffenseShootingPts() / _totalNumGames).round().toString() +
+        (calcOffenseShootingPts() / _totalNumGames).round().toString() +
+        "    Non-shooting pts/game: " +
+                (calcOffenseNonShootingPts() / _totalNumGames).round().toString() +
+
         "    Climb Accuracy: " +
         calcTotClimbAccuracy().round().toString() +
         "%"        +
-        "    Points prevented/game: " +
-        (calcTotPtsPrev() / _totalNumGames).round().toString() +
+        
         "    Shot Accuracy: " +
         calcShotAccuracy().round().toString() +
         "%" +
         "\n" +
+        "Points prevented/game: " +
+        (calcTotPtsPrev() / _totalNumGames).round().toString() +
         fouls;
   }
 
@@ -172,9 +179,10 @@ class Analyzer {
     _pushEnd = [];
   }
 
-  double calcTotOffenseShootingPts() {
+  double calcOffenseShootingPts() {
     double _lowPts = 0.0, _outerPts = 0.0, _innerPts = 0.0;
     for (int i = 0; i < _shotLow.length; i++) {
+      debugPrint("low shot at (" + _shotLow[i].x.toString() + ", " + _shotLow[i].y.toString() + ")");
       if (_shotLow[i].timeStamp <= Constants.autonMillisecondLength) {
         _lowPts += Constants.lowShotAutonValue;
       } else {
@@ -184,6 +192,8 @@ class Analyzer {
 
     for (int i = 0; i < _shotOuter.length; i++) {
       if (_shotOuter[i].timeStamp <= Constants.autonMillisecondLength) {
+        debugPrint("outer shot at (" + _shotOuter[i].x.toString() + ", " + _shotOuter[i].y.toString() + ")");
+
         _outerPts += Constants.outerShotAutonValue;
       } else {
         _outerPts += Constants.outerShotValue;
@@ -192,21 +202,25 @@ class Analyzer {
 
     for (int i = 0; i < _shotInner.length; i++) {
       if (_shotInner[i].timeStamp <= Constants.autonMillisecondLength) {
+        debugPrint("inner shot at (" + _shotInner[i].x.toString() + ", " + _shotInner[i].y.toString() + ")");
+
         _innerPts += Constants.innerShotAutonValue;
       } else {
         _innerPts += Constants.innerShotValue;
       }
     }
 
-    double _rotationControl =
-        _otherWheelRotation.length * Constants.positionControl;
+    return _lowPts +
+        _outerPts +
+        _innerPts;
+  }
+
+  double calcOffenseNonShootingPts() {
+    double _rotationControl = _otherWheelRotation.length * Constants.positionControl;
     double _positionControl =
         _otherWheelPosition.length * Constants.positionControl;
     double _climb = _otherClimb.length * Constants.climbValue;
-    return _lowPts +
-        _outerPts +
-        _innerPts +
-        _rotationControl +
+    return _rotationControl +
         _positionControl +
         _climb;
   }

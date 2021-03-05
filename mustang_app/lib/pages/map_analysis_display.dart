@@ -57,7 +57,9 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
     int a = ((colorValue/100).toInt())*100; //lower bound of 100
     int b = ((colorValue/100).toInt() + 1) * 100; //upper bound
     int returnVal = (colorValue - a > b - colorValue) ? b : a;
+    if (returnVal > 0){
     debugPrint("zone: (" + x.toString() + ", " + y.toString() + ")  points at zone per game: " + ptsAtZonePerGame.toString() + " color value: " + returnVal.toString());  
+    }
     if (returnVal > 900){
       return 900;
     }      
