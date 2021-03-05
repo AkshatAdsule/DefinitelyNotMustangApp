@@ -67,6 +67,18 @@ class Analyzer {
       _clearAllData();
       _collectData();
     }
+    if (totalNumGames == 0){
+      return "There are no recorded games";
+    }
+    int _shootingPtsPerGame  = (calcOffenseShootingPts() / _totalNumGames).round();
+    int _nonShootingsPtsPerGame = (calcOffenseNonShootingPts() / _totalNumGames).round();
+    int _climbAccuracy = calcTotClimbAccuracy().round();
+    int _shotAccuracy = calcShotAccuracy().round();
+    int _ptsPreventedPerGame = (calcTotPtsPrev() / _totalNumGames).round();
+
+    if (_shootingPtsPerGame ==  double.nan || _shootingPtsPerGame == double.infinity){
+      _shootingPtsPerGame = null;
+    }
 
     String fouls = "";
     if (_foulReg.length > 0) {
@@ -88,24 +100,12 @@ class Analyzer {
       fouls += "    Disqual Fouls: " + _foulDisqual.length.toString();
     }
 
-    return "Team: " +
-        _teamNum        +
-        "\nShooting pts/game: " +
-        (calcOffenseShootingPts() / _totalNumGames).round().toString() +
-        "    Non-shooting pts/game: " +
-                (calcOffenseNonShootingPts() / _totalNumGames).round().toString() +
-
-        "    Climb Accuracy: " +
-        calcTotClimbAccuracy().round().toString() +
-        "%"        +
-        
-        "    Shot Accuracy: " +
-        calcShotAccuracy().round().toString() +
-        "%" +
-        "\n" +
-        "Points prevented/game: " +
-        (calcTotPtsPrev() / _totalNumGames).round().toString() +
-        fouls;
+    return "Team: " + _teamNum +
+        "\nShooting pts/game: " + _shootingPtsPerGame.toString() +
+        "    Non-shooting pts/game: " + _nonShootingsPtsPerGame.toString() +
+        "    Climb Accuracy: " + _climbAccuracy.toString() +
+        "%\n    Shot Accuracy: " + _shotAccuracy.toString() +
+        "%    Pts prevented/game: " + _ptsPreventedPerGame.toString() + fouls;
   }
 
   void _collectData() {
@@ -229,7 +229,12 @@ class Analyzer {
     int _successfulShots =
         _shotLow.length + _shotOuter.length + _shotInner.length;
     int _missedShots = _missedLow.length + _missedOuter.length;
-    return (_successfulShots / (_successfulShots + _missedShots)) * 100.0;
+    if (_successfulShots + _missedShots != 0){
+          return (_successfulShots / (_successfulShots + _missedShots)) * 100.0;
+    }
+    else{
+      return 0;
+    }
   }
 
   double calcTotClimbAccuracy() {
@@ -396,6 +401,9 @@ class Analyzer {
           }
         }
       }
+    }
+    if (shotsMade + shotsMissed == 0){
+      return 0;
     }
     return shotsMade / (shotsMade + shotsMissed);
   }

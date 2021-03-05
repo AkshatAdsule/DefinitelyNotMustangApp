@@ -32,7 +32,8 @@ class _MapAnalysisTextState extends State<MapAnalysisText> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(myAnalyzer.getReport(),
+                    Text(
+                        myAnalyzer.getReport(),
                         textAlign: TextAlign.center,
 
                         //textDirection: TextDirection.ltr,
