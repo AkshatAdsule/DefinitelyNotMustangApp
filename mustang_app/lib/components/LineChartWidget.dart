@@ -278,22 +278,31 @@ class LineChartWidget extends StatelessWidget {
     return SizedBox(
       width: width,
       height: height,
-      child: new charts.LineChart(
-        this.data,
-        animate: true,
-        domainAxis: new charts.NumericAxisSpec(
-          viewport: new charts.NumericExtents(2001.0, 2020.0),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: new charts.LineChart(
+          this.data,
+          animate: true,
+          domainAxis: new charts.NumericAxisSpec(
+            viewport: new charts.NumericExtents(2001.0, 2020.0),
+          ),
+          behaviors: [
+            new charts.ChartTitle('Year',
+                behaviorPosition: charts.BehaviorPosition.bottom,
+                titleOutsideJustification:
+                    charts.OutsideJustification.middleDrawArea),
+            new charts.ChartTitle('Stat',
+                behaviorPosition: charts.BehaviorPosition.start,
+                titleOutsideJustification:
+                    charts.OutsideJustification.middleDrawArea),
+            new charts.SeriesLegend(
+                position: charts.BehaviorPosition.top,
+                horizontalFirst: false,
+                desiredMaxRows: 5,
+                cellPadding: new EdgeInsets.only(right: 150.0, bottom: 5.0),
+              )
+          ],
         ),
-        behaviors: [
-          new charts.ChartTitle('Year',
-              behaviorPosition: charts.BehaviorPosition.bottom,
-              titleOutsideJustification:
-                  charts.OutsideJustification.middleDrawArea),
-          new charts.ChartTitle('Stat',
-              behaviorPosition: charts.BehaviorPosition.start,
-              titleOutsideJustification:
-                  charts.OutsideJustification.middleDrawArea),
-        ],
       ),
     );
   }
