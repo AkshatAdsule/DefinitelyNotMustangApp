@@ -29,7 +29,8 @@ class TeamDataAnalyzer {
   static Future<void> init() async {
     await Firebase.initializeApp();
     _teams = (await Constants.db.collection('teams').snapshots().first).docs;
-    _matches = (await Constants.db.collectionGroup('matches').snapshots().first).docs;
+    _matches =
+        (await Constants.db.collectionGroup('matches').snapshots().first).docs;
     _updateTeamNumbers();
     _calcAverages();
     _initialized = true;
@@ -80,10 +81,7 @@ class TeamDataAnalyzer {
   }
 
   static DocumentSnapshot getTeamDoc(String teamNumber) {
-    return _teams
-        .where((element) => element.id == teamNumber)
-        .toList()
-        .first;
+    return _teams.where((element) => element.id == teamNumber).toList().first;
   }
 
   static List<DocumentSnapshot> getMatchDocs(String teamNumber) {

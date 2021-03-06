@@ -18,7 +18,8 @@ class TeamsService {
     CollectionReference ref =
         _db.collection(_year).doc('info').collection('teams');
 
-    return ref.snapshots().map(
-        (list) => list.docs.map((doc) => Team.fromSnapshot(doc)).toList());
+    return ref
+        .snapshots()
+        .map((list) => list.docs.map((doc) => Team.fromSnapshot(doc)).toList());
   }
 }

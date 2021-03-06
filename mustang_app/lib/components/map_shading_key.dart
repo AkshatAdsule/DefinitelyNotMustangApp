@@ -47,7 +47,6 @@ class _MapShadingKeyState extends State<MapShadingKey> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            
             Container(
               height: 50.0,
               child: RaisedButton(
@@ -68,9 +67,10 @@ class _MapShadingKeyState extends State<MapShadingKey> {
                         BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
                     alignment: Alignment.center,
                     child: Text(
-                      Constants.minPtValuePerZonePerGame.toString() + 
-                      " total pts                                            " +
-                      Constants.maxPtValuePerZonePerGame.toString() + " total pts",
+                      Constants.minPtValuePerZonePerGame.toString() +
+                          " total pts                                            " +
+                          Constants.maxPtValuePerZonePerGame.toString() +
+                          " total pts",
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.white),
                     ),

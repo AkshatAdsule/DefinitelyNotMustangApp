@@ -39,14 +39,17 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
 
   int _getScoringColorValue(int x, int y) {
     double totalNumGames = myAnalyzer.totalNumGames().toDouble();
-    double ptsAtZone = myAnalyzer.calcPtsAtZone(x.toDouble(), y.toDouble())/totalNumGames;
-    double ptsAtZonePerGame = ptsAtZone/totalNumGames;
-    return ((ptsAtZonePerGame/Constants.maxPtValuePerZonePerGame) * 600).toInt();
+    double ptsAtZone =
+        myAnalyzer.calcPtsAtZone(x.toDouble(), y.toDouble()) / totalNumGames;
+    double ptsAtZonePerGame = ptsAtZone / totalNumGames;
+    return ((ptsAtZonePerGame / Constants.maxPtValuePerZonePerGame) * 600)
+        .toInt();
   }
 
-  int _getAccuracyColorValue(int x, int y){
-    double zoneAccuracyOutOf1 = myAnalyzer.calcShotAccuracyAtZone(x.toDouble(), y.toDouble());
-    return (600*zoneAccuracyOutOf1).toInt();
+  int _getAccuracyColorValue(int x, int y) {
+    double zoneAccuracyOutOf1 =
+        myAnalyzer.calcShotAccuracyAtZone(x.toDouble(), y.toDouble());
+    return (600 * zoneAccuracyOutOf1).toInt();
   }
 
   //zones start at 0, see miro but climb up, no sense of columns or row so need to convert
@@ -77,7 +80,8 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
       return Container(
         width: cellWidth,
         height: cellHeight,
-        decoration: BoxDecoration(color: Colors.green[_getScoringColorValue(x, y)]),
+        decoration:
+            BoxDecoration(color: Colors.green[_getScoringColorValue(x, y)]),
       );
     });
 
@@ -86,7 +90,8 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
       return Container(
         width: cellWidth,
         height: cellHeight,
-        decoration: BoxDecoration(color: Colors.green[_getAccuracyColorValue(x, y)]),
+        decoration:
+            BoxDecoration(color: Colors.green[_getAccuracyColorValue(x, y)]),
       );
     });
 
@@ -99,9 +104,11 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
       gameMap = GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
     }
     */
-    GameMap scoringGameMap = GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
+    GameMap scoringGameMap =
+        GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
 
-    GameMap accuracyGameMap = GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
+    GameMap accuracyGameMap =
+        GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
 
     return Scaffold(
       appBar: Header(context, 'Analysis'),

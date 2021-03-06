@@ -268,11 +268,16 @@ class Analyzer {
     }
 
     for (int i = 0; i < _pushStart.length; i++) {
-      var _actualDisplacement = calcDisplacement(_pushStart[i].x, _pushStart[i].y, _pushEnd[i].x, _pushEnd[i].y);
-      var _pushTimeSeconds = (_pushEnd[i].timeStamp - _pushStart[i].timeStamp)/1000;
+      var _actualDisplacement = calcDisplacement(
+          _pushStart[i].x, _pushStart[i].y, _pushEnd[i].x, _pushEnd[i].y);
+      var _pushTimeSeconds =
+          (_pushEnd[i].timeStamp - _pushStart[i].timeStamp) / 1000;
       var _predictedDisplacement = _normalVelocity * _pushTimeSeconds;
-      var _zoneDisplacementDifference = (_predictedDisplacement - _actualDisplacement)/Constants.zoneSideLength;
-      _result += (_zoneDisplacementDifference * Constants.zoneDisplacementValue);
+      var _zoneDisplacementDifference =
+          (_predictedDisplacement - _actualDisplacement) /
+              Constants.zoneSideLength;
+      _result +=
+          (_zoneDisplacementDifference * Constants.zoneDisplacementValue);
     }
     //debugPrint("pushPtsPrev: " + _result.toString());
     var test = _allMatches[0];
@@ -306,28 +311,32 @@ class Analyzer {
   }
 
   //for map display, takes in a zone and returns offense pts scored there
-  double calcShotAccuracyAtZone(double x, double y){
+  double calcShotAccuracyAtZone(double x, double y) {
     double shotsMade = 0;
     double shotsMissed = 0;
     for (int i = 0; i < _allMatches.length; i++) {
       //inside each array of actions
       for (int j = 0; j < _allMatches[i].actions.length; j++) {
         GameAction currentAction = _allMatches[i].actions[j];
-        if (currentAction.action == ActionType.SHOT_LOW || currentAction.action == ActionType.SHOT_OUTER || currentAction.action == ActionType.SHOT_INNER) {
+        if (currentAction.action == ActionType.SHOT_LOW ||
+            currentAction.action == ActionType.SHOT_OUTER ||
+            currentAction.action == ActionType.SHOT_INNER) {
           if (currentAction.x == x && currentAction.y == y) {
-            shotsMade ++;
+            shotsMade++;
           }
         }
 
-        if (currentAction.action == ActionType.MISSED_LOW || currentAction.action == ActionType.MISSED_OUTER) {
+        if (currentAction.action == ActionType.MISSED_LOW ||
+            currentAction.action == ActionType.MISSED_OUTER) {
           if (currentAction.x == x && currentAction.y == y) {
-            shotsMissed ++;
+            shotsMissed++;
           }
         }
       }
     }
-    return shotsMade/(shotsMade + shotsMissed);
+    return shotsMade / (shotsMade + shotsMissed);
   }
+
   double calcPtsAtZone(double x, double y) {
 //needs to be called to initialize
     // String random = getReport();
