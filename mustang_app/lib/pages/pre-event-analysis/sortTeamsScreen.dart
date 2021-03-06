@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:mustang_app/components/OverallScoreDisplay.dart';
+import 'package:mustang_app/components/TeamStatsDisplay.dart';
 import 'package:mustang_app/components/teamWidget.dart';
 import 'package:mustang_app/utils/TeamStatistic.dart';
 import 'package:mustang_app/utils/getStatistics.dart';
@@ -10,13 +11,13 @@ class SortTeamsPage extends StatefulWidget {
   final List<String> teams;
   final String sortBy;
 
-  SortTeamsPage({@required this.teams, @required this.sortBy});
+  SortTeamsPage({this.teams, this.sortBy});
 
   _SortTeamsPageState createState() => _SortTeamsPageState();
 }
 
 class _SortTeamsPageState extends State<SortTeamsPage> {
-  List<TeamWidget> teamWidgets = [];
+  List<TeamStatsDisplay> teamWidgets = [];
   GetStatistics getStatistics = new GetStatistics();
 
   double _maxScore = 0;
@@ -48,9 +49,10 @@ class _SortTeamsPageState extends State<SortTeamsPage> {
 
     for (int i = teamStats.length - 1; i >= 0; i--) {
       setState(() {
-        teamWidgets.add(new TeamWidget(
+        teamWidgets.add(new TeamStatsDisplay(
           teamStatistic: teamStats[i],
-          maxScore: _maxScore,
+          max: _maxScore,
+          score: OverAllScoreDisplay.calculateScore(teamStats[i]),
         ));
       });
     }

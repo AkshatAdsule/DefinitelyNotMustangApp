@@ -43,7 +43,7 @@ class TeamService {
         .doc(teamNumber)
         .collection('matches');
 
-    return ref.snapshots().map((list) =>
-        list.docs.map((doc) => Match.fromSnapshot(doc)).toList());
+    return ref.snapshots().map(
+        (list) => list.docs.map((doc) => Match.fromSnapshot(doc)).toList());
   }
 }

@@ -64,7 +64,8 @@ class _SketchPageState extends State<SketchPage> {
             },
           ),
         ],
-      ), context: context,
+      ),
+      context: context,
     );
   }
 

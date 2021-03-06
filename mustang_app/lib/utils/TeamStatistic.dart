@@ -185,14 +185,14 @@ class EventStatistic {
   int year;
 
   EventStatistic(
-      {@required this.event,
-      @required this.year,
-      @required this.team,
-      @required this.opr,
-      @required this.dpr,
-      @required this.ccwm,
-      @required this.winRate,
-      @required this.pointContribution});
+      {this.event,
+      this.year,
+      this.team,
+      this.opr,
+      this.dpr,
+      this.ccwm,
+      this.winRate,
+      this.pointContribution});
 
   Map<String, dynamic> toJson() {
     return {

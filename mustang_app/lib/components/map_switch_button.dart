@@ -14,30 +14,28 @@ class _MapSwitchButtonState extends State<MapSwitchButton> {
   bool _accuracyMapText = true;
 
   //should display show accuracy map or not (scoring)
-  bool displayAccuracyMap (){
+  bool displayAccuracyMap() {
     return !_accuracyMapText;
   }
 
   @override
-  Widget build(BuildContext context) {  
+  Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(10),
       child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            
             Container(
               height: 50.0,
               child: RaisedButton(
                 onPressed: () {
-                  if (_accuracyMapText){
-                    setState((){
+                  if (_accuracyMapText) {
+                    setState(() {
                       _accuracyMapText = false;
                     });
-                  }
-                  else{
-                    setState((){
+                  } else {
+                    setState(() {
                       _accuracyMapText = true;
                     });
                   }
@@ -54,15 +52,14 @@ class _MapSwitchButtonState extends State<MapSwitchButton> {
                       ),
                       borderRadius: BorderRadius.circular(80.0)),
                   child: Container(
-                    constraints:
-                        BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
-                    alignment: Alignment.center,
-                    child: Text(
+                      constraints:
+                          BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
+                      alignment: Alignment.center,
+                      child: Text(
                         !_accuracyMapText ? "Scoring Map" : "Accuracy Map",
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.white),
-                    )
-                  ),
+                      )),
                 ),
               ),
             ),

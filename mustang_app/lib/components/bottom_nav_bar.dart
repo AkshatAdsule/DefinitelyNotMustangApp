@@ -37,7 +37,8 @@ class BottomNavBar extends BottomNavigationBar {
               icon: Icon(Icons.list),
               label: 'Scouter',
             ),
-            BottomNavigationBarItem(icon: Icon(Icons.insert_chart_outlined), label: 'Analysis'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.insert_chart_outlined), label: 'Analysis'),
             BottomNavigationBarItem(
               icon: Icon(Icons.search),
               label: 'Data',

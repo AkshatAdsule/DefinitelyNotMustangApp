@@ -10,8 +10,7 @@ class User {
     this._lastName,
   );
 
-  factory User.fromSnapshot(DocumentSnapshot
-   snapshot) {
+  factory User.fromSnapshot(DocumentSnapshot snapshot) {
     Map<String, dynamic> data = snapshot.data();
     return User(
       snapshot.id,

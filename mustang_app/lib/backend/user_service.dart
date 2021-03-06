@@ -7,8 +7,7 @@ class UserService {
   auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
 
   Future<User> getUser(auth.User user) async {
-    return User.fromSnapshot(
-        await _db.collection('users').doc(user.uid).get());
+    return User.fromSnapshot(await _db.collection('users').doc(user.uid).get());
   }
 
   Stream<User> streamUser(User user) {
