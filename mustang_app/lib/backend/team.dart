@@ -23,6 +23,9 @@ class Team {
       this._hasLeveller);
 
   factory Team.fromSnapshot(DocumentSnapshot snapshot) {
+    if (!snapshot.exists) {
+      return null;
+    }
     Map<String, dynamic> data = snapshot.data;
     return Team(
       snapshot.documentID,

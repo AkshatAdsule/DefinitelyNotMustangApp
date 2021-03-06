@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mustang_app/components/bottom_nav_bar.dart';
-import 'package:mustang_app/components/header.dart';
 import 'package:provider/provider.dart';
-
-import 'homepage.dart';
 
 class Login extends StatefulWidget {
   static const String route = '/login';
@@ -48,16 +44,15 @@ class _LoginState extends State<Login> {
     }
     return Scaffold(
       // appBar: Header(context, 'Login'),
-      bottomNavigationBar: BottomNavBar(context),
       body: Container(
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircleAvatar(
-                radius: 100,
-                backgroundImage: AssetImage('assets/logo.png'),
+              FractionallySizedBox(
+                child: Image.asset('assets/logo.png'),
+                widthFactor: 0.55,
               ),
               RaisedButton(
                 shape: RoundedRectangleBorder(

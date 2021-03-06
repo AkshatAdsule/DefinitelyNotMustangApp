@@ -16,6 +16,11 @@ class MyApp extends StatelessWidget {
   Route<dynamic> _onGenerateRoute(RouteSettings settings) {
     Map<String, dynamic> args = settings.arguments;
     switch (settings.name) {
+      case Splash.route:
+        return MaterialPageRoute(
+          builder: (context) => Splash(),
+          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
+        );
       case Login.route:
         return MaterialPageRoute(
           builder: (context) => Login(),
@@ -99,19 +104,17 @@ class MyApp extends StatelessWidget {
       providers: [
         StreamProvider<FirebaseUser>.value(
             value: FirebaseAuth.instance.onAuthStateChanged),
-        // StreamProvider<User>.value(
-        //   value: _userService.streamUser(
-        //     Provider.of<FirebaseUser>(context),
-        //   ),
-        // )
+        Provider<UserService>(
+          create: (_) => UserService(),
+        )
       ],
       child: MaterialApp(
         title: 'Mustang App',
         theme: ThemeData(
           primarySwatch: Colors.green,
         ),
-        home: HomePage(),
-        initialRoute: Login.route,
+        home: Splash(),
+        initialRoute: Splash.route,
         navigatorObservers: [_observer],
         onGenerateRoute: (settings) => _onGenerateRoute(settings),
       ),

@@ -11,6 +11,9 @@ class User {
   );
 
   factory User.fromSnapshot(DocumentSnapshot snapshot) {
+    if (!snapshot.exists) {
+      return null;
+    }
     Map<String, dynamic> data = snapshot.data;
     return User(
       snapshot.documentID,

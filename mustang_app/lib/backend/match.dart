@@ -24,6 +24,9 @@ class Match {
   }
 
   factory Match.fromSnapshot(DocumentSnapshot snapshot) {
+    if (!snapshot.exists) {
+      return null;
+    }
     Map<String, dynamic> data = snapshot.data;
     return Match(
       snapshot.documentID,
