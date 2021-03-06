@@ -9,7 +9,7 @@ class Event {
   String eventCode;
   int year;
 
-  Event({@required this.eventCode, @required this.year});
+  Event({this.eventCode, this.year});
 
   Map<String, dynamic> toJson() {
     return {"eventCode": eventCode, "year": year};

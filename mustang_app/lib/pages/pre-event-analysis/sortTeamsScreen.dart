@@ -11,7 +11,7 @@ class SortTeamsPage extends StatefulWidget {
   final List<String> teams;
   final String sortBy;
 
-  SortTeamsPage({@required this.teams, @required this.sortBy});
+  SortTeamsPage({this.teams, this.sortBy});
 
   _SortTeamsPageState createState() => _SortTeamsPageState();
 }
