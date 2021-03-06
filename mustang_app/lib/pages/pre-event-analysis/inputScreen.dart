@@ -15,7 +15,7 @@ class InputScreen extends StatefulWidget {
 class _InputScreenState extends State<InputScreen> {
   String input;
   String inputEvent;
-  String sortBy;
+  String sortBy = "opr";
   List<String> teams = [];
   GetStatistics getStatistics = new GetStatistics();
   List<String> sortByValues = ['opr', 'dpr', 'ccwm', 'winRate'];
@@ -127,51 +127,34 @@ class _InputScreenState extends State<InputScreen> {
             SizedBox(
               height: 10,
             ),
-            Row (
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 20
-                ),
-                Expanded(
-                  child:
-                  Center( 
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Container(
-                        height: 30,
-                        child: Text(
-                          teams.toString()
-                        )
-                      )
-                    )
-                  )
-                ), 
-                SizedBox(
-                  width: 20
-                )
-              ]
-            ),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              SizedBox(width: 20),
+              Expanded(
+                  child: Center(
+                      child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Container(
+                              height: 30, child: Text(teams.toString()))))),
+              SizedBox(width: 20)
+            ]),
             SizedBox(
               height: 10,
             ),
-            Row (
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 RaisedButton(
                   color: Color.fromRGBO(34, 139, 34, 1),
                   child: Text(
-                    "Get Statistics",
+                    "Sort Teams",
                   ),
-                  // Enables button only if there is more than 1 selected team
                   onPressed: teams.length > 0
                       ? () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => TeamStatsScreen(
-                                teams: teams,
-                              ),
+                              builder: (context) =>
+                                  SortTeamsPage(teams: teams, sortBy: sortBy),
                             ),
                           );
                         }
@@ -199,59 +182,23 @@ class _InputScreenState extends State<InputScreen> {
                 ),
               ],
             ),
-            SizedBox(
-              height: 30
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SizedBox(
-                  width: 30,
-                ),
-                Expanded(
-                  flex: 6,
-                  child: Center (
-                    child: DropdownButton(
-                      hint: Text('Sort by'),
-                      value: sortBy,
-                      onChanged: (newValue) {
-                        setState(() {
-                          sortBy = newValue;
-                        });
-                      },
-                      items: sortByValues.map((sortByValue) {
-                        return DropdownMenuItem(
-                          child: new Text(sortByValue),
-                          value: sortByValue,
-                        );
-                      }).toList(),
-                    ),
-                 )
-                ),
-                SizedBox(
-                  width: 20
-                ),
-                RaisedButton(
-                  color: Color.fromRGBO(34, 139, 34, 1),
-                  child: Text(
-                    "Sort Teams",
-                  ),
-                  onPressed: teams.length > 0
-                      ? () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  SortTeamsPage(teams: teams, sortBy: sortBy),
-                            ),
-                          );
-                        }
-                      : null,
-                ),
-                SizedBox (
-                  width: 35
-                ),
-              ],
+            SizedBox(height: 30),
+            DropdownButton(
+              hint: Text('Sort by'),
+              value: sortBy,
+              onChanged: (newValue) {
+                setState(() {
+                  sortBy = newValue;
+                });
+              },
+              items: sortByValues.map(
+                (sortByValue) {
+                  return DropdownMenuItem(
+                    child: new Text(sortByValue),
+                    value: sortByValue,
+                  );
+                },
+              ).toList(),
             ),
           ],
         ),
