@@ -64,7 +64,9 @@ class DefenseScoutingSide extends StatelessWidget {
     showDialog(
       routeSettings: RouteSettings(arguments: ScreenOrientation.landscapeOnly),
       context: context,
-      child: popUp,
+      builder: (BuildContext context) {
+        return popUp;
+      },
     );
   }
 

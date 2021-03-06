@@ -31,29 +31,31 @@ class _SketchPageState extends State<SketchPage> {
   void showColorPicker() {
     showDialog(
       context: context,
-      child: AlertDialog(
-        title: const Text('Pick a color!'),
-        content: SingleChildScrollView(
-          child: ColorPicker(
-            pickerColor: pickerColor,
-            onColorChanged: changeColor,
-            enableLabel: true,
-            pickerAreaHeightPercent: 0.8,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Pick a color!'),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: pickerColor,
+              onColorChanged: changeColor,
+              enableLabel: true,
+              pickerAreaHeightPercent: 0.8,
+            ),
           ),
-        ),
-        actions: <Widget>[
-          FlatButton(
-            child: const Text('Got it'),
-            onPressed: () {
-              setState(() {
-                currentColor = pickerColor;
-                _sketcher.setColor(currentColor);
-              });
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      ),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('Got it'),
+              onPressed: () {
+                setState(() {
+                  currentColor = pickerColor;
+                  _sketcher.setColor(currentColor);
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
