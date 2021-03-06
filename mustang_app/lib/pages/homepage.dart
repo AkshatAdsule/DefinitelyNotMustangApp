@@ -26,14 +26,20 @@ class HomePageState extends State<HomePage> {
       //     RaisedButton(onPressed: () async {}, child: Text('Update DB'))
       //   ],
       // ),
-      body: Center(
-        child: Text('Welcome!',
+      body: Column(children: [
+        Text("UR Welcome <3",
             style: TextStyle(
               color: Colors.green,
               fontSize: 30,
               fontWeight: FontWeight.bold,
             )),
-      ),
+        Text(
+            "Made by: Akshat Adsule, Antonio Cuan, Arnav Kulkarni, Elise Vambenepe, Laksh Bhambhani, Katia Bravo and Tarini Maram",
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 18,
+            )),
+      ]),
       bottomNavigationBar: BottomNavBar(context),
     );
   }

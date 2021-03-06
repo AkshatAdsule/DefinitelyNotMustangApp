@@ -99,104 +99,102 @@ class _GameReplayState extends State<GameReplay> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Container(
-                child: ListTile(
-                  title: Text(
-                    'Match Number',
-                    textAlign: TextAlign.right,
-                    style: new TextStyle(
+              ListTile(
+                title: Text(
+                  'Match Number',
+                  textAlign: TextAlign.right,
+                  style: new TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[800],
+                    fontWeight: FontWeight.bold,
+                    background: Paint()
+                      ..strokeWidth = 30.0
+                      ..color = Colors.green[300]
+                      ..style = PaintingStyle.stroke
+                      ..strokeJoin = StrokeJoin.bevel,
+                  ),
+                ),
+                trailing: DropdownButton<String>(
+                  value: matchNum,
+                  icon: Icon(Icons.arrow_downward),
+                  iconSize: 24,
+                  elevation: 16,
+                  style: TextStyle(
                       fontSize: 14,
-                      color: Colors.grey[800],
-                      fontWeight: FontWeight.bold,
-                      background: Paint()
-                        ..strokeWidth = 30.0
-                        ..color = Colors.green[300]
-                        ..style = PaintingStyle.stroke
-                        ..strokeJoin = StrokeJoin.bevel,
-                    ),
+                      color: Colors.green[300],
+                      fontWeight: FontWeight.bold),
+                  underline: Container(
+                    height: 2,
+                    color: Colors.grey[50],
                   ),
-                  trailing: DropdownButton<String>(
-                    value: matchNum,
-                    icon: Icon(Icons.arrow_downward),
-                    iconSize: 24,
-                    elevation: 16,
-                    style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.green[300],
-                        fontWeight: FontWeight.bold),
-                    underline: Container(
-                      height: 2,
-                      color: Colors.grey[50],
-                    ),
-                    onChanged: (String match) {
-                      setState(() {
-                        matchNum = match;
-                      });
-                    },
-                    items: _analyzer
-                        .getMatches()
-                        .map<DropdownMenuItem<String>>((String match) {
-                      return DropdownMenuItem<String>(
-                          value: matchNum,
-                          child: Center(
-                            child: Text(matchNum),
-                          ));
-                    }).toList(),
-                  ),
+                  onChanged: (String match) {
+                    setState(() {
+                      matchNum = match;
+                    });
+                  },
+                  items: _analyzer
+                      .getMatches()
+                      .map<DropdownMenuItem<String>>((String match) {
+                    return DropdownMenuItem<String>(
+                        value: matchNum,
+                        child: Center(
+                          child: Text(matchNum),
+                        ));
+                  }).toList(),
                 ),
               ),
               //Image.asset('assets/croppedmap.png', fit: BoxFit.contain),
               // scoringGrid,
               //slider
-              Container(
-                  height: 30,
-                  width: 400,
-                  child: Slider(
-                    divisions: (2 * 60) + 30, // number of seconds in a game
-                    label: _timeInGame.round().toString(),
-                    onChanged: (newVal) => setState(() {
-                      _timeInGame = newVal;
-                      displayActions(_timeInGame);
-                    }),
-                    min: 0,
-                    max: 150,
-                    value: _timeInGame,
-                  )),
-              //key
-              Row(
-                children: [
-                  FlatButton(
-                      onPressed: null,
-                      child: Container(
-                          height: 50.0,
-                          child: RaisedButton(
-                            onPressed: () {},
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(80.0)),
-                            padding: EdgeInsets.all(0.0),
-                            child: Ink(
-                              decoration: BoxDecoration(
-                                  // gradient:, colors that matter],
-                                  borderRadius: BorderRadius.horizontal()),
-                              child: Container(
-                                constraints: BoxConstraints(
-                                    maxWidth: MediaQuery.of(context).size.width,
-                                    minHeight: 60.0),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "Game Replay",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.grey[800],
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      height: 1),
-                                ),
-                              ),
-                            ),
-                          )))
-                ],
-              ),
+              // Container(
+              //     height: 30,
+              //     width: 400,
+              //     child: Slider(
+              //       divisions: (2 * 60) + 30, // number of seconds in a game
+              //       label: _timeInGame.round().toString(),
+              //       onChanged: (newVal) => setState(() {
+              //         _timeInGame = newVal;
+              //         displayActions(_timeInGame);
+              //       }),
+              //       min: 0,
+              //       max: 150,
+              //       value: _timeInGame,
+              //     )),
+              // //key
+              // Row(
+              //   children: [
+              //     FlatButton(
+              //         onPressed: null,
+              //         child: Container(
+              //             height: 50.0,
+              //             child: RaisedButton(
+              //               onPressed: () {},
+              //               shape: RoundedRectangleBorder(
+              //                   borderRadius: BorderRadius.circular(80.0)),
+              //               padding: EdgeInsets.all(0.0),
+              //               child: Ink(
+              //                 decoration: BoxDecoration(
+              //                     // gradient:, colors that matter],
+              //                     borderRadius: BorderRadius.horizontal()),
+              //                 child: Container(
+              //                   constraints: BoxConstraints(
+              //                       maxWidth: MediaQuery.of(context).size.width,
+              //                       minHeight: 60.0),
+              //                   alignment: Alignment.center,
+              //                   child: Text(
+              //                     "Game Replay",
+              //                     textAlign: TextAlign.center,
+              //                     style: TextStyle(
+              //                         color: Colors.grey[800],
+              //                         fontWeight: FontWeight.bold,
+              //                         fontSize: 16,
+              //                         height: 1),
+              //                   ),
+              //                 ),
+              //               ),
+              //             )))
+              //   ],
+              // ),
             ],
           ),
         ),
