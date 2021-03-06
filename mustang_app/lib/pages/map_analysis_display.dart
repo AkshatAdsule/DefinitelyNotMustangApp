@@ -92,43 +92,14 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
       int b = ((zoneAccuracyOutOf900 / 100).toInt() + 1) * 100; //upper bound
       int returnVal =
           (zoneAccuracyOutOf900 - a > b - zoneAccuracyOutOf900) ? b : a;
-      //debugPrint("zone: (" + x.toString() + ", " + y.toString() + ")  accuracy out of 900: " + (zoneAccuracyOutOf900).toInt().toString());
       return returnVal;
-      //return (zoneAccuracyOutOf900).toInt();
     } else {
-      //debugPrint("accuracy is 0");
       return 0;
     }
   }
 
-  //zones start at 0, see miro but climb up, no sense of columns or row so need to convert
-  /*
-  double zoneToX(int zone) {
-    return zone - (zoneToY(zone) * Constants.zoneColumns);
-  }
-
-  double zoneToY(int zone) {
-    double y = 0;
-    while (zone >= Constants.zoneColumns) {
-      zone -= Constants.zoneColumns;
-      y++;
-    }
-    return y;
-  }
-  */
-
   @override
   Widget build(BuildContext context) {
-    MapAnalysisDropdown dropdown = MapAnalysisDropdown(
-      key: _myKey,
-    );
-    MapAnalysisDropdown drop2 = new MapAnalysisDropdown();
-    //ActionType currentAction = _myKey.currentActionType;
-    ActionType currentAction = MapAnalysisDropdownState().currentActionType;
-    //debugPrint("current action type: " + _myKey.currentState.currentActionType.toString());
-    //debugPrint("right before the one i wanna test");
-    debugPrint("current action type in display: " + currentAction.toString());
-
     if (!myAnalyzer.initialized) {
       myAnalyzer.init().then((value) => setState(() {}));
     }
@@ -140,7 +111,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         height: cellHeight,
         decoration:
             BoxDecoration(color: Colors.green[_getScoringColorValue(x, y)]),
-        //BoxDecoration(color: Colors.green),
       );
     });
 
@@ -169,10 +139,10 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
 
     switchButton = new MapSwitchButton(this.toggle, _showScoringMap);
     var children2 = <Widget>[
-      //Image.asset('assets/croppedmap.png', fit: BoxFit.contain),
       MapAnalysisText(myAnalyzer),
-      // switchButton,
-      //drop2,
+      switchButton,
+      
+      //dropdown
       ListTile(
         title: Text(
           'Action Type',
@@ -221,8 +191,8 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
           }).toList(),
         ),
       ),
-      //accuracy is darker, scoring lighter
-      //i need to have it here bc otherwise it won't update showScoringMap
+
+      //shading key
       Ink(
         decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -249,11 +219,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         ),
       ),
       !(switchButton.showScoringMap) ? accuracyMap : scoringMap,
-      //gameMap,
-
-      //MapShadingKey(switchButton),
-      //MapShadingScoringKey(),
-      //MapShadingAccuracyKey(),
     ];
 
     Container gameReplay = Container(
@@ -271,7 +236,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         ));
 
     return Scaffold(
-      appBar: Header(context, 'Analysis' + " - " + _teamNumber,
+      appBar: Header(context, 'Analysis' + " for Team: " + _teamNumber,
           buttons: [gameReplay]),
       body: Container(
         child: SingleChildScrollView(
