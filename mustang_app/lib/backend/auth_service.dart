@@ -3,9 +3,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mustang_app/backend/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class UserService {
+class AuthService {
   FirebaseFirestore _db = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
+
+  User get currentUser => _auth.currentUser;
 
   Future<UserModel> getUser(String uid) async {
     if (uid == null || uid == "") {

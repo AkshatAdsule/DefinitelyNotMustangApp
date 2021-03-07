@@ -2,6 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mustang_app/backend/auth_service.dart';
 import 'package:mustang_app/components/bottom_nav_bar.dart';
 import 'package:mustang_app/backend/game_action.dart';
 import 'package:provider/provider.dart';
@@ -101,7 +102,7 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
 
   @override
   Widget build(BuildContext buildContext) {
-    User user = Provider.of<User>(context);
+    User user = Provider.of<AuthService>(context).currentUser;
 
     return Scaffold(
       appBar: Header(
