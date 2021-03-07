@@ -47,7 +47,7 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
   _MatchEndScouterState(this._teamNumber, this._matchNumber,
       this._allianceColor, this._actions, this._climbLocation);
 
-  void _finishGame(BuildContext context, FirebaseUser user) {
+  void _finishGame(BuildContext context, User user) {
     if (_matchResult == null) {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text("Please select a match result"),
@@ -101,7 +101,7 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
 
   @override
   Widget build(BuildContext buildContext) {
-    FirebaseUser user = Provider.of<FirebaseUser>(context);
+    User user = Provider.of<User>(context);
 
     return Scaffold(
       appBar: Header(

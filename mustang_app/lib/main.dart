@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/user.dart';
 import 'package:mustang_app/backend/user_service.dart';
@@ -6,11 +7,17 @@ import 'exports/pages.dart';
 import 'utils/orientation_helpers.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
+  Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
   // This widget is the root of your application.
   final _observer = NavigatorObserverWithOrientation();
+
   // UserService _userService = UserService();
 
   Route<dynamic> _onGenerateRoute(RouteSettings settings) {
@@ -100,24 +107,50 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        StreamProvider<FirebaseUser>.value(
-            value: FirebaseAuth.instance.onAuthStateChanged),
-        Provider<UserService>(
-          create: (_) => UserService(),
-        )
-      ],
-      child: MaterialApp(
-        title: 'Mustang App',
-        theme: ThemeData(
-          primarySwatch: Colors.green,
-        ),
-        home: Splash(),
-        initialRoute: Splash.route,
-        navigatorObservers: [_observer],
-        onGenerateRoute: (settings) => _onGenerateRoute(settings),
-      ),
+    return FutureBuilder(
+      // Initialize FlutterFire:
+      future: _initialization,
+      builder: (context, snapshot) {
+        // Check for errors
+        if (snapshot.hasError) {
+          // return SomethingWentWrong();
+        }
+
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          return MultiProvider(
+            providers: [
+              StreamProvider<User>.value(
+                value: FirebaseAuth.instance.authStateChanges(),
+              ),
+              Provider<UserService>(
+                create: (_) => UserService(),
+              ),
+            ],
+            child: MaterialApp(
+              title: 'Mustang App',
+              theme: ThemeData(
+                primarySwatch: Colors.green,
+              ),
+              home: HomePage(),
+              initialRoute: Splash.route,
+              navigatorObservers: [_observer],
+              onGenerateRoute: (settings) => _onGenerateRoute(settings),
+            ),
+          );
+        }
+
+        // Otherwise, show something whilst waiting for initialization to complete
+        return MaterialApp(
+          title: 'Mustang App',
+          theme: ThemeData(
+            primarySwatch: Colors.green,
+          ),
+          home: Splash(
+            useFirebase: false,
+          ),
+        );
+      },
     );
   }
 }

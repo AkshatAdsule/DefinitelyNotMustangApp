@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mustang_app/backend/user_service.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
@@ -18,27 +19,15 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> signInWithGoogle(BuildContext context) async {
-    try {
-      final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+    UserService service = Provider.of<UserService>(context);
+    await service.loginWithGoogle();
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      await _auth.signInWithCredential(credential);
-      Navigator.pushNamed(context, '/');
-    } catch (error) {
-      print('Error: $error');
-    }
+    Navigator.pushNamed(context, '/');
   }
 
   @override
   Widget build(BuildContext context) {
-    FirebaseUser user = Provider.of<FirebaseUser>(context);
+    User user = Provider.of<User>(context);
     if (user != null) {
       Navigator.pushNamed(context, '/');
     }

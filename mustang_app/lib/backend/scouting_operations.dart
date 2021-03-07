@@ -4,12 +4,12 @@ import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/backend/team.dart';
 
 class ScoutingOperations {
-  static Firestore _db = Firestore.instance;
+  static FirebaseFirestore _db = FirebaseFirestore.instance;
   static final String _year = DateTime.now().year.toString();
   static final CollectionReference _teamsRef =
-      _db.collection(_year).document('info').collection('teams');
+      _db.collection(_year).doc('info').collection('teams');
   static Future<void> setTeamData(Team team) async {
-    await _teamsRef.document(team.teamNumber).setData(team.toJson());
+    await _teamsRef.doc(team.teamNumber).set(team.toJson());
   }
 
   static Future<void> setMatchData(
@@ -18,15 +18,15 @@ class ScoutingOperations {
     String name,
   ) async {
     await _teamsRef
-        .document(match.teamNumber)
+        .doc(match.teamNumber)
         .collection('matches')
-        .document(match.matchNumber)
-        .setData({...match.toJson(), 'name': name, 'userId': uid});
+        .doc(match.matchNumber)
+        .set({...match.toJson(), 'name': name, 'userId': uid});
   }
 
   static Future<bool> doesTeamDataExist(String teamNumber) async {
-    DocumentSnapshot snap = await _teamsRef.document(teamNumber).get();
-    if (snap == null || snap.data == null) {
+    DocumentSnapshot snap = await _teamsRef.doc(teamNumber).get();
+    if (snap == null || snap.data() == null) {
       return false;
     }
     Team team = Team.fromSnapshot(snap);
@@ -43,11 +43,11 @@ class ScoutingOperations {
   static Future<bool> doesMatchDataExist(
       String teamNumber, String matchNumber) async {
     DocumentSnapshot snap = await _teamsRef
-        .document(teamNumber)
+        .doc(teamNumber)
         .collection('matches')
-        .document(matchNumber)
+        .doc(matchNumber)
         .get();
-    if (snap == null || snap.data == null) {
+    if (snap == null || snap.data() == null) {
       return false;
     }
     Match match = Match.fromSnapshot(snap);
@@ -61,6 +61,6 @@ class ScoutingOperations {
   }
 
   static Future<void> initTeamData(String teamNumber) async {
-    await _teamsRef.document(teamNumber).setData({'teamNumber': teamNumber});
+    await _teamsRef.doc(teamNumber).set({'teamNumber': teamNumber});
   }
 }

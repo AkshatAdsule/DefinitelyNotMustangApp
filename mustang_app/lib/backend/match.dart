@@ -27,9 +27,9 @@ class Match {
     if (!snapshot.exists) {
       return null;
     }
-    Map<String, dynamic> data = snapshot.data;
+    Map<String, dynamic> data = snapshot.data();
     return Match(
-      snapshot.documentID,
+      snapshot.id,
       data['teamNumber'] ?? '',
       data['allianceColor'] ?? 'blue',
       data['matchResult'] ?? 'Lose',
