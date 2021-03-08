@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/game_action.dart';
 import 'package:mustang_app/components/game_map.dart';
 import 'package:mustang_app/components/header.dart';
-import 'package:mustang_app/components/map_analysis_dropdown.dart';
 import 'package:mustang_app/components/map_analysis_text.dart';
 import 'package:mustang_app/components/map_switch_button.dart';
 import 'package:mustang_app/components/zone_grid.dart';
@@ -32,7 +31,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
   GameMap gameMap;
   MapSwitchButton switchButton;
   // ActionType _currentActionType = ActionType.SHOT_LOW;
-  GlobalKey<MapAnalysisDropdownState> _myKey = GlobalKey();
   ActionType currentActionType = ActionType.SHOT_LOW;
 
   String _scoringText = Constants.minPtValuePerZonePerGame.toString() +

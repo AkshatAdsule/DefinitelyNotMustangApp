@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/game_action.dart';
 import 'package:mustang_app/components/game_map.dart';
 import 'package:mustang_app/components/header.dart';
-import 'package:mustang_app/components/map_analysis_dropdown.dart';
-import 'package:mustang_app/components/map_analysis_text.dart';
-import 'package:mustang_app/components/map_switch_button.dart';
 import 'package:mustang_app/components/zone_grid.dart';
-import 'package:mustang_app/constants/constants.dart';
 import '../components/analyzer.dart';
 
 // ignore: must_be_immutable

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/zone_grid.dart';
-import 'package:mustang_app/constants/constants.dart';
 
 // ignore: must_be_immutable
 class GameMap extends StatelessWidget {
