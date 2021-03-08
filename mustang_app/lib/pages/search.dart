@@ -16,6 +16,7 @@ class SearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return StreamProvider<List<Team>>.value(
+      initialData: [],
       value: _teamsService.streamTeams(),
       child: Search(),
     );

@@ -26,9 +26,9 @@ class Team {
     if (!snapshot.exists) {
       return null;
     }
-    Map<String, dynamic> data = snapshot.data;
+    Map<String, dynamic> data = snapshot.data();
     return Team(
-      snapshot.documentID,
+      snapshot.id,
       data['drivebaseType'] ?? 'tank',
       data['notes'] ?? '',
       data['innerPort'] ?? false,

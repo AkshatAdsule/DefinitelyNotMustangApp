@@ -3,35 +3,37 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mustang_app/backend/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class UserService {
-  Firestore _db = Firestore.instance;
+class AuthService {
+  FirebaseFirestore _db = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<User> getUser(String uid) async {
+  User get currentUser => _auth.currentUser;
+
+  Future<UserModel> getUser(String uid) async {
     if (uid == null || uid == "") {
       return null;
     }
-    return User.fromSnapshot(await _db.collection('users').document(uid).get());
+    return UserModel.fromSnapshot(await _db.collection('users').doc(uid).get());
   }
 
-  Stream<User> streamUser(FirebaseUser user) {
+  Stream<UserModel> streamUser(User user) {
     return _db
         .collection('users')
-        .document(user.uid)
+        .doc(user.uid)
         .snapshots()
-        .map((snap) => User.fromSnapshot(snap));
+        .map((snap) => UserModel.fromSnapshot(snap));
   }
 
   Future<void> login() async {}
 
-  Future<AuthResult> loginWithGoogle() async {
+  Future<UserCredential> loginWithGoogle() async {
     try {
       final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
 
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
+      final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );

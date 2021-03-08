@@ -2,6 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mustang_app/backend/auth_service.dart';
 import 'package:mustang_app/components/bottom_nav_bar.dart';
 import 'package:mustang_app/backend/game_action.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +48,7 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
   _MatchEndScouterState(this._teamNumber, this._matchNumber,
       this._allianceColor, this._actions, this._climbLocation);
 
-  void _finishGame(BuildContext context, FirebaseUser user) {
+  void _finishGame(BuildContext context, User user) {
     if (_matchResult == null) {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text("Please select a match result"),
@@ -101,7 +102,7 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
 
   @override
   Widget build(BuildContext buildContext) {
-    FirebaseUser user = Provider.of<FirebaseUser>(context);
+    User user = Provider.of<AuthService>(context).currentUser;
 
     return Scaffold(
       appBar: Header(

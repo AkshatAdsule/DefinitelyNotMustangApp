@@ -1,17 +1,21 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mustang_app/backend/user.dart';
-import 'package:mustang_app/backend/user_service.dart';
+import 'package:mustang_app/backend/setup_service.dart';
+import 'package:mustang_app/backend/auth_service.dart';
 import 'exports/pages.dart';
 import 'utils/orientation_helpers.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SetupService.setup();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   final _observer = NavigatorObserverWithOrientation();
-  // UserService _userService = UserService();
+
+  // AuthService _AuthService = AuthService();
 
   Route<dynamic> _onGenerateRoute(RouteSettings settings) {
     Map<String, dynamic> args = settings.arguments;
@@ -102,18 +106,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        StreamProvider<FirebaseUser>.value(
-            value: FirebaseAuth.instance.onAuthStateChanged),
-        Provider<UserService>(
-          create: (_) => UserService(),
-        )
+        // StreamProvider<User>.value(
+        //   value: FirebaseAuth.instance.authStateChanges(),
+        // ),
+        Provider<AuthService>(
+          create: (_) => AuthService(),
+        ),
       ],
       child: MaterialApp(
         title: 'Mustang App',
         theme: ThemeData(
           primarySwatch: Colors.green,
         ),
-        home: Splash(),
+        home: HomePage(),
         initialRoute: Splash.route,
         navigatorObservers: [_observer],
         onGenerateRoute: (settings) => _onGenerateRoute(settings),
