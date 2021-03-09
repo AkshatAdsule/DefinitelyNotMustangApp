@@ -61,41 +61,24 @@ class _GameReplayState extends State<GameReplay> {
     currActions = _analyzer.getActionsAtTime(matchActions, (timeInGame * 1000));
   }
 
-  // List<Color> _getColorCombo(int x, int y) {
-  //   GameAction curr;
-  //   for (GameAction currentAction in currActions) {
-  //     if (currentAction.x == x && currentAction.y == y) {
-  //       curr = currentAction;
-  //       break;
-  //     }
-  //   }
-  //   if (curr == null) {
-  //     return [Colors.white];
-  //   }
-  //   List<Color> gradientCombo = new List<Color>();
-  //   String actionType = curr.action.toString();
-  //   if (actionType.contains("OTHER"))
-  //     gradientCombo.add(Colors.orange);
-  //   else if (actionType.contains("FOUL"))
-  //     gradientCombo.add(Colors.yellow);
-  //   else if (actionType.contains("PUSH")) gradientCombo.add(Colors.purple[900]);
+  List<Color> _getColorCombo(int x, int y) {
+    GameAction curr;
+    for (GameAction currentAction in currActions) {
+      if (currentAction.x == x && currentAction.y == y) {
+        curr = currentAction;
+        break;
+      }
+    }
+    if (curr == null) return [Colors.white];
 
-  //   if (actionType.contains("PREV"))
-  //     gradientCombo.add(Colors.pink[200]);
-  //   else if (actionType.contains("MISSED")) gradientCombo.add(Colors.red);
+    List<Color> gradientCombo = new List<Color>();
+    String actionType = curr.action.toString();
 
-  //   if (actionType.contains("INTAKE"))
-  //     gradientCombo.add(Colors.blue);
-  //   else if (actionType.contains("SHOT")) gradientCombo.add(Colors.green);
+    for (List<Object> shade in actionRelatedColors)
+      if (actionType.contains(shade[0])) gradientCombo.add(shade[1]);
 
-  //   if (actionType.contains("LOw"))
-  //     gradientCombo.add(Colors.white);
-  //   else if (actionType.contains("OUTER"))
-  //     gradientCombo.add(Colors.white30);
-  //   else if (actionType.contains("INNER")) gradientCombo.add(Colors.black);
-
-  //   return gradientCombo;
-  // }
+    return gradientCombo;
+  }
 
   // TODO: method for text (for shots or preventing of shtoof)
   // String _getZoneText(int x, int y) {
