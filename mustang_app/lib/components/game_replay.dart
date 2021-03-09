@@ -27,6 +27,18 @@ class _GameReplayState extends State<GameReplay> {
   // ZoneGrid scoringGrid;
   List<GameAction> matchActions;
   List<GameAction> currActions;
+  List<List<Object>> actionRelatedColors = [
+    ["OTHER", Colors.orange],
+    ["FOUL", Colors.yellow],
+    ["PUSH", Colors.deepPurple],
+    ["PREV", Colors.pink[200]],
+    ["MISSED", Colors.red],
+    ["INTAKE", Colors.blue],
+    ["SHOT", Colors.green],
+    ["LOW", Colors.white],
+    ["OUTER", Colors.grey],
+    ["INNER", Colors.black],
+  ];
 
   Analyzer _analyzer;
 
@@ -98,6 +110,29 @@ class _GameReplayState extends State<GameReplay> {
   //   // else if (actionType.contains("INNER")) gradientCombo.add(Colors.black);
   // }
 
+  List<Widget> getShadingKey(int start, int end) {
+    List<Widget> shades = new List<Widget>();
+    Widget colorKey;
+    for (int i = start; i < end; i++) {
+      List<Object> shade = actionRelatedColors[i];
+      colorKey = Container(
+          margin: EdgeInsets.only(left: 20, right: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(Icons.circle, color: shade[1]),
+              Text(shade[0].toString(),
+                  style: TextStyle(
+                      color: Colors.grey[850],
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14))
+            ],
+          ));
+      shades.add(colorKey);
+    }
+    return shades;
+  }
+
   @override
   Widget build(BuildContext context) {
     debugPrint("current action type: " + currentActionType.toString());
@@ -164,26 +199,17 @@ class _GameReplayState extends State<GameReplay> {
     );
 
     Widget shadingKey = Container(
-      margin: EdgeInsets.all(10),
-      child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-                margin: EdgeInsets.only(left: 20, right: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(Icons.circle, color: Colors.green),
-                    Text('Shot',
-                        style: TextStyle(
-                            color: Colors.grey[800],
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14))
-                  ],
-                )),
-          ]),
-    );
+        margin: EdgeInsets.all(2),
+        child: Column(children: [
+          Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: getShadingKey(0, 5)),
+          Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: getShadingKey(5, 10)),
+        ]));
 
     Widget timeSlider = Container(
         height: 30,
