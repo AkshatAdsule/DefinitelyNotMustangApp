@@ -72,18 +72,13 @@ class Analyzer {
       return "No analysis available";
     }
 
-    _clearAllData();
-    _collectData();
-    //TEST TO SEE IF DATA RLY NEEDS TO BE COLLECTED!!
     if (_allMatches.length > _oldAllMatchLength) {
       _oldAllMatchLength = _allMatches.length;
       //need to reset everything to 0 (simpler than checking what parts need to be updated)
       _clearAllData();
       _collectData();
     }
-    if (totalNumGames == 0) {
-      return "There are no recorded games";
-    }
+
     int _shootingPtsPerGame =
         (calcOffenseShootingPts() / _totalNumGames).round();
     int _nonShootingsPtsPerGame =
@@ -206,7 +201,6 @@ class Analyzer {
   double calcOffenseShootingPts() {
     double _lowPts = 0.0, _outerPts = 0.0, _innerPts = 0.0;
     for (int i = 0; i < _shotLow.length; i++) {
-      //debugPrint("low shot at (" + _shotLow[i].x.toString() + ", " + _shotLow[i].y.toString() + ")");
       if (_shotLow[i].timeStamp <= Constants.autonMillisecondLength) {
         _lowPts += Constants.lowShotAutonValue;
       } else {
@@ -216,8 +210,6 @@ class Analyzer {
 
     for (int i = 0; i < _shotOuter.length; i++) {
       if (_shotOuter[i].timeStamp <= Constants.autonMillisecondLength) {
-        //debugPrint("outer shot at (" + _shotOuter[i].x.toString() + ", " + _shotOuter[i].y.toString() + ")");
-
         _outerPts += Constants.outerShotAutonValue;
       } else {
         _outerPts += Constants.outerShotValue;
@@ -226,14 +218,11 @@ class Analyzer {
 
     for (int i = 0; i < _shotInner.length; i++) {
       if (_shotInner[i].timeStamp <= Constants.autonMillisecondLength) {
-        //debugPrint("inner shot at (" + _shotInner[i].x.toString() + ", " + _shotInner[i].y.toString() + ")");
-
         _innerPts += Constants.innerShotAutonValue;
       } else {
         _innerPts += Constants.innerShotValue;
       }
     }
-
     return _lowPts + _outerPts + _innerPts;
   }
 
@@ -396,33 +385,78 @@ class Analyzer {
 
   //returns a positive number, must subtract from total
   double calcFoulLostPts() {
-    double _regPtsLost = _foulReg.length * Constants.regFoul;
-    double _techPtsLost = _foulTech.length * Constants.techFoul;
-    double _yellowPtsLost = _foulYellow.length * Constants.techFoul;
-    double _redPtsLost = _foulRed.length * Constants.redCard;
-    return _regPtsLost + _techPtsLost + _yellowPtsLost + _redPtsLost;
+    return (_foulReg.length * Constants.regFoul) +
+        (_foulTech.length * Constants.techFoul) +
+        (_foulYellow.length * Constants.techFoul) +
+        (_foulRed.length * Constants.redCard);
   }
 
-  //for map display, takes in a zone and returns offense pts scored there
-  double calcShotAccuracyAtZone(double x, double y) {
+  double calcShotAccuracyAtZone(ActionType actionType, double x, double y) {
     double shotsMade = 0;
     double shotsMissed = 0;
-    for (int i = 0; i < _allMatches.length; i++) {
-      //inside each array of actions
-      for (int j = 0; j < _allMatches[i].actions.length; j++) {
-        GameAction currentAction = _allMatches[i].actions[j];
-        if (currentAction.action == ActionType.SHOT_LOW ||
-            currentAction.action == ActionType.SHOT_OUTER ||
-            currentAction.action == ActionType.SHOT_INNER) {
-          if (currentAction.x == x && currentAction.y == y) {
-            shotsMade++;
+    if (actionType == ActionType.ALL) {
+      for (int i = 0; i < _allMatches.length; i++) {
+        //inside each array of actions
+        for (int j = 0; j < _allMatches[i].actions.length; j++) {
+          GameAction currentAction = _allMatches[i].actions[j];
+          if (currentAction.action == ActionType.SHOT_LOW ||
+              currentAction.action == ActionType.SHOT_OUTER ||
+              currentAction.action == ActionType.SHOT_INNER) {
+            if (currentAction.x == x && currentAction.y == y) {
+              shotsMade++;
+            }
+          }
+
+          if (currentAction.action == ActionType.MISSED_LOW ||
+              currentAction.action == ActionType.MISSED_OUTER) {
+            if (currentAction.x == x && currentAction.y == y) {
+              shotsMissed++;
+            }
           }
         }
+      }
+    } else {
+      ActionType missedVersionOfAction;
+      //cannot miss a inner shot, accuracy is 100%
+      if (actionType == ActionType.SHOT_INNER) {
+        for (int i = 0; i < _allMatches.length; i++) {
+          //inside each array of actions
+          for (int j = 0; j < _allMatches[i].actions.length; j++) {
+            GameAction currentAction = _allMatches[i].actions[j];
+            if (currentAction.action == actionType) {
+              if (currentAction.x == x && currentAction.y == y) {
+                shotsMade++;
+              }
+            }
+          }
+        }
+        if (shotsMade + shotsMissed == 0) {
+          return 0;
+        }
+        return 1;
+      }
+      if (actionType == ActionType.SHOT_OUTER) {
+        missedVersionOfAction = ActionType.MISSED_OUTER;
+      }
 
-        if (currentAction.action == ActionType.MISSED_LOW ||
-            currentAction.action == ActionType.MISSED_OUTER) {
-          if (currentAction.x == x && currentAction.y == y) {
-            shotsMissed++;
+      if (actionType == ActionType.SHOT_LOW) {
+        missedVersionOfAction = ActionType.MISSED_LOW;
+      }
+
+      for (int i = 0; i < _allMatches.length; i++) {
+        //inside each array of actions
+        for (int j = 0; j < _allMatches[i].actions.length; j++) {
+          GameAction currentAction = _allMatches[i].actions[j];
+          if (currentAction.action == actionType) {
+            if (currentAction.x == x && currentAction.y == y) {
+              shotsMade++;
+            }
+          }
+
+          if (currentAction.action == missedVersionOfAction) {
+            if (currentAction.x == x && currentAction.y == y) {
+              shotsMissed++;
+            }
           }
         }
       }
@@ -433,74 +467,82 @@ class Analyzer {
     return shotsMade / (shotsMade + shotsMissed);
   }
 
-  double calcPtsAtZoneForAction(ActionType actionType, double x, double y){
-
+  //if doing everything, set actionType = ActionType.ALL
+  double calcPtsAtZone(ActionType actionType, double x, double y) {
     double totalPoints = 0;
-
-    for (int i = 0; i < _allMatches.length; i++) {
-      //inside each array of actions
-      for (int j = 0; j < _allMatches[i].actions.length; j++) {
-
-        GameAction currentAction = _allMatches[i].actions[j];
-        if (currentAction.action == actionType) {
-          if (currentAction.x == x && currentAction.y == y) {
-            if (currentAction.timeStamp <= 15000) {
-              totalPoints += Constants.lowShotAutonValue;
-            } else {
-              totalPoints += Constants.lowShotValue;
+    double pointValueAuton = 0;
+    double pointValueTeleop = 0;
+    if (actionType == null) {
+      return 0;
+    } else if (actionType == ActionType.ALL) {
+      for (int i = 0; i < _allMatches.length; i++) {
+        //inside each array of actions
+        for (int j = 0; j < _allMatches[i].actions.length; j++) {
+          //low shot
+          GameAction currentAction = _allMatches[i].actions[j];
+          if (currentAction.action == ActionType.SHOT_LOW) {
+            if (currentAction.x == x && currentAction.y == y) {
+              if (currentAction.timeStamp <= 15000) {
+                totalPoints += Constants.lowShotAutonValue;
+              } else {
+                totalPoints += Constants.lowShotValue;
+              }
             }
           }
-        }
 
-      }
-    }
-
-    return totalPoints;
-  }
-
-  double calcPtsAtZone(double x, double y) {
-    //random values for testing purposes that doesn't work
-    double totalPoints = 0;
-
-    for (int i = 0; i < _allMatches.length; i++) {
-      //inside each array of actions
-      for (int j = 0; j < _allMatches[i].actions.length; j++) {
-        //low shot
-        GameAction currentAction = _allMatches[i].actions[j];
-        if (currentAction.action == ActionType.SHOT_LOW) {
-          if (currentAction.x == x && currentAction.y == y) {
-            if (currentAction.timeStamp <= 15000) {
-              totalPoints += Constants.lowShotAutonValue;
-            } else {
-              totalPoints += Constants.lowShotValue;
+          //outer shot
+          if (currentAction.action == ActionType.SHOT_OUTER) {
+            if (currentAction.x == x && currentAction.y == y) {
+              if (currentAction.timeStamp <= 15000) {
+                totalPoints += Constants.outerShotAutonValue;
+              } else {
+                totalPoints += Constants.outerShotValue;
+              }
             }
           }
-        }
 
-        //outer shot
-        if (currentAction.action == ActionType.SHOT_OUTER) {
-          if (currentAction.x == x && currentAction.y == y) {
-            if (currentAction.timeStamp <= 15000) {
-              totalPoints += Constants.outerShotAutonValue;
-            } else {
-              totalPoints += Constants.outerShotValue;
-            }
-          }
-        }
-
-        //inner shot
-        if (currentAction.action == ActionType.SHOT_INNER) {
-          if (currentAction.x == x && currentAction.y == y) {
-            if (currentAction.timeStamp <= 15000) {
-              totalPoints += Constants.innerShotAutonValue;
-            } else {
-              totalPoints += Constants.innerShotValue;
+          //inner shot
+          if (currentAction.action == ActionType.SHOT_INNER) {
+            if (currentAction.x == x && currentAction.y == y) {
+              if (currentAction.timeStamp <= 15000) {
+                totalPoints += Constants.innerShotAutonValue;
+              } else {
+                totalPoints += Constants.innerShotValue;
+              }
             }
           }
         }
       }
-    }
+    } else {
+      if (actionType == ActionType.SHOT_INNER) {
+        pointValueAuton = Constants.innerShotAutonValue;
+        pointValueTeleop = Constants.innerShotValue;
+      }
+      if (actionType == ActionType.SHOT_OUTER) {
+        pointValueAuton = Constants.outerShotAutonValue;
+        pointValueTeleop = Constants.outerShotValue;
+      }
+      if (actionType == ActionType.SHOT_LOW) {
+        pointValueAuton = Constants.lowShotAutonValue;
+        pointValueTeleop = Constants.lowShotValue;
+      }
 
+      for (int i = 0; i < _allMatches.length; i++) {
+        //inside each array of actions
+        for (int j = 0; j < _allMatches[i].actions.length; j++) {
+          GameAction currentAction = _allMatches[i].actions[j];
+          if (currentAction.action == actionType) {
+            if (currentAction.x == x && currentAction.y == y) {
+              if (currentAction.timeStamp <= 15000) {
+                totalPoints += pointValueAuton;
+              } else {
+                totalPoints += pointValueTeleop;
+              }
+            }
+          }
+        }
+      }
+    }
     return totalPoints;
   }
 }

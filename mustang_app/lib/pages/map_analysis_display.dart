@@ -30,7 +30,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
 
   GameMap gameMap;
   MapSwitchButton switchButton;
-  ActionType currentActionType = ActionType.SHOT_LOW;
+  ActionType currentActionType = ActionType.ALL;
 
   String _scoringText = Constants.minPtValuePerZonePerGame.toString() +
       " total pts                                                                     " +
@@ -61,10 +61,12 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
     });
   }
 
-  int _getScoringColorValue(int x, int y) {
+  int _getScoringColorValue(ActionType actionType, int x, int y) {
     double totalNumGames = myAnalyzer.totalNumGames().toDouble();
     double ptsAtZone =
-        myAnalyzer.calcPtsAtZone(x.toDouble(), y.toDouble()) / totalNumGames;
+        myAnalyzer.calcPtsAtZone(actionType, x.toDouble(), y.toDouble()) /
+            totalNumGames;
+
     double ptsAtZonePerGame = ptsAtZone / totalNumGames;
     double colorValue =
         ((ptsAtZonePerGame / Constants.maxPtValuePerZonePerGame) * 900);
@@ -80,9 +82,10 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
     return returnVal;
   }
 
-  int _getAccuracyColorValue(int x, int y) {
-    double zoneAccuracyOutOf1 =
-        myAnalyzer.calcShotAccuracyAtZone(x.toDouble(), y.toDouble());
+  int _getAccuracyColorValue(ActionType actionType, int x, int y) {
+    double zoneAccuracyOutOf1 = myAnalyzer.calcShotAccuracyAtZone(
+        actionType, x.toDouble(), y.toDouble());
+
     double zoneAccuracyOutOf900 = zoneAccuracyOutOf1 * 900;
     if (!zoneAccuracyOutOf900.isInfinite && !zoneAccuracyOutOf900.isNaN) {
       int a = ((zoneAccuracyOutOf900 / 100).toInt()) * 100; //lower bound of 100
@@ -97,6 +100,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("current action type: " + currentActionType.toString());
     if (!myAnalyzer.initialized) {
       myAnalyzer.init().then((value) => setState(() {}));
     }
@@ -106,8 +110,9 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
       return Container(
         width: cellWidth,
         height: cellHeight,
-        decoration:
-            BoxDecoration(color: Colors.green[_getScoringColorValue(x, y)]),
+        decoration: BoxDecoration(
+            color:
+                Colors.green[_getScoringColorValue(currentActionType, x, y)]),
       );
     });
 
@@ -116,8 +121,9 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
       return Container(
         width: cellWidth,
         height: cellHeight,
-        decoration:
-            BoxDecoration(color: Colors.green[_getAccuracyColorValue(x, y)]),
+        decoration: BoxDecoration(
+            color:
+                Colors.green[_getAccuracyColorValue(currentActionType, x, y)]),
       );
     });
 
@@ -135,89 +141,88 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
 
     switchButton = new MapSwitchButton(this.toggle, _showScoringMap);
+    Widget dropDownList = ListTile(
+      title: Text(
+        'Action Type',
+        textAlign: TextAlign.right,
+        style: new TextStyle(
+          fontSize: 14,
+          color: Colors.grey[800],
+          fontWeight: FontWeight.bold,
+          background: Paint()
+            ..strokeWidth = 30.0
+            ..color = Colors.green[300]
+            ..style = PaintingStyle.stroke
+            ..strokeJoin = StrokeJoin.bevel,
+        ),
+      ),
+      trailing: DropdownButton<ActionType>(
+        value: currentActionType,
+        icon: Icon(Icons.arrow_downward),
+        iconSize: 24,
+        elevation: 16,
+        style: TextStyle(
+            fontSize: 14,
+            color: Colors.green[300],
+            fontWeight: FontWeight.bold),
+        underline: Container(
+          height: 2,
+          color: Colors.grey[50],
+        ),
+        onChanged: (ActionType actionType) {
+          setState(() {
+            currentActionType = actionType;
+          });
+        },
+        items: <ActionType>[
+          ActionType.ALL,
+          ActionType.SHOT_LOW,
+          ActionType.SHOT_OUTER,
+          ActionType.SHOT_INNER
+        ].map<DropdownMenuItem<ActionType>>((ActionType actionType) {
+          return DropdownMenuItem<ActionType>(
+            value: actionType,
+            child: Center(
+                child: Text(actionType
+                    .toString()
+                    .substring(actionType.toString().indexOf('.') + 1))),
+          );
+        }).toList(),
+      ),
+    );
+
+    Widget shadingKey = Ink(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.green[50], Colors.green[900]],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.horizontal()),
+      child: Container(
+        constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width, minHeight: 60.0),
+        alignment: Alignment.center,
+        child: Text(
+          !(switchButton.showScoringMap)
+              ? "Accuracy Map (avg per game)\n" + _accuracyText
+              : "Scoring Map (avg per game)\n" + _scoringText,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.grey[800],
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              height: 1),
+        ),
+      ),
+    );
     var children2 = <Widget>[
       MapAnalysisText(myAnalyzer),
       switchButton,
-      
-      //dropdown
-      ListTile(
-        title: Text(
-          'Action Type',
-          textAlign: TextAlign.right,
-          style: new TextStyle(
-            fontSize: 14,
-            color: Colors.grey[800],
-            fontWeight: FontWeight.bold,
-            background: Paint()
-              ..strokeWidth = 30.0
-              ..color = Colors.green[300]
-              ..style = PaintingStyle.stroke
-              ..strokeJoin = StrokeJoin.bevel,
-          ),
-        ),
-        trailing: DropdownButton<ActionType>(
-          value: currentActionType,
-          icon: Icon(Icons.arrow_downward),
-          iconSize: 24,
-          elevation: 16,
-          style: TextStyle(
-              fontSize: 14,
-              color: Colors.green[300],
-              fontWeight: FontWeight.bold),
-          underline: Container(
-            height: 2,
-            color: Colors.grey[50],
-          ),
-          onChanged: (ActionType actionType) {
-            setState(() {
-              currentActionType = actionType;
-            });
-          },
-          items: <ActionType>[
-            ActionType.SHOT_LOW,
-            ActionType.SHOT_OUTER,
-            ActionType.SHOT_INNER
-          ].map<DropdownMenuItem<ActionType>>((ActionType actionType) {
-            return DropdownMenuItem<ActionType>(
-              value: actionType,
-              child: Center(
-                  child: Text(actionType
-                      .toString()
-                      .substring(actionType.toString().indexOf('.') + 1))),
-            );
-          }).toList(),
-        ),
-      ),
-
-      //shading key
-      Ink(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.green[50], Colors.green[900]],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            ),
-            borderRadius: BorderRadius.horizontal()),
-        child: Container(
-          constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width, minHeight: 60.0),
-          alignment: Alignment.center,
-          child: Text(
-            !(switchButton.showScoringMap)
-                ? "Accuracy Map\n" + _accuracyText
-                : "Scoring Map\n" + _scoringText,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Colors.grey[800],
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                height: 1),
-          ),
-        ),
-      ),
+      dropDownList,
+      shadingKey,
       !(switchButton.showScoringMap) ? accuracyMap : scoringMap,
     ];
-
     Container gameReplay = Container(
         alignment: Alignment.center,
         child: RaisedButton(
