@@ -30,7 +30,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
 
   GameMap gameMap;
   MapSwitchButton switchButton;
-  // ActionType _currentActionType = ActionType.SHOT_LOW;
   ActionType currentActionType = ActionType.SHOT_LOW;
 
   String _scoringText = Constants.minPtValuePerZonePerGame.toString() +

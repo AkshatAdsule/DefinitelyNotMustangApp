@@ -1,6 +1,4 @@
 import 'dart:math';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/game_action.dart';
 import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/backend/team.dart';
@@ -433,6 +431,31 @@ class Analyzer {
       return 0;
     }
     return shotsMade / (shotsMade + shotsMissed);
+  }
+
+  double calcPtsAtZoneForAction(ActionType actionType, double x, double y){
+
+    double totalPoints = 0;
+
+    for (int i = 0; i < _allMatches.length; i++) {
+      //inside each array of actions
+      for (int j = 0; j < _allMatches[i].actions.length; j++) {
+
+        GameAction currentAction = _allMatches[i].actions[j];
+        if (currentAction.action == actionType) {
+          if (currentAction.x == x && currentAction.y == y) {
+            if (currentAction.timeStamp <= 15000) {
+              totalPoints += Constants.lowShotAutonValue;
+            } else {
+              totalPoints += Constants.lowShotValue;
+            }
+          }
+        }
+
+      }
+    }
+
+    return totalPoints;
   }
 
   double calcPtsAtZone(double x, double y) {
