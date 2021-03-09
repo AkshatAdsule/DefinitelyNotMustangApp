@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/game_action.dart';
 import 'package:mustang_app/components/game_map.dart';
-import 'package:mustang_app/components/game_replay.dart';
-import 'package:mustang_app/components/header.dart';
-import 'package:mustang_app/components/map_analysis_text.dart';
-import 'package:mustang_app/components/map_switch_button.dart';
 import 'package:mustang_app/components/zone_grid.dart';
-import 'package:mustang_app/constants/constants.dart';
 import '../components/analyzer.dart';
 
 // ignore: must_be_immutable
@@ -24,7 +19,6 @@ class GameReplay extends StatefulWidget {
 class _GameReplayState extends State<GameReplay> {
   double _timeInGame;
 
-  // ZoneGrid scoringGrid;
   List<GameAction> matchActions;
   List<GameAction> currActions;
   List<List<Object>> actionRelatedColors = [
@@ -41,9 +35,7 @@ class _GameReplayState extends State<GameReplay> {
   ];
 
   Analyzer _analyzer;
-
   GameMap gameMap;
-  ActionType currentActionType;
   String matchNum = "";
 
   _GameReplayState(Analyzer analyzer) {
@@ -81,17 +73,10 @@ class _GameReplayState extends State<GameReplay> {
   }
 
   // TODO: method for text (for shots or preventing of shtoof)
-  // String _getZoneText(int x, int y) {
-  //   // if (actionType.contains("INTAKE"))
-  //   //   gradientCombo.add(Colors.blue);
-  //   // else if (actionType.contains("SHOT")) gradientCombo.add(Colors.green);
-
-  //   // if (actionType.contains("LOw"))
-  //   //   gradientCombo.add(Colors.white);
-  //   // else if (actionType.contains("OUTER"))
-  //   //   gradientCombo.add(Colors.white30);
-  //   // else if (actionType.contains("INNER")) gradientCombo.add(Colors.black);
-  // }
+  String _getZoneText(GameAction action, int x, int y) {
+    String type = action.action.toString();
+    if (type.contains("INTsAKE") || type.contains("SHOT")) return "+1";
+  }
 
   List<Widget> getShadingKey(int start, int end) {
     List<Widget> shades = new List<Widget>();
@@ -118,8 +103,6 @@ class _GameReplayState extends State<GameReplay> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("current action type: " + currentActionType.toString());
-
     ZoneGrid scoringGrid = ZoneGrid(GlobalKey(), (int x, int y) {},
         (int x, int y, bool isSelected, double cellWidth, double cellHeight) {
       return Container(
@@ -130,6 +113,7 @@ class _GameReplayState extends State<GameReplay> {
         // _getColorCombo(x, y),
         //       ),
         // )
+        // TODO: add to game action the ability to merge actions together, ex. shotss
         // child: Text(_getZoneText(x, y))
       );
     });
