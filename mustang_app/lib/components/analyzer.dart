@@ -7,7 +7,7 @@ import 'package:mustang_app/constants/constants.dart';
 
 // ignore: must_be_immutable
 class Analyzer {
-  bool _initialized = false, _hasAnalysis = true;
+  bool _initialized = false;
   String _teamNum = '', _driveBase = 'tank';
   TeamService _teamService = TeamService();
   List<Match> _allMatches = []; //array that holds everything
@@ -50,7 +50,7 @@ class Analyzer {
   }
 
   List<String> getMatches() {
-    List<String> matchNums = new List<String>();
+    List<String> matchNums = [];
     matchNums.add("");
     for (Match m in _allMatches) {
       matchNums.add(m.matchNumber);
@@ -58,18 +58,20 @@ class Analyzer {
     return matchNums;
   }
 
-  //TODO: getMatch()--> returns names of the matches for the team (for dropdown)
+  // returns names of the matches for the team (for dropdown)
   List<GameAction> getMatch(String matchNum) {
+    print("teamdata: " + _allMatches.toString());
     for (Match m in _allMatches)
       if (m.matchNumber == matchNum) return m.actions;
+    return [];
   }
 
-  //TODO: getActionsAtTime(long milliseconds) return a list of actions at the time, x and y will be passed
-  List<GameAction> getActionsAtTime(List<GameAction> matchActions, int milli) {
-    List<GameAction> currActions = List<GameAction>();
+  // returns a list of actions at the time, x and y will be passed
+  List<GameAction> getActionsAtTime(List<GameAction> matchActions, int second) {
+    List<GameAction> currActions = [];
     for (GameAction g in matchActions) {
-      if (g.timeStamp > (milli.round() - 500) ||
-          g.timeStamp < (milli.round() + 500)) {
+      if (g.timeStamp > ((second.round() * 1000) - 5000) &&
+          g.timeStamp < ((second.round() * 1000) + 5000)) {
         currActions.add(g);
       }
     }
@@ -133,7 +135,8 @@ class Analyzer {
         _shotAccuracy.toString() +
         "%    Pts prevented/game: " +
         _ptsPreventedPerGame.toString() +
-        "\n" + fouls;
+        "\n" +
+        fouls;
   }
 
   void _collectData() {

@@ -19,8 +19,8 @@ class GameReplay extends StatefulWidget {
 class _GameReplayState extends State<GameReplay> {
   double _timeInGame;
 
-  List<GameAction> matchActions;
-  List<GameAction> currActions;
+  List<GameAction> matchActions = [];
+  List<GameAction> currActions = [];
   List<List<Object>> actionRelatedColors = [
     ["OTHER", Colors.orange],
     ["FOUL", Colors.yellow],
@@ -49,8 +49,11 @@ class _GameReplayState extends State<GameReplay> {
   }
 
   void displayActions(int timeInGame) {
-    // variable for selected locations
-    currActions = _analyzer.getActionsAtTime(matchActions, (timeInGame * 1000));
+    setState(() {
+      currActions =
+          _analyzer.getActionsAtTime(matchActions, (timeInGame * 1000));
+      print("currActions: " + currActions.toString());
+    });
   }
 
   List<Color> _getColorCombo(int x, int y) {
@@ -63,7 +66,7 @@ class _GameReplayState extends State<GameReplay> {
     }
     if (curr == null) return [Colors.white];
 
-    List<Color> gradientCombo = new List<Color>();
+    List<Color> gradientCombo = [];
     String actionType = curr.action.toString();
 
     for (List<Object> shade in actionRelatedColors)
@@ -75,11 +78,11 @@ class _GameReplayState extends State<GameReplay> {
   // TODO: method for text (for shots or preventing of shtoof)
   String _getZoneText(GameAction action, int x, int y) {
     String type = action.action.toString();
-    if (type.contains("INTsAKE") || type.contains("SHOT")) return "+1";
+    if (type.contains("INTAKE") || type.contains("SHOT")) return "+1";
   }
 
   List<Widget> getShadingKey(int start, int end) {
-    List<Widget> shades = new List<Widget>();
+    List<Widget> shades = [];
     Widget colorKey;
     for (int i = start; i < end; i++) {
       List<Object> shade = actionRelatedColors[i];
@@ -108,11 +111,11 @@ class _GameReplayState extends State<GameReplay> {
       return Container(
         width: cellWidth,
         height: cellHeight,
-        // decoration: BoxDecoration(
-        //   gradient: RadialGradient(colors:
-        // _getColorCombo(x, y),
-        //       ),
-        // )
+        decoration: BoxDecoration(
+          gradient: RadialGradient(colors:
+              // _getColorCombo(x, y),
+              [Colors.white, Colors.green]),
+        ),
         // TODO: add to game action the ability to merge actions together, ex. shotss
         // child: Text(_getZoneText(x, y))
       );
@@ -152,6 +155,7 @@ class _GameReplayState extends State<GameReplay> {
         onChanged: (String match) {
           setState(() {
             matchNum = match;
+            matchActions = _analyzer.getMatch(matchNum);
           });
         },
         items: (_analyzer.getMatches())
@@ -186,7 +190,7 @@ class _GameReplayState extends State<GameReplay> {
           label: _timeInGame.round().toString(),
           onChanged: (newVal) => setState(() {
             _timeInGame = newVal;
-            // displayActions(_timeInGame.round());
+            displayActions(_timeInGame.round());
           }),
           min: 0,
           max: 150,
