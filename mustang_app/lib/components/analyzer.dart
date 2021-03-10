@@ -40,6 +40,7 @@ class Analyzer {
   }
 
   bool get initialized => _initialized;
+  String get teamNum => _teamNum;
 
   Future<void> init() async {
     Team team = await _teamService.getTeam(_teamNum);

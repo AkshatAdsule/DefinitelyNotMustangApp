@@ -12,6 +12,7 @@ import '../components/analyzer.dart';
 // ignore: must_be_immutable
 class MapAnalysisDisplay extends StatefulWidget {
   static const String route = '/MapAnalysisDisplay';
+  //remove team num
   String _teamNumber = '';
   MapAnalysisDisplay({String teamNumber}) {
     _teamNumber = teamNumber;
@@ -112,7 +113,12 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         height: cellHeight,
         decoration: BoxDecoration(
             color:
-                Colors.green[_getScoringColorValue(currentActionType, x, y)]),
+                (Colors.green[_getScoringColorValue(currentActionType, x, y)] ==
+                        null)
+                    ? null
+                    : Colors
+                        .green[_getScoringColorValue(currentActionType, x, y)]
+                        .withOpacity(0.7)),
       );
     });
 
@@ -122,8 +128,12 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         width: cellWidth,
         height: cellHeight,
         decoration: BoxDecoration(
-            color:
-                Colors.green[_getAccuracyColorValue(currentActionType, x, y)]),
+            color: (Colors.green[
+                        _getAccuracyColorValue(currentActionType, x, y)] ==
+                    null)
+                ? null
+                : Colors.green[_getAccuracyColorValue(currentActionType, x, y)]
+                    .withOpacity(0.7)),
       );
     });
 
@@ -141,58 +151,37 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
 
     switchButton = new MapSwitchButton(this.toggle, _showScoringMap);
-    Widget dropDownList = ListTile(
-      title: Text(
-        'Action Type',
-        textAlign: TextAlign.center,
-        style: new TextStyle(
-          fontSize: 14,
-          color: Colors.grey[800],
-          fontWeight: FontWeight.bold,
-          background: Paint()
-            ..strokeWidth = 30.0
-            ..color = Colors.green[300]
-            ..style = PaintingStyle.stroke
-            ..strokeJoin = StrokeJoin.bevel,
-        ),
+
+    Widget dropDownList = DropdownButton<ActionType>(
+      value: currentActionType,
+      icon: Icon(Icons.arrow_downward),
+      iconSize: 24,
+      elevation: 16,
+      style: TextStyle(
+          fontSize: 14, color: Colors.green[300], fontWeight: FontWeight.bold),
+      underline: Container(
+        height: 2,
+        color: Colors.grey[500],
       ),
-
-      trailing: DropdownButton<ActionType>(
-
-        value: currentActionType,
-        icon: Icon(Icons.arrow_downward),
-        iconSize: 24,
-        elevation: 16,
-
-        style: TextStyle(
-            fontSize: 14,
-            color: Colors.green[300],
-            fontWeight: FontWeight.bold),
-        underline: Container(
-          height: 2,
-          color: Colors.grey[50],
-        ),
-        onChanged: (ActionType actionType) {
-          setState(() {
-            currentActionType = actionType;
-          });
-        },
-        items: <ActionType>[
-          ActionType.ALL,
-          ActionType.SHOT_LOW,
-          ActionType.SHOT_OUTER,
-          ActionType.SHOT_INNER
-        ].map<DropdownMenuItem<ActionType>>((ActionType actionType) {
-          return DropdownMenuItem<ActionType>(
-
-            value: actionType,
-            child: Center(
-                child: Text(actionType
-                    .toString()
-                    .substring(actionType.toString().indexOf('.') + 1))),
-          );
-        }).toList(),
-      ),
+      onChanged: (ActionType actionType) {
+        setState(() {
+          currentActionType = actionType;
+        });
+      },
+      items: <ActionType>[
+        ActionType.ALL,
+        ActionType.SHOT_LOW,
+        ActionType.SHOT_OUTER,
+        ActionType.SHOT_INNER
+      ].map<DropdownMenuItem<ActionType>>((ActionType actionType) {
+        return DropdownMenuItem<ActionType>(
+          value: actionType,
+          child: Center(
+              child: Text(actionType
+                  .toString()
+                  .substring(actionType.toString().indexOf('.') + 1))),
+        );
+      }).toList(),
     );
 
     Widget shadingKey = Ink(
@@ -208,9 +197,8 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
             maxWidth: MediaQuery.of(context).size.width, minHeight: 60.0),
         alignment: Alignment.center,
         child: Text(
-          !(switchButton.showScoringMap)
-              ? "Accuracy Map (avg per game)\n" + _accuracyText
-              : "Scoring Map (avg per game)\n" + _scoringText,
+          switchButton.showScoringMap
+              ? "Scoring Map (avg per game)\n" + _scoringText : "Accuracy Map (avg per game)\n" + _accuracyText,
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.grey[800],
@@ -224,9 +212,9 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
     var children2 = <Widget>[
       MapAnalysisText(myAnalyzer),
       switchButton,
-      dropDownList,
+      Container(child: Center(child: dropDownList)),
       shadingKey,
-      !(switchButton.showScoringMap) ? accuracyMap : scoringMap,
+      switchButton.showScoringMap ? scoringMap : accuracyMap,
     ];
 
     Container gameReplay = Container(
@@ -244,7 +232,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         ));
 
     return Scaffold(
-      appBar: Header(context, 'Analysis for Team: ' + _teamNumber,
+      appBar: Header(context, 'Analysis for Team: ' + myAnalyzer.teamNum,
           buttons: [gameReplay]),
       body: Container(
         child: SingleChildScrollView(
