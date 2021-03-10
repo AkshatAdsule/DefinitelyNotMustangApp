@@ -123,9 +123,7 @@ class Analyzer {
       fouls += "    Disqual Fouls: " + _foulDisqual.length.toString();
     }
 
-    return "Team: " +
-        _teamNum +
-        "\nShooting pts/game: " +
+    return "Shooting pts/game: " +
         _shootingPtsPerGame.toString() +
         "    Non-shooting pts/game: " +
         _nonShootingsPtsPerGame.toString() +
@@ -135,7 +133,7 @@ class Analyzer {
         _shotAccuracy.toString() +
         "%    Pts prevented/game: " +
         _ptsPreventedPerGame.toString() +
-        fouls;
+        "\n" + fouls;
   }
 
   void _collectData() {

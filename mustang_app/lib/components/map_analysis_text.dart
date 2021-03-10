@@ -38,6 +38,7 @@ class _MapAnalysisTextState extends State<MapAnalysisText> {
                           color: Colors.grey[800],
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
+                          height: 1.5,
                           background: Paint()
                             ..strokeWidth = 30.0
                             ..color = Colors.green[300]

@@ -223,7 +223,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
 
     var children2 = <Widget>[
       MapAnalysisText(myAnalyzer),
-      //switchAndDrop,
       switchButton,
       dropDownList,
       shadingKey,
