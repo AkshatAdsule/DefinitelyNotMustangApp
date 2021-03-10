@@ -112,7 +112,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         height: cellHeight,
         decoration: BoxDecoration(
             color:
-                Colors.green[_getScoringColorValue(currentActionType, x, y)]),
+                (Colors.green[_getScoringColorValue(currentActionType, x, y)] == null) ? null : Colors.green[_getScoringColorValue(currentActionType, x, y)].withOpacity(0.7)),
       );
     });
 
@@ -123,7 +123,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         height: cellHeight,
         decoration: BoxDecoration(
             color:
-                Colors.green[_getAccuracyColorValue(currentActionType, x, y)]),
+                (Colors.green[_getAccuracyColorValue(currentActionType, x, y)] == null) ? null : Colors.green[_getAccuracyColorValue(currentActionType, x, y)].withOpacity(0.7)),
       );
     });
 
@@ -142,6 +142,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
 
     switchButton = new MapSwitchButton(this.toggle, _showScoringMap);
     Widget dropDownList = ListTile(
+      /*
       title: Text(
         'Action Type',
         textAlign: TextAlign.center,
@@ -156,9 +157,8 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
             ..strokeJoin = StrokeJoin.bevel,
         ),
       ),
-
+*/
       trailing: DropdownButton<ActionType>(
-
         value: currentActionType,
         icon: Icon(Icons.arrow_downward),
         iconSize: 24,
@@ -224,7 +224,9 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
     var children2 = <Widget>[
       MapAnalysisText(myAnalyzer),
       switchButton,
-      dropDownList,
+      
+      Container(child: Center(child: dropDownList)),
+
       shadingKey,
       !(switchButton.showScoringMap) ? accuracyMap : scoringMap,
     ];
