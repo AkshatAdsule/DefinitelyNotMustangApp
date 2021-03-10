@@ -144,7 +144,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
     Widget dropDownList = ListTile(
       title: Text(
         'Action Type',
-        textAlign: TextAlign.right,
+        textAlign: TextAlign.center,
         style: new TextStyle(
           fontSize: 14,
           color: Colors.grey[800],
@@ -156,11 +156,14 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
             ..strokeJoin = StrokeJoin.bevel,
         ),
       ),
+      
       trailing: DropdownButton<ActionType>(
+        
         value: currentActionType,
         icon: Icon(Icons.arrow_downward),
         iconSize: 24,
         elevation: 16,
+
         style: TextStyle(
             fontSize: 14,
             color: Colors.green[300],
@@ -181,6 +184,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
           ActionType.SHOT_INNER
         ].map<DropdownMenuItem<ActionType>>((ActionType actionType) {
           return DropdownMenuItem<ActionType>(
+            
             value: actionType,
             child: Center(
                 child: Text(actionType
@@ -216,8 +220,14 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         ),
       ),
     );
+
+    var switchAndDrop = Row(
+      children: [switchButton, dropDownList],
+    );
+
     var children2 = <Widget>[
       MapAnalysisText(myAnalyzer),
+      //switchAndDrop,
       switchButton,
       dropDownList,
       shadingKey,
