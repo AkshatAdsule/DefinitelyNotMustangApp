@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/game_action.dart';
 import 'package:mustang_app/components/game_map.dart';
+import 'package:mustang_app/components/game_replay.dart';
 import 'package:mustang_app/components/header.dart';
 import 'package:mustang_app/components/map_analysis_text.dart';
 import 'package:mustang_app/components/map_switch_button.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/constants/constants.dart';
-import 'package:mustang_app/pages/game_replay.dart';
 import '../components/analyzer.dart';
 
 // ignore: must_be_immutable
@@ -221,10 +221,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
       ),
     );
 
-    var switchAndDrop = Row(
-      children: [switchButton, dropDownList],
-    );
-
     var children2 = <Widget>[
       MapAnalysisText(myAnalyzer),
       //switchAndDrop,
@@ -233,6 +229,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
       shadingKey,
       !(switchButton.showScoringMap) ? accuracyMap : scoringMap,
     ];
+
     Container gameReplay = Container(
         alignment: Alignment.center,
         child: RaisedButton(
@@ -248,19 +245,14 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         ));
 
     return Scaffold(
-      appBar: Header(context, 'Analysis' + " for Team: " + _teamNumber,
+      appBar: Header(context, 'Analysis for Team: ' + _teamNumber,
           buttons: [gameReplay]),
       body: Container(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: _accuracyMap
-                ? children2
-                : <Widget>[
-                    GameReplay(
-                      analyzer: myAnalyzer,
-                    )
-                  ],
+            children:
+                _accuracyMap ? children2 : <Widget>[GameReplay(myAnalyzer)],
           ),
         ),
       ),

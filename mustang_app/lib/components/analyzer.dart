@@ -51,6 +51,7 @@ class Analyzer {
 
   List<String> getMatches() {
     List<String> matchNums = new List<String>();
+    matchNums.add("");
     for (Match m in _allMatches) {
       matchNums.add(m.matchNumber);
     }
@@ -64,6 +65,16 @@ class Analyzer {
   }
 
   //TODO: getActionsAtTime(long milliseconds) return a list of actions at the time, x and y will be passed
+  List<GameAction> getActionsAtTime(List<GameAction> matchActions, int milli) {
+    List<GameAction> currActions = List<GameAction>();
+    for (GameAction g in matchActions) {
+      if (g.timeStamp > (milli.round() - 500) ||
+          g.timeStamp < (milli.round() + 500)) {
+        currActions.add(g);
+      }
+    }
+    return currActions;
+  }
 
   int totalNumGames() => _totalNumGames;
 
