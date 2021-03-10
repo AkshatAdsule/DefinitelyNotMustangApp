@@ -8,14 +8,19 @@ class ZoneGrid extends StatefulWidget {
   Widget Function(
           int x, int y, bool isSelected, double cellWidth, double cellHeight)
       _createCell;
+  int _rows, _cols;
 
   ZoneGrid(
-      Key key,
-      Function(int x, int y) onTap,
-      Widget Function(int x, int y, bool isSelected, double cellWidth,
-              double cellHeight)
-          createCell)
-      : _zoneGridState = _ZoneGridState(onTap, createCell),
+    Key key,
+    Function(int x, int y) onTap,
+    Widget Function(
+            int x, int y, bool isSelected, double cellWidth, double cellHeight)
+        createCell, {
+    int rows = Constants.zoneRows,
+    int cols = Constants.zoneColumns,
+  })  : _zoneGridState = _ZoneGridState(onTap, createCell, rows, cols),
+        _rows = rows,
+        _cols = cols,
         _onTap = onTap,
         _createCell = createCell,
         super(key: key);
@@ -28,7 +33,7 @@ class ZoneGrid extends StatefulWidget {
 
   @override
   _ZoneGridState createState() {
-    _zoneGridState = _ZoneGridState(_onTap, _createCell);
+    _zoneGridState = _ZoneGridState(_onTap, _createCell, _rows, _cols);
     return _zoneGridState;
   }
 }
@@ -36,13 +41,14 @@ class ZoneGrid extends StatefulWidget {
 class _ZoneGridState extends State<ZoneGrid> {
   int _selectedX, _selectedY;
   bool _hasSelected;
+  int _rows, _cols;
 
   Function(int x, int y) _onTap;
   Widget Function(
           int x, int y, bool isSelected, double cellWidth, double cellHeight)
       _createCell;
 
-  _ZoneGridState(this._onTap, this._createCell);
+  _ZoneGridState(this._onTap, this._createCell, this._rows, this._cols);
 
   @override
   void initState() {
@@ -60,12 +66,11 @@ class _ZoneGridState extends State<ZoneGrid> {
 
   List<TableRow> _getTableContents(double width, double height) {
     List<TableRow> tableRows = [];
-    final double cellWidth = width / Constants.zoneColumns,
-        cellHeight = height / Constants.zoneRows;
+    final double cellWidth = width / _cols, cellHeight = height / _rows;
 
-    for (int i = 0; i < Constants.zoneRows; i++) {
+    for (int i = 0; i < _rows; i++) {
       List<Widget> row = [];
-      for (int j = 0; j < Constants.zoneColumns; j++) {
+      for (int j = 0; j < _cols; j++) {
         row.add(
           TableCell(
             child: GestureDetector(

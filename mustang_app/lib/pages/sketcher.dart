@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../components/bottom_nav_bar.dart';
@@ -18,7 +21,6 @@ class _SketchPageState extends State<SketchPage> {
 
   _SketchPageState() {
     _sketcher = new Sketcher(points);
-    // _sketcher.setColor(Colors.black);
   }
 // ValueChanged<Color> callback
   void changeColor(Color color) {
@@ -28,58 +30,64 @@ class _SketchPageState extends State<SketchPage> {
 // raise the [showDialog] widget
   void showColorPicker() {
     showDialog(
-      builder: (context) => AlertDialog(
-        title: const Text('Pick a color!'),
-        content: SingleChildScrollView(
-          child: ColorPicker(
-            pickerColor: pickerColor,
-            onColorChanged: changeColor,
-            enableLabel: true,
-            pickerAreaHeightPercent: 0.8,
-          ),
-          // Use Material color picker:
-          //
-          // child: MaterialPicker(
-          //   pickerColor: pickerColor,
-          //   onColorChanged: changeColor,
-          //   enableLabel: true, // only on portrait mode
-          // ),
-          //
-          // Use Block color picker:
-          //
-          // child: BlockPicker(
-          //   pickerColor: currentColor,
-          //   onColorChanged: changeColor,
-          // ),
-        ),
-        actions: <Widget>[
-          FlatButton(
-            child: const Text('Got it'),
-            onPressed: () {
-              setState(() {
-                currentColor = pickerColor;
-                _sketcher.setColor(currentColor);
-              });
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      ),
       context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Pick a color!'),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: pickerColor,
+              onColorChanged: changeColor,
+              enableLabel: true,
+              pickerAreaHeightPercent: 0.8,
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('Got it'),
+              onPressed: () {
+                setState(() {
+                  currentColor = pickerColor;
+                  _sketcher.setColor(currentColor);
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
+
+  // takescrshot() async {
+  //   RenderRepaintBoundary boundary = scr.currentContext.findRenderObject();
+  //   var image = await boundary.toImage();
+  //   var byteData = await image.toByteData(format: ImageByteFormat.png);
+  //   var pngBytes = byteData.buffer.asUint8List();
+  //   print(pngBytes);
+  // }
+
+  // var scr = new GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     final Container sketchArea = Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/blue_field.png"),
+          fit: BoxFit.cover,
+        ),
+      ),
       margin: EdgeInsets.all(1.0),
       alignment: Alignment.topLeft,
-      color: Colors.blueGrey[50],
       child: CustomPaint(
         painter: _sketcher,
       ),
     );
 
+    // return RepaintBoundary(
+    //     key: scr,
+    //     child:
     return Scaffold(
       bottomNavigationBar: BottomNavBar(context),
       appBar: AppBar(
@@ -104,11 +112,11 @@ class _SketchPageState extends State<SketchPage> {
       ),
       floatingActionButton: SpeedDial(
         animatedIcon: AnimatedIcons.menu_close,
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.green.shade800,
         children: [
           SpeedDialChild(
             label: 'Clear Screen',
-            backgroundColor: Colors.red,
+            backgroundColor: Colors.green,
             child: Icon(Icons.refresh),
             onTap: () {
               setState(() => points.clear());
@@ -116,13 +124,21 @@ class _SketchPageState extends State<SketchPage> {
           ),
           SpeedDialChild(
               label: 'Palette',
-              backgroundColor: Colors.red,
+              backgroundColor: Colors.green,
               child: Icon(Icons.format_paint),
               onTap: () {
                 showColorPicker();
+              }),
+          SpeedDialChild(
+              label: 'Take picture',
+              backgroundColor: Colors.green,
+              child: Icon(Icons.camera),
+              onTap: () {
+                // takescrshot();
               })
         ],
       ),
+      // )
     );
   }
 }

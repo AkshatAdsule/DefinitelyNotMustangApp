@@ -1,19 +1,41 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/pages/pre-event-analysis/inputScreen.dart';
+import 'package:mustang_app/backend/setup_service.dart';
+import 'package:mustang_app/backend/auth_service.dart';
 import 'exports/pages.dart';
 import 'utils/orientation_helpers.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SetupService.setup();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   final _observer = NavigatorObserverWithOrientation();
 
+  // AuthService _AuthService = AuthService();
+
   Route<dynamic> _onGenerateRoute(RouteSettings settings) {
     Map<String, dynamic> args = settings.arguments;
     switch (settings.name) {
+      case Splash.route:
+        return MaterialPageRoute(
+          builder: (context) => Splash(),
+          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
+        );
+      case Login.route:
+        return MaterialPageRoute(
+          builder: (context) => Login(),
+          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
+        );
+      case HomePage.route:
+        return MaterialPageRoute(
+          builder: (context) => HomePage(),
+          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
+        );
       case Calendar.route:
         return MaterialPageRoute(
           builder: (context) => Calendar(),
@@ -31,6 +53,7 @@ class MyApp extends StatelessWidget {
             matchNumber: args['matchNumber'],
             actions: args['actions'],
             allianceColor: args['allianceColor'],
+            climbLocation: args['climbLocation'],
           ),
           settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
         );
@@ -84,10 +107,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Mustang App',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
+    return MultiProvider(
+      providers: [
+        // StreamProvider<User>.value(
+        //   value: FirebaseAuth.instance.authStateChanges(),
+        // ),
+        Provider<AuthService>(
+          create: (_) => AuthService(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Mustang App',
+        theme: ThemeData(
+          primarySwatch: Colors.green,
+        ),
+        home: HomePage(),
+        initialRoute: Splash.route,
+        navigatorObservers: [_observer],
+        onGenerateRoute: (settings) => _onGenerateRoute(settings),
       ),
       home: HomePage(),
       navigatorObservers: [_observer],

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/backend/game_action.dart';
 import 'package:mustang_app/components/game_map.dart';
+import 'package:mustang_app/components/game_replay.dart';
 import 'package:mustang_app/components/header.dart';
 import 'package:mustang_app/components/map_analysis_text.dart';
-import 'package:mustang_app/components/map_shading_key.dart';
 import 'package:mustang_app/components/map_switch_button.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/constants/constants.dart';
@@ -23,13 +24,24 @@ class MapAnalysisDisplay extends StatefulWidget {
 
 class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
   Analyzer myAnalyzer;
+  bool _showScoringMap = true;
+  bool _accuracyMap = true;
   String _teamNumber;
-  //MapAnalysisShading shading;
+
+  GameMap gameMap;
+  MapSwitchButton switchButton;
+  ActionType currentActionType = ActionType.ALL;
+
+  String _scoringText = Constants.minPtValuePerZonePerGame.toString() +
+      " total pts                                                                     " +
+      Constants.maxPtValuePerZonePerGame.toString() +
+      " total pts";
+  String _accuracyText =
+      "0%                                                                  100%";
 
   _MapAnalysisDisplayState(String teamNumber) {
     myAnalyzer = new Analyzer(teamNumber);
     _teamNumber = teamNumber;
-    //shading = new MapAnalysisShading();
   }
 
   @override
@@ -37,40 +49,58 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
     super.initState();
   }
 
-  int _getScoringColorValue(int x, int y) {
+  void toggle() {
+    setState(() {
+      _showScoringMap = !_showScoringMap;
+    });
+  }
+
+  void _toggleScreen() {
+    setState(() {
+      _accuracyMap = !_accuracyMap;
+    });
+  }
+
+  int _getScoringColorValue(ActionType actionType, int x, int y) {
     double totalNumGames = myAnalyzer.totalNumGames().toDouble();
     double ptsAtZone =
-        myAnalyzer.calcPtsAtZone(x.toDouble(), y.toDouble()) / totalNumGames;
+        myAnalyzer.calcPtsAtZone(actionType, x.toDouble(), y.toDouble()) /
+            totalNumGames;
+
     double ptsAtZonePerGame = ptsAtZone / totalNumGames;
-    return ((ptsAtZonePerGame / Constants.maxPtValuePerZonePerGame) * 600)
-        .toInt();
-  }
-
-  int _getAccuracyColorValue(int x, int y) {
-    double zoneAccuracyOutOf1 =
-        myAnalyzer.calcShotAccuracyAtZone(x.toDouble(), y.toDouble());
-    return (600 * zoneAccuracyOutOf1).toInt();
-  }
-
-  //zones start at 0, see miro but climb up, no sense of columns or row so need to convert
-  /*
-  double zoneToX(int zone) {
-    return zone - (zoneToY(zone) * Constants.zoneColumns);
-  }
-
-  double zoneToY(int zone) {
-    double y = 0;
-    while (zone >= Constants.zoneColumns) {
-      zone -= Constants.zoneColumns;
-      y++;
+    double colorValue =
+        ((ptsAtZonePerGame / Constants.maxPtValuePerZonePerGame) * 900);
+    int a = ((colorValue / 100).toInt()) * 100; //lower bound of 100
+    int b = ((colorValue / 100).toInt() + 1) * 100; //upper bound
+    int returnVal = (colorValue - a > b - colorValue) ? b : a;
+    if (returnVal > 0) {
+      //debugPrint("zone: (" + x.toString() + ", " + y.toString() + ")  points at zone per game: " + ptsAtZonePerGame.toString() + " color value: " + returnVal.toString());
     }
-    return y;
+    if (returnVal > 900) {
+      return 900;
+    }
+    return returnVal;
   }
-  */
+
+  int _getAccuracyColorValue(ActionType actionType, int x, int y) {
+    double zoneAccuracyOutOf1 = myAnalyzer.calcShotAccuracyAtZone(
+        actionType, x.toDouble(), y.toDouble());
+
+    double zoneAccuracyOutOf900 = zoneAccuracyOutOf1 * 900;
+    if (!zoneAccuracyOutOf900.isInfinite && !zoneAccuracyOutOf900.isNaN) {
+      int a = ((zoneAccuracyOutOf900 / 100).toInt()) * 100; //lower bound of 100
+      int b = ((zoneAccuracyOutOf900 / 100).toInt() + 1) * 100; //upper bound
+      int returnVal =
+          (zoneAccuracyOutOf900 - a > b - zoneAccuracyOutOf900) ? b : a;
+      return returnVal;
+    } else {
+      return 0;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    MapSwitchButton switchButton = new MapSwitchButton();
+    debugPrint("current action type: " + currentActionType.toString());
     if (!myAnalyzer.initialized) {
       myAnalyzer.init().then((value) => setState(() {}));
     }
@@ -80,8 +110,9 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
       return Container(
         width: cellWidth,
         height: cellHeight,
-        decoration:
-            BoxDecoration(color: Colors.green[_getScoringColorValue(x, y)]),
+        decoration: BoxDecoration(
+            color:
+                Colors.green[_getScoringColorValue(currentActionType, x, y)]),
       );
     });
 
@@ -90,53 +121,141 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
       return Container(
         width: cellWidth,
         height: cellHeight,
-        decoration:
-            BoxDecoration(color: Colors.green[_getAccuracyColorValue(x, y)]),
+        decoration: BoxDecoration(
+            color:
+                Colors.green[_getAccuracyColorValue(currentActionType, x, y)]),
       );
     });
 
-    /*
-    GameMap gameMap;
-    if (switchButton.displayAccuracyMap == true){
-      gameMap = GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
+    if (_showScoringMap == true) {
+      gameMap =
+          GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
+    } else {
+      gameMap =
+          GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
     }
-    else{
-      gameMap = GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
-    }
-    */
-    GameMap scoringGameMap =
-        GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
 
-    GameMap accuracyGameMap =
+    GameMap scoringMap =
+        GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
+    GameMap accuracyMap =
         GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
 
+    switchButton = new MapSwitchButton(this.toggle, _showScoringMap);
+    Widget dropDownList = ListTile(
+      title: Text(
+        'Action Type',
+        textAlign: TextAlign.center,
+        style: new TextStyle(
+          fontSize: 14,
+          color: Colors.grey[800],
+          fontWeight: FontWeight.bold,
+          background: Paint()
+            ..strokeWidth = 30.0
+            ..color = Colors.green[300]
+            ..style = PaintingStyle.stroke
+            ..strokeJoin = StrokeJoin.bevel,
+        ),
+      ),
+
+      trailing: DropdownButton<ActionType>(
+
+        value: currentActionType,
+        icon: Icon(Icons.arrow_downward),
+        iconSize: 24,
+        elevation: 16,
+
+        style: TextStyle(
+            fontSize: 14,
+            color: Colors.green[300],
+            fontWeight: FontWeight.bold),
+        underline: Container(
+          height: 2,
+          color: Colors.grey[50],
+        ),
+        onChanged: (ActionType actionType) {
+          setState(() {
+            currentActionType = actionType;
+          });
+        },
+        items: <ActionType>[
+          ActionType.ALL,
+          ActionType.SHOT_LOW,
+          ActionType.SHOT_OUTER,
+          ActionType.SHOT_INNER
+        ].map<DropdownMenuItem<ActionType>>((ActionType actionType) {
+          return DropdownMenuItem<ActionType>(
+
+            value: actionType,
+            child: Center(
+                child: Text(actionType
+                    .toString()
+                    .substring(actionType.toString().indexOf('.') + 1))),
+          );
+        }).toList(),
+      ),
+    );
+
+    Widget shadingKey = Ink(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.green[50], Colors.green[900]],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.horizontal()),
+      child: Container(
+        constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width, minHeight: 60.0),
+        alignment: Alignment.center,
+        child: Text(
+          !(switchButton.showScoringMap)
+              ? "Accuracy Map (avg per game)\n" + _accuracyText
+              : "Scoring Map (avg per game)\n" + _scoringText,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.grey[800],
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              height: 1),
+        ),
+      ),
+    );
+
+    var children2 = <Widget>[
+      MapAnalysisText(myAnalyzer),
+      //switchAndDrop,
+      switchButton,
+      dropDownList,
+      shadingKey,
+      !(switchButton.showScoringMap) ? accuracyMap : scoringMap,
+    ];
+
+    Container gameReplay = Container(
+        alignment: Alignment.center,
+        child: RaisedButton(
+          color: Colors.green[900],
+          onPressed: () {
+            _toggleScreen();
+          },
+          child: Text(
+            _accuracyMap ? "Game Replay" : "Accuracy Map",
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white, fontSize: 16, height: 1),
+          ),
+        ));
+
     return Scaffold(
-      appBar: Header(context, 'Analysis'),
+      appBar: Header(context, 'Analysis for Team: ' + _teamNumber,
+          buttons: [gameReplay]),
       body: Container(
-        // height: MediaQuery.of(context).size.height,
         child: SingleChildScrollView(
-          // child: ConstrainedBox(
-          //   constraints: BoxConstraints(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              //Image.asset('assets/croppedmap.png', fit: BoxFit.contain),
-              MapAnalysisText(myAnalyzer),
-              MapSwitchButton(),
-
-              scoringGameMap,
-              //gameMap,
-              //WHY IS THIS NOT WORKING FLKSDFK
-              //!switchButton.displayAccuracyMap ? accuracyGameMap : scoringGameMap,
-
-              //plotter,
-              //MapScouterKey(),
-              MapShadingKey(),
-            ],
+            children:
+                _accuracyMap ? children2 : <Widget>[GameReplay(myAnalyzer)],
           ),
         ),
       ),
-      // ),
     );
   }
 }

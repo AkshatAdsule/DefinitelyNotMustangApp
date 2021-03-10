@@ -8,6 +8,7 @@ class Constants {
   static const double intakeValue = 1.5;
   static const double shotValue = 2; //avg of low, outer, inner
   static const double zoneDisplacementValue = 0.5;
+  static const double maxBallsInBot = 5; //ie max number of balls in bot is 5
   static const double regFoul = -3;
   static const double techFoul = -15;
   static const double yellowCard = -20;
@@ -37,8 +38,8 @@ class Constants {
   static const double climbValue = 25;
   static const double endgameParkValue = 5;
 
-  static int zoneRows = 8;
-  static int zoneColumns = 16;
+  static const int zoneRows = 8;
+  static const int zoneColumns = 16;
 
   //MAP ANALYSIS
   static const int shadingPointDifference = 2;
@@ -46,5 +47,9 @@ class Constants {
   static const int minPtValuePerZonePerGame = 0;
   static const int maxPtValuePerZonePerGame = 5;
 
-  static FirebaseFirestore db = FirebaseFirestore.instance;
+  // MAP SCOUTING
+  static const int teleopStartMillis = 15000;
+  static const int endgameStartMillis = 120000;
+  static const int matchEndMillis = 150000;
+  static const int stopwatchLagMillis = 5000;
 }

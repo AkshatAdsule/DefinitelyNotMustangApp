@@ -5,30 +5,29 @@
 // import 'dart:convert';
 // import 'package:firebase_storage/firebase_storage.dart';
 
-// class DataProvider {
-//   static Future<TaskSnapshot> exportDB() async {
-//     final Directory directory = await getApplicationDocumentsDirectory();
-//     final File file = File('${directory.path}/_db.json');
+class DataProvider {
+  // static Future<UploadTask> exportDB() async {
+  //   final Directory directory = await getApplicationDocumentsDirectory();
+  //   final File file = File('${directory.path}/_db.json');
 
-//     Map<String, Map<String, dynamic>> data = {};
-//     final FirebaseFirestore _db = FirebaseFirestore.instance;
-//     TaskSnapshot ref = FirebaseStorage.instance.ref().child('_db.json');
-//     QuerySnapshot teams = await _db.collection('teams').getdocs();
-//     teams.docs.forEach((doc) async {
-//       data[doc.id] = {};
-//       data[doc.id]['Match Scouting'] =
-//           new Map<String, Map<String, dynamic>>();
-//       data[doc.id].addAll(doc.data());
-//       QuerySnapshot matches =
-//           await doc.reference.collection('Match Scouting').get();
-//       matches.docs.forEach((match) {
-//         data[doc.id]['Match Scouting'][match.id] = match.data;
-//       });
-//     });
+  //   Map<String, Map<String, dynamic>> data = {};
+  //   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  //   Reference ref = FirebaseStorage.instance.ref().child('_db.json');
+  //   QuerySnapshot teams = await _db.collection('teams').get();
+  //   teams.docs.forEach((doc) async {
+  //     data[doc.id] = {};
+  //     data[doc.id]['Match Scouting'] = new Map<String, Map<String, dynamic>>();
+  //     data[doc.id].addAll(doc.data());
+  //     QuerySnapshot matches =
+  //         await doc.reference.collection('Match Scouting').get();
+  //     matches.docs.forEach((match) {
+  //       data[doc.id]['Match Scouting'][match.id] = match.data();
+  //     });
+  //   });
 
-//     File updated = await file.writeAsString(jsonEncode(data));
-//     return ref.put(updated).onComplete;
-//   }
+  //   File updated = await file.writeAsString(jsonEncode(data));
+  //   return ref.putFile(updated);
+  // }
 
 //   // static Future<void> importDB() async { }
 // }

@@ -69,7 +69,7 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  void _onDaySelected(DateTime day, List events, List holidats) {
+  void _onDaySelected(DateTime day, List events, List holidays) {
     setState(() {
       _selectedEvents = events;
     });
@@ -203,16 +203,16 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
   //           );
   //         }
 
-  //         return children;
-  //       },
-  //     ),
-  //     onDaySelected: (date, events) {
-  //       _onDaySelected(date, events);
-  //       _animationController.forward(from: 0.0);
-  //     },
-  //     onVisibleDaysChanged: _onVisibleDaysChanged,
-  //   );
-  // }
+          return children;
+        },
+      ),
+      onDaySelected: (date, events, holidays) {
+        _onDaySelected(date, events, holidays);
+        _animationController.forward(from: 0.0);
+      },
+      onVisibleDaysChanged: _onVisibleDaysChanged,
+    );
+  }
 
   // Widget _buildEventsMarker(DateTime date, List events) {
   //   return AnimatedContainer(

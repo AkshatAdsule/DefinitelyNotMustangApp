@@ -1,18 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class User {
+class UserModel {
   String _uid, _email, _firstName, _lastName;
 
-  User(
+  UserModel(
     this._uid,
     this._email,
     this._firstName,
     this._lastName,
   );
 
-  factory User.fromSnapshot(DocumentSnapshot snapshot) {
+  factory UserModel.fromSnapshot(DocumentSnapshot snapshot) {
+    if (!snapshot.exists) {
+      return null;
+    }
     Map<String, dynamic> data = snapshot.data();
-    return User(
+    return UserModel(
       snapshot.id,
       data['email'],
       data['firstName'],
@@ -20,8 +23,8 @@ class User {
     );
   }
 
-  factory User.fromJson(Map<String, dynamic> data) {
-    return User(
+  factory UserModel.fromJson(Map<String, dynamic> data) {
+    return UserModel(
       data['uid'],
       data['email'],
       data['firstName'],

@@ -19,7 +19,6 @@ class Scouter extends StatefulWidget {
 class _ScouterState extends State<Scouter> {
   TextEditingController _teamNumberController = TextEditingController();
   TextEditingController _matchNumberController = TextEditingController();
-  TextEditingController _namesController = new TextEditingController();
   String _allianceColor = "Blue";
   int _allianceNum = 0;
 
@@ -126,16 +125,6 @@ class _ScouterState extends State<Scouter> {
           ),
         ),
         Container(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
-          child: TextField(
-            controller: _namesController,
-            decoration: InputDecoration(
-              labelText: 'Name',
-              border: OutlineInputBorder(),
-            ),
-          ),
-        ),
-        Container(
           padding: EdgeInsets.all(8.0),
           child: new Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -166,7 +155,6 @@ class _ScouterState extends State<Scouter> {
                           _allianceColor = 'Red';
 
                           Constants.fieldColor = value;
-                          //debugPrint(Constants.fieldColor.toString());
                         });
                       }),
                   new Text(
@@ -188,11 +176,6 @@ class _ScouterState extends State<Scouter> {
                         if (_teamNumberController.text.isEmpty) {
                           Scaffold.of(buildContext).showSnackBar(SnackBar(
                             content: Text("Enter a team number"),
-                          ));
-                          return;
-                        } else if (_namesController.text.isEmpty) {
-                          Scaffold.of(buildContext).showSnackBar(SnackBar(
-                            content: Text("Enter a name"),
                           ));
                           return;
                         }
@@ -236,11 +219,6 @@ class _ScouterState extends State<Scouter> {
                             content: Text("Enter a match number"),
                           ));
                           return;
-                        } else if (_namesController.text.isEmpty) {
-                          Scaffold.of(buildContext).showSnackBar(SnackBar(
-                            content: Text("Enter a name"),
-                          ));
-                          return;
                         }
                         ScoutingOperations.doesMatchDataExist(
                                 _teamNumberController.text,
@@ -249,12 +227,20 @@ class _ScouterState extends State<Scouter> {
                           if (exists) {
                             showAlertDialog(context, false);
                           } else {
-                            Navigator.pushNamed(context, MapScouting.route,
-                                arguments: {
-                                  'teamNumber': _teamNumberController.text,
-                                  'matchNumber': _matchNumberController.text,
-                                  'allianceColor': _allianceColor,
-                                });
+                            ScoutingOperations.doesTeamDataExist(
+                                    _teamNumberController.text)
+                                .then((bool exists) {
+                              if (!exists) {
+                                ScoutingOperations.initTeamData(
+                                    _teamNumberController.text);
+                              }
+                              Navigator.pushNamed(context, MapScouting.route,
+                                  arguments: {
+                                    'teamNumber': _teamNumberController.text,
+                                    'matchNumber': _matchNumberController.text,
+                                    'allianceColor': _allianceColor,
+                                  });
+                            });
                           }
                         });
                       });

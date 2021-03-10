@@ -13,17 +13,21 @@ class ScoutingOperations {
     await _teamsRef.doc(team.teamNumber).set(team.toJson());
   }
 
-  static Future<void> setMatchData(Match match) async {
+  static Future<void> setMatchData(
+    Match match,
+    String uid,
+    String name,
+  ) async {
     await _teamsRef
         .doc(match.teamNumber)
         .collection('matches')
         .doc(match.matchNumber)
-        .set(match.toJson());
+        .set({...match.toJson(), 'name': name, 'userId': uid});
   }
 
   static Future<bool> doesTeamDataExist(String teamNumber) async {
     DocumentSnapshot snap = await _teamsRef.doc(teamNumber).get();
-    if (snap == null || snap.data == null) {
+    if (snap == null || snap.data() == null) {
       return false;
     }
     Team team = Team.fromSnapshot(snap);
@@ -44,7 +48,7 @@ class ScoutingOperations {
         .collection('matches')
         .doc(matchNumber)
         .get();
-    if (snap == null || snap.data == null) {
+    if (snap == null || snap.data() == null) {
       return false;
     }
     Match match = Match.fromSnapshot(snap);
@@ -55,5 +59,9 @@ class ScoutingOperations {
     } else {
       return true;
     }
+  }
+
+  static Future<void> initTeamData(String teamNumber) async {
+    await _teamsRef.doc(teamNumber).set({'teamNumber': teamNumber});
   }
 }

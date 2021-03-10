@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 
 class MapSwitchButton extends StatefulWidget {
-  get displayAccuracyMap => displayAccuracyMap();
+  void Function() onToggle;
+  bool showScoringMap = true;
+
+  MapSwitchButton(this.onToggle, this.showScoringMap);
 
   @override
   State<StatefulWidget> createState() {
-    return new _MapSwitchButtonState();
+    return new _MapSwitchButtonState(onToggle, showScoringMap);
   }
 }
 
 class _MapSwitchButtonState extends State<MapSwitchButton> {
-  //String switchText = "Accuracy Map"; //other option is "Scoring Map"
-  bool _accuracyMapText = true;
+  void Function() onToggle;
+  bool showScoringMap = true;
 
-  //should display show accuracy map or not (scoring)
-  bool displayAccuracyMap() {
-    return !_accuracyMapText;
-  }
-
+  _MapSwitchButtonState(this.onToggle, this.showScoringMap);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,35 +29,31 @@ class _MapSwitchButtonState extends State<MapSwitchButton> {
               height: 50.0,
               child: RaisedButton(
                 onPressed: () {
-                  if (_accuracyMapText) {
-                    setState(() {
-                      _accuracyMapText = false;
-                    });
-                  } else {
-                    setState(() {
-                      _accuracyMapText = true;
-                    });
-                  }
+                  onToggle();
+                  showScoringMap = !showScoringMap;
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(80.0)),
                 padding: EdgeInsets.all(0.0),
                 child: Ink(
                   decoration: BoxDecoration(
+                    color: Colors.green[300],
+                    /*
                       gradient: LinearGradient(
                         colors: [Colors.green[50], Colors.green[600]],
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                       ),
+                      */
                       borderRadius: BorderRadius.circular(80.0)),
                   child: Container(
                       constraints:
                           BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
                       alignment: Alignment.center,
                       child: Text(
-                        !_accuracyMapText ? "Scoring Map" : "Accuracy Map",
+                        !widget.showScoringMap ? "Scoring Map" : "Accuracy Map",
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white, fontSize: 16),
                       )),
                 ),
               ),

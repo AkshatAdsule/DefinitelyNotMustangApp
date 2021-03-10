@@ -75,6 +75,7 @@ class GameAction {
 }
 
 enum ActionType {
+  ALL,
   TEST,
   FOUL_REG,
   FOUL_TECH,

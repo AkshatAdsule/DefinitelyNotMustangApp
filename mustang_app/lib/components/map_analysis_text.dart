@@ -14,6 +14,7 @@ class MapAnalysisText extends StatefulWidget {
 
 class _MapAnalysisTextState extends State<MapAnalysisText> {
   Analyzer myAnalyzer;
+
   _MapAnalysisTextState(Analyzer analyzer) {
     myAnalyzer = analyzer;
   }
@@ -32,20 +33,16 @@ class _MapAnalysisTextState extends State<MapAnalysisText> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(myAnalyzer.getReport(),
-                        //textDirection: TextDirection.ltr,
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.grey[800],
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
-                          /*
-                            background: Paint()
+                          background: Paint()
                             ..strokeWidth = 30.0
-                            ..color = Colors.grey
-             ..style = PaintingStyle.stroke
-        ..strokeJoin = StrokeJoin.round),
-        */
-                          backgroundColor: Colors.green[300],
-                          height: 2,
+                            ..color = Colors.green[300]
+                            ..style = PaintingStyle.stroke
+                            ..strokeJoin = StrokeJoin.bevel,
                         ))
                   ],
                 )),

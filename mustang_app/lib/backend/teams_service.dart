@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mustang_app/backend/team.dart';
-import 'package:mustang_app/backend/match.dart';
 
 class TeamsService {
   FirebaseFirestore _db = FirebaseFirestore.instance;

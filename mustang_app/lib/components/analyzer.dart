@@ -1,6 +1,4 @@
 import 'dart:math';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/game_action.dart';
 import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/backend/team.dart';
@@ -51,12 +49,40 @@ class Analyzer {
     _initialized = true;
   }
 
-  double calcPtsAtZoneMapDisplay(double x, double y) => calcPtsAtZone(x, y);
+  List<String> getMatches() {
+    List<String> matchNums = new List<String>();
+    matchNums.add("");
+    for (Match m in _allMatches) {
+      matchNums.add(m.matchNumber);
+    }
+    return matchNums;
+  }
+
+  //TODO: getMatch()--> returns names of the matches for the team (for dropdown)
+  List<GameAction> getMatch(String matchNum) {
+    for (Match m in _allMatches)
+      if (m.matchNumber == matchNum) return m.actions;
+  }
+
+  //TODO: getActionsAtTime(long milliseconds) return a list of actions at the time, x and y will be passed
+  List<GameAction> getActionsAtTime(List<GameAction> matchActions, int milli) {
+    List<GameAction> currActions = List<GameAction>();
+    for (GameAction g in matchActions) {
+      if (g.timeStamp > (milli.round() - 500) ||
+          g.timeStamp < (milli.round() + 500)) {
+        currActions.add(g);
+      }
+    }
+    return currActions;
+  }
 
   int totalNumGames() => _totalNumGames;
 
   String getReport() {
-    //TEST TO SEE IF DATA RLY NEEDS TO BE COLLECTED!!
+    if (!_initialized || _allMatches.length == 0) {
+      return "No analysis available";
+    }
+
     if (_allMatches.length > _oldAllMatchLength) {
       _oldAllMatchLength = _allMatches.length;
       //need to reset everything to 0 (simpler than checking what parts need to be updated)
@@ -64,43 +90,51 @@ class Analyzer {
       _collectData();
     }
 
+    int _shootingPtsPerGame =
+        (calcOffenseShootingPts() / _totalNumGames).round();
+    int _nonShootingsPtsPerGame =
+        (calcOffenseNonShootingPts() / _totalNumGames).round();
+    int _climbAccuracy = calcTotClimbAccuracy().round();
+    int _shotAccuracy = calcShotAccuracy().round();
+    int _ptsPreventedPerGame = (calcTotPtsPrev() / _totalNumGames).round();
+
+    if (_shootingPtsPerGame == double.nan ||
+        _shootingPtsPerGame == double.infinity) {
+      _shootingPtsPerGame = null;
+    }
+
     String fouls = "";
     if (_foulReg.length > 0) {
       fouls += "Reg Fouls: " + _foulReg.length.toString();
     }
     if (_foulTech.length > 0) {
-      fouls += " Tech Fouls: " + _foulTech.length.toString();
+      fouls += "    Tech Fouls: " + _foulTech.length.toString();
     }
     if (_foulYellow.length > 0) {
-      fouls += " Yellow Fouls: " + _foulYellow.length.toString();
+      fouls += "    Yellow Fouls: " + _foulYellow.length.toString();
     }
     if (_foulRed.length > 0) {
-      fouls += " Red Fouls: " + _foulRed.length.toString();
+      fouls += "    Red Fouls: " + _foulRed.length.toString();
     }
     if (_foulDisabled.length > 0) {
-      fouls += " Disabled Fouls: " + _foulDisabled.length.toString();
+      fouls += "    Disabled Fouls: " + _foulDisabled.length.toString();
     }
     if (_foulDisqual.length > 0) {
-      fouls += " Disqual Fouls: " + _foulDisqual.length.toString();
+      fouls += "    Disqual Fouls: " + _foulDisqual.length.toString();
     }
 
     return "Team: " +
-        _teamNum
-        //+ "\nOffense Shooting Points: " + calcTotOffenseShootingPts().round().toString()
-        +
-        "\nShooting Pts/game: " +
-        (calcTotOffenseShootingPts() / _totalNumGames).round().toString() +
+        _teamNum +
+        "\nShooting pts/game: " +
+        _shootingPtsPerGame.toString() +
+        "    Non-shooting pts/game: " +
+        _nonShootingsPtsPerGame.toString() +
         "    Climb Accuracy: " +
-        calcTotClimbAccuracy().round().toString() +
-        "%"
-        //+ "\nTotal points prevented: " + calcTotPtsPrev().round().toString()
-        +
-        "\nPts Prevented/game: " +
-        (calcTotPtsPrev() / _totalNumGames).round().toString() +
-        "    Shot accuracy: " +
-        calcShotAccuracy().round().toString() +
-        "%" +
-        "\n" +
+        _climbAccuracy.toString() +
+        "%\n    Shot Accuracy: " +
+        _shotAccuracy.toString() +
+        "%    Pts prevented/game: " +
+        _ptsPreventedPerGame.toString() +
         fouls;
   }
 
@@ -175,7 +209,7 @@ class Analyzer {
     _pushEnd = [];
   }
 
-  double calcTotOffenseShootingPts() {
+  double calcOffenseShootingPts() {
     double _lowPts = 0.0, _outerPts = 0.0, _innerPts = 0.0;
     for (int i = 0; i < _shotLow.length; i++) {
       if (_shotLow[i].timeStamp <= Constants.autonMillisecondLength) {
@@ -200,25 +234,27 @@ class Analyzer {
         _innerPts += Constants.innerShotValue;
       }
     }
+    return _lowPts + _outerPts + _innerPts;
+  }
 
+  double calcOffenseNonShootingPts() {
     double _rotationControl =
         _otherWheelRotation.length * Constants.positionControl;
     double _positionControl =
         _otherWheelPosition.length * Constants.positionControl;
     double _climb = _otherClimb.length * Constants.climbValue;
-    return _lowPts +
-        _outerPts +
-        _innerPts +
-        _rotationControl +
-        _positionControl +
-        _climb;
+    return _rotationControl + _positionControl + _climb;
   }
 
   double calcShotAccuracy() {
     int _successfulShots =
         _shotLow.length + _shotOuter.length + _shotInner.length;
     int _missedShots = _missedLow.length + _missedOuter.length;
-    return (_successfulShots / (_successfulShots + _missedShots)) * 100;
+    if (_successfulShots + _missedShots != 0) {
+      return (_successfulShots / (_successfulShots + _missedShots)) * 100.0;
+    } else {
+      return 0;
+    }
   }
 
   double calcTotClimbAccuracy() {
@@ -246,11 +282,75 @@ class Analyzer {
     return _prevIntake.length * Constants.intakeValue;
   }
 
+  double getBallsInBot(String matchNum, double timeStamp) {
+    double ballsInBot = 0;
+    Match match =
+        null; //only reason it's here is to test if matchNum has a "match" in _allMatches. PUN INTENDED
+    List<GameAction> matchActions = null;
+    //find and set match
+    for (int i = 0; i < _allMatches.length; i++) {
+      if (_allMatches[i].matchNumber == matchNum) {
+        match = _allMatches[i];
+        matchActions = match.actions;
+      }
+    }
+    //matchNum does not correspond to an actual match
+    if (match == null || matchActions == null) {
+      return 0;
+    }
+
+    for (int b = 0; b < matchActions.length; b++) {
+      //add intaked balls
+      if (matchActions[b].action == ActionType.INTAKE &&
+          matchActions[b].timeStamp <= timeStamp) {
+        ballsInBot++;
+      }
+
+      //remove balls that were shot
+      if (matchActions[b].action == ActionType.SHOT_LOW ||
+          matchActions[b].action == ActionType.SHOT_OUTER ||
+          matchActions[b].action == ActionType.SHOT_INNER) {
+        if (matchActions[b].timeStamp <= timeStamp) {
+          ballsInBot--;
+        }
+      }
+    }
+
+    return ballsInBot;
+  }
+
   double calcPushPtsPrev() {
+    double result = 0;
+
+    //goes thru all matches
+    for (int i = 0; i < _allMatches.length; i++) {
+      Match _currentMatch = _allMatches[i];
+      List<GameAction> actions = _currentMatch.actions;
+      String matchNum = _currentMatch.matchNumber;
+      for (int a = 0; a < actions.length; a++) {
+        if (actions[a].action == ActionType.PUSH_START) {
+          double ballsInBot = getBallsInBot(matchNum, actions[a].timeStamp);
+          //assume immediate action is end push
+          result +=
+              calcSinglePushPtsPrev(actions[a], actions[a + 1], ballsInBot);
+        }
+      }
+    }
+    return result;
+  }
+
+  double calcSinglePushPtsPrev(
+      GameAction pushStart, GameAction pushEnd, double ballsInBot) {
+    double zoneDisplacementValue = Constants.zoneDisplacementValue;
+    zoneDisplacementValue *=
+        (ballsInBot / Constants.maxBallsInBot); //take balls in bot into account
+    zoneDisplacementValue *= calcShotAccuracy() /
+        100.0; //take shot accuracy into account, worth more if higher value
+
     double _result = 0.0;
     //set speed
-    //TODO: fix to enum
     double _normalVelocity = 0.0;
+
     if (_driveBase.contains("tank")) {
       _normalVelocity = Constants.tankSpeed;
     }
@@ -267,22 +367,15 @@ class Analyzer {
       _normalVelocity = Constants.swerveSpeed;
     }
 
-    for (int i = 0; i < _pushStart.length; i++) {
-      var _actualDisplacement = calcDisplacement(
-          _pushStart[i].x, _pushStart[i].y, _pushEnd[i].x, _pushEnd[i].y);
-      var _pushTimeSeconds =
-          (_pushEnd[i].timeStamp - _pushStart[i].timeStamp) / 1000;
-      var _predictedDisplacement = _normalVelocity * _pushTimeSeconds;
-      var _zoneDisplacementDifference =
-          (_predictedDisplacement - _actualDisplacement) /
-              Constants.zoneSideLength;
-      _result +=
-          (_zoneDisplacementDifference * Constants.zoneDisplacementValue);
-    }
-    //debugPrint("pushPtsPrev: " + _result.toString());
-    var test = _allMatches[0];
-    var testAgain = test.matchNumber;
-    //debugPrint("all matches test: " + testAgain.toString());
+    var _actualDisplacement =
+        calcDisplacement(pushStart.x, pushStart.y, pushEnd.x, pushEnd.y);
+    var _pushTimeSeconds = (pushEnd.timeStamp - pushStart.timeStamp) / 1000.0;
+    var _predictedDisplacement = _normalVelocity * _pushTimeSeconds;
+    var _zoneDisplacementDifference =
+        (_predictedDisplacement - _actualDisplacement) /
+            Constants.zoneSideLength;
+    _result += (_zoneDisplacementDifference * zoneDisplacementValue);
+
     return _result;
   }
 
@@ -303,94 +396,164 @@ class Analyzer {
 
   //returns a positive number, must subtract from total
   double calcFoulLostPts() {
-    double _regPtsLost = _foulReg.length * Constants.regFoul;
-    double _techPtsLost = _foulTech.length * Constants.techFoul;
-    double _yellowPtsLost = _foulYellow.length * Constants.techFoul;
-    double _redPtsLost = _foulRed.length * Constants.redCard;
-    return _regPtsLost + _techPtsLost + _yellowPtsLost + _redPtsLost;
+    return (_foulReg.length * Constants.regFoul) +
+        (_foulTech.length * Constants.techFoul) +
+        (_foulYellow.length * Constants.techFoul) +
+        (_foulRed.length * Constants.redCard);
   }
 
-  //for map display, takes in a zone and returns offense pts scored there
-  double calcShotAccuracyAtZone(double x, double y) {
+  double calcShotAccuracyAtZone(ActionType actionType, double x, double y) {
     double shotsMade = 0;
     double shotsMissed = 0;
-    for (int i = 0; i < _allMatches.length; i++) {
-      //inside each array of actions
-      for (int j = 0; j < _allMatches[i].actions.length; j++) {
-        GameAction currentAction = _allMatches[i].actions[j];
-        if (currentAction.action == ActionType.SHOT_LOW ||
-            currentAction.action == ActionType.SHOT_OUTER ||
-            currentAction.action == ActionType.SHOT_INNER) {
-          if (currentAction.x == x && currentAction.y == y) {
-            shotsMade++;
+    if (actionType == ActionType.ALL) {
+      for (int i = 0; i < _allMatches.length; i++) {
+        //inside each array of actions
+        for (int j = 0; j < _allMatches[i].actions.length; j++) {
+          GameAction currentAction = _allMatches[i].actions[j];
+          if (currentAction.action == ActionType.SHOT_LOW ||
+              currentAction.action == ActionType.SHOT_OUTER ||
+              currentAction.action == ActionType.SHOT_INNER) {
+            if (currentAction.x == x && currentAction.y == y) {
+              shotsMade++;
+            }
           }
-        }
 
-        if (currentAction.action == ActionType.MISSED_LOW ||
-            currentAction.action == ActionType.MISSED_OUTER) {
-          if (currentAction.x == x && currentAction.y == y) {
-            shotsMissed++;
+          if (currentAction.action == ActionType.MISSED_LOW ||
+              currentAction.action == ActionType.MISSED_OUTER) {
+            if (currentAction.x == x && currentAction.y == y) {
+              shotsMissed++;
+            }
           }
         }
       }
+    } else {
+      ActionType missedVersionOfAction;
+      //cannot miss a inner shot, accuracy is 100%
+      if (actionType == ActionType.SHOT_INNER) {
+        for (int i = 0; i < _allMatches.length; i++) {
+          //inside each array of actions
+          for (int j = 0; j < _allMatches[i].actions.length; j++) {
+            GameAction currentAction = _allMatches[i].actions[j];
+            if (currentAction.action == actionType) {
+              if (currentAction.x == x && currentAction.y == y) {
+                shotsMade++;
+              }
+            }
+          }
+        }
+        if (shotsMade + shotsMissed == 0) {
+          return 0;
+        }
+        return 1;
+      }
+      if (actionType == ActionType.SHOT_OUTER) {
+        missedVersionOfAction = ActionType.MISSED_OUTER;
+      }
+
+      if (actionType == ActionType.SHOT_LOW) {
+        missedVersionOfAction = ActionType.MISSED_LOW;
+      }
+
+      for (int i = 0; i < _allMatches.length; i++) {
+        //inside each array of actions
+        for (int j = 0; j < _allMatches[i].actions.length; j++) {
+          GameAction currentAction = _allMatches[i].actions[j];
+          if (currentAction.action == actionType) {
+            if (currentAction.x == x && currentAction.y == y) {
+              shotsMade++;
+            }
+          }
+
+          if (currentAction.action == missedVersionOfAction) {
+            if (currentAction.x == x && currentAction.y == y) {
+              shotsMissed++;
+            }
+          }
+        }
+      }
+    }
+    if (shotsMade + shotsMissed == 0) {
+      return 0;
     }
     return shotsMade / (shotsMade + shotsMissed);
   }
 
-  double calcPtsAtZone(double x, double y) {
-//needs to be called to initialize
-    // String random = getReport();
-    //debugPrint("all matches: " + _allMatches.toString());
+  //if doing everything, set actionType = ActionType.ALL
+  double calcPtsAtZone(ActionType actionType, double x, double y) {
     double totalPoints = 0;
+    double pointValueAuton = 0;
+    double pointValueTeleop = 0;
+    if (actionType == null) {
+      return 0;
+    } else if (actionType == ActionType.ALL) {
+      for (int i = 0; i < _allMatches.length; i++) {
+        //inside each array of actions
+        for (int j = 0; j < _allMatches[i].actions.length; j++) {
+          //low shot
+          GameAction currentAction = _allMatches[i].actions[j];
+          if (currentAction.action == ActionType.SHOT_LOW) {
+            if (currentAction.x == x && currentAction.y == y) {
+              if (currentAction.timeStamp <= 15000) {
+                totalPoints += Constants.lowShotAutonValue;
+              } else {
+                totalPoints += Constants.lowShotValue;
+              }
+            }
+          }
 
-    for (int i = 0; i < _allMatches.length; i++) {
-      //inside each array of actions
-      for (int j = 0; j < _allMatches[i].actions.length; j++) {
-        //low shot
-        GameAction currentAction = _allMatches[i].actions[j];
-        if (currentAction.action == ActionType.SHOT_LOW) {
-          if (currentAction.x == x && currentAction.y == y) {
-            if (currentAction.timeStamp <= 15) {
-              totalPoints += Constants.lowShotAutonValue;
-            } else {
-              totalPoints += Constants.lowShotValue;
+          //outer shot
+          if (currentAction.action == ActionType.SHOT_OUTER) {
+            if (currentAction.x == x && currentAction.y == y) {
+              if (currentAction.timeStamp <= 15000) {
+                totalPoints += Constants.outerShotAutonValue;
+              } else {
+                totalPoints += Constants.outerShotValue;
+              }
+            }
+          }
+
+          //inner shot
+          if (currentAction.action == ActionType.SHOT_INNER) {
+            if (currentAction.x == x && currentAction.y == y) {
+              if (currentAction.timeStamp <= 15000) {
+                totalPoints += Constants.innerShotAutonValue;
+              } else {
+                totalPoints += Constants.innerShotValue;
+              }
             }
           }
         }
+      }
+    } else {
+      if (actionType == ActionType.SHOT_INNER) {
+        pointValueAuton = Constants.innerShotAutonValue;
+        pointValueTeleop = Constants.innerShotValue;
+      }
+      if (actionType == ActionType.SHOT_OUTER) {
+        pointValueAuton = Constants.outerShotAutonValue;
+        pointValueTeleop = Constants.outerShotValue;
+      }
+      if (actionType == ActionType.SHOT_LOW) {
+        pointValueAuton = Constants.lowShotAutonValue;
+        pointValueTeleop = Constants.lowShotValue;
+      }
 
-        //outer shot
-        if (currentAction.action == ActionType.SHOT_OUTER) {
-          if (currentAction.x == x && currentAction.y == y) {
-            if (currentAction.timeStamp <= 15) {
-              totalPoints += Constants.outerShotAutonValue;
-            } else {
-              totalPoints += Constants.outerShotValue;
-            }
-          }
-        }
-
-        //inner shot
-        if (currentAction.action == ActionType.SHOT_INNER) {
-          if (currentAction.x == x && currentAction.y == y) {
-            if (currentAction.timeStamp <= 15) {
-              totalPoints += Constants.innerShotAutonValue;
-            } else {
-              totalPoints += Constants.innerShotValue;
+      for (int i = 0; i < _allMatches.length; i++) {
+        //inside each array of actions
+        for (int j = 0; j < _allMatches[i].actions.length; j++) {
+          GameAction currentAction = _allMatches[i].actions[j];
+          if (currentAction.action == actionType) {
+            if (currentAction.x == x && currentAction.y == y) {
+              if (currentAction.timeStamp <= 15000) {
+                totalPoints += pointValueAuton;
+              } else {
+                totalPoints += pointValueTeleop;
+              }
             }
           }
         }
       }
     }
-    /*
-    for (int i = 0; i < _shotLow.length; i++){
-      if (_shotLow[i].x == x && _shotLow[i].y == y){
-        //debugPrint("_shotLow[i].x == x && _shotLow[i].y == y was called");
-        if (_shotLow[i].timeStamp <= 15){ totalPoints += Constants.lowShotAutonValue;}
-        else { totalPoints += Constants.lowShotValue;}
-      }
-    }
-*/
-
     return totalPoints;
   }
 }
