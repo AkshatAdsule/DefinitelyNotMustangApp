@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mustang_app/pages/pre-event-analysis/inputScreen.dart';
+import 'package:mustang_app/pages/pre-event-analysis/input_screen.dart';
 import '../pages/sketcher.dart';
 import '../pages/calendar.dart';
 import '../pages/scouting/scouter.dart';

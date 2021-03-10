@@ -92,7 +92,6 @@ class _ScouterState extends State<Scouter> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Firebase.initializeApp();
   }
 
   @override

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mustang_app/utils/TeamStatistic.dart';
+import 'package:mustang_app/utils/team_statistic.dart';
 
 class OverAllScoreDisplay extends StatelessWidget {
   final double maxScore, score;

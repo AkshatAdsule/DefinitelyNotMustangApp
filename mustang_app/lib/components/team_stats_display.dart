@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mustang_app/components/OverallScoreDisplay.dart';
-import 'package:mustang_app/pages/pre-event-analysis/viewGraphScreen.dart';
-import 'package:mustang_app/utils/TeamStatistic.dart';
+import 'package:mustang_app/components/overall_score_display.dart';
+import 'package:mustang_app/pages/pre-event-analysis/view_graph_screen.dart';
+import 'package:mustang_app/utils/team_statistic.dart';
 
 class TeamStatsDisplay extends StatelessWidget {
   final TeamStatistic teamStatistic;

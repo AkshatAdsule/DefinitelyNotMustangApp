@@ -2,9 +2,9 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:mustang_app/components/LineChartWidget.dart';
-import 'package:mustang_app/utils/TeamStatistic.dart';
-import 'package:mustang_app/utils/getStatistics.dart';
+import 'package:mustang_app/components/line_chart_widget.dart';
+import 'package:mustang_app/utils/team_statistic.dart';
+import 'package:mustang_app/utils/get_statistics.dart';
 
 class CompareTeams extends StatefulWidget {
   final String team1, team2;
@@ -21,7 +21,6 @@ class _CompareTeamsState extends State<CompareTeams> {
   bool _loading = true;
 
   Future<void> _onInit() async {
-    await Firebase.initializeApp();
     _teamStatistic1 = await getStatistics.getCumulativeStats(widget.team1);
     _teamStatistic2 = await getStatistics.getCumulativeStats(widget.team2);
     data = LineChartWidget.createCompareData(_teamStatistic1, _teamStatistic2);
