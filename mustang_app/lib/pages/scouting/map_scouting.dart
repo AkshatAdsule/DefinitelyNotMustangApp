@@ -15,6 +15,7 @@ import 'package:mustang_app/exports/pages.dart';
 import '../../components/header.dart';
 import '../../components/game_buttons.dart' as game_button;
 
+// ignore: must_be_immutable
 class MapScouting extends StatefulWidget {
   static const String route = '/MapScouter';
   String _teamNumber, _matchNumber, _allianceColor;
@@ -291,6 +292,7 @@ class _MapScoutingState extends State<MapScouting> {
   }
 }
 
+// ignore: must_be_immutable
 class UndoButton extends StatelessWidget {
   void Function() _onClick;
 
@@ -306,6 +308,7 @@ class UndoButton extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class FinishGameButton extends StatelessWidget {
   void Function() _onClick;
   Stopwatch _stopwatch;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/utils/TeamStatistic.dart';
 
+// ignore: must_be_immutable
 class ClassifierWidget extends StatelessWidget {
   final Classification classification;
   String _text;

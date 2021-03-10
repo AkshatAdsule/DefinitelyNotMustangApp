@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:mustang_app/components/OverallScoreDisplay.dart';
 import 'package:mustang_app/components/TeamStatsDisplay.dart';
-import 'package:mustang_app/components/teamWidget.dart';
 import 'package:mustang_app/utils/TeamStatistic.dart';
 import 'package:mustang_app/utils/getStatistics.dart';
 

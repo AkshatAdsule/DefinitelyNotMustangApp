@@ -8,6 +8,7 @@ import 'map_analysis_display.dart';
 import '../components/bottom_nav_bar.dart';
 import 'team_info_display.dart';
 
+// ignore: must_be_immutable
 class SearchPage extends StatelessWidget {
   TeamsService _teamsService = TeamsService();
   static const String route = './Search';
@@ -53,13 +54,13 @@ class _SearchState extends State<Search> {
   }
 
   showAlertDialog(BuildContext context, String teamNumber) {
-    FlatButton cancelButton = FlatButton(
+    TextButton cancelButton = TextButton(
       child: Text("Cancel"),
       onPressed: () {
         Navigator.pop(context);
       },
     );
-    FlatButton goToAnalysis = FlatButton(
+    TextButton goToAnalysis = TextButton(
       child: Text("Analysis"),
       onPressed: () {
         Navigator.pop(context);
@@ -68,7 +69,7 @@ class _SearchState extends State<Search> {
         });
       },
     );
-    FlatButton goToData = FlatButton(
+    TextButton goToData = TextButton(
       child: Text("Data"),
       onPressed: () {
         Navigator.pop(context);

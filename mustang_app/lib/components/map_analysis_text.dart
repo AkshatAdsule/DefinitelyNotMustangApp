@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/analyzer.dart';
 
+// ignore: must_be_immutable
 class MapAnalysisText extends StatefulWidget {
   Analyzer _analyzer;
   MapAnalysisText(Analyzer analyzer) {
