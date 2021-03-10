@@ -36,11 +36,11 @@ class MyApp extends StatelessWidget {
           builder: (context) => HomePage(),
           settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
         );
-      case Calendar.route:
-        return MaterialPageRoute(
-          builder: (context) => Calendar(),
-          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
-        );
+      // case Calendar.route:
+      //   return MaterialPageRoute(
+      //     builder: (context) => Calendar(),
+      //     settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
+      //   );
       case Scouter.route:
         return MaterialPageRoute(
           builder: (context) => Scouter(),
@@ -126,9 +126,6 @@ class MyApp extends StatelessWidget {
         navigatorObservers: [_observer],
         onGenerateRoute: (settings) => _onGenerateRoute(settings),
       ),
-      home: HomePage(),
-      navigatorObservers: [_observer],
-      onGenerateRoute: (settings) => _onGenerateRoute(settings),
     );
   }
 }

@@ -10,7 +10,7 @@ class BottomNavBar extends BottomNavigationBar {
 
   static final routes = [
     '/',
-    Calendar.route,
+    // Calendar.route,
     Scouter.route,
     InputScreen.route,
     SearchPage.route,
@@ -29,10 +29,10 @@ class BottomNavBar extends BottomNavigationBar {
               icon: Icon(Icons.home),
               label: 'Home',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today),
-              label: 'Calendar',
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(Icons.calendar_today),
+            //   label: 'Calendar',
+            // ),
             BottomNavigationBarItem(
               icon: Icon(Icons.list),
               label: 'Scouter',

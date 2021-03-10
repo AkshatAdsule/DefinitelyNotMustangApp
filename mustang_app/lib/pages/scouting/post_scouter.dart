@@ -36,22 +36,22 @@ class PostScouter extends StatelessWidget {
                   style: TextStyle(fontSize: 15),
                 ),
               ),
-              Container(
-                padding:
-                    EdgeInsets.only(top: 7.5, left: 15, right: 15, bottom: 10),
-                child: RaisedButton(
-                  onPressed: () {
-                    BottomNavBar.setSelected(Calendar.route);
-                    Navigator.of(context).pushNamed(Calendar.route);
-                  },
-                  child: Text(
-                    '           Calendar           ',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  color: Colors.greenAccent,
-                  padding: EdgeInsets.all(15),
-                ),
-              ),
+              // Container(
+              //   padding:
+              //       EdgeInsets.only(top: 7.5, left: 15, right: 15, bottom: 10),
+              //   child: RaisedButton(
+              //     onPressed: () {
+              //       BottomNavBar.setSelected(Calendar.route);
+              //       Navigator.of(context).pushNamed(Calendar.route);
+              //     },
+              //     child: Text(
+              //       '           Calendar           ',
+              //       style: TextStyle(fontSize: 20),
+              //     ),
+              //     color: Colors.greenAccent,
+              //     padding: EdgeInsets.all(15),
+              //   ),
+              // ),
               Container(
                 padding:
                     EdgeInsets.only(top: 7.5, left: 15, right: 15, bottom: 10),
