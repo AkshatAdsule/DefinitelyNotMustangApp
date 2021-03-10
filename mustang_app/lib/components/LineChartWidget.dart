@@ -163,7 +163,7 @@ class LineChartWidget extends StatelessWidget {
         data: predictedWinRateData,
       ),
       new charts.Series<LinearStats, int>(
-        id: 'predicted_contributionPercentages',
+        id: 'predicted_CPs',
         colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
         dashPatternFn: (_, __) => [8, 3, 2, 3],
         domainFn: (LinearStats stat, _) => stat.year,
@@ -299,7 +299,9 @@ class LineChartWidget extends StatelessWidget {
                 position: charts.BehaviorPosition.top,
                 horizontalFirst: false,
                 desiredMaxRows: 5,
-                cellPadding: new EdgeInsets.only(right: 150.0, bottom: 5.0),
+                cellPadding: new EdgeInsets.only(right: 10.0, bottom: 5.0),
+                entryTextStyle: charts.TextStyleSpec(
+                  fontSize: 10),
               )
           ],
         ),
