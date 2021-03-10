@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/game_action.dart';
+import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/components/game_map.dart';
 import 'package:mustang_app/components/zone_grid.dart';
-import '../components/analyzer.dart';
+import 'package:mustang_app/constants/constants.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class GameReplay extends StatefulWidget {
-  Analyzer _analyzer;
-  GameReplay(Analyzer analyzer) {
-    _analyzer = analyzer;
-  }
   @override
   State<StatefulWidget> createState() {
-    return new _GameReplayState(_analyzer);
+    return new _GameReplayState();
   }
 }
 
 class _GameReplayState extends State<GameReplay> {
-  double _timeInGame;
-
+  double _timeInGame = 0;
+  bool _initialized = false;
   List<GameAction> matchActions = [];
   List<GameAction> currActions = [];
   List<List<Object>> actionRelatedColors = [
@@ -34,13 +32,8 @@ class _GameReplayState extends State<GameReplay> {
     ["INNER", Colors.black],
   ];
 
-  Analyzer _analyzer;
   GameMap gameMap;
   String matchNum = "";
-
-  _GameReplayState(Analyzer analyzer) {
-    _analyzer = analyzer;
-  }
 
   @override
   void initState() {
@@ -48,11 +41,13 @@ class _GameReplayState extends State<GameReplay> {
     _timeInGame = 0;
   }
 
-  void displayActions(int timeInGame) {
+  void init(Match match) {
     setState(() {
-      currActions =
-          _analyzer.getActionsAtTime(matchActions, (timeInGame * 1000));
-      print("currActions: " + currActions.toString());
+      _initialized = true;
+      matchNum = match.matchNumber;
+      matchActions = match.actions;
+      currActions = match.actions;
+      _timeInGame = Constants.matchEndMillis / 1000;
     });
   }
 
@@ -64,7 +59,7 @@ class _GameReplayState extends State<GameReplay> {
         break;
       }
     }
-    if (curr == null) return [Colors.white];
+    if (curr == null) return [Colors.white, Colors.transparent];
 
     List<Color> gradientCombo = [];
     String actionType = curr.action.toString();
@@ -87,18 +82,22 @@ class _GameReplayState extends State<GameReplay> {
     for (int i = start; i < end; i++) {
       List<Object> shade = actionRelatedColors[i];
       colorKey = Container(
-          margin: EdgeInsets.only(left: 20, right: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(Icons.circle, color: shade[1]),
-              Text(shade[0].toString(),
-                  style: TextStyle(
-                      color: Colors.grey[850],
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14))
-            ],
-          ));
+        margin: EdgeInsets.only(left: 20, right: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(Icons.circle, color: shade[1]),
+            Text(
+              shade[0].toString(),
+              style: TextStyle(
+                color: Colors.grey[850],
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            )
+          ],
+        ),
+      );
       shades.add(colorKey);
     }
     return shades;
@@ -106,15 +105,21 @@ class _GameReplayState extends State<GameReplay> {
 
   @override
   Widget build(BuildContext context) {
+    List<Match> matches = Provider.of<List<Match>>(context);
+    print('matches: $matches');
+    if (!_initialized && matches.length > 0) {
+      init(matches.first);
+    }
     ZoneGrid scoringGrid = ZoneGrid(GlobalKey(), (int x, int y) {},
         (int x, int y, bool isSelected, double cellWidth, double cellHeight) {
       return Container(
         width: cellWidth,
         height: cellHeight,
         decoration: BoxDecoration(
-          gradient: RadialGradient(colors:
-              // _getColorCombo(x, y),
-              [Colors.white, Colors.green]),
+          gradient: RadialGradient(
+            colors: _getColorCombo(x, y),
+            // [Colors.white, Colors.green],
+          ),
         ),
         // TODO: add to game action the ability to merge actions together, ex. shotss
         // child: Text(_getZoneText(x, y))
@@ -155,10 +160,14 @@ class _GameReplayState extends State<GameReplay> {
         onChanged: (String match) {
           setState(() {
             matchNum = match;
-            matchActions = _analyzer.getMatch(matchNum);
+            matchActions = matches
+                .where((element) => element.matchNumber == matchNum)
+                .first
+                .actions;
           });
         },
-        items: (_analyzer.getMatches())
+        items: matches
+            .map((e) => e.matchNumber)
             .map<DropdownMenuItem<String>>((String match) {
           return DropdownMenuItem<String>(
               value: match,
@@ -190,7 +199,11 @@ class _GameReplayState extends State<GameReplay> {
           label: _timeInGame.round().toString(),
           onChanged: (newVal) => setState(() {
             _timeInGame = newVal;
-            displayActions(_timeInGame.round());
+            setState(() {
+              currActions = matchActions
+                  .where((element) => element.timeStamp > newVal * 1000 - 5000)
+                  .where((element) => element.timeStamp < newVal * 1000 + 5000);
+            });
           }),
           min: 0,
           max: 150,

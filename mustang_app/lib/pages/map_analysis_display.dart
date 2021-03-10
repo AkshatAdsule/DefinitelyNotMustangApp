@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/game_action.dart';
+import 'package:mustang_app/backend/team.dart';
+import 'package:mustang_app/backend/match.dart';
+import 'package:mustang_app/backend/team_service.dart';
 import 'package:mustang_app/components/game_map.dart';
 import 'package:mustang_app/components/game_replay.dart';
 import 'package:mustang_app/components/header.dart';
@@ -7,10 +10,11 @@ import 'package:mustang_app/components/map_analysis_text.dart';
 import 'package:mustang_app/components/map_switch_button.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/constants/constants.dart';
+import 'package:provider/provider.dart';
 import '../components/analyzer.dart';
 
-// ignore: must_be_immutable
-class MapAnalysisDisplay extends StatefulWidget {
+class MapAnalysisDisplay extends StatelessWidget {
+  TeamService _teamService = TeamService();
   static const String route = '/MapAnalysisDisplay';
   //remove team num
   String _teamNumber = '';
@@ -18,12 +22,36 @@ class MapAnalysisDisplay extends StatefulWidget {
     _teamNumber = teamNumber;
   }
   @override
+  Widget build(BuildContext context) {
+    return StreamProvider<Team>.value(
+      initialData: null,
+      value: _teamService.streamTeam(_teamNumber),
+      child: StreamProvider<List<Match>>.value(
+        value: _teamService.streamMatches(_teamNumber),
+        initialData: [],
+        child: MapAnalysisDisplayPage(
+          teamNumber: _teamNumber,
+        ),
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class MapAnalysisDisplayPage extends StatefulWidget {
+  //remove team num
+  String _teamNumber = '';
+  MapAnalysisDisplayPage({String teamNumber}) {
+    _teamNumber = teamNumber;
+  }
+
+  @override
   State<StatefulWidget> createState() {
     return new _MapAnalysisDisplayState(_teamNumber);
   }
 }
 
-class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
+class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
   Analyzer myAnalyzer;
   bool _showScoringMap = true;
   bool _accuracyMap = true;
@@ -112,13 +140,13 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         width: cellWidth,
         height: cellHeight,
         decoration: BoxDecoration(
-            color:
-                (Colors.green[_getScoringColorValue(currentActionType, x, y)] ==
-                        null)
-                    ? null
-                    : Colors
-                        .green[_getScoringColorValue(currentActionType, x, y)]
-                        .withOpacity(0.7)),
+          color:
+              (Colors.green[_getScoringColorValue(currentActionType, x, y)] ==
+                      null)
+                  ? null
+                  : Colors.green[_getScoringColorValue(currentActionType, x, y)]
+                      .withOpacity(0.7),
+        ),
       );
     });
 
@@ -198,7 +226,8 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         alignment: Alignment.center,
         child: Text(
           switchButton.showScoringMap
-              ? "Scoring Map (avg per game)\n" + _scoringText : "Accuracy Map (avg per game)\n" + _accuracyText,
+              ? "Scoring Map (avg per game)\n" + _scoringText
+              : "Accuracy Map (avg per game)\n" + _accuracyText,
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.grey[800],
@@ -238,8 +267,11 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children:
-                _accuracyMap ? children2 : <Widget>[GameReplay(myAnalyzer)],
+            children: _accuracyMap
+                ? children2
+                : <Widget>[
+                    GameReplay(),
+                  ],
           ),
         ),
       ),
