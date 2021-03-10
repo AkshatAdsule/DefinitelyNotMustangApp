@@ -202,7 +202,8 @@ class _GameReplayState extends State<GameReplay> {
             setState(() {
               currActions = matchActions
                   .where((element) => element.timeStamp > newVal * 1000 - 5000)
-                  .where((element) => element.timeStamp < newVal * 1000 + 5000);
+                  .where((element) => element.timeStamp < newVal * 1000 + 5000)
+                  .toList();
             });
           }),
           min: 0,
