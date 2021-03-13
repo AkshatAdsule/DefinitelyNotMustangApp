@@ -273,7 +273,7 @@ class GetStatistics {
         yearStats: dataMap['yearStatistics']
             .map<YearStats>(
               (s) => new YearStats.premade(
-                  year: s["year"],
+                  year: new DateTime( s["year"]),
                   avgOpr: s["oprAverage"] as double,
                   avgDpr: s["dprAverage"] as double,
                   avgCcwm: s["ccwmAverage"] as double,

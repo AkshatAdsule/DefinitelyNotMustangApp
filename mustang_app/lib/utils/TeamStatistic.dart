@@ -29,7 +29,7 @@ class TeamStatistic {
         currentYearWinRates = [],
         currentYearPointContributions = [];
 
-    int currentYear = eventStats[1].year;
+    DateTime currentYear = new DateTime(eventStats[1].year);
     for (EventStatistic eventStat in eventStats) {
       if (eventStat.opr > 150 ||
           eventStat.dpr > 150 ||
@@ -39,7 +39,7 @@ class TeamStatistic {
         debugPrint(
             'Ignoring ${eventStat.event} for ${eventStat.team} because of a outlier');
       } else {
-        if (currentYear == eventStat.year) {
+        if (currentYear.year == eventStat.year) {
           currentYearOprs.add(eventStat.opr);
           currentYearDprs.add(eventStat.dpr);
           currentYearCcwms.add(eventStat.ccwm);
@@ -56,7 +56,7 @@ class TeamStatistic {
                 currentYearWinRates,
                 currentYearPointContributions),
           );
-          currentYear = eventStat.year;
+          currentYear = new DateTime(eventStat.year);
           currentYearOprs = [eventStat.opr];
           currentYearDprs = [eventStat.dpr];
           currentYearCcwms = [eventStat.ccwm];
@@ -209,7 +209,7 @@ class EventStatistic {
 }
 
 class YearStats {
-  int year;
+  DateTime year;
   double avgOpr, avgDpr, avgCcwm, avgWinRate, avgPointContribution;
 
   YearStats(this.year, List<double> oprs, List<double> dprs, List<double> ccwms,

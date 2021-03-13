@@ -17,7 +17,7 @@ class CompareTeams extends StatefulWidget {
 class _CompareTeamsState extends State<CompareTeams> {
   TeamStatistic _teamStatistic1, _teamStatistic2;
   GetStatistics getStatistics = new GetStatistics();
-  Map<DataType, List<charts.Series<LinearStats, int>>> data;
+  Map<DataType, List<charts.Series<LinearStats, DateTime>>> data;
   bool _loading = true;
 
   Future<void> _onInit() async {
@@ -32,7 +32,7 @@ class _CompareTeamsState extends State<CompareTeams> {
 
   Widget buildCard(DataType dataType) {
     String type;
-    List<charts.Series<LinearStats, int>> data = this.data[dataType];
+    List<charts.Series<LinearStats, DateTime>> data = this.data[dataType];
     double team1avg, team2avg;
     switch (dataType) {
       case DataType.OPR:

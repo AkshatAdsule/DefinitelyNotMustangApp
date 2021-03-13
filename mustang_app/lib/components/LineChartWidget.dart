@@ -9,7 +9,7 @@ class LineChartWidget extends StatelessWidget {
   // final bool animate;
   // final String teamCode;
   // final List<double> oprs;
-  final List<charts.Series<LinearStats, int>> data;
+  final List<charts.Series<LinearStats, DateTime>> data;
   final double height, width;
 
   LineChartWidget({this.data, this.height: 300, this.width: 50});
@@ -25,7 +25,7 @@ class LineChartWidget extends StatelessWidget {
   //   );
   // }
 
-  static List<charts.Series<LinearStats, int>> createTeamData(
+  static List<charts.Series<LinearStats, DateTime>> createTeamData(
       TeamStatistic stats) {
     List<LinearStats> oprData = [];
     List<LinearStats> dprData = [];
@@ -47,7 +47,7 @@ class LineChartWidget extends StatelessWidget {
       pointContributionData
           .add(new LinearStats(yearStat.year, yearStat.avgPointContribution));
     }
-    int currentYear = stats.yearStats.last.year;
+    DateTime currentYear = stats.yearStats.last.year;
     predictedOprData
         .add(new LinearStats(currentYear, stats.yearStats.last.avgOpr));
     predictedDprData
@@ -63,31 +63,31 @@ class LineChartWidget extends StatelessWidget {
     for (var i = 1; i <= 7; i++) {
       predictedOprData.add(
         new LinearStats(
-          currentYear + i,
+          currentYear.add(Duration(days: 365*i)) ,
           (stats.oprSlope + predictedOprData[i - 1].stat),
         ),
       );
       predictedDprData.add(
         new LinearStats(
-          currentYear + i,
+          currentYear.add(Duration(days: 365*i)) ,
           (stats.dprSlope + predictedDprData[i - 1].stat),
         ),
       );
       predictedCcwmData.add(
         new LinearStats(
-          currentYear + i,
+          currentYear.add(Duration(days: 365*i)) ,
           (stats.ccwmSlope + predictedCcwmData[i - 1].stat),
         ),
       );
       predictedWinRateData.add(
         new LinearStats(
-          currentYear + i,
+          currentYear.add(Duration(days: 365*i)) ,
           (stats.winrateSlope + predictedWinRateData[i - 1].stat),
         ),
       );
       predictedPointContributionData.add(
         new LinearStats(
-          currentYear + i,
+          currentYear.add(Duration(days: 365*i)) ,
           (stats.contributionSlope +
               predictedPointContributionData[i - 1].stat),
         ),
@@ -95,75 +95,75 @@ class LineChartWidget extends StatelessWidget {
     }
 
     return [
-      new charts.Series<LinearStats, int>(
-        id: 'OPRS',
+      new charts.Series<LinearStats, DateTime>(
+        id: 'OPR',
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
         domainFn: (LinearStats stat, _) => stat.year,
         measureFn: (LinearStats stat, _) => stat.stat,
         data: oprData,
       ),
-      new charts.Series<LinearStats, int>(
-        id: 'DPRS',
+      new charts.Series<LinearStats, DateTime>(
+        id: 'DPR',
         colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
         domainFn: (LinearStats stat, _) => stat.year,
         measureFn: (LinearStats stat, _) => stat.stat,
         data: dprData,
       ),
-      new charts.Series<LinearStats, int>(
-        id: 'CCWMS',
+      new charts.Series<LinearStats, DateTime>(
+        id: 'CCWM',
         colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
         domainFn: (LinearStats stat, _) => stat.year,
         measureFn: (LinearStats stat, _) => stat.stat,
         data: ccwmData,
       ),
-      new charts.Series<LinearStats, int>(
-        id: 'winRates',
+      new charts.Series<LinearStats, DateTime>(
+        id: 'Win Rate',
         colorFn: (_, __) => charts.MaterialPalette.black,
         domainFn: (LinearStats stat, _) => stat.year,
         measureFn: (LinearStats stat, _) => stat.stat,
         data: winRateData,
       ),
-      new charts.Series<LinearStats, int>(
-        id: 'contributionPercentages',
+      new charts.Series<LinearStats, DateTime>(
+        id: 'Contribution Percentage',
         colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
         domainFn: (LinearStats stat, _) => stat.year,
         measureFn: (LinearStats stat, _) => stat.stat,
         data: pointContributionData,
       ),
-      new charts.Series<LinearStats, int>(
-        id: 'predicted_OPRS',
+      new charts.Series<LinearStats, DateTime>(
+        id: 'predicted OPR',
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
         dashPatternFn: (_, __) => [2, 2],
         domainFn: (LinearStats stat, _) => stat.year,
         measureFn: (LinearStats stat, _) => stat.stat,
         data: predictedOprData,
       ),
-      new charts.Series<LinearStats, int>(
-        id: 'predicted_DPRS',
+      new charts.Series<LinearStats, DateTime>(
+        id: 'predicted DPR',
         colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
         dashPatternFn: (_, __) => [2, 2],
         domainFn: (LinearStats stat, _) => stat.year,
         measureFn: (LinearStats stat, _) => stat.stat,
         data: predictedDprData,
       ),
-      new charts.Series<LinearStats, int>(
-        id: 'predicted_CCWMS',
+      new charts.Series<LinearStats, DateTime>(
+        id: 'predicted CCWM',
         colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
         dashPatternFn: (_, __) => [2, 2],
         domainFn: (LinearStats stat, _) => stat.year,
         measureFn: (LinearStats stat, _) => stat.stat,
         data: predictedCcwmData,
       ),
-      new charts.Series<LinearStats, int>(
-        id: 'predicted_winRates',
+      new charts.Series<LinearStats, DateTime>(
+        id: 'predicted Win Rate',
         colorFn: (_, __) => charts.MaterialPalette.black,
         dashPatternFn: (_, __) => [2, 2],
         domainFn: (LinearStats stat, _) => stat.year,
         measureFn: (LinearStats stat, _) => stat.stat,
         data: predictedWinRateData,
       ),
-      new charts.Series<LinearStats, int>(
-        id: 'predicted_CPs',
+      new charts.Series<LinearStats, DateTime>(
+        id: 'predicted CP',
         colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
         dashPatternFn: (_, __) => [8, 3, 2, 3],
         domainFn: (LinearStats stat, _) => stat.year,
@@ -173,7 +173,7 @@ class LineChartWidget extends StatelessWidget {
     ];
   }
 
-  static Map<DataType, List<charts.Series<LinearStats, int>>> createCompareData(
+  static Map<DataType, List<charts.Series<LinearStats, DateTime>>> createCompareData(
       TeamStatistic team1, TeamStatistic team2) {
     List<LinearStats> team1OprData = [], team2OprData = [];
     List<LinearStats> team1DprData = [], team2DprData = [];
@@ -280,12 +280,13 @@ class LineChartWidget extends StatelessWidget {
       height: height,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: new charts.LineChart(
+        child: new charts.TimeSeriesChart(
           this.data,
           animate: true,
-          domainAxis: new charts.NumericAxisSpec(
-            viewport: new charts.NumericExtents(2001.0, 2020.0),
-          ),
+          // domainAxis: new charts.NumericAxisSpec(
+          //   viewport: new charts.NumericExtents(2001.0, 2020.0),
+          // ),
+          dateTimeFactory: const charts.LocalDateTimeFactory(),
           behaviors: [
             new charts.ChartTitle('Year',
                 behaviorPosition: charts.BehaviorPosition.bottom,
@@ -312,7 +313,7 @@ class LineChartWidget extends StatelessWidget {
 
 /// Sample linear data type.
 class LinearStats {
-  final int year;
+  final DateTime year;
   final double stat;
 
   LinearStats(this.year, this.stat);
