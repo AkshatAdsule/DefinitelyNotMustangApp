@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'TeamStatistic.dart';
+import 'team_statistic.dart';
 import 'package:http/http.dart' as http;
 
 class Event {
@@ -26,7 +26,6 @@ class GetStatistics {
   GetStatistics getStatistics;
 
   Future<void> _firebaseInit() async {
-    await Firebase.initializeApp();
     _firestore = FirebaseFirestore.instance;
     _teams = _firestore.collection('team-statistics');
   }

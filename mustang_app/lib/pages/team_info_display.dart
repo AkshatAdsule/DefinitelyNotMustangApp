@@ -6,6 +6,7 @@ import 'package:mustang_app/components/bottom_nav_bar.dart';
 import '../components/header.dart';
 
 //TODO: IMPLEMENT THIS CLASS WITH PROVIDER
+// ignore: must_be_immutable
 class TeamInfoDisplay extends StatefulWidget {
   String _teamNumber;
   static const String route = '/TeamInfoDisplay';
@@ -21,9 +22,6 @@ class TeamInfoDisplay extends StatefulWidget {
 
 class _TeamInfoDisplayState extends State<TeamInfoDisplay> {
   String _teamNumber;
-  List<String> _matches = [];
-  Team _team;
-  List<Match> _matchData = [];
   TeamService _teamService;
 
   _TeamInfoDisplayState(String teamNumber) {

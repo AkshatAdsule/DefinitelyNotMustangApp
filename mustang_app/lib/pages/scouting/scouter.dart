@@ -43,13 +43,13 @@ class _ScouterState extends State<Scouter> {
 
   showAlertDialog(BuildContext context, bool pit) {
     // set up the buttons
-    Widget cancelButton = FlatButton(
+    Widget cancelButton = TextButton(
       child: Text("Cancel"),
       onPressed: () {
         Navigator.pop(context);
       },
     );
-    Widget continueButton = FlatButton(
+    Widget continueButton = TextButton(
       child: Text("Override"),
       onPressed: () {
         Navigator.pop(context);
@@ -92,7 +92,6 @@ class _ScouterState extends State<Scouter> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Firebase.initializeApp();
   }
 
   @override

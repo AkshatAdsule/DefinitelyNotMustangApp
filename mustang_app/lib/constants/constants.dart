@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Constants {
   //not a constant but needs to be accessible
   static int fieldColor = 0;

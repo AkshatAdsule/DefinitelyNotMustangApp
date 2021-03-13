@@ -43,7 +43,7 @@ class _SketchPageState extends State<SketchPage> {
             ),
           ),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: const Text('Got it'),
               onPressed: () {
                 setState(() {

@@ -1,6 +1,6 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
-import 'package:mustang_app/utils/TeamStatistic.dart';
+import 'package:mustang_app/utils/team_statistic.dart';
 
 enum DataType { OPR, DPR, CCWM, WINRATE, CONTRIBUTION }
 
@@ -297,13 +297,12 @@ class LineChartWidget extends StatelessWidget {
                 titleOutsideJustification:
                     charts.OutsideJustification.middleDrawArea),
             new charts.SeriesLegend(
-                position: charts.BehaviorPosition.top,
-                horizontalFirst: false,
-                desiredMaxRows: 5,
-                cellPadding: new EdgeInsets.only(right: 10.0, bottom: 5.0),
-                entryTextStyle: charts.TextStyleSpec(
-                  fontSize: 10),
-              )
+              position: charts.BehaviorPosition.top,
+              horizontalFirst: false,
+              desiredMaxRows: 5,
+              cellPadding: new EdgeInsets.only(right: 10.0, bottom: 5.0),
+              entryTextStyle: charts.TextStyleSpec(fontSize: 10),
+            )
           ],
         ),
       ),

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/game_action.dart';
+import 'package:mustang_app/backend/team.dart';
+import 'package:mustang_app/backend/match.dart';
+import 'package:mustang_app/backend/team_service.dart';
 import 'package:mustang_app/components/game_map.dart';
 import 'package:mustang_app/components/game_replay.dart';
 import 'package:mustang_app/components/header.dart';
@@ -7,22 +10,48 @@ import 'package:mustang_app/components/map_analysis_text.dart';
 import 'package:mustang_app/components/map_switch_button.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/constants/constants.dart';
+import 'package:provider/provider.dart';
 import '../components/analyzer.dart';
 
-// ignore: must_be_immutable
-class MapAnalysisDisplay extends StatefulWidget {
+class MapAnalysisDisplay extends StatelessWidget {
+  TeamService _teamService = TeamService();
   static const String route = '/MapAnalysisDisplay';
+  //remove team num
   String _teamNumber = '';
   MapAnalysisDisplay({String teamNumber}) {
     _teamNumber = teamNumber;
   }
+  @override
+  Widget build(BuildContext context) {
+    return StreamProvider<Team>.value(
+      initialData: null,
+      value: _teamService.streamTeam(_teamNumber),
+      child: StreamProvider<List<Match>>.value(
+        value: _teamService.streamMatches(_teamNumber),
+        initialData: [],
+        child: MapAnalysisDisplayPage(
+          teamNumber: _teamNumber,
+        ),
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class MapAnalysisDisplayPage extends StatefulWidget {
+  //remove team num
+  String _teamNumber = '';
+  MapAnalysisDisplayPage({String teamNumber}) {
+    _teamNumber = teamNumber;
+  }
+
   @override
   State<StatefulWidget> createState() {
     return new _MapAnalysisDisplayState(_teamNumber);
   }
 }
 
-class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
+class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
   Analyzer myAnalyzer;
   bool _showScoringMap = true;
   bool _accuracyMap = true;
@@ -111,8 +140,13 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         width: cellWidth,
         height: cellHeight,
         decoration: BoxDecoration(
-            color:
-                Colors.green[_getScoringColorValue(currentActionType, x, y)]),
+          color:
+              (Colors.green[_getScoringColorValue(currentActionType, x, y)] ==
+                      null)
+                  ? null
+                  : Colors.green[_getScoringColorValue(currentActionType, x, y)]
+                      .withOpacity(0.7),
+        ),
       );
     });
 
@@ -122,8 +156,12 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         width: cellWidth,
         height: cellHeight,
         decoration: BoxDecoration(
-            color:
-                Colors.green[_getAccuracyColorValue(currentActionType, x, y)]),
+            color: (Colors.green[
+                        _getAccuracyColorValue(currentActionType, x, y)] ==
+                    null)
+                ? null
+                : Colors.green[_getAccuracyColorValue(currentActionType, x, y)]
+                    .withOpacity(0.7)),
       );
     });
 
@@ -141,58 +179,37 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
 
     switchButton = new MapSwitchButton(this.toggle, _showScoringMap);
-    Widget dropDownList = ListTile(
-      title: Text(
-        'Action Type',
-        textAlign: TextAlign.center,
-        style: new TextStyle(
-          fontSize: 14,
-          color: Colors.grey[800],
-          fontWeight: FontWeight.bold,
-          background: Paint()
-            ..strokeWidth = 30.0
-            ..color = Colors.green[300]
-            ..style = PaintingStyle.stroke
-            ..strokeJoin = StrokeJoin.bevel,
-        ),
+
+    Widget dropDownList = DropdownButton<ActionType>(
+      value: currentActionType,
+      icon: Icon(Icons.arrow_downward),
+      iconSize: 24,
+      elevation: 16,
+      style: TextStyle(
+          fontSize: 14, color: Colors.green[300], fontWeight: FontWeight.bold),
+      underline: Container(
+        height: 2,
+        color: Colors.grey[500],
       ),
-
-      trailing: DropdownButton<ActionType>(
-
-        value: currentActionType,
-        icon: Icon(Icons.arrow_downward),
-        iconSize: 24,
-        elevation: 16,
-
-        style: TextStyle(
-            fontSize: 14,
-            color: Colors.green[300],
-            fontWeight: FontWeight.bold),
-        underline: Container(
-          height: 2,
-          color: Colors.grey[50],
-        ),
-        onChanged: (ActionType actionType) {
-          setState(() {
-            currentActionType = actionType;
-          });
-        },
-        items: <ActionType>[
-          ActionType.ALL,
-          ActionType.SHOT_LOW,
-          ActionType.SHOT_OUTER,
-          ActionType.SHOT_INNER
-        ].map<DropdownMenuItem<ActionType>>((ActionType actionType) {
-          return DropdownMenuItem<ActionType>(
-
-            value: actionType,
-            child: Center(
-                child: Text(actionType
-                    .toString()
-                    .substring(actionType.toString().indexOf('.') + 1))),
-          );
-        }).toList(),
-      ),
+      onChanged: (ActionType actionType) {
+        setState(() {
+          currentActionType = actionType;
+        });
+      },
+      items: <ActionType>[
+        ActionType.ALL,
+        ActionType.SHOT_LOW,
+        ActionType.SHOT_OUTER,
+        ActionType.SHOT_INNER
+      ].map<DropdownMenuItem<ActionType>>((ActionType actionType) {
+        return DropdownMenuItem<ActionType>(
+          value: actionType,
+          child: Center(
+              child: Text(actionType
+                  .toString()
+                  .substring(actionType.toString().indexOf('.') + 1))),
+        );
+      }).toList(),
     );
 
     Widget shadingKey = Ink(
@@ -208,9 +225,9 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
             maxWidth: MediaQuery.of(context).size.width, minHeight: 60.0),
         alignment: Alignment.center,
         child: Text(
-          !(switchButton.showScoringMap)
-              ? "Accuracy Map (avg per game)\n" + _accuracyText
-              : "Scoring Map (avg per game)\n" + _scoringText,
+          switchButton.showScoringMap
+              ? "Scoring Map (avg per game)\n" + _scoringText
+              : "Accuracy Map (avg per game)\n" + _accuracyText,
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.grey[800],
@@ -223,11 +240,10 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
 
     var children2 = <Widget>[
       MapAnalysisText(myAnalyzer),
-      //switchAndDrop,
       switchButton,
-      dropDownList,
+      Container(child: Center(child: dropDownList)),
       shadingKey,
-      !(switchButton.showScoringMap) ? accuracyMap : scoringMap,
+      switchButton.showScoringMap ? scoringMap : accuracyMap,
     ];
 
     Container gameReplay = Container(
@@ -245,14 +261,17 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplay> {
         ));
 
     return Scaffold(
-      appBar: Header(context, 'Analysis for Team: ' + _teamNumber,
+      appBar: Header(context, 'Analysis for Team: ' + myAnalyzer.teamNum,
           buttons: [gameReplay]),
       body: Container(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children:
-                _accuracyMap ? children2 : <Widget>[GameReplay(myAnalyzer)],
+            children: _accuracyMap
+                ? children2
+                : <Widget>[
+                    GameReplay(),
+                  ],
           ),
         ),
       ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mustang_app/components/LineChartWidget.dart';
-import 'package:mustang_app/utils/TeamStatistic.dart';
+import 'package:mustang_app/components/line_chart_widget.dart';
+import 'package:mustang_app/utils/team_statistic.dart';
 
 class ViewGraphScreen extends StatelessWidget {
   final TeamStatistic _statistic;

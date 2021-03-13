@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/backend/team.dart';
 

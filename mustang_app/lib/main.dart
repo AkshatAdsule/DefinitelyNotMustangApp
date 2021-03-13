@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mustang_app/pages/pre-event-analysis/inputScreen.dart';
 import 'package:mustang_app/backend/setup_service.dart';
 import 'package:mustang_app/backend/auth_service.dart';
 import 'exports/pages.dart';

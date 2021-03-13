@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/bottom_nav_bar.dart';
-import 'package:mustang_app/pages/pre-event-analysis/compareTeams.dart';
-import 'package:mustang_app/utils/getStatistics.dart';
+import 'package:mustang_app/pages/pre-event-analysis/compare_teams.dart';
+import 'package:mustang_app/utils/get_statistics.dart';
 
-import 'sortTeamsScreen.dart';
+import 'sort_teams_screen.dart';
 
 class InputScreen extends StatefulWidget {
   static const String route = '/inputScreen';
