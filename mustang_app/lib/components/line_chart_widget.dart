@@ -59,8 +59,7 @@ class LineChartWidget extends StatelessWidget {
     predictedPointContributionData.add(new LinearStats(
         currentYear, stats.yearStats.last.avgPointContribution));
 
-    //TODO Make this a better number
-    for (var i = 1; i <= 7; i++) {
+    for (var i = 1; i <= 2; i++) {
       predictedOprData.add(
         new LinearStats(
           currentYear.add(Duration(days: 365*i)) ,
