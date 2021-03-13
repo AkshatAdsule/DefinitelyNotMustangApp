@@ -59,7 +59,7 @@ class _GameReplayState extends State<GameReplay> {
         break;
       }
     }
-    if (curr == null) return [Colors.white, Colors.transparent];
+    if (curr == null) return [Colors.green[0], Colors.transparent];
 
     List<Color> gradientCombo = [];
     String actionType = curr.action.toString();
@@ -115,12 +115,13 @@ class _GameReplayState extends State<GameReplay> {
       return Container(
         width: cellWidth,
         height: cellHeight,
-        decoration: BoxDecoration(
-          gradient: RadialGradient(
-            colors: _getColorCombo(x, y),
-            // [Colors.white, Colors.green],
-          ),
-        ),
+        decoration: (x != 0 && y != 0)
+            ? BoxDecoration(
+                gradient: RadialGradient(
+                  colors: _getColorCombo(x, y),
+                ),
+              )
+            : BoxDecoration(color: Colors.transparent),
         // TODO: add to game action the ability to merge actions together, ex. shotss
         // child: Text(_getZoneText(x, y))
       );
@@ -169,11 +170,12 @@ class _GameReplayState extends State<GameReplay> {
         items: matches
             .map((e) => e.matchNumber)
             .map<DropdownMenuItem<String>>((String match) {
-          return DropdownMenuItem<String>(
+          var dropdownMenuItem = DropdownMenuItem<String>(
               value: match,
               child: Center(
                 child: Text(match),
               ));
+          return dropdownMenuItem;
         }).toList(),
       ),
     );
@@ -207,7 +209,7 @@ class _GameReplayState extends State<GameReplay> {
             });
           }),
           min: 0,
-          max: 150,
+          max: 150, // number of seconds in a game
           value: _timeInGame,
         ));
 
