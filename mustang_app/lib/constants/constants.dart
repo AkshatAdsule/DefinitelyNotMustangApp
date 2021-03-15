@@ -50,4 +50,14 @@ class Constants {
   static const int endgameStartMillis = 120000;
   static const int matchEndMillis = 150000;
   static const int stopwatchLagMillis = 5000;
+
+  static const List<String> creators = [
+    "Akshat Adsule",
+    "Antonio Cuan",
+    "Arnav Kulkarni",
+    "Elise Vambenepe",
+    "Laksh Bhambhani",
+    "Katia Bravo",
+    "Tarini Maram",
+  ];
 }

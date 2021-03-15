@@ -61,7 +61,6 @@ class Analyzer {
 
   // returns names of the matches for the team (for dropdown)
   List<GameAction> getMatch(String matchNum) {
-    print("teamdata: " + _allMatches.toString());
     for (Match m in _allMatches)
       if (m.matchNumber == matchNum) return m.actions;
     return [];

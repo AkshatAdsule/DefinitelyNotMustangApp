@@ -71,7 +71,7 @@ class MyApp extends StatelessWidget {
       case SketchPage.route:
         return MaterialPageRoute(
           builder: (context) => SketchPage(),
-          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
+          settings: rotationSettings(settings, ScreenOrientation.landscapeOnly),
         );
       case SearchPage.route:
         return MaterialPageRoute(
@@ -121,6 +121,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.green,
         ),
         home: HomePage(),
+        debugShowCheckedModeBanner: false,
         initialRoute: Splash.route,
         navigatorObservers: [_observer],
         onGenerateRoute: (settings) => _onGenerateRoute(settings),

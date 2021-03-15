@@ -106,7 +106,6 @@ class _GameReplayState extends State<GameReplay> {
   @override
   Widget build(BuildContext context) {
     List<Match> matches = Provider.of<List<Match>>(context);
-    print('matches: $matches');
     if (!_initialized && matches.length > 0) {
       init(matches.first);
     }

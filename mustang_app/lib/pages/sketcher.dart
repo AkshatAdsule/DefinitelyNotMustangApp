@@ -89,10 +89,10 @@ class _SketchPageState extends State<SketchPage> {
     //     key: scr,
     //     child:
     return Scaffold(
-      bottomNavigationBar: BottomNavBar(context),
-      appBar: AppBar(
-        title: Text('Sketcher'),
-      ),
+      // bottomNavigationBar: BottomNavBar(context),
+      // appBar: AppBar(
+      //   title: Text('Sketcher'),
+      // ),
       body: GestureDetector(
         onPanUpdate: (DragUpdateDetails details) {
           setState(() {

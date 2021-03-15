@@ -129,7 +129,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("current action type: " + currentActionType.toString());
     if (!myAnalyzer.initialized) {
       myAnalyzer.init().then((value) => setState(() {}));
     }

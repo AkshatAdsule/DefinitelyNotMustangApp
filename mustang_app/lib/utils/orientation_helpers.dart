@@ -23,7 +23,7 @@ class NavigatorObserverWithOrientation extends NavigatorObserver {
       _setOrientation(previousRoute.settings.arguments);
     } else {
       // Portrait-only is the default option
-      _setOrientation(ScreenOrientation.portraitOnly);
+      _setOrientation(ScreenOrientation.rotating);
     }
   }
 
@@ -32,7 +32,9 @@ class NavigatorObserverWithOrientation extends NavigatorObserver {
     if (route.settings.arguments is ScreenOrientation) {
       _setOrientation(route.settings.arguments);
     } else {
-      _setOrientation(ScreenOrientation.portraitOnly);
+      // Don't change orientation if new route has no orientation
+      return;
+      _setOrientation(ScreenOrientation.rotating);
     }
   }
 }

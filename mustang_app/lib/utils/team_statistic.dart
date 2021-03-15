@@ -36,8 +36,8 @@ class TeamStatistic {
           eventStat.ccwm > 150 ||
           eventStat.pointContribution > 100 ||
           eventStat.pointContribution < -100) {
-        debugPrint(
-            'Ignoring ${eventStat.event} for ${eventStat.team} because of a outlier');
+        // debugPrint(
+        //     'Ignoring ${eventStat.event} for ${eventStat.team} because of a outlier');
       } else {
         if (currentYear.year == eventStat.year) {
           currentYearOprs.add(eventStat.opr);
@@ -45,7 +45,7 @@ class TeamStatistic {
           currentYearCcwms.add(eventStat.ccwm);
           currentYearWinRates.add(eventStat.winRate);
           currentYearPointContributions.add(eventStat.pointContribution);
-          debugPrint("added year " + currentYear.toString() + " stats");
+          // debugPrint("added year " + currentYear.toString() + " stats");
         } else {
           yearStats.add(
             new YearStats(
@@ -99,11 +99,11 @@ class TeamStatistic {
     dprAverage = dprs.reduce((a, b) => a + b) / dprs.length;
     ccwmAverage = ccwms.reduce((a, b) => a + b) / ccwms.length;
     winRateAverage = winRates.reduce((a, b) => a + b) / winRates.length;
-    debugPrint(contributionPercentages.length.toString());
+    // debugPrint(contributionPercentages.length.toString());
     double sum = 0;
     for (double contributionPercentage in contributionPercentages) {
       sum += contributionPercentage;
-      debugPrint(sum.toString());
+      // debugPrint(sum.toString());
     }
     pointContributionAvg = contributionPercentages.reduce((a, b) => a + b) /
         contributionPercentages.length;

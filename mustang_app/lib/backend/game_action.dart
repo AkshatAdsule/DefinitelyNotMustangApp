@@ -62,10 +62,8 @@ class GameAction {
   }
 
   static ActionType stringToActionType(String str) {
-    print("String: " + str);
     ActionType action = ActionType.values
         .firstWhere((e) => e.toString() == 'ActionType.' + str);
-    print("Enum:" + action.toString());
     return action;
   }
 

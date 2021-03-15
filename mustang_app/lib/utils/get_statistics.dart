@@ -183,13 +183,13 @@ class GetStatistics {
 
       // Make sure result is not empty object
       if (opr != null) {
-        debugPrint('$team at ${event.eventCode}  ${{
-          "opr": opr,
-          "dpr": dpr,
-          "ccwm": ccwm,
-          "winRate": winRate,
-          "pointContribution": contributionPercentage
-        }}');
+        // debugPrint('$team at ${event.eventCode}  ${{
+        //   "opr": opr,
+        //   "dpr": dpr,
+        //   "ccwm": ccwm,
+        //   "winRate": winRate,
+        //   "pointContribution": contributionPercentage
+        // }}');
         // return {"opr": opr, "dpr": dpr, "ccwm": ccwm, "winRate": winRate};
         return new EventStatistic(
             team: team,
@@ -272,7 +272,7 @@ class GetStatistics {
         yearStats: dataMap['yearStatistics']
             .map<YearStats>(
               (s) => new YearStats.premade(
-                  year: new DateTime( s["year"]),
+                  year: new DateTime(s["year"]),
                   avgOpr: s["oprAverage"] as double,
                   avgDpr: s["dprAverage"] as double,
                   avgCcwm: s["ccwmAverage"] as double,

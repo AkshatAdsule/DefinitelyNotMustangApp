@@ -76,6 +76,9 @@ class _SplashState extends State<Splash> {
                 );
               },
               onEnd: () {
+                Navigator.of(context).pushNamed(HomePage.route);
+                // Use below code block for production or dev, above for demo
+                /*
                 if (_user == null) {
                   _init(context).then((value) {
                     _goToNextPage(context);
@@ -83,6 +86,7 @@ class _SplashState extends State<Splash> {
                 } else {
                   _goToNextPage(context);
                 }
+                */
               },
             ),
             Hero(
