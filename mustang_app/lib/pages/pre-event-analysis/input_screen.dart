@@ -47,13 +47,18 @@ class _InputScreenState extends State<InputScreen> {
               children: [
                 Expanded(
                   flex: 1,
-                  child: IconButton(
-                    icon: Icon(Icons.remove),
-                    onPressed: () {
+                  child: GestureDetector(
+                    onLongPress: () {
+                      setState(() {
+                        teams = [];
+                      });
+                    },
+                    onTap: () {
                       setState(() {
                         teams.removeLast();
                       });
                     },
+                    child: Icon(Icons.remove),
                   ),
                 ),
                 Expanded(
