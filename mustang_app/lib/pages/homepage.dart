@@ -4,7 +4,7 @@ import '../components/header.dart';
 import '../components/bottom_nav_bar.dart';
 
 class HomePage extends StatefulWidget {
-  static const String route = '/home';
+  static const String route = '/';
   @override
   State<StatefulWidget> createState() {
     return HomePageState();

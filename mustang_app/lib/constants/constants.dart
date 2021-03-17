@@ -49,7 +49,7 @@ class Constants {
   static const int teleopStartMillis = 15000;
   static const int endgameStartMillis = 120000;
   static const int matchEndMillis = 150000;
-  static const int stopwatchLagMillis = 5000;
+  static const int stopwatchLagMillis = 2000;
 
   static const List<String> creators = [
     "Akshat Adsule",

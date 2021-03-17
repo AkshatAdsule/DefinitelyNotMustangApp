@@ -494,7 +494,7 @@ class Analyzer {
           GameAction currentAction = _allMatches[i].actions[j];
           if (currentAction.action == ActionType.SHOT_LOW) {
             if (currentAction.x == x && currentAction.y == y) {
-              if (currentAction.timeStamp <= 15000) {
+              if (currentAction.timeStamp <= Constants.teleopStartMillis) {
                 totalPoints += Constants.lowShotAutonValue;
               } else {
                 totalPoints += Constants.lowShotValue;
@@ -505,7 +505,7 @@ class Analyzer {
           //outer shot
           if (currentAction.action == ActionType.SHOT_OUTER) {
             if (currentAction.x == x && currentAction.y == y) {
-              if (currentAction.timeStamp <= 15000) {
+              if (currentAction.timeStamp <= Constants.teleopStartMillis) {
                 totalPoints += Constants.outerShotAutonValue;
               } else {
                 totalPoints += Constants.outerShotValue;
@@ -516,7 +516,7 @@ class Analyzer {
           //inner shot
           if (currentAction.action == ActionType.SHOT_INNER) {
             if (currentAction.x == x && currentAction.y == y) {
-              if (currentAction.timeStamp <= 15000) {
+              if (currentAction.timeStamp <= Constants.teleopStartMillis) {
                 totalPoints += Constants.innerShotAutonValue;
               } else {
                 totalPoints += Constants.innerShotValue;
@@ -545,7 +545,7 @@ class Analyzer {
           GameAction currentAction = _allMatches[i].actions[j];
           if (currentAction.action == actionType) {
             if (currentAction.x == x && currentAction.y == y) {
-              if (currentAction.timeStamp <= 15000) {
+              if (currentAction.timeStamp <= Constants.teleopStartMillis) {
                 totalPoints += pointValueAuton;
               } else {
                 totalPoints += pointValueTeleop;

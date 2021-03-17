@@ -166,7 +166,7 @@ class _MapScoutingState extends State<MapScouting> {
     _actions.add(
       GameAction(
         ActionType.OTHER_CLIMB,
-        _sliderLastChanged.toDouble() ?? 120000,
+        _sliderLastChanged.toDouble() ?? Constants.endgameStartMillis,
         _sliderVal,
         _sliderVal,
       ),
@@ -316,7 +316,7 @@ class FinishGameButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _stopwatch.elapsedMilliseconds > 150000
+    return _stopwatch.elapsedMilliseconds >= Constants.matchEndMillis
         ? Container(
             margin: EdgeInsets.only(
               right: 10,

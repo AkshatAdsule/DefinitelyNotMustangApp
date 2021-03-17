@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/exports/pages.dart';
 import 'package:mustang_app/pages/pre-event-analysis/input_screen.dart';
 import '../pages/sketcher.dart';
 import '../pages/calendar.dart';
@@ -9,7 +10,7 @@ class BottomNavBar extends BottomNavigationBar {
   static int _selectedIndex = 0;
 
   static final routes = [
-    '/',
+    HomePage.route,
     // Calendar.route,
     Scouter.route,
     InputScreen.route,
@@ -20,6 +21,9 @@ class BottomNavBar extends BottomNavigationBar {
   static void setSelected(String route) {
     _selectedIndex = routes.indexOf(route);
   }
+
+  static int get selected => _selectedIndex;
+  static String get selectedRoute => routes[_selectedIndex];
 
   BottomNavBar(BuildContext context)
       : super(

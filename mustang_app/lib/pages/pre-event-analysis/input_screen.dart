@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/bottom_nav_bar.dart';
+import 'package:mustang_app/components/header.dart';
 import 'package:mustang_app/pages/pre-event-analysis/compare_teams.dart';
 import 'package:mustang_app/utils/get_statistics.dart';
 
@@ -33,9 +34,7 @@ class _InputScreenState extends State<InputScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Mustang Pre-Event Data Analyzer"),
-      ),
+      appBar: Header(context, "Pre-Event Data Analyzer"),
       bottomNavigationBar: BottomNavBar(context),
       body: SafeArea(
         child: Column(
