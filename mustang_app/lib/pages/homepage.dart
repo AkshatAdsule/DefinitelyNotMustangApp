@@ -23,7 +23,7 @@ class HomePageState extends State<HomePage> {
           children: [
             Container(
               child: Text(
-                "You Are Welcome 💚",
+                "U R Welcome 💚",
                 style: TextStyle(
                   color: Colors.green,
                   fontSize: 30,
