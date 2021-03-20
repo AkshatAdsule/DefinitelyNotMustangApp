@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mustang_app/components/bottom_nav_bar.dart';
 import 'package:mustang_app/components/header.dart';
 import 'package:mustang_app/pages/pre-event-analysis/compare_teams.dart';
@@ -69,6 +70,11 @@ class _InputScreenState extends State<InputScreen> {
                       labelText: 'Enter teams',
                     ),
                     controller: inputController,
+                    keyboardType: TextInputType.numberWithOptions(
+                      signed: false,
+                      decimal: false,
+                    ),
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     onChanged: (value) => {
                       setState(() {
                         input = value;
@@ -146,8 +152,7 @@ class _InputScreenState extends State<InputScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                RaisedButton(
-                  color: Color.fromRGBO(34, 139, 34, 1),
+                ElevatedButton(
                   child: Text(
                     "Sort Teams",
                   ),
@@ -163,8 +168,7 @@ class _InputScreenState extends State<InputScreen> {
                         }
                       : null,
                 ),
-                RaisedButton(
-                  color: Color.fromRGBO(34, 139, 34, 1),
+                ElevatedButton(
                   child: Text(
                     "Compare Teams",
                   ),
