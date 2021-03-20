@@ -99,12 +99,6 @@ class TeamStatistic {
     dprAverage = dprs.reduce((a, b) => a + b) / dprs.length;
     ccwmAverage = ccwms.reduce((a, b) => a + b) / ccwms.length;
     winRateAverage = winRates.reduce((a, b) => a + b) / winRates.length;
-    // debugPrint(contributionPercentages.length.toString());
-    double sum = 0;
-    for (double contributionPercentage in contributionPercentages) {
-      sum += contributionPercentage;
-      // debugPrint(sum.toString());
-    }
     pointContributionAvg = contributionPercentages.reduce((a, b) => a + b) /
         contributionPercentages.length;
   }
@@ -156,26 +150,6 @@ class TeamStatistic {
     this.ccwmSlope = ccwmSum / max;
     this.winrateSlope = winRateSum / max;
     this.contributionSlope = contributionSum / max;
-    // oprSlope = (yearStats[length - 1].avgOpr +
-    //         yearStats[length - 2].avgOpr +
-    //         yearStats[length - 3].avgOpr) /
-    //     3;
-    // dprSlope = (yearStats[length - 1].avgDpr +
-    //         yearStats[length - 2].avgDpr +
-    //         yearStats[length - 3].avgDpr) /
-    //     3;
-    // ccwmSlope = (yearStats[length - 1].avgCcwm +
-    //         yearStats[length - 2].avgCcwm +
-    //         yearStats[length - 3].avgCcwm) /
-    //     3;
-    // winrateSlope = (yearStats[length - 1].avgWinRate +
-    //         yearStats[length - 2].avgWinRate +
-    //         yearStats[length - 3].avgWinRate) /
-    //     3;
-    // contributionSlope = (yearStats[length - 1].avgPointContribution +
-    //         yearStats[length - 2].avgPointContribution +
-    //         yearStats[length - 3].avgPointContribution) /
-    //     3;
   }
 }
 
