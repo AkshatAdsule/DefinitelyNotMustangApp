@@ -57,7 +57,7 @@ class BottomNavBar extends BottomNavigationBar {
           onTap: (int index) {
             _selectedIndex = index;
             Navigator.of(context).pushNamed('/');
-            Navigator.of(context).pushNamed(routes[index]);
+            Navigator.of(context).pushReplacementNamed(routes[index]);
           },
         );
 }
