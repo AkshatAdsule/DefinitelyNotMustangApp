@@ -6,12 +6,13 @@ import 'package:http/http.dart' as http;
 
 class Event {
   String eventCode;
+  String eventType;
   int year;
 
-  Event({this.eventCode, this.year});
+  Event({this.eventCode, this.year, this.eventType});
 
   Map<String, dynamic> toJson() {
-    return {"eventCode": eventCode, "year": year};
+    return {"eventCode": eventCode, "year": year, "eventType": eventType};
   }
 }
 
@@ -23,6 +24,16 @@ class GetStatistics {
   FirebaseFirestore _firestore;
   CollectionReference _teams;
   GetStatistics getStatistics;
+
+  static const Map<String, double> eventTypeWeightings = {
+    "Regional": 1.0,
+    "Championship Division": 2.0,
+    "Offseason": 1.0,
+    "District Championship": 1.5,
+    "District": 1.2,
+    // Don't count remote events
+    "Remote": 0.0
+  };
 
   Future<void> _firebaseInit() async {
     _firestore = FirebaseFirestore.instance;
@@ -44,7 +55,15 @@ class GetStatistics {
     var resJson = jsonDecode(response);
 
     for (var event in resJson) {
-      events.add(new Event(eventCode: event['key'], year: event['year']));
+      print("Event code is ${event['event_type_string']}");
+      if (eventTypeWeightings[event['event_type_string']] == null) {
+        print(
+            "----------------- FAILED: ${event['event_type_string']} -------------------");
+      }
+      events.add(new Event(
+          eventCode: event['key'],
+          year: event['year'],
+          eventType: event['event_type_string']));
     }
     return events;
   }
@@ -176,6 +195,7 @@ class GetStatistics {
       double opr = resJson['oprs'][team];
       double dpr = resJson['dprs'][team];
       double ccwm = resJson['ccwms'][team];
+      double scale = GetStatistics.eventTypeWeightings[event.eventType];
       double winRate = await getWinRate(team, event.eventCode);
       double contributionPercentage = await getPointContribution(team, event);
       //debugPrint(contributionPercentage);
@@ -194,9 +214,9 @@ class GetStatistics {
             team: team,
             event: event.eventCode,
             year: event.year,
-            opr: opr,
-            dpr: dpr,
-            ccwm: ccwm,
+            opr: opr * scale,
+            dpr: dpr * scale,
+            ccwm: ccwm * scale,
             winRate: winRate,
             pointContribution: contributionPercentage);
       } else {
@@ -293,7 +313,8 @@ class GetStatistics {
         }
       }
       TeamStatistic teamStatistic = new TeamStatistic(team, eventStats);
-      _teams.doc(team).set(jsonDecode(jsonEncode(teamStatistic)));
+      // _teams.doc(team).set(jsonDecode(jsonEncode(teamStatistic)));
+      _teams.doc(team).set(teamStatistic.toJson());
       return teamStatistic;
     }
   }

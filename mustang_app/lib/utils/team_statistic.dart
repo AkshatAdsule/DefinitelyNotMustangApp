@@ -74,24 +74,25 @@ class TeamStatistic {
     this.calculateSlope();
   }
 
-  TeamStatistic.premade(
-      {this.teamCode,
-      this.oprs,
-      this.oprAverage,
-      this.oprSlope,
-      this.dprs,
-      this.dprAverage,
-      this.dprSlope,
-      this.ccwms,
-      this.ccwmAverage,
-      this.ccwmSlope,
-      this.winRates,
-      this.winRateAverage,
-      this.winrateSlope,
-      this.contributionPercentages,
-      this.pointContributionAvg,
-      this.contributionSlope,
-      this.yearStats});
+  TeamStatistic.premade({
+    this.teamCode,
+    this.oprs,
+    this.oprAverage,
+    this.oprSlope,
+    this.dprs,
+    this.dprAverage,
+    this.dprSlope,
+    this.ccwms,
+    this.ccwmAverage,
+    this.ccwmSlope,
+    this.winRates,
+    this.winRateAverage,
+    this.winrateSlope,
+    this.contributionPercentages,
+    this.pointContributionAvg,
+    this.contributionSlope,
+    this.yearStats,
+  });
 
   TeamStatistic.fromJson(Map<String, dynamic> data);
   void _calculateAverages() {
@@ -210,7 +211,7 @@ class YearStats {
 
   Map<String, dynamic> toJson() {
     return {
-      "year": year,
+      "year": year.toString(),
       "oprAverage": avgOpr,
       "dprAverage": avgDpr,
       "ccwmAverage": avgCcwm,
