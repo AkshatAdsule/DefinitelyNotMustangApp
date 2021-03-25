@@ -17,24 +17,26 @@ class MatchEndScouter extends StatefulWidget {
   String _teamNumber, _matchNumber, _allianceColor;
   List<GameAction> _actions;
   double _climbLocation;
+  bool _offenseOnRightSide;
 
   MatchEndScouter({
     String teamNumber,
     String matchNumber,
     List<GameAction> actions,
-    String allianceColor,
-    double climbLocation,
+    String allianceColor, bool offenseOnRightSide,
+    double climbLocation
   }) {
     _climbLocation = climbLocation;
     _teamNumber = teamNumber;
     _matchNumber = matchNumber;
     _actions = actions;
     _allianceColor = allianceColor;
+    _offenseOnRightSide = offenseOnRightSide;
   }
 
   @override
   _MatchEndScouterState createState() => _MatchEndScouterState(
-      _teamNumber, _matchNumber, _allianceColor, _actions, _climbLocation);
+      _teamNumber, _matchNumber, _allianceColor, _offenseOnRightSide, _actions, _climbLocation);
 }
 
 class _MatchEndScouterState extends State<MatchEndScouter> {
@@ -44,9 +46,10 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
   TextEditingController _finalCommentsController = TextEditingController();
   bool _brokeDown;
   double _climbLocation;
+  bool _offenseOnRightSide;
 
   _MatchEndScouterState(this._teamNumber, this._matchNumber,
-      this._allianceColor, this._actions, this._climbLocation);
+      this._allianceColor, this._offenseOnRightSide, this._actions, this._climbLocation);
 
   void _finishGame(BuildContext context, User user) {
     if (_matchResult == null) {
@@ -80,7 +83,7 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
         break;
     }
     ScoutingOperations.setMatchData(
-      new Match(_matchNumber, _teamNumber, _allianceColor, _matchResult,
+      new Match(_matchNumber, _teamNumber, _allianceColor, _offenseOnRightSide, _matchResult,
           _finalCommentsController.text, _actions),
       user != null ? user.uid : 'Anonymous',
       user != null ? user.displayName : 'Anonymous',

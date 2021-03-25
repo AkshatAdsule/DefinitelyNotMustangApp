@@ -19,22 +19,25 @@ import '../../components/game_buttons.dart' as game_button;
 class MapScouting extends StatefulWidget {
   static const String route = '/MapScouter';
   String _teamNumber, _matchNumber, _allianceColor;
+  bool _offenseOnRightSide;
 
-  MapScouting({String teamNumber, String matchNumber, String allianceColor}) {
+  MapScouting({String teamNumber, String matchNumber, String allianceColor, bool offenseOnRightSide}) {
     _teamNumber = teamNumber;
     _matchNumber = matchNumber;
     _allianceColor = allianceColor;
+    _offenseOnRightSide = offenseOnRightSide;
   }
 
   @override
   _MapScoutingState createState() =>
-      _MapScoutingState(_teamNumber, _matchNumber, _allianceColor);
+      _MapScoutingState(_teamNumber, _matchNumber, _allianceColor, _offenseOnRightSide);
 }
 
 class _MapScoutingState extends State<MapScouting> {
   bool _onOffense, _startedScouting;
   Stopwatch _stopwatch;
   String _teamNumber, _matchNumber, _allianceColor;
+  bool _offenseOnRightSide;
   ZoneGrid _zoneGrid;
   List<GameAction> _actions;
   int _sliderLastChanged;
@@ -46,7 +49,7 @@ class _MapScoutingState extends State<MapScouting> {
   bool _pushTextStart;
   Timer _endgameTimer, _endTimer, _teleopTimer;
 
-  _MapScoutingState(this._teamNumber, this._matchNumber, this._allianceColor);
+  _MapScoutingState(this._teamNumber, this._matchNumber, this._allianceColor, this._offenseOnRightSide);
 
   @override
   void initState() {
@@ -176,6 +179,7 @@ class _MapScoutingState extends State<MapScouting> {
       'matchNumber': _matchNumber,
       'actions': _actions,
       'allianceColor': _allianceColor,
+      'offenseOnRightSide' : _offenseOnRightSide,
       'climbLocation': _sliderVal,
     });
   }
@@ -269,6 +273,7 @@ class _MapScoutingState extends State<MapScouting> {
             ? BlurOverlay(
                 background: GameMap(
                   allianceColor: _allianceColor,
+                  offenseOnRightSide: _offenseOnRightSide,
                   zoneGrid: _zoneGrid,
                   imageChildren: [scoutingOverlay],
                   sideWidget: scoutingSide,
@@ -283,6 +288,7 @@ class _MapScoutingState extends State<MapScouting> {
               )
             : GameMap(
                 allianceColor: _allianceColor,
+                offenseOnRightSide: _offenseOnRightSide,
                 zoneGrid: _zoneGrid,
                 imageChildren: [scoutingOverlay],
                 sideWidget: scoutingSide,

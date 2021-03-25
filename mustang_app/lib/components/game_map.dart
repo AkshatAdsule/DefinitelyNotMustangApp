@@ -6,6 +6,8 @@ class GameMap extends StatelessWidget {
   List<Widget> _imageChildren = [];
   Widget _sideWidget;
   String _allianceColor;
+  bool _offenseOnRightSide;
+  
   ZoneGrid _zoneGrid;
 
   GameMap({
@@ -13,15 +15,31 @@ class GameMap extends StatelessWidget {
     Widget sideWidget,
     ZoneGrid zoneGrid,
     String allianceColor = "blue",
+    bool offenseOnRightSide = true,
   }) {
     _imageChildren.addAll(imageChildren);
     _sideWidget = sideWidget;
     _zoneGrid = zoneGrid;
     _allianceColor = allianceColor;
+    _offenseOnRightSide = offenseOnRightSide;
   }
 
   @override
   Widget build(BuildContext context) {
+    String imageName = '';
+      if (_allianceColor.toUpperCase() == "BLUE" && _offenseOnRightSide == true){
+        imageName = 'assets/rightblue_leftred.png';
+      }
+      else if (_allianceColor.toUpperCase() == "BLUE" && _offenseOnRightSide == false){
+        imageName = 'assets/rightred_leftblue.png';
+      }
+      else if (_allianceColor.toUpperCase() == "RED" && _offenseOnRightSide == true){
+        imageName = 'assets/rightred_leftblue.png';
+      }
+      else if (_allianceColor.toUpperCase() == "RED" && _offenseOnRightSide == false){
+        imageName = 'assets/rightblue_leftred.png';
+      }
+
     return Container(
         child: Row(
       children: [
@@ -30,9 +48,12 @@ class GameMap extends StatelessWidget {
           child: Stack(
             alignment: Alignment.centerLeft,
             children: [
+              Image.asset(imageName),
+              /*
               Image.asset(_allianceColor.toUpperCase() == "BLUE"
                   ? 'assets/blue_field.png'
                   : 'assets/red_field.png'),
+                  */
               _zoneGrid ?? Container(),
               ..._imageChildren,
             ],
