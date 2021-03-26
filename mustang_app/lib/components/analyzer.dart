@@ -144,7 +144,12 @@ class Analyzer {
     //goes thru all matches
     for (int i = 0; i < _totalNumGames; i++) {
       Match _currentMatch = _allMatches[i];
+
       List<GameAction> actions = _currentMatch.actions;
+
+      if (!_currentMatch.offenseOnRightSide){
+        flipGameActionOffense(actions);
+      }
 
       _foulReg.addAll(
           actions.where((element) => element.action == ActionType.FOUL_REG));
@@ -556,5 +561,16 @@ class Analyzer {
       }
     }
     return totalPoints;
+  }
+
+  //normalize data if offense was on left side, switch columns (or x) to the other side
+  //ex: column 0 becomes column 15, column 3 becomes 12, columm 7 becomes 8
+  void flipGameActionOffense(List<GameAction> actions){
+    //normally 16 but goes 0-15 so should be 15
+    int largestColumnNum = Constants.zoneColumns - 1;
+    for (int i = 0; i < actions.length; i++){
+      double temp = actions[i].x;
+      actions[i].x = largestColumnNum-temp;
+    }
   }
 }

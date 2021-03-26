@@ -210,7 +210,15 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
         );
       }).toList(),
     );
-
+    Widget normalizedToRightSideText = Text(
+      "*data has been normalized so that offense is on the ride side*",
+      textAlign: TextAlign.center,
+      style: TextStyle(
+          color: Colors.grey[800],
+          //fontWeight: FontWeight.bold,
+          fontSize: 14,
+          height: 1),
+    );
     Widget shadingKey = Ink(
       decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -241,6 +249,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
       MapAnalysisText(myAnalyzer),
       switchButton,
       Container(child: Center(child: dropDownList)),
+      normalizedToRightSideText,
       shadingKey,
       switchButton.showScoringMap ? scoringMap : accuracyMap,
     ];

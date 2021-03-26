@@ -192,6 +192,16 @@ class _GameReplayState extends State<GameReplay> {
               children: getShadingKey(5, 10)),
         ]));
 
+Widget normalizedToRightSideText = Text(
+      "*data has been normalized so that offense is on the ride side*",
+      textAlign: TextAlign.center,
+      style: TextStyle(
+          color: Colors.grey[800],
+          //fontWeight: FontWeight.bold,
+          fontSize: 14,
+          height: 1),
+    );
+
     Widget timeSlider = Container(
         height: 30,
         width: 650,
@@ -216,7 +226,7 @@ class _GameReplayState extends State<GameReplay> {
         child: SingleChildScrollView(
       child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[dropDownList, shadingKey, scoringMap, timeSlider]),
+          children: <Widget>[dropDownList, shadingKey, normalizedToRightSideText, scoringMap, timeSlider]),
     ));
   }
 }

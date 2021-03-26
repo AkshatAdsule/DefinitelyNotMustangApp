@@ -52,6 +52,7 @@ class MyApp extends StatelessWidget {
             matchNumber: args['matchNumber'],
             actions: args['actions'],
             allianceColor: args['allianceColor'],
+            offenseOnRightSide: args['offenseOnRightSide'],
             climbLocation: args['climbLocation'],
           ),
           settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
@@ -92,6 +93,7 @@ class MyApp extends StatelessWidget {
         return MaterialPageRoute(
           builder: (context) => MapScouting(
             allianceColor: args['allianceColor'],
+            offenseOnRightSide: args['offenseOnRightSide'],
             teamNumber: args['teamNumber'],
             matchNumber: args['matchNumber'],
           ),
