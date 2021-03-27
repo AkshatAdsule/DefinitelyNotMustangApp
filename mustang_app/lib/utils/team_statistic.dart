@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/constants/constants.dart';
 
 class TeamStatistic {
   String teamCode;
@@ -106,6 +107,7 @@ class TeamStatistic {
 
   Map<String, dynamic> toJson() {
     return {
+      "DATA_VERSION": Constants.DATA_VERSION,
       "team": teamCode,
       "oprAverage": oprAverage,
       "dprAverage": dprAverage,
@@ -118,7 +120,7 @@ class TeamStatistic {
       "winrateSlope": winrateSlope,
       "contributionSlope": contributionSlope,
       "events": events,
-      "yearStatistics": yearStats
+      "yearStatistics": yearStats.map((e) => e.toJson()).toList(),
     };
   }
 

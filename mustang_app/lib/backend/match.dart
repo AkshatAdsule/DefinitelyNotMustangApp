@@ -4,8 +4,9 @@ import 'package:mustang_app/backend/game_action.dart';
 class Match {
   String _matchNumber, _teamNumber, _allianceColor, _matchResult, _notes;
   List<GameAction> _actions;
+  bool _offenseOnRightSide;
 
-  Match(this._matchNumber, this._teamNumber, this._allianceColor,
+  Match(this._matchNumber, this._teamNumber, this._allianceColor, this._offenseOnRightSide,
       this._matchResult, this._notes, this._actions);
 
   factory Match.fromJson(Map<String, dynamic> data) {
@@ -13,6 +14,7 @@ class Match {
       data['matchNumber'] ?? '',
       data['teamNumber'] ?? '',
       data['allianceColor'] ?? 'blue',
+      data['offesneOnRightSide'] ?? true,
       data['matchResult'] ?? 'Lose',
       data['finalComments'] ?? '',
       data['actions'] != null
@@ -32,6 +34,7 @@ class Match {
       snapshot.id,
       data['teamNumber'] ?? '',
       data['allianceColor'] ?? 'blue',
+      data['offfenseOnRightSide'] ?? true,
       data['matchResult'] ?? 'Lose',
       data['finalComments'] ?? '',
       data['actions'] != null
@@ -50,6 +53,7 @@ class Match {
       'matchNumber': _matchNumber,
       'finalComments': _notes,
       'allianceColor': _allianceColor,
+      'offenseOnRightSide' : _offenseOnRightSide,
       'matchResult': _matchResult,
       'actions': _actions.map((e) => e.toJson()).toList(),
     };
@@ -58,6 +62,7 @@ class Match {
   String get matchNumber => _matchNumber;
   String get teamNumber => _teamNumber;
   String get allianceColor => _allianceColor;
+  bool get offenseOnRightSide => _offenseOnRightSide;
   String get matchResult => _matchResult;
   String get notes => _notes;
   List<GameAction> get actions => _actions;
@@ -65,6 +70,7 @@ class Match {
   set matchNumber(String matchNumber) => _matchNumber = matchNumber;
   set teamNumber(String teamNumber) => _teamNumber = teamNumber;
   set allianceColor(String allianceColor) => _allianceColor = allianceColor;
+  set offenseOnRightSide(bool offenseOnRightSide) => _offenseOnRightSide = offenseOnRightSide;
   set matchResult(String matchResult) => _matchResult = matchResult;
   set notes(String notes) => _notes = notes;
   set actions(List<GameAction> actions) => _actions = actions;

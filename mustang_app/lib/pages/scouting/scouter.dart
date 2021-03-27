@@ -22,6 +22,7 @@ class _ScouterState extends State<Scouter> {
   String _allianceColor = "Blue";
   int _allianceNum = 0;
 
+  bool _offenseOnRightSide = true;
   bool _showError = false;
   /*
    _handleRadioValueChange (String color){
@@ -62,6 +63,7 @@ class _ScouterState extends State<Scouter> {
             'teamNumber': _teamNumberController.text,
             'matchNumber': _matchNumberController.text,
             'allianceColor': _allianceColor,
+            'offenseOnRightSide': _offenseOnRightSide,
           });
         }
       },
@@ -152,7 +154,6 @@ class _ScouterState extends State<Scouter> {
                         setState(() {
                           _allianceNum = value;
                           _allianceColor = 'Red';
-
                           Constants.fieldColor = value;
                         });
                       }),
@@ -162,6 +163,40 @@ class _ScouterState extends State<Scouter> {
                       fontSize: 16.0,
                     ),
                   ),
+                ],
+              ),
+              new Row(mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  //offense on right/left side
+                  new Radio<bool>(
+                      value: true,
+                      groupValue: _offenseOnRightSide,
+                      onChanged: (bool value) {
+                        setState(() {
+                          //_offenseNum = value;
+                          _offenseOnRightSide = value;
+                        });
+                      }),
+                  new Text(
+                    'Offense Right Side',
+                    style: new TextStyle(fontSize: 16.0),
+                  ),
+                  new Radio<bool>(
+                      value: false,
+                      groupValue: _offenseOnRightSide,
+                      onChanged: (bool value) {
+                        setState(() {
+                          //_offenseNum = value;
+                          _offenseOnRightSide = value;
+                        });
+                      }),
+                  new Text(
+                    'Offense Left Side',
+                    style: new TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
+  
                 ],
               ),
               Container(
@@ -238,6 +273,7 @@ class _ScouterState extends State<Scouter> {
                                     'teamNumber': _teamNumberController.text,
                                     'matchNumber': _matchNumberController.text,
                                     'allianceColor': _allianceColor,
+                                    'offenseOnRightSide': _offenseOnRightSide,
                                   });
                             });
                           }

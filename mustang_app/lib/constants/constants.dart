@@ -2,6 +2,9 @@ class Constants {
   //not a constant but needs to be accessible
   static int fieldColor = 0;
 
+  // Pre event analysis data version
+  static const double DATA_VERSION = 1.0;
+
   //DEFENSE ANAYLSIS
   static const double intakeValue = 1.5;
   static const double shotValue = 2; //avg of low, outer, inner

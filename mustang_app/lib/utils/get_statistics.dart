@@ -1,8 +1,10 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'team_statistic.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
+import 'team_statistic.dart';
 
 class Event {
   String eventCode;
@@ -34,6 +36,8 @@ class GetStatistics {
     // Don't count remote events
     "Remote": 0.0
   };
+
+  static const double _DATA_VERSION = 1.0;
 
   Future<void> _firebaseInit() async {
     _firestore = FirebaseFirestore.instance;
@@ -272,7 +276,7 @@ class GetStatistics {
   Future<TeamStatistic> getCumulativeStats(String team) async {
     List<EventStatistic> eventStats = [];
     var doc = await _teams.doc(team).get();
-    if (doc.exists) {
+    if (doc.exists && doc.data()["DATA_VERSION"] == _DATA_VERSION) {
       var docData = doc.data();
       Map<String, dynamic> dataMap =
           docData.map((key, value) => MapEntry(key, value));
@@ -291,7 +295,7 @@ class GetStatistics {
         yearStats: dataMap['yearStatistics']
             .map<YearStats>(
               (s) => new YearStats.premade(
-                  year: new DateTime(s["year"]),
+                  year: DateTime.parse(s["year"]),
                   avgOpr: s["oprAverage"] as double,
                   avgDpr: s["dprAverage"] as double,
                   avgCcwm: s["ccwmAverage"] as double,
@@ -313,7 +317,6 @@ class GetStatistics {
         }
       }
       TeamStatistic teamStatistic = new TeamStatistic(team, eventStats);
-      // _teams.doc(team).set(jsonDecode(jsonEncode(teamStatistic)));
       _teams.doc(team).set(teamStatistic.toJson());
       return teamStatistic;
     }
