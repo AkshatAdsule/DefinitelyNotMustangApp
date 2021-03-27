@@ -165,7 +165,8 @@ class _ScouterState extends State<Scouter> {
                   ),
                 ],
               ),
-              new Row(mainAxisAlignment: MainAxisAlignment.center,
+              new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   //offense on right/left side
                   new Radio<bool>(
@@ -196,7 +197,6 @@ class _ScouterState extends State<Scouter> {
                       fontSize: 16.0,
                     ),
                   ),
-  
                 ],
               ),
               Container(
@@ -213,7 +213,7 @@ class _ScouterState extends State<Scouter> {
                           ));
                           return;
                         }
-                        ScoutingOperations.doesTeamDataExist(
+                        ScoutingOperations.doesPitDataExist(
                                 _teamNumberController.text)
                             .then((exists) {
                           if (exists) {
