@@ -54,7 +54,7 @@ class Constants {
   static const int matchEndMillis = 150000;
   static const int stopwatchLagMillis = 2000;
 
-  static const Duration offlineTimeoutMillis = Duration(milliseconds: 3000);
+  static const Duration offlineTimeoutMillis = Duration(milliseconds: 5000);
 
   // CREDITS
   static const List<String> creators = [

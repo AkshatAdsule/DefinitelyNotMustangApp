@@ -27,10 +27,19 @@ class ScoutingOperations {
   }
 
   static Future<bool> doesTeamDataExist(String teamNumber) async {
-    DocumentSnapshot snap = await _teamsRef.doc(teamNumber).get().timeout(
+    DocumentSnapshot snap = await _teamsRef
+        .doc(teamNumber)
+        .get()
+        .timeout(
           Constants.offlineTimeoutMillis,
           onTimeout: () => null,
-        );
+        )
+        .catchError(
+      (error) {
+        print('error: $error');
+        return null;
+      },
+    );
     if (snap == null || snap.data() == null) {
       return false;
     }
@@ -55,7 +64,13 @@ class ScoutingOperations {
         .timeout(
           Constants.offlineTimeoutMillis,
           onTimeout: () => null,
-        );
+        )
+        .catchError(
+      (error) {
+        print('error: $error');
+        return null;
+      },
+    );
     if (snap == null || snap.data() == null) {
       return false;
     }
