@@ -17,6 +17,7 @@ environment:
   sdk: ">=2.8.0 <3.0.0"
 
 dependencies:
+  firebase_analytics: "^7.0.1"
   firebase_auth: ^0.20.1
   firebase_core: ^0.7.0
   table_calendar: ^2.0.0
