@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mustang_app/constants/constants.dart';
 
 import 'team_statistic.dart';
 
@@ -37,8 +38,6 @@ class GetStatistics {
     "Remote": 0.0
   };
 
-  static const double _DATA_VERSION = 1.0;
-
   Future<void> _firebaseInit() async {
     _firestore = FirebaseFirestore.instance;
     _teams = _firestore.collection('team-statistics');
@@ -59,7 +58,6 @@ class GetStatistics {
     var resJson = jsonDecode(response);
 
     for (var event in resJson) {
-      print("Event code is ${event['event_type_string']}");
       if (eventTypeWeightings[event['event_type_string']] == null) {
         print(
             "----------------- FAILED: ${event['event_type_string']} -------------------");
@@ -199,7 +197,7 @@ class GetStatistics {
       double opr = resJson['oprs'][team];
       double dpr = resJson['dprs'][team];
       double ccwm = resJson['ccwms'][team];
-      double scale = GetStatistics.eventTypeWeightings[event.eventType];
+      double scale = GetStatistics.eventTypeWeightings[event.eventType] ?? 1.0;
       double winRate = await getWinRate(team, event.eventCode);
       double contributionPercentage = await getPointContribution(team, event);
       //debugPrint(contributionPercentage);
@@ -276,7 +274,7 @@ class GetStatistics {
   Future<TeamStatistic> getCumulativeStats(String team) async {
     List<EventStatistic> eventStats = [];
     var doc = await _teams.doc(team).get();
-    if (doc.exists && doc.data()["DATA_VERSION"] == _DATA_VERSION) {
+    if (doc.exists && doc.data()["DATA_VERSION"] == Constants.DATA_VERSION) {
       var docData = doc.data();
       Map<String, dynamic> dataMap =
           docData.map((key, value) => MapEntry(key, value));
@@ -295,13 +293,13 @@ class GetStatistics {
         yearStats: dataMap['yearStatistics']
             .map<YearStats>(
               (s) => new YearStats.premade(
-                  year: DateTime.parse(s["year"]),
-                  avgOpr: s["oprAverage"] as double,
-                  avgDpr: s["dprAverage"] as double,
-                  avgCcwm: s["ccwmAverage"] as double,
-                  avgWinRate: s["winRateAverage"] as double,
-                  avgPointContribution:
-                      s["pointContributionAverage"] as double),
+                year: DateTime.parse(s["year"]),
+                avgOpr: s["oprAverage"] as double,
+                avgDpr: s["dprAverage"] as double,
+                avgCcwm: s["ccwmAverage"] as double,
+                avgWinRate: s["winRateAverage"] as double,
+                avgPointContribution: s["pointContributionAverage"] as double,
+              ),
             )
             .toList(),
       );

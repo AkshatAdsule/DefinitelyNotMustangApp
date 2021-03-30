@@ -199,7 +199,7 @@ class YearStats {
       avgPointContribution = contributionPercentages.reduce((a, b) => a + b) /
           contributionPercentages.length;
     } catch (error) {
-      debugPrint(error);
+      //// debugPrint(error);
     }
   }
 
