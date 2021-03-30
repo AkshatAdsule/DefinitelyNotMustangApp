@@ -204,14 +204,6 @@ class GetStatistics {
 
       // Make sure result is not empty object
       if (opr != null) {
-        // debugPrint('$team at ${event.eventCode}  ${{
-        //   "opr": opr,
-        //   "dpr": dpr,
-        //   "ccwm": ccwm,
-        //   "winRate": winRate,
-        //   "pointContribution": contributionPercentage
-        // }}');
-        // return {"opr": opr, "dpr": dpr, "ccwm": ccwm, "winRate": winRate};
         return new EventStatistic(
             team: team,
             event: event.eventCode,
@@ -228,24 +220,6 @@ class GetStatistics {
       throw 'Could not find stats for $team at ${event.eventCode}';
     }
   }
-
-/*
-  List<double> getPointContribution(String teamCode) {
-    List<Event> events = getEvents(teamCode) as List<Event>;
-    List<double> contributionPercentages;
-    for (Event event in events) {
-      List<double> matchScores = getMatchScores(teamCode, event.eventCode) as List<double>;
-      EventStatistic eventStat = getEventStats(teamCode, event) as EventStatistic;
-      double opr = eventStat.opr;
-      double sum = 0;
-      for (double allianceScore in matchScores) {
-        sum += opr/allianceScore;
-      }
-      contributionPercentages.add((sum/matchScores.length) * 100);
-    }
-    return contributionPercentages;
-  }
-  */
 
   Future<double> getPointContribution(String teamCode, Event event) async {
     var response;
