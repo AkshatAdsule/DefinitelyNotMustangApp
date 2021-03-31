@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mustang_app/constants/constants.dart';
 import 'dart:math';
@@ -15,12 +17,14 @@ class OffenseScoutingOverlay extends StatelessWidget {
   bool _completedPositionControl = false;
   bool _crossedInitiationLine = false;
   double _sliderValue = 2;
+  Timer _matchEndTimer, _teleopStartTimer, _endgameStartTimer;
 
   OffenseScoutingOverlay(
       {void Function(double millisecondsElapsed) setClimb,
       void Function(ActionType type, BuildContext context) addAction,
       void Function() onWheelPress,
       void Function(bool newVal) setCrossedInitiationLine,
+      void Function() refresh,
       Stopwatch stopwatch,
       bool completedRotationControl,
       bool completedPositionControl,
@@ -35,6 +39,36 @@ class OffenseScoutingOverlay extends StatelessWidget {
     _completedPositionControl = completedPositionControl;
     _crossedInitiationLine = crossedInitiationLine;
     _sliderValue = sliderValue;
+    _initTimers(stopwatch, refresh);
+  }
+
+  void _initTimers(Stopwatch stopwatch, void Function() refresh) {
+    if (stopwatch.elapsedMilliseconds < Constants.teleopStartMillis) {
+      _teleopStartTimer = Timer(
+        Duration(
+            milliseconds:
+                Constants.teleopStartMillis - stopwatch.elapsedMilliseconds),
+        () {
+          refresh();
+          if (_teleopStartTimer != null) {
+            _teleopStartTimer.cancel();
+          }
+        },
+      );
+    }
+    if (stopwatch.elapsedMilliseconds < Constants.endgameStartMillis) {
+      _endgameStartTimer = Timer(
+        Duration(
+            milliseconds:
+                Constants.endgameStartMillis - stopwatch.elapsedMilliseconds),
+        () {
+          refresh();
+          if (_endgameStartTimer != null) {
+            _endgameStartTimer.cancel();
+          }
+        },
+      );
+    }
   }
 
   @override

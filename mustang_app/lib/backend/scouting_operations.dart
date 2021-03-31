@@ -26,6 +26,38 @@ class ScoutingOperations {
         .set({...match.toJson(), 'name': name, 'userId': uid});
   }
 
+  static Future<bool> doesPitDataExist(String teamNumber) async {
+    DocumentSnapshot snap = await _teamsRef
+        .doc(teamNumber)
+        .get()
+        .timeout(
+          Constants.offlineTimeoutMillis,
+          onTimeout: () => null,
+        )
+        .catchError(
+      (error) {
+        print('error: $error');
+        return null;
+      },
+    );
+    if (snap == null || snap.data() == null) {
+      return false;
+    }
+    if (snap.data().keys.where((element) => element != "teamNumber").length <=
+        0) {
+      return false;
+    }
+    Team team = Team.fromSnapshot(snap);
+
+    if (team == null) {
+      return false;
+    } else if (team.teamNumber == "") {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   static Future<bool> doesTeamDataExist(String teamNumber) async {
     DocumentSnapshot snap = await _teamsRef
         .doc(teamNumber)

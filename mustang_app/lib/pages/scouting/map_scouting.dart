@@ -21,7 +21,11 @@ class MapScouting extends StatefulWidget {
   String _teamNumber, _matchNumber, _allianceColor;
   bool _offenseOnRightSide;
 
-  MapScouting({String teamNumber, String matchNumber, String allianceColor, bool offenseOnRightSide}) {
+  MapScouting(
+      {String teamNumber,
+      String matchNumber,
+      String allianceColor,
+      bool offenseOnRightSide}) {
     _teamNumber = teamNumber;
     _matchNumber = matchNumber;
     _allianceColor = allianceColor;
@@ -29,8 +33,8 @@ class MapScouting extends StatefulWidget {
   }
 
   @override
-  _MapScoutingState createState() =>
-      _MapScoutingState(_teamNumber, _matchNumber, _allianceColor, _offenseOnRightSide);
+  _MapScoutingState createState() => _MapScoutingState(
+      _teamNumber, _matchNumber, _allianceColor, _offenseOnRightSide);
 }
 
 class _MapScoutingState extends State<MapScouting> {
@@ -49,7 +53,8 @@ class _MapScoutingState extends State<MapScouting> {
   bool _pushTextStart;
   Timer _endgameTimer, _endTimer, _teleopTimer;
 
-  _MapScoutingState(this._teamNumber, this._matchNumber, this._allianceColor, this._offenseOnRightSide);
+  _MapScoutingState(this._teamNumber, this._matchNumber, this._allianceColor,
+      this._offenseOnRightSide);
 
   @override
   void initState() {
@@ -66,13 +71,20 @@ class _MapScoutingState extends State<MapScouting> {
     _pushTextStart = false;
     _sliderLastChanged = 0;
     _sliderVal = 2;
-    if (_stopwatch.elapsedMilliseconds <= Constants.endgameStartMillis) {
-      _endgameTimer = new Timer(
-          Duration(
-              milliseconds:
-                  Constants.endgameStartMillis + Constants.stopwatchLagMillis),
-          () => setState(() {}));
-    }
+    // if (_stopwatch.elapsedMilliseconds <= Constants.teleopStartMillis) {
+    //   _teleopTimer = new Timer(
+    //       Duration(
+    //           milliseconds:
+    //               Constants.teleopStartMillis + Constants.stopwatchLagMillis),
+    //       () => setState(() {}));
+    // }
+    // if (_stopwatch.elapsedMilliseconds <= Constants.endgameStartMillis) {
+    //   _endgameTimer = new Timer(
+    //       Duration(
+    //           milliseconds:
+    //               Constants.endgameStartMillis + Constants.stopwatchLagMillis),
+    //       () => setState(() {}));
+    // }
     if (_stopwatch.elapsedMilliseconds <= Constants.matchEndMillis) {
       _endTimer = new Timer(
           Duration(
@@ -80,21 +92,14 @@ class _MapScoutingState extends State<MapScouting> {
                   Constants.matchEndMillis + Constants.stopwatchLagMillis),
           () => setState(() {}));
     }
-    if (_stopwatch.elapsedMilliseconds <= Constants.teleopStartMillis) {
-      _teleopTimer = new Timer(
-          Duration(
-              milliseconds:
-                  Constants.teleopStartMillis + Constants.stopwatchLagMillis),
-          () => setState(() {}));
-    }
   }
 
   @override
   void dispose() {
     super.dispose();
+    // _teleopTimer.cancel();
+    // _endgameTimer.cancel();
     _endTimer.cancel();
-    _endgameTimer.cancel();
-    _teleopTimer.cancel();
     _stopwatch.stop();
   }
 
@@ -179,7 +184,7 @@ class _MapScoutingState extends State<MapScouting> {
       'matchNumber': _matchNumber,
       'actions': _actions,
       'allianceColor': _allianceColor,
-      'offenseOnRightSide' : _offenseOnRightSide,
+      'offenseOnRightSide': _offenseOnRightSide,
       'climbLocation': _sliderVal,
     });
   }
@@ -217,6 +222,7 @@ class _MapScoutingState extends State<MapScouting> {
       index: _onOffense ? 0 : 1,
       children: [
         OffenseScoutingOverlay(
+          refresh: () => setState(() {}),
           addAction: _addAction,
           stopwatch: _stopwatch,
           completedPositionControl: _completedPositionControl,
@@ -322,7 +328,8 @@ class FinishGameButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _stopwatch.elapsedMilliseconds >= Constants.matchEndMillis
+    return _stopwatch.elapsedMilliseconds >=
+            Constants.matchEndMillis - Constants.stopwatchLagMillis
         ? Container(
             margin: EdgeInsets.only(
               right: 10,
