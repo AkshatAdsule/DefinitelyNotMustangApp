@@ -28,16 +28,6 @@ class GetStatistics {
   CollectionReference _teams;
   GetStatistics getStatistics;
 
-  static const Map<String, double> eventTypeWeightings = {
-    "Regional": 1.0,
-    "Championship Division": 2.0,
-    "Offseason": 1.0,
-    "District Championship": 1.5,
-    "District": 1.2,
-    // Don't count remote events
-    "Remote": 0.0
-  };
-
   Future<void> _firebaseInit() async {
     _firestore = FirebaseFirestore.instance;
     _teams = _firestore.collection('team-statistics');
@@ -58,7 +48,7 @@ class GetStatistics {
     var resJson = jsonDecode(response);
 
     for (var event in resJson) {
-      if (eventTypeWeightings[event['event_type_string']] == null) {
+      if (Constants.EVENT_TYPE_WEIGHTS[event['event_type_string']] == null) {
         print(
             "----------------- FAILED: ${event['event_type_string']} -------------------");
       }
@@ -104,9 +94,7 @@ class GetStatistics {
       var found = false;
       for (var team in teams) {
         if (team == teamCode) {
-          //debugPrint("red alliance");
           matchScores.add(red['score']);
-          //debugPrint(red['score']);
           found = true;
         }
       }
@@ -197,7 +185,7 @@ class GetStatistics {
       double opr = resJson['oprs'][team];
       double dpr = resJson['dprs'][team];
       double ccwm = resJson['ccwms'][team];
-      double scale = GetStatistics.eventTypeWeightings[event.eventType] ?? 1.0;
+      double scale = Constants.EVENT_TYPE_WEIGHTS[event.eventType] ?? 1.0;
       double winRate = await getWinRate(team, event.eventCode);
       double contributionPercentage = await getPointContribution(team, event);
       //debugPrint(contributionPercentage);

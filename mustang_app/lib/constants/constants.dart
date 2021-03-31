@@ -3,7 +3,17 @@ class Constants {
   static int fieldColor = 0;
 
   // Pre event analysis data version
-  static const double DATA_VERSION = 1.0;
+  static const double DATA_VERSION = 1.1;
+
+  static const Map<String, double> EVENT_TYPE_WEIGHTS = {
+    "Regional": 1.0,
+    "Offseason": 1.0,
+    "District": 1.15,
+    "District Championship": 1.25,
+    "Championship Division": 1.5,
+    "Championship Finals": 1.75,
+    "Remote": 0.0
+  };
 
   //DEFENSE ANAYLSIS
   static const double intakeValue = 1.5;

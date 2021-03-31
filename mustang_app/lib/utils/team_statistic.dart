@@ -199,17 +199,18 @@ class YearStats {
       avgPointContribution = contributionPercentages.reduce((a, b) => a + b) /
           contributionPercentages.length;
     } catch (error) {
-      //// debugPrint(error);
+      print(error);
     }
   }
 
-  YearStats.premade(
-      {this.year,
-      this.avgOpr,
-      this.avgCcwm,
-      this.avgDpr,
-      this.avgWinRate,
-      this.avgPointContribution});
+  YearStats.premade({
+    this.year,
+    this.avgOpr,
+    this.avgCcwm,
+    this.avgDpr,
+    this.avgWinRate,
+    this.avgPointContribution,
+  });
 
   Map<String, dynamic> toJson() {
     return {
