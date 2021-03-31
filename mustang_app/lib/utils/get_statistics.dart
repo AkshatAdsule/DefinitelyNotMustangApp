@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:mustang_app/constants/constants.dart';
 
 import 'team_statistic.dart';
 
@@ -28,6 +27,18 @@ class GetStatistics {
   CollectionReference _teams;
   GetStatistics getStatistics;
 
+  static const Map<String, double> eventTypeWeightings = {
+    "Regional": 1.0,
+    "Championship Division": 2.0,
+    "Offseason": 1.0,
+    "District Championship": 1.5,
+    "District": 1.2,
+    // Don't count remote events
+    "Remote": 0.0
+  };
+
+  static const double _DATA_VERSION = 1.0;
+
   Future<void> _firebaseInit() async {
     _firestore = FirebaseFirestore.instance;
     _teams = _firestore.collection('team-statistics');
@@ -48,7 +59,8 @@ class GetStatistics {
     var resJson = jsonDecode(response);
 
     for (var event in resJson) {
-      if (Constants.EVENT_TYPE_WEIGHTS[event['event_type_string']] == null) {
+      print("Event code is ${event['event_type_string']}");
+      if (eventTypeWeightings[event['event_type_string']] == null) {
         print(
             "----------------- FAILED: ${event['event_type_string']} -------------------");
       }
@@ -94,7 +106,9 @@ class GetStatistics {
       var found = false;
       for (var team in teams) {
         if (team == teamCode) {
+          //debugPrint("red alliance");
           matchScores.add(red['score']);
+          //debugPrint(red['score']);
           found = true;
         }
       }
@@ -185,13 +199,21 @@ class GetStatistics {
       double opr = resJson['oprs'][team];
       double dpr = resJson['dprs'][team];
       double ccwm = resJson['ccwms'][team];
-      double scale = Constants.EVENT_TYPE_WEIGHTS[event.eventType] ?? 1.0;
+      double scale = GetStatistics.eventTypeWeightings[event.eventType];
       double winRate = await getWinRate(team, event.eventCode);
       double contributionPercentage = await getPointContribution(team, event);
       //debugPrint(contributionPercentage);
 
       // Make sure result is not empty object
       if (opr != null) {
+        // debugPrint('$team at ${event.eventCode}  ${{
+        //   "opr": opr,
+        //   "dpr": dpr,
+        //   "ccwm": ccwm,
+        //   "winRate": winRate,
+        //   "pointContribution": contributionPercentage
+        // }}');
+        // return {"opr": opr, "dpr": dpr, "ccwm": ccwm, "winRate": winRate};
         return new EventStatistic(
             team: team,
             event: event.eventCode,
@@ -208,6 +230,24 @@ class GetStatistics {
       throw 'Could not find stats for $team at ${event.eventCode}';
     }
   }
+
+/*
+  List<double> getPointContribution(String teamCode) {
+    List<Event> events = getEvents(teamCode) as List<Event>;
+    List<double> contributionPercentages;
+    for (Event event in events) {
+      List<double> matchScores = getMatchScores(teamCode, event.eventCode) as List<double>;
+      EventStatistic eventStat = getEventStats(teamCode, event) as EventStatistic;
+      double opr = eventStat.opr;
+      double sum = 0;
+      for (double allianceScore in matchScores) {
+        sum += opr/allianceScore;
+      }
+      contributionPercentages.add((sum/matchScores.length) * 100);
+    }
+    return contributionPercentages;
+  }
+  */
 
   Future<double> getPointContribution(String teamCode, Event event) async {
     var response;
@@ -236,7 +276,7 @@ class GetStatistics {
   Future<TeamStatistic> getCumulativeStats(String team) async {
     List<EventStatistic> eventStats = [];
     var doc = await _teams.doc(team).get();
-    if (doc.exists && doc.data()["DATA_VERSION"] == Constants.DATA_VERSION) {
+    if (doc.exists && doc.data()["DATA_VERSION"] == _DATA_VERSION) {
       var docData = doc.data();
       Map<String, dynamic> dataMap =
           docData.map((key, value) => MapEntry(key, value));
@@ -255,13 +295,13 @@ class GetStatistics {
         yearStats: dataMap['yearStatistics']
             .map<YearStats>(
               (s) => new YearStats.premade(
-                year: DateTime.parse(s["year"]),
-                avgOpr: s["oprAverage"] as double,
-                avgDpr: s["dprAverage"] as double,
-                avgCcwm: s["ccwmAverage"] as double,
-                avgWinRate: s["winRateAverage"] as double,
-                avgPointContribution: s["pointContributionAverage"] as double,
-              ),
+                  year: DateTime.parse(s["year"]),
+                  avgOpr: s["oprAverage"] as double,
+                  avgDpr: s["dprAverage"] as double,
+                  avgCcwm: s["ccwmAverage"] as double,
+                  avgWinRate: s["winRateAverage"] as double,
+                  avgPointContribution:
+                      s["pointContributionAverage"] as double),
             )
             .toList(),
       );
