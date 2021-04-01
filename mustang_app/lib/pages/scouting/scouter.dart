@@ -174,7 +174,7 @@ class _ScouterState extends State<Scouter> {
                           _offenseOnRightSide = true;
                         });
                       }),
-                       new Text(
+                  new Text(
                     'Offense Right Side',
                     style: new TextStyle(
                       fontSize: 16.0,

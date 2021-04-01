@@ -21,7 +21,11 @@ class MapScouting extends StatefulWidget {
   String _teamNumber, _matchNumber, _allianceColor;
   bool _offenseOnRightSide;
 
-  MapScouting({String teamNumber, String matchNumber, String allianceColor, bool offenseOnRightSide}) {
+  MapScouting(
+      {String teamNumber,
+      String matchNumber,
+      String allianceColor,
+      bool offenseOnRightSide}) {
     _teamNumber = teamNumber;
     _matchNumber = matchNumber;
     _allianceColor = allianceColor;
@@ -29,8 +33,8 @@ class MapScouting extends StatefulWidget {
   }
 
   @override
-  _MapScoutingState createState() =>
-      _MapScoutingState(_teamNumber, _matchNumber, _allianceColor, _offenseOnRightSide);
+  _MapScoutingState createState() => _MapScoutingState(
+      _teamNumber, _matchNumber, _allianceColor, _offenseOnRightSide);
 }
 
 class _MapScoutingState extends State<MapScouting> {
@@ -49,7 +53,8 @@ class _MapScoutingState extends State<MapScouting> {
   bool _pushTextStart;
   Timer _endgameTimer, _endTimer, _teleopTimer;
 
-  _MapScoutingState(this._teamNumber, this._matchNumber, this._allianceColor, this._offenseOnRightSide);
+  _MapScoutingState(this._teamNumber, this._matchNumber, this._allianceColor,
+      this._offenseOnRightSide);
 
   @override
   void initState() {
@@ -66,27 +71,6 @@ class _MapScoutingState extends State<MapScouting> {
     _pushTextStart = false;
     _sliderLastChanged = 0;
     _sliderVal = 2;
-    if (_stopwatch.elapsedMilliseconds <= Constants.endgameStartMillis) {
-      _endgameTimer = new Timer(
-          Duration(
-              milliseconds:
-                  Constants.endgameStartMillis + Constants.stopwatchLagMillis),
-          () => setState(() {}));
-    }
-    if (_stopwatch.elapsedMilliseconds <= Constants.matchEndMillis) {
-      _endTimer = new Timer(
-          Duration(
-              milliseconds:
-                  Constants.matchEndMillis + Constants.stopwatchLagMillis),
-          () => setState(() {}));
-    }
-    if (_stopwatch.elapsedMilliseconds <= Constants.teleopStartMillis) {
-      _teleopTimer = new Timer(
-          Duration(
-              milliseconds:
-                  Constants.teleopStartMillis + Constants.stopwatchLagMillis),
-          () => setState(() {}));
-    }
   }
 
   @override
@@ -96,6 +80,23 @@ class _MapScoutingState extends State<MapScouting> {
     _endgameTimer.cancel();
     _teleopTimer.cancel();
     _stopwatch.stop();
+  }
+
+  void _initTimers() {
+    if (_stopwatch.elapsedMilliseconds <= Constants.endgameStartMillis) {
+      _endgameTimer = new Timer(
+          Duration(milliseconds: Constants.endgameStartMillis),
+          () => setState(() {}));
+    }
+    if (_stopwatch.elapsedMilliseconds <= Constants.matchEndMillis) {
+      _endTimer = new Timer(Duration(milliseconds: Constants.matchEndMillis),
+          () => setState(() {}));
+    }
+    if (_stopwatch.elapsedMilliseconds <= Constants.teleopStartMillis) {
+      _teleopTimer = new Timer(
+          Duration(milliseconds: Constants.teleopStartMillis),
+          () => setState(() {}));
+    }
   }
 
   void _toggleMode() {
@@ -179,7 +180,7 @@ class _MapScoutingState extends State<MapScouting> {
       'matchNumber': _matchNumber,
       'actions': _actions,
       'allianceColor': _allianceColor,
-      'offenseOnRightSide' : _offenseOnRightSide,
+      'offenseOnRightSide': _offenseOnRightSide,
       'climbLocation': _sliderVal,
     });
   }
@@ -283,6 +284,7 @@ class _MapScoutingState extends State<MapScouting> {
                   setState(() {
                     _startedScouting = true;
                     _stopwatch.start();
+                    _initTimers();
                   });
                 },
               )

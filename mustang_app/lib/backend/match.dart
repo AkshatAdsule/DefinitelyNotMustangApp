@@ -6,15 +6,15 @@ class Match {
   List<GameAction> _actions;
   bool _offenseOnRightSide;
 
-  Match(this._matchNumber, this._teamNumber, this._allianceColor, this._offenseOnRightSide,
-      this._matchResult, this._notes, this._actions);
+  Match(this._matchNumber, this._teamNumber, this._allianceColor,
+      this._offenseOnRightSide, this._matchResult, this._notes, this._actions);
 
   factory Match.fromJson(Map<String, dynamic> data) {
     return Match(
       data['matchNumber'] ?? '',
       data['teamNumber'] ?? '',
       data['allianceColor'] ?? 'blue',
-      data['offesneOnRightSide'] ?? true,
+      data['offenseOnRightSide'] ?? true,
       data['matchResult'] ?? 'Lose',
       data['finalComments'] ?? '',
       data['actions'] != null
@@ -34,9 +34,7 @@ class Match {
       snapshot.id,
       data['teamNumber'] ?? '',
       data['allianceColor'] ?? 'blue',
-      //data['offfenseOnRightSide'] ?? true,
-      data['offfenseOnRightSide'],
-
+      data['offenseOnRightSide'] ?? true,
       data['matchResult'] ?? 'Lose',
       data['finalComments'] ?? '',
       data['actions'] != null
@@ -55,7 +53,7 @@ class Match {
       'matchNumber': _matchNumber,
       'finalComments': _notes,
       'allianceColor': _allianceColor,
-      'offenseOnRightSide' : _offenseOnRightSide,
+      'offenseOnRightSide': _offenseOnRightSide,
       'matchResult': _matchResult,
       'actions': _actions.map((e) => e.toJson()).toList(),
     };
@@ -72,7 +70,8 @@ class Match {
   set matchNumber(String matchNumber) => _matchNumber = matchNumber;
   set teamNumber(String teamNumber) => _teamNumber = teamNumber;
   set allianceColor(String allianceColor) => _allianceColor = allianceColor;
-  set offenseOnRightSide(bool offenseOnRightSide) => _offenseOnRightSide = offenseOnRightSide;
+  set offenseOnRightSide(bool offenseOnRightSide) =>
+      _offenseOnRightSide = offenseOnRightSide;
   set matchResult(String matchResult) => _matchResult = matchResult;
   set notes(String notes) => _notes = notes;
   set actions(List<GameAction> actions) => _actions = actions;

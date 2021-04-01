@@ -15,17 +15,17 @@ class OffenseScoutingOverlay extends StatelessWidget {
   bool _completedPositionControl = false;
   bool _crossedInitiationLine = false;
   double _sliderValue = 2;
-
-  OffenseScoutingOverlay(
-      {void Function(double millisecondsElapsed) setClimb,
-      void Function(ActionType type, BuildContext context) addAction,
-      void Function() onWheelPress,
-      void Function(bool newVal) setCrossedInitiationLine,
-      Stopwatch stopwatch,
-      bool completedRotationControl,
-      bool completedPositionControl,
-      bool crossedInitiationLine,
-      double sliderValue}) {
+  OffenseScoutingOverlay({
+    void Function(double millisecondsElapsed) setClimb,
+    void Function(ActionType type, BuildContext context) addAction,
+    void Function() onWheelPress,
+    void Function(bool newVal) setCrossedInitiationLine,
+    Stopwatch stopwatch,
+    bool completedRotationControl,
+    bool completedPositionControl,
+    bool crossedInitiationLine,
+    double sliderValue,
+  }) {
     _stopwatch = stopwatch;
     _addAction = addAction;
     _setClimb = setClimb;
