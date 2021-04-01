@@ -35,6 +35,7 @@ class Constants {
   static const double positionControl = 20;
   static const double climbValue = 25;
   static const double endgameParkValue = 5;
+  static const double levelledValue = 15;
 
   static const int zoneRows = 8;
   static const int zoneColumns = 16;

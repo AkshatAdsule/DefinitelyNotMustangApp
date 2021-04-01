@@ -16,7 +16,8 @@ class Analyzer {
   //for testing if data needs to be collected again or not - if same then don't
   int _totalNumGames = 1;
   //array for each type of action, has all instances of that action for all games
-  List<GameAction> _foulReg = [],
+  List<GameAction> 
+      _foulReg = [],
       _foulTech = [],
       _foulYellow = [],
       _foulRed = [],
@@ -34,7 +35,10 @@ class Analyzer {
       _prevShot = [],
       _prevIntake = [],
       _pushStart = [],
-      _pushEnd = [];
+      _pushEnd = [],
+      _otherCrossedInitiationLine = [],
+      _otherParked = [],
+      _otherLevelled = [];
 
   Analyzer(String teamNum) {
     _teamNum = teamNum;
@@ -192,6 +196,13 @@ class Analyzer {
           actions.where((element) => element.action == ActionType.PUSH_START));
       _pushEnd.addAll(
           actions.where((element) => element.action == ActionType.PUSH_END));
+      _otherCrossedInitiationLine.addAll(
+        actions.where((element) => element.action == ActionType.OTHER_CROSSED_INITIATION_LINE));
+      _otherParked.addAll(
+        actions.where((element) => element.action == ActionType.OTHER_PARKED));
+      _otherLevelled.addAll(
+        actions.where((element) => element.action == ActionType.OTHER_LEVELLED));
+      
     }
   }
 
@@ -216,6 +227,9 @@ class Analyzer {
     _prevIntake = [];
     _pushStart = [];
     _pushEnd = [];
+    _otherCrossedInitiationLine = [];
+    _otherParked = [];
+    _otherLevelled = [];
   }
 
   double calcOffenseShootingPts() {
@@ -247,12 +261,16 @@ class Analyzer {
   }
 
   double calcOffenseNonShootingPts() {
+    double _crossInitiation = _otherCrossedInitiationLine.length * Constants.crossInitiationLineValue;
     double _rotationControl =
         _otherWheelRotation.length * Constants.positionControl;
     double _positionControl =
         _otherWheelPosition.length * Constants.positionControl;
-    double _climb = _otherClimb.length * Constants.climbValue;
-    return _rotationControl + _positionControl + _climb;
+    double _climb = (_otherClimb.length * Constants.climbValue) 
+            + (_otherParked.length * Constants.endgameParkValue)
+            + (_otherLevelled.length * Constants.levelledValue);
+    
+    return _crossInitiation + _rotationControl + _positionControl + _climb;
   }
 
   double calcShotAccuracy() {
@@ -267,7 +285,7 @@ class Analyzer {
   }
 
   double calcTotClimbAccuracy() {
-    double _climb = _otherClimb.length * 1.0;
+    double _climb = (_otherClimb.length + _otherLevelled.length) * 1.0;
     double _miss = _otherClimbMiss.length * 1.0;
     double _totalClimbAttempts = _climb + _miss;
     if (_totalClimbAttempts == 0) {
