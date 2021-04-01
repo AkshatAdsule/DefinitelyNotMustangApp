@@ -99,9 +99,13 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
     double ptsAtZonePerGame = ptsAtZone / totalNumGames;
     double colorValue =
         ((ptsAtZonePerGame / Constants.maxPtValuePerZonePerGame) * 900);
-    int a = ((colorValue / 100).toInt()) * 100; //lower bound of 100
-    int b = ((colorValue / 100).toInt() + 1) * 100; //upper bound
-    int returnVal = (colorValue - a > b - colorValue) ? b : a;
+    int lowerBound = 0, upperBound = 0;
+    if (!colorValue.isNaN && colorValue.isFinite){
+      lowerBound = (colorValue ~/ 100) * 100; //lower bound of 100
+      upperBound = (colorValue ~/ 100 + 1) * 100; //upper bound
+    }
+    
+    int returnVal = (colorValue - lowerBound > upperBound - colorValue) ? upperBound : lowerBound;
     if (returnVal > 0) {
       //debugPrint("zone: (" + x.toString() + ", " + y.toString() + ")  points at zone per game: " + ptsAtZonePerGame.toString() + " color value: " + returnVal.toString());
     }

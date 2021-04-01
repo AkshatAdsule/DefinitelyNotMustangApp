@@ -1,7 +1,4 @@
 class Constants {
-  //not a constant but needs to be accessible
-  static int fieldColor = 0;
-
   // Pre event analysis data version
   static const double DATA_VERSION = 1.0;
 

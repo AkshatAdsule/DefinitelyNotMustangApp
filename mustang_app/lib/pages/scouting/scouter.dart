@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/bottom_nav_bar.dart';
-import 'package:mustang_app/constants/constants.dart';
 import 'package:mustang_app/pages/scouting/map_scouting.dart';
 import 'pit_scouting.dart';
 import '../../components/header.dart';
@@ -19,28 +18,14 @@ class Scouter extends StatefulWidget {
 class _ScouterState extends State<Scouter> {
   TextEditingController _teamNumberController = TextEditingController();
   TextEditingController _matchNumberController = TextEditingController();
+
   String _allianceColor = "Blue";
   int _allianceNum = 0;
 
   bool _offenseOnRightSide = true;
+  int _offenseNum = 0;
+
   bool _showError = false;
-  /*
-   _handleRadioValueChange (String color){
-    setState(() {
-      _allianceColor = color;
-      switch(color){
-        case "Blue Alliance" : { debugPrint("blue");}
-        break;
-
-        case "Red Alliance" : { debugPrint("red");}
-        break;
-
-        default: {debugPrint("default");}
-        break;
-      }
-    });
-  }
-  */
 
   showAlertDialog(BuildContext context, bool pit) {
     // set up the buttons
@@ -140,7 +125,6 @@ class _ScouterState extends State<Scouter> {
                         setState(() {
                           _allianceNum = value;
                           _allianceColor = 'Blue';
-                          Constants.fieldColor = value;
                         });
                       }),
                   new Text(
@@ -154,7 +138,6 @@ class _ScouterState extends State<Scouter> {
                         setState(() {
                           _allianceNum = value;
                           _allianceColor = 'Red';
-                          Constants.fieldColor = value;
                         });
                       }),
                   new Text(
@@ -165,38 +148,38 @@ class _ScouterState extends State<Scouter> {
                   ),
                 ],
               ),
-              new Row(mainAxisAlignment: MainAxisAlignment.center,
+              new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   //offense on right/left side
-                  new Radio<bool>(
-                      value: true,
-                      groupValue: _offenseOnRightSide,
-                      onChanged: (bool value) {
+                  new Radio(
+                      value: 0,
+                      groupValue: _offenseNum,
+                      onChanged: (int value) {
                         setState(() {
-                          //_offenseNum = value;
-                          _offenseOnRightSide = value;
-                        });
-                      }),
-                  new Text(
-                    'Offense Right Side',
-                    style: new TextStyle(fontSize: 16.0),
-                  ),
-                  new Radio<bool>(
-                      value: false,
-                      groupValue: _offenseOnRightSide,
-                      onChanged: (bool value) {
-                        setState(() {
-                          //_offenseNum = value;
-                          _offenseOnRightSide = value;
+                          _offenseNum = value;
+                          _offenseOnRightSide = false;
                         });
                       }),
                   new Text(
                     'Offense Left Side',
+                    style: new TextStyle(fontSize: 16.0),
+                  ),
+                  new Radio(
+                      value: 1,
+                      groupValue: _offenseNum,
+                      onChanged: (int value) {
+                        setState(() {
+                          _offenseNum = value;
+                          _offenseOnRightSide = true;
+                        });
+                      }),
+                       new Text(
+                    'Offense Right Side',
                     style: new TextStyle(
                       fontSize: 16.0,
                     ),
                   ),
-  
                 ],
               ),
               Container(

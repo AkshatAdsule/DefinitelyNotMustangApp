@@ -22,6 +22,7 @@ class _MapAnalysisTextState extends State<MapAnalysisText> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Container(
       margin: EdgeInsets.all(10),
       child: Row(

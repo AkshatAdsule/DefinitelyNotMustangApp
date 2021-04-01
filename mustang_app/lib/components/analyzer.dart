@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:mustang_app/backend/game_action.dart';
 import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/backend/team.dart';
@@ -41,12 +42,14 @@ class Analyzer {
 
   bool get initialized => _initialized;
   String get teamNum => _teamNum;
+  int totalNumGames() => _totalNumGames;
 
   Future<void> init() async {
     Team team = await _teamService.getTeam(_teamNum);
     List<Match> matches = await _teamService.getMatches(_teamNum);
     _driveBase = team.drivebaseType;
     _allMatches = matches;
+    flipGameActionOffenseAllMatches();
     _initialized = true;
   }
 
@@ -59,7 +62,7 @@ class Analyzer {
     return matchNums;
   }
 
-  // returns names of the matches for the team (for dropdown)
+  // returns names of the matches for the team
   List<GameAction> getMatch(String matchNum) {
     for (Match m in _allMatches)
       if (m.matchNumber == matchNum) return m.actions;
@@ -77,8 +80,6 @@ class Analyzer {
     }
     return currActions;
   }
-
-  int totalNumGames() => _totalNumGames;
 
   String getReport() {
     if (!_initialized || _allMatches.length == 0) {
@@ -147,10 +148,12 @@ class Analyzer {
 
       List<GameAction> actions = _currentMatch.actions;
 
-      if (!_currentMatch.offenseOnRightSide){
-        flipGameActionOffense(actions);
+/*
+      if (!_currentMatch.offenseOnRightSide) {
+        flipGameActionOffense(i);
+        debugPrint("called flip!");
       }
-
+*/
       _foulReg.addAll(
           actions.where((element) => element.action == ActionType.FOUL_REG));
       _foulTech.addAll(
@@ -290,18 +293,9 @@ class Analyzer {
 
   double getBallsInBot(String matchNum, double timeStamp) {
     double ballsInBot = 0;
-    Match match =
-        null; //only reason it's here is to test if matchNum has a "match" in _allMatches. PUN INTENDED
-    List<GameAction> matchActions = null;
-    //find and set match
-    for (int i = 0; i < _allMatches.length; i++) {
-      if (_allMatches[i].matchNumber == matchNum) {
-        match = _allMatches[i];
-        matchActions = match.actions;
-      }
-    }
-    //matchNum does not correspond to an actual match
-    if (match == null || matchActions == null) {
+    List<GameAction> matchActions = getMatch(matchNum);
+
+    if (matchActions == null) {
       return 0;
     }
 
@@ -411,6 +405,8 @@ class Analyzer {
   double calcShotAccuracyAtZone(ActionType actionType, double x, double y) {
     double shotsMade = 0;
     double shotsMissed = 0;
+    _clearAllData();
+    _collectData();
     if (actionType == ActionType.ALL) {
       for (int i = 0; i < _allMatches.length; i++) {
         //inside each array of actions
@@ -489,6 +485,8 @@ class Analyzer {
     double totalPoints = 0;
     double pointValueAuton = 0;
     double pointValueTeleop = 0;
+    _clearAllData();
+    _collectData();
     if (actionType == null) {
       return 0;
     } else if (actionType == ActionType.ALL) {
@@ -563,14 +561,60 @@ class Analyzer {
     return totalPoints;
   }
 
+/*
   //normalize data if offense was on left side, switch columns (or x) to the other side
   //ex: column 0 becomes column 15, column 3 becomes 12, columm 7 becomes 8
-  void flipGameActionOffense(List<GameAction> actions){
+  //void flipGameActionOffense(List<GameAction> actions){
+  void flipGameActionOffense(int matchNumber) {
+    debugPrint("flipped");
+    //Match _currentMatch = ;
+
+    List<GameAction> actions = _allMatches[matchNumber].actions;
+    debugPrint("actions before: " + actions.toString());
     //normally 16 but goes 0-15 so should be 15
     int largestColumnNum = Constants.zoneColumns - 1;
-    for (int i = 0; i < actions.length; i++){
-      double temp = actions[i].x;
-      actions[i].x = largestColumnNum-temp;
+    int largestRowNum = Constants.zoneRows - 1;
+    for (int i = 0; i < actions.length; i++) {
+      //double tempX = actions[i].x;
+      //actions[i].x = largestColumnNum - tempX;
+
+      double tempX = actions[i].x;
+      actions[i].x = largestColumnNum - tempX;
+
+      double tempY = actions[i].y;
+      actions[i].y = largestRowNum - tempY;
+    }
+
+    debugPrint("actions after: " + actions.toString());
+  }
+*/
+  //normalize data if offense was on left side, switch columns (or x) to the other side
+  //ex: column 0 becomes column 15, column 3 becomes 12, columm 7 becomes 8
+  //void flipGameActionOffense(List<GameAction> actions){
+  void flipGameActionOffenseAllMatches() {
+    debugPrint("flipped all");
+    int largestColumnNum = Constants.zoneColumns - 1;
+    int largestRowNum = Constants.zoneRows - 1;
+
+    for (Match m in _allMatches) {
+      debugPrint("is offense on right side: " + m.offenseOnRightSide.toString());
+      debugPrint("alliance color: " + m.allianceColor.toString());
+
+      //if (m.offenseOnRightSide != null && !m.offenseOnRightSide) {
+            //debugPrint("offense NOT right side");
+        for (GameAction a in m.actions) {
+
+          double tempX = a.x;
+          debugPrint("tempX: " + tempX.toString());
+          a.x = largestColumnNum - tempX;
+          debugPrint("new x: " + a.x.toString());
+
+          double tempY = a.y;
+          debugPrint("tempY: " + tempY.toString());
+          a.y = largestRowNum - tempY;
+          debugPrint("new y: " + a.y.toString());
+        }
+      //}
     }
   }
 }
