@@ -600,8 +600,8 @@ class Analyzer {
       debugPrint("is offense on right side: " + m.offenseOnRightSide.toString());
       debugPrint("alliance color: " + m.allianceColor.toString());
 
-      //if (m.offenseOnRightSide != null && !m.offenseOnRightSide) {
-            //debugPrint("offense NOT right side");
+      if (m.offenseOnRightSide != null && !m.offenseOnRightSide) {
+            debugPrint("offense NOT right side");
         for (GameAction a in m.actions) {
 
           double tempX = a.x;
@@ -614,7 +614,7 @@ class Analyzer {
           a.y = largestRowNum - tempY;
           debugPrint("new y: " + a.y.toString());
         }
-      //}
+      }
     }
   }
 }
