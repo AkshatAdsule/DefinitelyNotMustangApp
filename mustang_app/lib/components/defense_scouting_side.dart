@@ -31,7 +31,7 @@ class DefenseScoutingSide extends StatelessWidget {
 
   void actionDeterminer(BuildContext context, String action) {
     List<String> types = [
-      'Reg',
+      // 'Reg',
       'Tech',
       'Red',
       'Yellow',
@@ -56,7 +56,7 @@ class DefenseScoutingSide extends StatelessWidget {
     // set up the AlertDialog
     AlertDialog popUp = AlertDialog(
       title: Text(action),
-      content: Text('type'),
+      content: Text('Type of Foul'),
       actions: optionButtons,
     );
 
