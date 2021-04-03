@@ -15,7 +15,7 @@ class GameMap extends StatelessWidget {
     Widget sideWidget,
     ZoneGrid zoneGrid,
     String allianceColor = "blue",
-    bool offenseOnRightSide = true,
+    bool offenseOnRightSide = false,
   }) {
     _imageChildren.addAll(imageChildren);
     _sideWidget = sideWidget;
@@ -28,15 +28,21 @@ class GameMap extends StatelessWidget {
   Widget build(BuildContext context) {
     String imageName = '';
       if (_allianceColor.toUpperCase() == "BLUE" && _offenseOnRightSide == true){
+        debugPrint("right blue, left red");
         imageName = 'assets/rightblue_leftred.png';
       }
       else if (_allianceColor.toUpperCase() == "BLUE" && _offenseOnRightSide == false){
+                debugPrint("right red, left blue");
+
         imageName = 'assets/rightred_leftblue.png';
       }
       else if (_allianceColor.toUpperCase() == "RED" && _offenseOnRightSide == true){
+                       debugPrint("right red, left blue");
+
         imageName = 'assets/rightred_leftblue.png';
       }
       else if (_allianceColor.toUpperCase() == "RED" && _offenseOnRightSide == false){
+        debugPrint("right blue, left red");
         imageName = 'assets/rightblue_leftred.png';
       }
 

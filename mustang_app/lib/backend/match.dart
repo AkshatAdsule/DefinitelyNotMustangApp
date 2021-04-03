@@ -14,7 +14,7 @@ class Match {
       data['matchNumber'] ?? '',
       data['teamNumber'] ?? '',
       data['allianceColor'] ?? 'blue',
-      data['offenseOnRightSide'] ?? true,
+      data['offenseOnRightSide'] ?? false,
       data['matchResult'] ?? 'Lose',
       data['finalComments'] ?? '',
       data['actions'] != null
@@ -34,7 +34,7 @@ class Match {
       snapshot.id,
       data['teamNumber'] ?? '',
       data['allianceColor'] ?? 'blue',
-      data['offenseOnRightSide'] ?? true,
+      data['offenseOnRightSide'] ?? false,
       data['matchResult'] ?? 'Lose',
       data['finalComments'] ?? '',
       data['actions'] != null

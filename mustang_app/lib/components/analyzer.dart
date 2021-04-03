@@ -152,12 +152,6 @@ class Analyzer {
 
       List<GameAction> actions = _currentMatch.actions;
 
-/*
-      if (!_currentMatch.offenseOnRightSide) {
-        flipGameActionOffense(i);
-        debugPrint("called flip!");
-      }
-*/
       _foulReg.addAll(
           actions.where((element) => element.action == ActionType.FOUL_REG));
       _foulTech.addAll(
@@ -579,58 +573,21 @@ class Analyzer {
     return totalPoints;
   }
 
-/*
+
   //normalize data if offense was on left side, switch columns (or x) to the other side
   //ex: column 0 becomes column 15, column 3 becomes 12, columm 7 becomes 8
-  //void flipGameActionOffense(List<GameAction> actions){
-  void flipGameActionOffense(int matchNumber) {
-    debugPrint("flipped");
-    //Match _currentMatch = ;
-
-    List<GameAction> actions = _allMatches[matchNumber].actions;
-    debugPrint("actions before: " + actions.toString());
-    //normally 16 but goes 0-15 so should be 15
-    int largestColumnNum = Constants.zoneColumns - 1;
-    int largestRowNum = Constants.zoneRows - 1;
-    for (int i = 0; i < actions.length; i++) {
-      //double tempX = actions[i].x;
-      //actions[i].x = largestColumnNum - tempX;
-
-      double tempX = actions[i].x;
-      actions[i].x = largestColumnNum - tempX;
-
-      double tempY = actions[i].y;
-      actions[i].y = largestRowNum - tempY;
-    }
-
-    debugPrint("actions after: " + actions.toString());
-  }
-*/
-  //normalize data if offense was on left side, switch columns (or x) to the other side
-  //ex: column 0 becomes column 15, column 3 becomes 12, columm 7 becomes 8
-  //void flipGameActionOffense(List<GameAction> actions){
   void flipGameActionOffenseAllMatches() {
-    debugPrint("flipped all");
     int largestColumnNum = Constants.zoneColumns - 1;
     int largestRowNum = Constants.zoneRows - 1;
 
     for (Match m in _allMatches) {
-      debugPrint("is offense on right side: " + m.offenseOnRightSide.toString());
-      debugPrint("alliance color: " + m.allianceColor.toString());
-
       if (m.offenseOnRightSide != null && !m.offenseOnRightSide) {
-            debugPrint("offense NOT right side");
         for (GameAction a in m.actions) {
-
           double tempX = a.x;
-          //debugPrint("tempX: " + tempX.toString());
           a.x = largestColumnNum - tempX;
-          //debugPrint("new x: " + a.x.toString());
 
           double tempY = a.y;
-          //debugPrint("tempY: " + tempY.toString());
           a.y = largestRowNum - tempY;
-          //debugPrint("new y: " + a.y.toString());
         }
       }
     }

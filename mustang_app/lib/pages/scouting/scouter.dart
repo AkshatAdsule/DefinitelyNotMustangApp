@@ -22,7 +22,7 @@ class _ScouterState extends State<Scouter> {
   String _allianceColor = "Blue";
   int _allianceNum = 0;
 
-  bool _offenseOnRightSide = true;
+  bool _offenseOnRightSide = false;
   int _offenseNum = 0;
 
   bool _showError = false;
