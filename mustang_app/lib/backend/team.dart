@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+enum CheckBoxValues { NULL, TRUE, FALSE }
+
 class Team {
   String _teamNumber, _drivebaseType, _notes;
-  bool _innerPort,
+  CheckBoxValues _innerPort,
       _outerPort,
       _bottomPort,
       _rotationControl,
@@ -31,13 +33,13 @@ class Team {
       snapshot.id,
       data['drivebaseType'] ?? 'tank',
       data['notes'] ?? '',
-      data['innerPort'] ?? false,
-      data['outerPort'] ?? false,
-      data['bottomPort'] ?? false,
-      data['rotationControl'] ?? false,
-      data['positionControl'] ?? false,
-      data['climber'] ?? false,
-      data['leveller'] ?? false,
+      data['innerPort'] ?? CheckBoxValues.NULL,
+      data['outerPort'] ?? CheckBoxValues.NULL,
+      data['bottomPort'] ?? CheckBoxValues.NULL,
+      data['rotationControl'] ?? CheckBoxValues.NULL,
+      data['positionControl'] ?? CheckBoxValues.NULL,
+      data['climber'] ?? CheckBoxValues.NULL,
+      data['leveller'] ?? CheckBoxValues.NULL,
     );
   }
 
@@ -46,13 +48,13 @@ class Team {
       data['teamNumber'] ?? '',
       data['drivebaseType'] ?? 'tank',
       data['notes'] ?? '',
-      data['innerPort'] ?? false,
-      data['outerPort'] ?? false,
-      data['bottomPort'] ?? false,
-      data['rotationControl'] ?? false,
-      data['positionControl'] ?? false,
-      data['climber'] ?? false,
-      data['leveller'] ?? false,
+      data['innerPort'] ?? CheckBoxValues.NULL,
+      data['outerPort'] ?? CheckBoxValues.NULL,
+      data['bottomPort'] ?? CheckBoxValues.NULL,
+      data['rotationControl'] ?? CheckBoxValues.NULL,
+      data['positionControl'] ?? CheckBoxValues.NULL,
+      data['climber'] ?? CheckBoxValues.NULL,
+      data['leveller'] ?? CheckBoxValues.NULL,
     );
   }
 
@@ -74,24 +76,24 @@ class Team {
   String get teamNumber => _teamNumber;
   String get drivebaseType => _drivebaseType;
   String get notes => _notes;
-  bool get innerPort => _innerPort;
-  bool get outerPort => _outerPort;
-  bool get bottomPort => _bottomPort;
-  bool get rotationControl => _rotationControl;
-  bool get positionControl => _positionControl;
-  bool get hasLeveller => _hasLeveller;
-  bool get hasClimber => _hasClimber;
+  CheckBoxValues get innerPort => _innerPort;
+  CheckBoxValues get outerPort => _outerPort;
+  CheckBoxValues get bottomPort => _bottomPort;
+  CheckBoxValues get rotationControl => _rotationControl;
+  CheckBoxValues get positionControl => _positionControl;
+  CheckBoxValues get hasLeveller => _hasLeveller;
+  CheckBoxValues get hasClimber => _hasClimber;
 
   set teamNumber(String teamNumber) => _teamNumber = teamNumber;
   set drivebaseType(String drivebaseType) => _drivebaseType = drivebaseType;
   set notes(String notes) => _notes = notes;
-  set innerPort(bool innerPort) => _innerPort = innerPort;
-  set outerPort(bool outerPort) => _outerPort = outerPort;
-  set bottomPort(bool bottomPort) => _bottomPort = bottomPort;
-  set rotationControl(bool rotationControl) =>
+  set innerPort(CheckBoxValues innerPort) => _innerPort = innerPort;
+  set outerPort(CheckBoxValues outerPort) => _outerPort = outerPort;
+  set bottomPort(CheckBoxValues bottomPort) => _bottomPort = bottomPort;
+  set rotationControl(CheckBoxValues rotationControl) =>
       _rotationControl = rotationControl;
-  set positionControl(bool positionControl) =>
+  set positionControl(CheckBoxValues positionControl) =>
       _positionControl = positionControl;
-  set hasLeveller(bool hasLeveller) => _hasLeveller = hasLeveller;
-  set hasClimber(bool hasClimber) => _hasClimber = hasClimber;
+  set hasLeveller(CheckBoxValues hasLeveller) => _hasLeveller = hasLeveller;
+  set hasClimber(CheckBoxValues hasClimber) => _hasClimber = hasClimber;
 }
