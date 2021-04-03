@@ -3,6 +3,7 @@ import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/backend/team.dart';
 import 'package:mustang_app/backend/team_service.dart';
 import 'package:mustang_app/components/bottom_nav_bar.dart';
+import 'package:mustang_app/components/screen.dart';
 import '../components/header.dart';
 
 //TODO: IMPLEMENT THIS CLASS WITH PROVIDER
@@ -36,9 +37,9 @@ class _TeamInfoDisplayState extends State<TeamInfoDisplay> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: Header(context, _teamNumber),
-      body: Column(children: [
+    return new Screen(
+      title: _teamNumber,
+      child: Column(children: [
         StreamBuilder<Team>(
           stream: _teamService.streamTeam(_teamNumber),
           builder: (context, snapshot) {
@@ -57,7 +58,6 @@ class _TeamInfoDisplayState extends State<TeamInfoDisplay> {
               return Container();
             })
       ]),
-      bottomNavigationBar: BottomNavBar(context),
     );
   }
 }

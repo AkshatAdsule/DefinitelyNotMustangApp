@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/header.dart';
 import 'package:mustang_app/components/line_chart_widget.dart';
+import 'package:mustang_app/components/screen.dart';
 import 'package:mustang_app/utils/team_statistic.dart';
 
 class ViewGraphScreen extends StatelessWidget {
@@ -9,12 +10,9 @@ class ViewGraphScreen extends StatelessWidget {
   ViewGraphScreen(this._statistic);
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: Header(
-        context,
-        _statistic.teamCode.substring(3),
-      ),
-      body: Center(
+    return Screen(
+      title: _statistic.teamCode.substring(3),
+      child: Center(
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) =>
               LineChartWidget(

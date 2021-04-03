@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/team.dart';
 import 'package:mustang_app/backend/teams_service.dart';
+import 'package:mustang_app/components/screen.dart';
 import 'package:provider/provider.dart';
 import '../components/header.dart';
 import 'map_analysis_display.dart';
@@ -106,12 +107,9 @@ class _SearchState extends State<Search> {
         });
       }
     }
-    return new Scaffold(
-      appBar: new Header(
-        context,
-        'Search Data',
-      ),
-      body: ListView(
+    return new Screen(
+      title: 'Search Data',
+      child: ListView(
         children: <Widget>[
           Padding(
             padding: EdgeInsets.all(10.0),
@@ -169,7 +167,6 @@ class _SearchState extends State<Search> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavBar(context),
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:mustang_app/components/defense_scouting_side.dart';
 import 'package:mustang_app/components/game_map.dart';
 import 'package:mustang_app/components/offense_scouting_overlay.dart';
 import 'package:mustang_app/components/offense_scouting_side.dart';
+import 'package:mustang_app/components/screen.dart';
 import 'package:mustang_app/components/selectable_zone_grid.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/constants/constants.dart';
@@ -143,7 +144,7 @@ class _MapScoutingState extends State<MapScouting> {
     } else if (!GameAction.requiresLocation(type)) {
       action = GameAction.other(type, now.toDouble());
     } else {
-      Scaffold.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("No location selected"),
         duration: Duration(milliseconds: 1500),
       ));
@@ -252,24 +253,22 @@ class _MapScoutingState extends State<MapScouting> {
       ],
     );
 
-    return Scaffold(
-      appBar: Header(
-        context,
-        'Map Scouting',
-        buttons: [
-          Container(
-            margin: EdgeInsets.only(
-              right: 10,
-            ),
-            child: UndoButton(_undo),
+    return Screen(
+      title: 'Map Scouting',
+      headerButtons: [
+        Container(
+          margin: EdgeInsets.only(
+            right: 10,
           ),
-          FinishGameButton(
-            () => _finishGame(context),
-            _stopwatch,
-          )
-        ],
-      ),
-      body: Container(
+          child: UndoButton(_undo),
+        ),
+        FinishGameButton(
+          () => _finishGame(context),
+          _stopwatch,
+        )
+      ],
+      includeBottomNav: false,
+      child: Container(
         child: !_startedScouting
             ? BlurOverlay(
                 background: GameMap(

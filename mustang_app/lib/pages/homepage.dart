@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/components/screen.dart';
 import 'package:mustang_app/constants/constants.dart';
 import '../components/header.dart';
 import '../components/bottom_nav_bar.dart';
@@ -14,9 +15,11 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: Header(context, 'Home'),
-      body: Container(
+    return Screen(
+      title: 'Home',
+      left: false,
+      right: false,
+      child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -64,7 +67,6 @@ class HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavBar(context),
     );
   }
 }

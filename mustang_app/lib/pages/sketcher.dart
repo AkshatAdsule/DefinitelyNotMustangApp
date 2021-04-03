@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:mustang_app/components/screen.dart';
 import '../components/bottom_nav_bar.dart';
 
 class SketchPage extends StatefulWidget {
@@ -88,12 +89,12 @@ class _SketchPageState extends State<SketchPage> {
     // return RepaintBoundary(
     //     key: scr,
     //     child:
-    return Scaffold(
-      // bottomNavigationBar: BottomNavBar(context),
-      // appBar: AppBar(
-      //   title: Text('Sketcher'),
-      // ),
-      body: GestureDetector(
+    return Screen(
+      includeBottomNav: false,
+      includeHeader: false,
+      top: false,
+      bottom: false,
+      child: GestureDetector(
         onPanUpdate: (DragUpdateDetails details) {
           setState(() {
             RenderBox box = context.findRenderObject();
@@ -110,6 +111,7 @@ class _SketchPageState extends State<SketchPage> {
         },
         child: sketchArea,
       ),
+
       floatingActionButton: SpeedDial(
         animatedIcon: AnimatedIcons.menu_close,
         backgroundColor: Colors.green.shade800,
