@@ -61,9 +61,8 @@ class PostScouter extends StatelessWidget {
                   },
                   child: Text(
                     'Scout Another Team',
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
-                  //color: Colors.greenAccent,
                   color: Colors.green,
                   padding: EdgeInsets.all(15),
                 ),

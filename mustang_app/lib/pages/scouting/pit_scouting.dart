@@ -16,6 +16,8 @@ class PitScouter extends StatefulWidget {
   _PitScouterState createState() => _PitScouterState(_teamNumber);
 }
 
+enum DriveBase { TANK, OMNI, WESTCOAST, MECANUM, SWERVE }
+
 enum CheckBoxValues { NULL, TRUE, FALSE }
 
 class _PitScouterState extends State<PitScouter> {
@@ -23,14 +25,19 @@ class _PitScouterState extends State<PitScouter> {
   DriveBase _driveBase = DriveBase.TANK;
   TextEditingController _notes = new TextEditingController();
   List<List<Object>> boxStates = [
-    ['Inner', null],
-    ['Outer', null],
-    ['Lower', null],
-    ['Rotation', null],
-    ['Position', null],
-    ['Climb', null],
-    ['Level', null],
+    ['Inner', CheckBoxValues.NULL],
+    ['Outer', CheckBoxValues.NULL],
+    ['Lower', CheckBoxValues.NULL],
+    ['Rotation', CheckBoxValues.NULL],
+    ['Position', CheckBoxValues.NULL],
+    ['Climb', CheckBoxValues.NULL],
+    ['Level', CheckBoxValues.NULL],
   ];
+  Map<String, bool> boxStateToBool = {
+    "CheckBoxValues.NULL": null,
+    "CheckBoxValues.TRUE": true,
+    "CheckBoxValues.FALSE": false
+  };
 
   _PitScouterState(teamNumber) {
     _teamNumber = teamNumber;
@@ -46,11 +53,10 @@ class _PitScouterState extends State<PitScouter> {
   }
 
   Widget createCheckBox(String text) {
-    bool state;
-    for (int i = 0; i < boxStates.length; i++) {
-      if ((boxStates[i].contains(text))) state = boxStates[i][1];
+    int i;
+    for (int j = 0; j < boxStates.length; j++) {
+      if ((boxStates[j].contains(text))) i = j;
     }
-    bool boxState = false;
     String last = text.substring(text.length - 2);
     String label = text +
         (last == "er"
@@ -59,33 +65,29 @@ class _PitScouterState extends State<PitScouter> {
                 ? " Control"
                 : "er");
     return CheckboxListTile(
-        value: boxState,
+        value: boxStates[i][1] == CheckBoxValues.NULL ? false : true,
         onChanged: (bool val) {
           setState(() {
-            print("------------ boxState: " + boxState.toString() + "- before");
-            print("------------ state: " + state.toString() + "- before");
-            if (state == null) {
-              state = true;
-              boxState = true;
-            } else if (state == true) {
-              state = false;
-              boxState = true;
-            } else if (state == false) {
-              state = null;
-              boxState = false;
+            switch (boxStates[i][1]) {
+              case CheckBoxValues.NULL:
+                boxStates[i][1] = CheckBoxValues.TRUE;
+                break;
+              case CheckBoxValues.TRUE:
+                boxStates[i][1] = CheckBoxValues.FALSE;
+                break;
+              case CheckBoxValues.FALSE:
+                boxStates[i][1] = CheckBoxValues.TRUE;
+                break;
             }
-            print("------------ boxState: " + boxState.toString() + "- after");
-            print("------------ state: " + state.toString() + "- after");
           });
         },
         title: Text(
           label,
           style: new TextStyle(fontSize: 20.0),
         ),
-        activeColor: boxState ? Colors.green : Colors.red);
+        activeColor:
+            boxStates[i][1] == CheckBoxValues.TRUE ? Colors.green : Colors.red);
   }
-
-  Map<String, bool> boxVals = {"null": null, "true": true, "false": false};
 
   @override
   Widget build(BuildContext context) {
@@ -162,13 +164,13 @@ class _PitScouterState extends State<PitScouter> {
                           _teamNumber,
                           _driveBase.toString(),
                           _notes.text,
-                          boxStates[0][1],
-                          boxStates[1][1],
-                          boxStates[2][1],
-                          boxStates[3][1],
-                          boxStates[4][1],
-                          boxStates[5][1],
-                          boxStates[6][1],
+                          boxStateToBool[boxStates[0][1].toString()],
+                          boxStateToBool[boxStates[1][1].toString()],
+                          boxStateToBool[boxStates[2][1].toString()],
+                          boxStateToBool[boxStates[3][1].toString()],
+                          boxStateToBool[boxStates[4][1].toString()],
+                          boxStateToBool[boxStates[5][1].toString()],
+                          boxStateToBool[boxStates[6][1].toString()],
                         ),
                       );
                       Navigator.pushNamed(context, PostScouter.route);
@@ -190,5 +192,3 @@ class _PitScouterState extends State<PitScouter> {
         ));
   }
 }
-
-enum DriveBase { TANK, OMNI, WESTCOAST, MECANUM, SWERVE }
