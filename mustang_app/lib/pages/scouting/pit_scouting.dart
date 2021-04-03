@@ -20,13 +20,13 @@ class _PitScouterState extends State<PitScouter> {
   String _teamNumber;
   DriveBase _driveBase = DriveBase.TANK;
   TextEditingController _notes = new TextEditingController();
-  CheckBoxValues _innerVal = CheckBoxValues.NULL,
-      _outerVal = CheckBoxValues.NULL,
-      _bottomVal = CheckBoxValues.NULL,
-      _rotationVal = CheckBoxValues.NULL,
-      _positionVal = CheckBoxValues.NULL,
-      _climbVal = CheckBoxValues.NULL,
-      _levellerVal = CheckBoxValues.NULL;
+  bool _innerVal = null,
+      _outerVal = null,
+      _bottomVal = null,
+      _rotationVal = null,
+      _positionVal = null,
+      _climbVal = null,
+      _levellerVal = null;
   _PitScouterState(teamNumber) {
     _teamNumber = teamNumber;
   }
@@ -85,87 +85,49 @@ class _PitScouterState extends State<PitScouter> {
                   ),
                 ),
                 CheckboxListTile(
-                  value: _outerVal == CheckBoxValues.NULL ? false : true,
+                  value: _outerVal == null ? false : true,
                   onChanged: (bool val) {
                     setState(() {
-                      switch (_outerVal) {
-                        case CheckBoxValues.NULL:
-                          _outerVal = CheckBoxValues.TRUE;
-                          break;
-                        case CheckBoxValues.TRUE:
-                          _outerVal = CheckBoxValues.FALSE;
-                          break;
-                        case CheckBoxValues.FALSE:
-                          _outerVal = CheckBoxValues.NULL;
-                          break;
-                        default:
-                          break;
-                      }
+                      _outerVal = val;
                     });
                   },
                   title: Text(
                     'Outer Port',
                     style: new TextStyle(fontSize: 20.0),
                   ),
-                  activeColor: _outerVal == CheckBoxValues.TRUE
-                      ? Colors.green
-                      : Colors.red,
+                  activeColor: _outerVal == true ? Colors.green : Colors.red,
                 ),
                 CheckboxListTile(
-                  value: _innerVal == CheckBoxValues.NULL ? false : true,
+                  value: _innerVal == null ? false : true,
                   onChanged: (bool val) {
                     setState(() {
-                      switch (_innerVal) {
-                        case CheckBoxValues.NULL:
-                          _innerVal = CheckBoxValues.TRUE;
-                          break;
-                        case CheckBoxValues.TRUE:
-                          _innerVal = CheckBoxValues.FALSE;
-                          break;
-                        case CheckBoxValues.FALSE:
-                          _innerVal = CheckBoxValues.NULL;
-                          break;
-                        default:
-                          break;
-                      }
+                      _innerVal = val;
                     });
                   },
                   title: Text(
                     'Inner Port',
                     style: new TextStyle(fontSize: 20.0),
                   ),
-                  activeColor: _innerVal == CheckBoxValues.NULL
+                  activeColor: _innerVal == null
                       ? Colors.white
-                      : _innerVal == CheckBoxValues.TRUE
+                      : _innerVal == true
                           ? Colors.green
                           : Colors.red,
                 ),
                 CheckboxListTile(
-                  value: _bottomVal == CheckBoxValues.NULL ? false : true,
+                  value: _bottomVal == null ? false : true,
                   onChanged: (bool val) {
                     setState(() {
-                      switch (_bottomVal) {
-                        case CheckBoxValues.NULL:
-                          _bottomVal = CheckBoxValues.TRUE;
-                          break;
-                        case CheckBoxValues.TRUE:
-                          _bottomVal = CheckBoxValues.FALSE;
-                          break;
-                        case CheckBoxValues.FALSE:
-                          _bottomVal = CheckBoxValues.NULL;
-                          break;
-                        default:
-                          break;
-                      }
+                      _bottomVal = val;
                     });
                   },
                   title: Text(
                     'Bottom Port',
                     style: new TextStyle(fontSize: 20.0),
                   ),
-                  activeColor: _bottomVal == CheckBoxValues.NULL
+                  activeColor: _bottomVal == null
                       ? Colors.white
-                      : _bottomVal == CheckBoxValues.TRUE
+                      : _bottomVal == true
                           ? Colors.green
                           : Colors.red,
                 ),
@@ -177,60 +139,36 @@ class _PitScouterState extends State<PitScouter> {
                   ),
                 ),
                 CheckboxListTile(
-                  value: _rotationVal == CheckBoxValues.NULL ? false : true,
+                  value: _rotationVal == null ? false : true,
                   onChanged: (bool val) {
                     setState(() {
-                      switch (_rotationVal) {
-                        case CheckBoxValues.NULL:
-                          _rotationVal = CheckBoxValues.TRUE;
-                          break;
-                        case CheckBoxValues.TRUE:
-                          _rotationVal = CheckBoxValues.FALSE;
-                          break;
-                        case CheckBoxValues.FALSE:
-                          _rotationVal = CheckBoxValues.NULL;
-                          break;
-                        default:
-                          break;
-                      }
+                      _rotationVal = val;
                     });
                   },
                   title: Text(
                     'Rotation Control',
                     style: new TextStyle(fontSize: 20.0),
                   ),
-                  activeColor: _rotationVal == CheckBoxValues.NULL
+                  activeColor: _rotationVal == null
                       ? Colors.white
-                      : _rotationVal == CheckBoxValues.TRUE
+                      : _rotationVal == true
                           ? Colors.green
                           : Colors.red,
                 ),
                 CheckboxListTile(
-                  value: _positionVal == CheckBoxValues.NULL ? false : true,
+                  value: _positionVal == null ? false : true,
                   onChanged: (bool val) {
                     setState(() {
-                      switch (_positionVal) {
-                        case CheckBoxValues.NULL:
-                          _positionVal = CheckBoxValues.TRUE;
-                          break;
-                        case CheckBoxValues.TRUE:
-                          _positionVal = CheckBoxValues.FALSE;
-                          break;
-                        case CheckBoxValues.FALSE:
-                          _positionVal = CheckBoxValues.NULL;
-                          break;
-                        default:
-                          break;
-                      }
+                      _positionVal = val;
                     });
                   },
                   title: Text(
                     'Position Control',
                     style: new TextStyle(fontSize: 20.0),
                   ),
-                  activeColor: _positionVal == CheckBoxValues.NULL
+                  activeColor: _positionVal == null
                       ? Colors.white
-                      : _positionVal == CheckBoxValues.TRUE
+                      : _positionVal == true
                           ? Colors.green
                           : Colors.red,
                 ),
@@ -242,22 +180,10 @@ class _PitScouterState extends State<PitScouter> {
                   ),
                 ),
                 CheckboxListTile(
-                  value: _climbVal == CheckBoxValues.NULL ? false : true,
+                  value: _climbVal == null ? false : true,
                   onChanged: (bool val) {
                     setState(() {
-                      switch (_climbVal) {
-                        case CheckBoxValues.NULL:
-                          _climbVal = CheckBoxValues.TRUE;
-                          break;
-                        case CheckBoxValues.TRUE:
-                          _climbVal = CheckBoxValues.FALSE;
-                          break;
-                        case CheckBoxValues.FALSE:
-                          _climbVal = CheckBoxValues.NULL;
-                          break;
-                        default:
-                          break;
-                      }
+                      _climbVal = val;
                     });
                   },
                   title: Text(
@@ -266,38 +192,26 @@ class _PitScouterState extends State<PitScouter> {
                       fontSize: 20.0,
                     ),
                   ),
-                  activeColor: _climbVal == CheckBoxValues.NULL
+                  activeColor: _climbVal == null
                       ? Colors.white
-                      : _climbVal == CheckBoxValues.TRUE
+                      : _climbVal == true
                           ? Colors.green
                           : Colors.red,
                 ),
                 CheckboxListTile(
-                  value: _levellerVal == CheckBoxValues.NULL ? false : true,
+                  value: _levellerVal == null ? false : true,
                   onChanged: (bool val) {
                     setState(() {
-                      switch (_levellerVal) {
-                        case CheckBoxValues.NULL:
-                          _levellerVal = CheckBoxValues.TRUE;
-                          break;
-                        case CheckBoxValues.TRUE:
-                          _levellerVal = CheckBoxValues.FALSE;
-                          break;
-                        case CheckBoxValues.FALSE:
-                          _levellerVal = CheckBoxValues.NULL;
-                          break;
-                        default:
-                          break;
-                      }
+                      _levellerVal = val;
                     });
                   },
                   title: Text(
                     'Leveller',
                     style: new TextStyle(fontSize: 20.0),
                   ),
-                  activeColor: _levellerVal == CheckBoxValues.NULL
+                  activeColor: _levellerVal == null
                       ? Colors.white
-                      : _levellerVal == CheckBoxValues.TRUE
+                      : _levellerVal == true
                           ? Colors.green
                           : Colors.red,
                 ),

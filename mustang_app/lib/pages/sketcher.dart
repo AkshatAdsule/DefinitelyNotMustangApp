@@ -74,7 +74,7 @@ class _SketchPageState extends State<SketchPage> {
     final Container sketchArea = Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/blue_field.png"),
+          image: AssetImage("assets/rightblue_leftred.png"),
           fit: BoxFit.cover,
         ),
       ),
