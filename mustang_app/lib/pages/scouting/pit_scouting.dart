@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/team.dart';
 import 'package:mustang_app/components/screen.dart';
 import 'package:mustang_app/pages/scouting/post_scouter.dart';
-import '../../components/header.dart';
 import '../../backend/scouting_operations.dart';
 
 class PitScouter extends StatefulWidget {
@@ -17,20 +16,76 @@ class PitScouter extends StatefulWidget {
   _PitScouterState createState() => _PitScouterState(_teamNumber);
 }
 
+enum CheckBoxValues { NULL, TRUE, FALSE }
+
 class _PitScouterState extends State<PitScouter> {
   String _teamNumber;
   DriveBase _driveBase = DriveBase.TANK;
   TextEditingController _notes = new TextEditingController();
-  bool _innerVal = null,
-      _outerVal = null,
-      _bottomVal = null,
-      _rotationVal = null,
-      _positionVal = null,
-      _climbVal = null,
-      _levellerVal = null;
+  List<List<Object>> boxStates = [
+    ['Inner', null],
+    ['Outer', null],
+    ['Lower', null],
+    ['Rotation', null],
+    ['Position', null],
+    ['Climb', null],
+    ['Level', null],
+  ];
+
   _PitScouterState(teamNumber) {
     _teamNumber = teamNumber;
   }
+
+  Widget createTitle(String text) {
+    return ListTile(
+      tileColor: Colors.green,
+      title: Center(
+        child: Text(text, style: TextStyle(fontSize: 20, color: Colors.white)),
+      ),
+    );
+  }
+
+  Widget createCheckBox(String text) {
+    bool state;
+    for (int i = 0; i < boxStates.length; i++) {
+      if ((boxStates[i].contains(text))) state = boxStates[i][1];
+    }
+    bool boxState = false;
+    String last = text.substring(text.length - 2);
+    String label = text +
+        (last == "er"
+            ? " Port"
+            : last == "on"
+                ? " Control"
+                : "er");
+    return CheckboxListTile(
+        value: boxState,
+        onChanged: (bool val) {
+          setState(() {
+            print("------------ boxState: " + boxState.toString() + "- before");
+            print("------------ state: " + state.toString() + "- before");
+            if (state == null) {
+              state = true;
+              boxState = true;
+            } else if (state == true) {
+              state = false;
+              boxState = true;
+            } else if (state == false) {
+              state = null;
+              boxState = false;
+            }
+            print("------------ boxState: " + boxState.toString() + "- after");
+            print("------------ state: " + state.toString() + "- after");
+          });
+        },
+        title: Text(
+          label,
+          style: new TextStyle(fontSize: 20.0),
+        ),
+        activeColor: boxState ? Colors.green : Colors.red);
+  }
+
+  Map<String, bool> boxVals = {"null": null, "true": true, "false": false};
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +114,6 @@ class _PitScouterState extends State<PitScouter> {
                     onChanged: (DriveBase driveBase) {
                       setState(() {
                         _driveBase = driveBase;
-                        //_driveBaseTest = newValue;
                       });
                     },
                     items: <DriveBase>[
@@ -78,144 +132,16 @@ class _PitScouterState extends State<PitScouter> {
                     }).toList(),
                   ),
                 ),
-                ListTile(
-                  tileColor: Colors.green,
-                  title: Center(
-                    child: Text('Shooting Capability',
-                        style: TextStyle(fontSize: 20, color: Colors.white)),
-                  ),
-                ),
-                CheckboxListTile(
-                  value: _outerVal == null ? false : true,
-                  onChanged: (bool val) {
-                    setState(() {
-                      _outerVal = val;
-                    });
-                  },
-                  title: Text(
-                    'Outer Port',
-                    style: new TextStyle(fontSize: 20.0),
-                  ),
-                  activeColor: _outerVal == true ? Colors.green : Colors.red,
-                ),
-                CheckboxListTile(
-                  value: _innerVal == null ? false : true,
-                  onChanged: (bool val) {
-                    setState(() {
-                      _innerVal = val;
-                    });
-                  },
-                  title: Text(
-                    'Inner Port',
-                    style: new TextStyle(fontSize: 20.0),
-                  ),
-                  activeColor: _innerVal == null
-                      ? Colors.white
-                      : _innerVal == true
-                          ? Colors.green
-                          : Colors.red,
-                ),
-                CheckboxListTile(
-                  value: _bottomVal == null ? false : true,
-                  onChanged: (bool val) {
-                    setState(() {
-                      _bottomVal = val;
-                    });
-                  },
-                  title: Text(
-                    'Bottom Port',
-                    style: new TextStyle(fontSize: 20.0),
-                  ),
-                  activeColor: _bottomVal == null
-                      ? Colors.white
-                      : _bottomVal == true
-                          ? Colors.green
-                          : Colors.red,
-                ),
-                ListTile(
-                  tileColor: Colors.green,
-                  title: Center(
-                    child: Text('Color Wheel',
-                        style: TextStyle(fontSize: 20, color: Colors.white)),
-                  ),
-                ),
-                CheckboxListTile(
-                  value: _rotationVal == null ? false : true,
-                  onChanged: (bool val) {
-                    setState(() {
-                      _rotationVal = val;
-                    });
-                  },
-                  title: Text(
-                    'Rotation Control',
-                    style: new TextStyle(fontSize: 20.0),
-                  ),
-                  activeColor: _rotationVal == null
-                      ? Colors.white
-                      : _rotationVal == true
-                          ? Colors.green
-                          : Colors.red,
-                ),
-                CheckboxListTile(
-                  value: _positionVal == null ? false : true,
-                  onChanged: (bool val) {
-                    setState(() {
-                      _positionVal = val;
-                    });
-                  },
-                  title: Text(
-                    'Position Control',
-                    style: new TextStyle(fontSize: 20.0),
-                  ),
-                  activeColor: _positionVal == null
-                      ? Colors.white
-                      : _positionVal == true
-                          ? Colors.green
-                          : Colors.red,
-                ),
-                ListTile(
-                  tileColor: Colors.green,
-                  title: Center(
-                    child: Text('Climb Capability',
-                        style: TextStyle(fontSize: 20, color: Colors.white)),
-                  ),
-                ),
-                CheckboxListTile(
-                  value: _climbVal == null ? false : true,
-                  onChanged: (bool val) {
-                    setState(() {
-                      _climbVal = val;
-                    });
-                  },
-                  title: Text(
-                    'Climber',
-                    style: new TextStyle(
-                      fontSize: 20.0,
-                    ),
-                  ),
-                  activeColor: _climbVal == null
-                      ? Colors.white
-                      : _climbVal == true
-                          ? Colors.green
-                          : Colors.red,
-                ),
-                CheckboxListTile(
-                  value: _levellerVal == null ? false : true,
-                  onChanged: (bool val) {
-                    setState(() {
-                      _levellerVal = val;
-                    });
-                  },
-                  title: Text(
-                    'Leveller',
-                    style: new TextStyle(fontSize: 20.0),
-                  ),
-                  activeColor: _levellerVal == null
-                      ? Colors.white
-                      : _levellerVal == true
-                          ? Colors.green
-                          : Colors.red,
-                ),
+                createTitle("Shooting Capability"),
+                createCheckBox("Inner"),
+                createCheckBox("Outer"),
+                createCheckBox("Lower"),
+                createTitle("Color Wheel"),
+                createCheckBox("Rotation"),
+                createCheckBox("Position"),
+                createTitle("Climb Capability"),
+                createCheckBox("Climb"),
+                createCheckBox("Level"),
                 Container(
                   padding:
                       EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
@@ -236,13 +162,13 @@ class _PitScouterState extends State<PitScouter> {
                           _teamNumber,
                           _driveBase.toString(),
                           _notes.text,
-                          _innerVal,
-                          _outerVal,
-                          _bottomVal,
-                          _rotationVal,
-                          _positionVal,
-                          _climbVal,
-                          _levellerVal,
+                          boxStates[0][1],
+                          boxStates[1][1],
+                          boxStates[2][1],
+                          boxStates[3][1],
+                          boxStates[4][1],
+                          boxStates[5][1],
+                          boxStates[6][1],
                         ),
                       );
                       Navigator.pushNamed(context, PostScouter.route);
