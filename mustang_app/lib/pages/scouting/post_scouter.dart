@@ -28,6 +28,7 @@ class PostScouter extends StatelessWidget {
                   style: TextStyle(fontSize: 30),
                 ),
               ),
+              /*
               Container(
                 padding:
                     EdgeInsets.only(top: 7.5, left: 15, right: 15, bottom: 10),
@@ -36,6 +37,8 @@ class PostScouter extends StatelessWidget {
                   style: TextStyle(fontSize: 15),
                 ),
               ),
+              */
+
               // Container(
               //   padding:
               //       EdgeInsets.only(top: 7.5, left: 15, right: 15, bottom: 10),
@@ -63,7 +66,8 @@ class PostScouter extends StatelessWidget {
                     'Scout Another Team',
                     style: TextStyle(fontSize: 20),
                   ),
-                  color: Colors.greenAccent,
+                  //color: Colors.greenAccent,
+                  color: Colors.green,
                   padding: EdgeInsets.all(15),
                 ),
               ),
