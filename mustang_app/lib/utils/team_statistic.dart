@@ -107,7 +107,7 @@ class TeamStatistic {
 
   Map<String, dynamic> toJson() {
     return {
-      "DATA_VERSION": Constants.DATA_VERSION,
+      "DATA_VERSION": Constants.DATA_ANALYSIS_DATA_VERSION,
       "team": teamCode,
       "oprAverage": oprAverage,
       "dprAverage": dprAverage,

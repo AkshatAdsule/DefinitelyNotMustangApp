@@ -15,6 +15,7 @@ class BottomNavBar extends BottomNavigationBar {
     Scouter.route,
     InputScreen.route,
     SearchPage.route,
+    DataViewScreen.route,
     SketchPage.route,
   ];
 
@@ -47,6 +48,8 @@ class BottomNavBar extends BottomNavigationBar {
               icon: Icon(Icons.search),
               label: 'Data',
             ),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.dashboard_outlined), label: 'Collection'),
             BottomNavigationBarItem(
               icon: Icon(Icons.edit),
               label: 'Draw',

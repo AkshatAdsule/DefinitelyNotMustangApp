@@ -101,6 +101,9 @@ class MyApp extends StatelessWidget {
         );
       case InputScreen.route:
         return MaterialPageRoute(builder: (context) => InputScreen());
+      case DataViewScreen.route:
+        return MaterialPageRoute(builder: (context) => DataViewScreen());
+
       default:
         return null;
     }
