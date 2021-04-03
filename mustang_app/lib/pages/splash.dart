@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/user.dart';
 import 'package:mustang_app/backend/auth_service.dart';
 import 'package:mustang_app/components/logo.dart';
+import 'package:mustang_app/components/screen.dart';
 import 'package:mustang_app/exports/pages.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
@@ -60,8 +61,14 @@ class _SplashState extends State<Splash> {
     if (!_initialized) {
       _init(context);
     }
-    return Scaffold(
-      body: Center(
+    return Screen(
+      includeBottomNav: false,
+      includeHeader: false,
+      left: false,
+      right: false,
+      top: false,
+      bottom: false,
+      child: Center(
         child: Stack(
           alignment: Alignment.center,
           children: [

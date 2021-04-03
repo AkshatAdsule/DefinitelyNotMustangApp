@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/components/screen.dart';
 import '../../components/bottom_nav_bar.dart';
 
 import '../../components/header.dart';
@@ -10,13 +11,9 @@ class PostScouter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        bottomNavigationBar: BottomNavBar(context),
-        appBar: Header(
-          context,
-          'Finished!',
-        ),
-        body: Center(
+    return Screen(
+        title: 'Finished!',
+        child: Center(
             child: SingleChildScrollView(
           child: Column(
             children: <Widget>[

@@ -3,6 +3,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mustang_app/backend/auth_service.dart';
 import 'package:mustang_app/components/logo.dart';
+import 'package:mustang_app/components/screen.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
@@ -32,9 +33,14 @@ class _LoginState extends State<Login> {
     if (user != null) {
       Navigator.pushNamed(context, '/');
     }
-    return Scaffold(
-      // appBar: Header(context, 'Login'),
-      body: Container(
+    return Screen(
+      left: false,
+      right: false,
+      top: false,
+      bottom: false,
+      includeHeader: false,
+      includeBottomNav: false,
+      child: Container(
         decoration: BoxDecoration(
           color: Colors.green.shade800,
         ),

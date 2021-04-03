@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/bottom_nav_bar.dart';
+import 'package:mustang_app/components/screen.dart';
 import 'package:mustang_app/pages/scouting/map_scouting.dart';
 import 'pit_scouting.dart';
 import '../../components/header.dart';
@@ -83,12 +84,9 @@ class _ScouterState extends State<Scouter> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: Header(
-        context,
-        'Pre Game Notes',
-      ),
-      body: ListView(children: <Widget>[
+    return Screen(
+      title: 'Pre Game Notes',
+      child: ListView(children: <Widget>[
         Container(
           padding: EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 15),
           child: TextField(
@@ -191,7 +189,8 @@ class _ScouterState extends State<Scouter> {
                     onPressed: () {
                       setState(() {
                         if (_teamNumberController.text.isEmpty) {
-                          Scaffold.of(buildContext).showSnackBar(SnackBar(
+                          ScaffoldMessenger.of(buildContext)
+                              .showSnackBar(SnackBar(
                             content: Text("Enter a team number"),
                           ));
                           return;
@@ -227,12 +226,14 @@ class _ScouterState extends State<Scouter> {
                     onPressed: () {
                       setState(() {
                         if (_teamNumberController.text.isEmpty) {
-                          Scaffold.of(buildContext).showSnackBar(SnackBar(
+                          ScaffoldMessenger.of(buildContext)
+                              .showSnackBar(SnackBar(
                             content: Text("Enter a team number"),
                           ));
                           return;
                         } else if (_matchNumberController.text.isEmpty) {
-                          Scaffold.of(buildContext).showSnackBar(SnackBar(
+                          ScaffoldMessenger.of(buildContext)
+                              .showSnackBar(SnackBar(
                             content: Text("Enter a match number"),
                           ));
                           return;
@@ -275,7 +276,6 @@ class _ScouterState extends State<Scouter> {
           ),
         )
       ]),
-      bottomNavigationBar: BottomNavBar(context),
     );
   }
 }

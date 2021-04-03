@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/team.dart';
+import 'package:mustang_app/components/screen.dart';
 import 'package:mustang_app/pages/scouting/post_scouter.dart';
 import '../../components/header.dart';
 import '../../backend/scouting_operations.dart';
@@ -33,9 +34,9 @@ class _PitScouterState extends State<PitScouter> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: Header(context, 'Pit Scouting'),
-        body: SingleChildScrollView(
+    return Screen(
+        title: 'Pit Scouting',
+        child: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.all(10),
             child: Column(

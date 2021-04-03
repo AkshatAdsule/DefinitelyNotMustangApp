@@ -8,6 +8,7 @@ import 'package:mustang_app/components/game_replay.dart';
 import 'package:mustang_app/components/header.dart';
 import 'package:mustang_app/components/map_analysis_text.dart';
 import 'package:mustang_app/components/map_switch_button.dart';
+import 'package:mustang_app/components/screen.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/constants/constants.dart';
 import 'package:provider/provider.dart';
@@ -100,12 +101,14 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
     double colorValue =
         ((ptsAtZonePerGame / Constants.maxPtValuePerZonePerGame) * 900);
     int lowerBound = 0, upperBound = 0;
-    if (!colorValue.isNaN && colorValue.isFinite){
+    if (!colorValue.isNaN && colorValue.isFinite) {
       lowerBound = (colorValue ~/ 100) * 100; //lower bound of 100
       upperBound = (colorValue ~/ 100 + 1) * 100; //upper bound
     }
-    
-    int returnVal = (colorValue - lowerBound > upperBound - colorValue) ? upperBound : lowerBound;
+
+    int returnVal = (colorValue - lowerBound > upperBound - colorValue)
+        ? upperBound
+        : lowerBound;
     if (returnVal > 0) {
       //debugPrint("zone: (" + x.toString() + ", " + y.toString() + ")  points at zone per game: " + ptsAtZonePerGame.toString() + " color value: " + returnVal.toString());
     }
@@ -272,10 +275,11 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
           ),
         ));
 
-    return Scaffold(
-      appBar: Header(context, 'Analysis for Team: ' + myAnalyzer.teamNum,
-          buttons: [gameReplay]),
-      body: Container(
+    return Screen(
+      title: 'Analysis for Team: ' + myAnalyzer.teamNum,
+      headerButtons: [gameReplay],
+      includeBottomNav: false,
+      child: Container(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
