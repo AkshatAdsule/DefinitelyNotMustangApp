@@ -269,7 +269,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             _toggleScreen();
           },
           child: Text(
-            _accuracyMap ? "Game Replay" : "Accuracy Map",
+            _accuracyMap ? "Game Replay" : "Overall Map Analysis",
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.white, fontSize: 16, height: 1),
           ),
