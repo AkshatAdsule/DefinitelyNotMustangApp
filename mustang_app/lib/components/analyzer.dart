@@ -623,14 +623,14 @@ class Analyzer {
         for (GameAction a in m.actions) {
 
           double tempX = a.x;
-          debugPrint("tempX: " + tempX.toString());
+          //debugPrint("tempX: " + tempX.toString());
           a.x = largestColumnNum - tempX;
-          debugPrint("new x: " + a.x.toString());
+          //debugPrint("new x: " + a.x.toString());
 
           double tempY = a.y;
-          debugPrint("tempY: " + tempY.toString());
+          //debugPrint("tempY: " + tempY.toString());
           a.y = largestRowNum - tempY;
-          debugPrint("new y: " + a.y.toString());
+          //debugPrint("new y: " + a.y.toString());
         }
       }
     }
