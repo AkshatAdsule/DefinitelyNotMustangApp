@@ -7,7 +7,7 @@ import './game_buttons.dart' as game_button;
 class DefenseScoutingSide extends StatelessWidget {
   bool Function(ActionType type, BuildContext context) _addAction;
   void Function() _toggleMode;
-  void Function(List<int> newPrev) _setPrev;
+  // void Function(List<int> newPrev) _setPrev;
   void Function(bool newVal) _setPush;
   List<int> _prev = [0, 0];
   bool _pushTextStart = false;
@@ -16,13 +16,13 @@ class DefenseScoutingSide extends StatelessWidget {
       {Key key,
       void Function() toggleMode,
       bool Function(ActionType type, BuildContext context) addAction,
-      void Function(List<int> newPrev) setPrev,
+      // void Function(List<int> newPrev) setPrev,
       void Function(bool newVal) setPush,
-      List<int> prev,
+      // List<int> prev,
       bool pushTextStart})
       : super(key: key) {
-    _prev = prev;
-    _setPrev = setPrev;
+    // _prev = prev;
+    // _setPrev = setPrev;
     _toggleMode = toggleMode;
     _addAction = addAction;
     _setPush = setPush;
@@ -99,8 +99,10 @@ class DefenseScoutingSide extends StatelessWidget {
                   style: game_button.ButtonStyle.RAISED,
                   type: game_button.ButtonType.ELEMENT,
                   onPressed: () {
-                    if (_addAction(ActionType.PREV_INTAKE, context))
-                      _setPrev([_prev[0] + 1, _prev[1]]);
+                    // if (
+                    _addAction(ActionType.PREV_INTAKE, context);
+                    // )
+                    // _setPrev([_prev[0] + 1, _prev[1]]);
                   },
                   text: 'Prevent Intake',
                 ),
@@ -108,7 +110,8 @@ class DefenseScoutingSide extends StatelessWidget {
                     style: game_button.ButtonStyle.FLAT,
                     type: game_button.ButtonType.COUNTER,
                     onPressed: () {},
-                    text: _prev[0].toString()),
+                    text: ""),
+                // _prev[0].toString()),
               ],
             ),
           ),
@@ -121,8 +124,10 @@ class DefenseScoutingSide extends StatelessWidget {
                   style: game_button.ButtonStyle.RAISED,
                   type: game_button.ButtonType.ELEMENT,
                   onPressed: () {
-                    if (_addAction(ActionType.PREV_INTAKE, context))
-                      _setPrev([_prev[0], _prev[1] + 1]);
+                    // if (
+                    _addAction(ActionType.PREV_INTAKE, context);
+                    // )
+                    // _setPrev([_prev[0], _prev[1] + 1]);
                   },
                   text: 'Prevent Shot',
                 ),
@@ -130,7 +135,8 @@ class DefenseScoutingSide extends StatelessWidget {
                     style: game_button.ButtonStyle.FLAT,
                     type: game_button.ButtonType.COUNTER,
                     onPressed: () {},
-                    text: _prev[1].toString()),
+                    text: ""),
+                // _prev[1].toString()),
               ],
             ),
           ),
@@ -156,7 +162,7 @@ class DefenseScoutingSide extends StatelessWidget {
                         if (_addAction(ActionType.PUSH_START, context))
                           _setPush(true);
                       }
-                      _prev = [0, 0];
+                      // _prev = [0, 0];
                     },
                     child: Text(!_pushTextStart ? "Push Start" : "Push End"))
                 // game_button.ScoutingButton(
@@ -187,7 +193,7 @@ class DefenseScoutingSide extends StatelessWidget {
                   type: game_button.ButtonType.ELEMENT,
                   onPressed: () {
                     actionDeterminer(context, 'Foul');
-                    _prev = [0, 0];
+                    // _prev = [0, 0];
                   },
                   text: 'Foul',
                 ),

@@ -49,7 +49,7 @@ class _MapScoutingState extends State<MapScouting> {
       _completedPositionControl,
       _crossedInitiationLine;
   double _sliderVal;
-  List<int> _prev;
+  // List<int> _prev;
   bool _pushTextStart;
   Timer _endgameTimer, _endTimer, _teleopTimer;
 
@@ -67,7 +67,7 @@ class _MapScoutingState extends State<MapScouting> {
     _completedPositionControl = false;
     _crossedInitiationLine = false;
     _actions = [];
-    _prev = [0, 0];
+    // _prev = [0, 0];
     _pushTextStart = false;
     _sliderLastChanged = 0;
     _sliderVal = 2;
@@ -105,11 +105,11 @@ class _MapScoutingState extends State<MapScouting> {
     });
   }
 
-  void _setPrev(List<int> newPrev) {
-    setState(() {
-      _prev = newPrev;
-    });
-  }
+  // void _setPrev(List<int> newPrev) {
+  //   setState(() {
+  //     _prev = newPrev;
+  //   });
+  // }
 
   void _setPush(bool newVal) {
     setState(() {
@@ -131,7 +131,6 @@ class _MapScoutingState extends State<MapScouting> {
     }
   }
 
-  // -1 = no loc, 0 = all good
   bool _addAction(ActionType type, BuildContext context) {
     int now = _stopwatch.elapsedMilliseconds;
     int x = _zoneGrid.x;
@@ -244,8 +243,8 @@ class _MapScoutingState extends State<MapScouting> {
         DefenseScoutingSide(
           addAction: _addAction,
           toggleMode: _toggleMode,
-          prev: _prev,
-          setPrev: _setPrev,
+          // prev: _prev,
+          // setPrev: _setPrev,
           pushTextStart: _pushTextStart,
           setPush: _setPush,
         ),
