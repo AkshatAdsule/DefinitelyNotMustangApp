@@ -192,7 +192,7 @@ class _GameReplayState extends State<GameReplay> {
               children: getShadingKey(5, 10)),
         ]));
 
-Widget normalizedToRightSideText = Text(
+    Widget normalizedToRightSideText = Text(
       "*data has been normalized so that offense is on the ride side*",
       textAlign: TextAlign.center,
       style: TextStyle(

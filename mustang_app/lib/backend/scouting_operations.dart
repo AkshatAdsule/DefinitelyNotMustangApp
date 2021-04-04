@@ -75,13 +75,7 @@ class ScoutingOperations {
       return false;
     }
     Match match = Match.fromSnapshot(snap);
-    if (match == null) {
-      return false;
-    } else if (match.matchNumber == "") {
-      return false;
-    } else {
-      return true;
-    }
+    return (match == null || match.matchNumber == "") ? false : true;
   }
 
   static Future<void> initTeamData(String teamNumber) async {

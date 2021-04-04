@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:flutter/cupertino.dart';
 import 'package:mustang_app/backend/game_action.dart';
 import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/backend/team.dart';
@@ -16,8 +15,7 @@ class Analyzer {
   //for testing if data needs to be collected again or not - if same then don't
   int _totalNumGames = 1;
   //array for each type of action, has all instances of that action for all games
-  List<GameAction> 
-      _foulReg = [],
+  List<GameAction> _foulReg = [],
       _foulTech = [],
       _foulYellow = [],
       _foulRed = [],
@@ -190,13 +188,12 @@ class Analyzer {
           actions.where((element) => element.action == ActionType.PUSH_START));
       _pushEnd.addAll(
           actions.where((element) => element.action == ActionType.PUSH_END));
-      _otherCrossedInitiationLine.addAll(
-        actions.where((element) => element.action == ActionType.OTHER_CROSSED_INITIATION_LINE));
-      _otherParked.addAll(
-        actions.where((element) => element.action == ActionType.OTHER_PARKED));
-      _otherLevelled.addAll(
-        actions.where((element) => element.action == ActionType.OTHER_LEVELLED));
-      
+      _otherCrossedInitiationLine.addAll(actions.where((element) =>
+          element.action == ActionType.OTHER_CROSSED_INITIATION_LINE));
+      _otherParked.addAll(actions
+          .where((element) => element.action == ActionType.OTHER_PARKED));
+      _otherLevelled.addAll(actions
+          .where((element) => element.action == ActionType.OTHER_LEVELLED));
     }
   }
 
@@ -255,15 +252,16 @@ class Analyzer {
   }
 
   double calcOffenseNonShootingPts() {
-    double _crossInitiation = _otherCrossedInitiationLine.length * Constants.crossInitiationLineValue;
+    double _crossInitiation =
+        _otherCrossedInitiationLine.length * Constants.crossInitiationLineValue;
     double _rotationControl =
         _otherWheelRotation.length * Constants.positionControl;
     double _positionControl =
         _otherWheelPosition.length * Constants.positionControl;
-    double _climb = (_otherClimb.length * Constants.climbValue) 
-            + (_otherParked.length * Constants.endgameParkValue)
-            + (_otherLevelled.length * Constants.levelledValue);
-    
+    double _climb = (_otherClimb.length * Constants.climbValue) +
+        (_otherParked.length * Constants.endgameParkValue) +
+        (_otherLevelled.length * Constants.levelledValue);
+
     return _crossInitiation + _rotationControl + _positionControl + _climb;
   }
 
@@ -572,7 +570,6 @@ class Analyzer {
     }
     return totalPoints;
   }
-
 
   //normalize data if offense was on left side, switch columns (or x) to the other side
   //ex: column 0 becomes column 15, column 3 becomes 12, columm 7 becomes 8

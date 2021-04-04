@@ -14,11 +14,6 @@ class GameAction {
     _y = -1;
   }
 
-  //for push, timeStamp is at the beginning of the push
-  //GameAction.push(this._action, this._timeStamp, this._x, this._y, this._endX,
-  //    this._endY, this._pushTime);
-  //_action = ActionType.PUSH;
-
   String toString() {
     return "Type: " +
         _action.toString() +
@@ -34,6 +29,7 @@ class GameAction {
   double get timeStamp => _timeStamp;
   double get x => _x;
   double get y => _y;
+  //for push, timeStamp is at the beginning of the push
   double get pushTime => _pushTime;
   ActionType get action => _action;
 
