@@ -139,21 +139,41 @@ class DefenseScoutingSide extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                game_button.ScoutingButton(
-                  style: game_button.ButtonStyle.RAISED,
-                  type: game_button.ButtonType.ELEMENT,
-                  onPressed: () {
-                    if (_pushTextStart) {
-                      if (_addAction(ActionType.PUSH_END, context))
-                        _setPush(false);
-                    } else {
-                      if (_addAction(ActionType.PUSH_START, context))
-                        _setPush(true);
-                    }
-                    _prev = [0, 0];
-                  },
-                  text: !_pushTextStart ? "Push Start" : "Push End",
-                ),
+                // TODO: make Game_Button take in a method to change the color for something
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary:
+                          !_pushTextStart ? Colors.green : Colors.deepPurple,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(1),
+                          side: BorderSide(color: Colors.black, width: 1)),
+                    ),
+                    onPressed: () {
+                      if (_pushTextStart) {
+                        if (_addAction(ActionType.PUSH_END, context))
+                          _setPush(false);
+                      } else {
+                        if (_addAction(ActionType.PUSH_START, context))
+                          _setPush(true);
+                      }
+                      _prev = [0, 0];
+                    },
+                    child: Text(!_pushTextStart ? "Push Start" : "Push End"))
+                // game_button.ScoutingButton(
+                //   style: game_button.ButtonStyle.RAISED,
+                //   type: game_button.ButtonType.ELEMENT,
+                //   onPressed: () {
+                //     if (_pushTextStart) {
+                //       if (_addAction(ActionType.PUSH_END, context))
+                //         _setPush(false);
+                //     } else {
+                //       if (_addAction(ActionType.PUSH_START, context))
+                //         _setPush(true);
+                //     }
+                //     _prev = [0, 0];
+                //   },
+                //   text: !_pushTextStart ? "Push Start" : "Push End",
+                // ),
               ],
             ),
           ),
