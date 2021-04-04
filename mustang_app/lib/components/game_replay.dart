@@ -15,7 +15,7 @@ class GameReplay extends StatefulWidget {
 }
 
 class _GameReplayState extends State<GameReplay> {
-  double _timeInGame = 0;
+  double timeInGame;
   bool _initialized = false;
   List<GameAction> matchActions = [];
   List<GameAction> currActions = [];
@@ -38,7 +38,7 @@ class _GameReplayState extends State<GameReplay> {
   @override
   void initState() {
     super.initState();
-    _timeInGame = 0;
+    timeInGame = 0;
   }
 
   void init(Match match) {
@@ -47,7 +47,7 @@ class _GameReplayState extends State<GameReplay> {
       matchNum = match.matchNumber;
       matchActions = match.actions;
       currActions = match.actions;
-      _timeInGame = Constants.matchEndMillis / 1000;
+      timeInGame = Constants.matchEndMillis / 1000;
     });
   }
 
@@ -67,14 +67,22 @@ class _GameReplayState extends State<GameReplay> {
     for (List<Object> shade in actionRelatedColors)
       if (actionType.contains(shade[0])) gradientCombo.add(shade[1]);
 
+    if (gradientCombo.length < 2) {
+      if (actionType.contains("FOUL")) {
+        gradientCombo.add(Colors.yellow[600]);
+      } else if (actionType.contains("OTHER")) {
+        gradientCombo.add(Colors.orange[600]);
+      }
+    }
+
     return gradientCombo;
   }
 
   // TODO: method for text (for shots or preventing of shtoof)
-  String _getZoneText(GameAction action, int x, int y) {
-    String type = action.action.toString();
-    if (type.contains("INTAKE") || type.contains("SHOT")) return "+1";
-  }
+  // String _getZoneText(GameAction action, int x, int y) {
+  //   String type = action.action.toString();
+  //   if (type.contains("INTAKE") || type.contains("SHOT")) return "+1";
+  // }
 
   List<Widget> getShadingKey(int start, int end) {
     List<Widget> shades = [];
@@ -109,25 +117,24 @@ class _GameReplayState extends State<GameReplay> {
     if (!_initialized && matches.length > 0) {
       init(matches.first);
     }
-    ZoneGrid scoringGrid = ZoneGrid(GlobalKey(), (int x, int y) {},
-        (int x, int y, bool isSelected, double cellWidth, double cellHeight) {
-      return Container(
-        width: cellWidth,
-        height: cellHeight,
-        decoration: (x != 0 && y != 0)
-            ? BoxDecoration(
-                gradient: RadialGradient(
-                  colors: _getColorCombo(x, y),
-                ),
-              )
-            : BoxDecoration(color: Colors.transparent),
-        // TODO: add to game action the ability to merge actions together, ex. shotss
-        // child: Text(_getZoneText(x, y))
-      );
-    });
 
-    GameMap scoringMap =
-        GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
+    GameMap scoringMap = GameMap(
+        imageChildren: [],
+        sideWidget: null,
+        zoneGrid: ZoneGrid(GlobalKey(), (int x, int y) {}, (int x, int y,
+            bool isSelected, double cellWidth, double cellHeight) {
+          return Container(
+            width: cellWidth,
+            height: cellHeight,
+            decoration: (x != 0 && y != 0)
+                ? BoxDecoration(
+                    gradient: RadialGradient(
+                      colors: _getColorCombo(x, y),
+                    ),
+                  )
+                : BoxDecoration(color: Colors.transparent),
+          );
+        }));
 
     Widget dropDownList = ListTile(
       title: Text(
@@ -195,11 +202,7 @@ class _GameReplayState extends State<GameReplay> {
     Widget normalizedToRightSideText = Text(
       "*data has been normalized so that offense is on the ride side*",
       textAlign: TextAlign.center,
-      style: TextStyle(
-          color: Colors.grey[800],
-          //fontWeight: FontWeight.bold,
-          fontSize: 14,
-          height: 1),
+      style: TextStyle(color: Colors.grey[800], fontSize: 14, height: 1),
     );
 
     Widget timeSlider = Container(
@@ -207,9 +210,9 @@ class _GameReplayState extends State<GameReplay> {
         width: 650,
         child: Slider(
           divisions: (2 * 60) + 30, // number of seconds in a game
-          label: _timeInGame.round().toString(),
+          label: timeInGame.round().toString(),
           onChanged: (newVal) => setState(() {
-            _timeInGame = newVal;
+            timeInGame = newVal;
             setState(() {
               currActions = matchActions
                   .where((element) => element.timeStamp > newVal * 1000 - 5000)
@@ -219,14 +222,20 @@ class _GameReplayState extends State<GameReplay> {
           }),
           min: 0,
           max: 150, // number of seconds in a game
-          value: _timeInGame,
+          value: timeInGame,
         ));
 
     return Container(
         child: SingleChildScrollView(
       child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[dropDownList, shadingKey, normalizedToRightSideText, scoringMap, timeSlider]),
+          children: <Widget>[
+            dropDownList,
+            shadingKey,
+            normalizedToRightSideText,
+            scoringMap,
+            timeSlider
+          ]),
     ));
   }
 }
