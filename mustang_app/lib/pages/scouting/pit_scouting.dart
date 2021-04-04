@@ -18,26 +18,19 @@ class PitScouter extends StatefulWidget {
 
 enum DriveBase { TANK, OMNI, WESTCOAST, MECANUM, SWERVE }
 
-enum CheckBoxValues { NULL, TRUE, FALSE }
-
 class _PitScouterState extends State<PitScouter> {
   String _teamNumber;
   DriveBase _driveBase = DriveBase.TANK;
   TextEditingController _notes = new TextEditingController();
   List<List<Object>> boxStates = [
-    ['Inner', CheckBoxValues.NULL],
-    ['Outer', CheckBoxValues.NULL],
-    ['Lower', CheckBoxValues.NULL],
-    ['Rotation', CheckBoxValues.NULL],
-    ['Position', CheckBoxValues.NULL],
-    ['Climb', CheckBoxValues.NULL],
-    ['Level', CheckBoxValues.NULL],
+    ['Inner', null],
+    ['Outer', null],
+    ['Lower', null],
+    ['Rotation', null],
+    ['Position', null],
+    ['Climb', null],
+    ['Level', null],
   ];
-  Map<String, bool> boxStateToBool = {
-    "CheckBoxValues.NULL": null,
-    "CheckBoxValues.TRUE": true,
-    "CheckBoxValues.FALSE": false
-  };
 
   _PitScouterState(teamNumber) {
     _teamNumber = teamNumber;
@@ -65,28 +58,19 @@ class _PitScouterState extends State<PitScouter> {
                 ? " Control"
                 : "er");
     return CheckboxListTile(
-        value: boxStates[i][1] == CheckBoxValues.NULL ? false : true,
+        value: boxStates[i][1] != null ? true : false,
         onChanged: (bool val) {
           setState(() {
-            switch (boxStates[i][1]) {
-              case CheckBoxValues.NULL:
-                boxStates[i][1] = CheckBoxValues.TRUE;
-                break;
-              case CheckBoxValues.TRUE:
-                boxStates[i][1] = CheckBoxValues.FALSE;
-                break;
-              case CheckBoxValues.FALSE:
-                boxStates[i][1] = CheckBoxValues.TRUE;
-                break;
-            }
+            boxStates[i][1] == null
+                ? boxStates[i][1] = true
+                : boxStates[i][1] = !boxStates[i][1];
           });
         },
         title: Text(
           label,
           style: new TextStyle(fontSize: 20.0),
         ),
-        activeColor:
-            boxStates[i][1] == CheckBoxValues.TRUE ? Colors.green : Colors.red);
+        activeColor: boxStates[i][1] == true ? Colors.green : Colors.red);
   }
 
   @override
@@ -164,13 +148,13 @@ class _PitScouterState extends State<PitScouter> {
                           _teamNumber,
                           _driveBase.toString(),
                           _notes.text,
-                          boxStateToBool[boxStates[0][1].toString()],
-                          boxStateToBool[boxStates[1][1].toString()],
-                          boxStateToBool[boxStates[2][1].toString()],
-                          boxStateToBool[boxStates[3][1].toString()],
-                          boxStateToBool[boxStates[4][1].toString()],
-                          boxStateToBool[boxStates[5][1].toString()],
-                          boxStateToBool[boxStates[6][1].toString()],
+                          boxStates[0][1],
+                          boxStates[1][1],
+                          boxStates[2][1],
+                          boxStates[3][1],
+                          boxStates[4][1],
+                          boxStates[5][1],
+                          boxStates[6][1],
                         ),
                       );
                       Navigator.pushNamed(context, PostScouter.route);
