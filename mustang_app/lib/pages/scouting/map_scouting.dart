@@ -3,10 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/blur_overlay.dart';
 import 'package:mustang_app/backend/game_action.dart';
-import 'package:mustang_app/components/defense_scouting_overlay.dart';
 import 'package:mustang_app/components/defense_scouting_side.dart';
 import 'package:mustang_app/components/game_map.dart';
-import 'package:mustang_app/components/offense_scouting_overlay.dart';
+import 'package:mustang_app/components/scouting_overlay.dart';
 import 'package:mustang_app/components/offense_scouting_side.dart';
 import 'package:mustang_app/components/screen.dart';
 import 'package:mustang_app/components/selectable_zone_grid.dart';
@@ -213,26 +212,16 @@ class _MapScoutingState extends State<MapScouting> {
 
   @override
   Widget build(BuildContext context) {
-    Widget scoutingOverlay = IndexedStack(
-      index: _onOffense ? 0 : 1,
-      children: [
-        OffenseScoutingOverlay(
-          addAction: _addAction,
-          stopwatch: _stopwatch,
-          completedPositionControl: _completedPositionControl,
-          completedRotationControl: _completedRotationControl,
-          crossedInitiationLine: _crossedInitiationLine,
-          onWheelPress: _onWheelPress,
-          setClimb: _setClimb,
-          sliderValue: _sliderVal,
-          setCrossedInitiationLine: _setCrossedInitiationLine,
-        ),
-        DefenseScoutingOverlay(
-          stopwatch: _stopwatch,
-          addAction: _addAction,
-        ),
-      ],
-    );
+    Widget scoutingOverlay = ScoutingOverlay(
+        addAction: _addAction,
+        stopwatch: _stopwatch,
+        completedPositionControl: _completedPositionControl,
+        completedRotationControl: _completedRotationControl,
+        crossedInitiationLine: _crossedInitiationLine,
+        onWheelPress: _onWheelPress,
+        setClimb: _setClimb,
+        sliderValue: _sliderVal,
+        setCrossedInitiationLine: _setCrossedInitiationLine);
     Widget scoutingSide = IndexedStack(
       index: _onOffense ? 0 : 1,
       children: [

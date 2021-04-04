@@ -5,7 +5,7 @@ import '../backend/game_action.dart';
 import './game_map.dart';
 
 // ignore: must_be_immutable
-class OffenseScoutingOverlay extends StatelessWidget {
+class ScoutingOverlay extends StatelessWidget {
   void Function(ActionType type, BuildContext context) _addAction;
   void Function(double millisecondsElapsed) _setClimb;
   void Function() _onWheelPress;
@@ -15,7 +15,7 @@ class OffenseScoutingOverlay extends StatelessWidget {
   bool _completedPositionControl = false;
   bool _crossedInitiationLine = false;
   double _sliderValue = 2;
-  OffenseScoutingOverlay({
+  ScoutingOverlay({
     void Function(double millisecondsElapsed) setClimb,
     void Function(ActionType type, BuildContext context) addAction,
     void Function() onWheelPress,
