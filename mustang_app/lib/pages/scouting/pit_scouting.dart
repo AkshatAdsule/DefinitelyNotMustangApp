@@ -141,34 +141,35 @@ class _PitScouterState extends State<PitScouter> {
                 ),
                 Container(
                   padding: EdgeInsets.only(top: 10, bottom: 10),
-                  child: RaisedButton(
-                    onPressed: () {
-                      ScoutingOperations.setTeamData(
-                        Team(
-                          _teamNumber,
-                          _driveBase.toString(),
-                          _notes.text,
-                          boxStates[0][1],
-                          boxStates[1][1],
-                          boxStates[2][1],
-                          boxStates[3][1],
-                          boxStates[4][1],
-                          boxStates[5][1],
-                          boxStates[6][1],
+                  child: ElevatedButton(
+                      onPressed: () {
+                        ScoutingOperations.setTeamData(
+                          Team(
+                            _teamNumber,
+                            _driveBase.toString(),
+                            _notes.text,
+                            boxStates[0][1],
+                            boxStates[1][1],
+                            boxStates[2][1],
+                            boxStates[3][1],
+                            boxStates[4][1],
+                            boxStates[5][1],
+                            boxStates[6][1],
+                          ),
+                        );
+                        Navigator.pushNamed(context, PostScouter.route);
+                      },
+                      child: Text(
+                        'Submit',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
                         ),
-                      );
-                      Navigator.pushNamed(context, PostScouter.route);
-                    },
-                    child: Text(
-                      'Submit',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
                       ),
-                    ),
-                    color: Colors.green,
-                    padding: EdgeInsets.all(15),
-                  ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.green,
+                        padding: EdgeInsets.all(15),
+                      )),
                 ),
               ],
             ),

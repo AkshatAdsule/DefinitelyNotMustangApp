@@ -38,10 +38,10 @@ class DefenseScoutingSide extends StatelessWidget {
       'Disabled',
       'Disqual'
     ];
-    List<FlatButton> optionButtons = new List<FlatButton>();
+    List<TextButton> optionButtons = [];
 
     for (String type in types) {
-      FlatButton option = FlatButton(
+      TextButton option = TextButton(
         child: Text(type),
         onPressed: () {
           _addAction(

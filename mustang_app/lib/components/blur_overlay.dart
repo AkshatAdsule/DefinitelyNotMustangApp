@@ -77,16 +77,16 @@ class _BlurOverlayState extends State<BlurOverlay> {
             ),
             child: !_animating
                 ? Center(
-                    child: RaisedButton(
-                      color: Colors.red.shade900,
-                      onPressed: () {
-                        setState(() {
-                          _targetValue = 0;
-                          _animating = true;
-                        });
-                      },
-                      child: text,
-                    ),
+                    child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _targetValue = 0;
+                            _animating = true;
+                          });
+                        },
+                        child: text,
+                        style:
+                            ElevatedButton.styleFrom(primary: Colors.red[900])),
                   )
                 : Container(),
           ),

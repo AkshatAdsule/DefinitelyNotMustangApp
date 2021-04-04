@@ -41,34 +41,43 @@ class ScoutingButton extends StatelessWidget {
     }
     switch (style) {
       case ButtonStyle.RAISED:
-        return RaisedButton(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(borderWidth),
-              side: BorderSide(color: borderColor, width: borderWidth)),
-          color: color,
+        return ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: color,
+            onPrimary:
+                type == ButtonType.PAGEBUTTON ? Colors.black : Colors.white,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(borderWidth),
+                side: BorderSide(color: borderColor, width: borderWidth)),
+          ),
           onPressed: this.onPressed,
           child: Text(text),
         );
         break;
       case ButtonStyle.OUTLINED:
-        return OutlineButton(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(borderWidth),
-              side: BorderSide(color: borderColor, width: borderWidth)),
-          color: color,
+        return OutlinedButton(
+          style: OutlinedButton.styleFrom(
+            primary: color,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(borderWidth),
+                side: BorderSide(color: borderColor, width: borderWidth)),
+          ),
           onPressed: this.onPressed,
           child: Text(text),
         );
         break;
       case ButtonStyle.FLAT:
-        return FlatButton(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(borderWidth),
-              side: BorderSide(color: borderColor, width: borderWidth)),
-          color: color,
+        return TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: color,
+            primary: Colors.black,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(borderWidth),
+                side: BorderSide(color: borderColor, width: borderWidth)),
+          ),
           onPressed: this.onPressed,
           child: Text(text),
-          minWidth: 20,
+          // minWidth: 20,
         );
         break;
       default:

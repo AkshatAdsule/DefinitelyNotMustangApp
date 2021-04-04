@@ -3,13 +3,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/auth_service.dart';
-import 'package:mustang_app/components/bottom_nav_bar.dart';
 import 'package:mustang_app/backend/game_action.dart';
 import 'package:mustang_app/components/screen.dart';
 import 'package:provider/provider.dart';
 import '../../backend/match.dart';
 import '../../backend/scouting_operations.dart';
-import '../../components/header.dart';
 import 'post_scouter.dart';
 
 // ignore: must_be_immutable
@@ -194,10 +192,12 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
               Container(
                 padding:
                     EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
-                child: RaisedButton(
-                  color: Colors.green,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                    padding: EdgeInsets.all(15),
+                  ),
                   onPressed: () => _finishGame(context, user),
-                  padding: EdgeInsets.all(15),
                   child: Text(
                     'Submit',
                     style: TextStyle(

@@ -5,7 +5,6 @@ import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/backend/team_service.dart';
 import 'package:mustang_app/components/game_map.dart';
 import 'package:mustang_app/components/game_replay.dart';
-import 'package:mustang_app/components/header.dart';
 import 'package:mustang_app/components/map_analysis_text.dart';
 import 'package:mustang_app/components/map_switch_button.dart';
 import 'package:mustang_app/components/screen.dart';
@@ -14,6 +13,7 @@ import 'package:mustang_app/constants/constants.dart';
 import 'package:provider/provider.dart';
 import '../components/analyzer.dart';
 
+// ignore: must_be_immutable
 class MapAnalysisDisplay extends StatelessWidget {
   TeamService _teamService = TeamService();
   static const String route = '/MapAnalysisDisplay';
@@ -124,8 +124,8 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
 
     double zoneAccuracyOutOf900 = zoneAccuracyOutOf1 * 900;
     if (!zoneAccuracyOutOf900.isInfinite && !zoneAccuracyOutOf900.isNaN) {
-      int a = ((zoneAccuracyOutOf900 / 100).toInt()) * 100; //lower bound of 100
-      int b = ((zoneAccuracyOutOf900 / 100).toInt() + 1) * 100; //upper bound
+      int a = (zoneAccuracyOutOf900 ~/ 100) * 100; //lower bound of 100
+      int b = (zoneAccuracyOutOf900 ~/ 100 + 1) * 100; //upper bound
       int returnVal =
           (zoneAccuracyOutOf900 - a > b - zoneAccuracyOutOf900) ? b : a;
       return returnVal;
@@ -263,8 +263,8 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
 
     Container gameReplay = Container(
         alignment: Alignment.center,
-        child: RaisedButton(
-          color: Colors.green[900],
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(primary: Colors.green[900]),
           onPressed: () {
             _toggleScreen();
           },

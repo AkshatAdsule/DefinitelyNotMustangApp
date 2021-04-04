@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/backend/team.dart';
 import 'package:mustang_app/backend/team_service.dart';
-import 'package:mustang_app/components/bottom_nav_bar.dart';
 import 'package:mustang_app/components/screen.dart';
-import '../components/header.dart';
 
 //TODO: IMPLEMENT THIS CLASS WITH PROVIDER
 // ignore: must_be_immutable

@@ -34,7 +34,7 @@ class NavigatorObserverWithOrientation extends NavigatorObserver {
     } else {
       // Don't change orientation if new route has no orientation
       return;
-      _setOrientation(ScreenOrientation.rotating);
+      // _setOrientation(ScreenOrientation.rotating);
     }
   }
 }

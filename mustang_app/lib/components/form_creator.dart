@@ -34,6 +34,7 @@ class FormChild {
   List<List<String>> get multiSelectOptions => _multiSelectOptions;
 }
 
+// ignore: must_be_immutable
 class FormCreator extends StatefulWidget {
   List<FormChild> _children;
   void Function() _submitCallback;

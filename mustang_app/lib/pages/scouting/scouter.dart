@@ -1,10 +1,7 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:mustang_app/components/bottom_nav_bar.dart';
 import 'package:mustang_app/components/screen.dart';
 import 'package:mustang_app/pages/scouting/map_scouting.dart';
 import 'pit_scouting.dart';
-import '../../components/header.dart';
 import '../../backend/scouting_operations.dart';
 
 class Scouter extends StatefulWidget {
@@ -184,8 +181,11 @@ class _ScouterState extends State<Scouter> {
                 padding:
                     EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
                 child: new Builder(
-                  builder: (BuildContext buildContext) => RaisedButton(
-                    color: Colors.green,
+                  builder: (BuildContext buildContext) => ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.green,
+                      padding: EdgeInsets.all(15),
+                    ),
                     onPressed: () {
                       setState(() {
                         if (_teamNumberController.text.isEmpty) {
@@ -209,7 +209,6 @@ class _ScouterState extends State<Scouter> {
                         });
                       });
                     },
-                    padding: EdgeInsets.all(15),
                     child: Text(
                       'Pit Scouting',
                       style: TextStyle(fontSize: 20, color: Colors.white),
@@ -221,8 +220,11 @@ class _ScouterState extends State<Scouter> {
                 padding:
                     EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
                 child: new Builder(
-                  builder: (BuildContext buildContext) => new RaisedButton(
-                    color: Colors.green,
+                  builder: (BuildContext buildContext) => ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.green,
+                      padding: EdgeInsets.all(15),
+                    ),
                     onPressed: () {
                       setState(() {
                         if (_teamNumberController.text.isEmpty) {
@@ -264,7 +266,6 @@ class _ScouterState extends State<Scouter> {
                         });
                       });
                     },
-                    padding: EdgeInsets.all(15),
                     child: Text(
                       'Match Scouting',
                       style: TextStyle(fontSize: 20, color: Colors.white),

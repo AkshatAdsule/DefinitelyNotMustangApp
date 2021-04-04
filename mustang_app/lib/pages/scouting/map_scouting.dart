@@ -13,7 +13,6 @@ import 'package:mustang_app/components/selectable_zone_grid.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/constants/constants.dart';
 import 'package:mustang_app/exports/pages.dart';
-import '../../components/header.dart';
 import '../../components/game_buttons.dart' as game_button;
 
 // ignore: must_be_immutable

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:mustang_app/components/header.dart';
 import 'package:mustang_app/components/overall_score_display.dart';
 import 'package:mustang_app/components/screen.dart';
 import 'package:mustang_app/components/team_stats_display.dart';

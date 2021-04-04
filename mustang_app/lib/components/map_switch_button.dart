@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class MapSwitchButton extends StatefulWidget {
   void Function() onToggle;
   bool showScoringMap = true;
@@ -17,6 +18,7 @@ class _MapSwitchButtonState extends State<MapSwitchButton> {
   bool showScoringMap = true;
 
   _MapSwitchButtonState(this.onToggle, this.showScoringMap);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,24 +29,19 @@ class _MapSwitchButtonState extends State<MapSwitchButton> {
           children: [
             Container(
               height: 50.0,
-              child: RaisedButton(
+              child: ElevatedButton(
                 onPressed: () {
                   onToggle();
                   showScoringMap = !showScoringMap;
                 },
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(80.0)),
-                padding: EdgeInsets.all(0.0),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.all(0.0),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(80.0)),
+                ),
                 child: Ink(
                   decoration: BoxDecoration(
-                    color: Colors.green[300],
-                    /*
-                      gradient: LinearGradient(
-                        colors: [Colors.green[50], Colors.green[600]],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ),
-                      */
+                      color: Colors.green[300],
                       borderRadius: BorderRadius.circular(80.0)),
                   child: Container(
                       constraints:

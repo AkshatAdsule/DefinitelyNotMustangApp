@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/screen.dart';
-import '../../components/bottom_nav_bar.dart';
-
-import '../../components/header.dart';
 import '../calendar.dart';
 import 'scouter.dart';
 
@@ -55,7 +52,7 @@ class PostScouter extends StatelessWidget {
               Container(
                 padding:
                     EdgeInsets.only(top: 7.5, left: 15, right: 15, bottom: 10),
-                child: RaisedButton(
+                child: ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pushNamed(Scouter.route);
                   },
@@ -63,8 +60,10 @@ class PostScouter extends StatelessWidget {
                     'Scout Another Team',
                     style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
-                  color: Colors.green,
-                  padding: EdgeInsets.all(15),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                    padding: EdgeInsets.all(15),
+                  ),
                 ),
               ),
             ],

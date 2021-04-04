@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/screen.dart';
 import 'package:mustang_app/constants/constants.dart';
-import '../components/header.dart';
-import '../components/bottom_nav_bar.dart';
 
 class HomePage extends StatefulWidget {
   static const String route = '/';

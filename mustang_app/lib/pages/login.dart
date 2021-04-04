@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mustang_app/backend/auth_service.dart';
 import 'package:mustang_app/components/logo.dart';
@@ -13,8 +12,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-
   @override
   void initState() {
     super.initState();
@@ -58,16 +55,20 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
-              RaisedButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(1),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(1),
+                  ),
                 ),
                 onPressed: () => signInWithGoogle(context),
                 child: Text('Sign In With Google'),
               ),
-              RaisedButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(1),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(1),
+                  ),
                 ),
                 onPressed: () => Navigator.pushNamed(context, '/'),
                 child: Text('Emulator Next'),

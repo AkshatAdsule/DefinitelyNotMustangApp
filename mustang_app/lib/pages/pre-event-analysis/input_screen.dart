@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mustang_app/components/bottom_nav_bar.dart';
-import 'package:mustang_app/components/header.dart';
 import 'package:mustang_app/components/screen.dart';
 import 'package:mustang_app/pages/pre-event-analysis/compare_teams.dart';
 import 'package:mustang_app/utils/get_statistics.dart';

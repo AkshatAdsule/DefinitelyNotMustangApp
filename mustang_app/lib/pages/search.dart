@@ -4,9 +4,7 @@ import 'package:mustang_app/backend/team.dart';
 import 'package:mustang_app/backend/teams_service.dart';
 import 'package:mustang_app/components/screen.dart';
 import 'package:provider/provider.dart';
-import '../components/header.dart';
 import 'map_analysis_display.dart';
-import '../components/bottom_nav_bar.dart';
 import 'team_info_display.dart';
 
 // ignore: must_be_immutable
@@ -16,7 +14,6 @@ class SearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return StreamProvider<List<Team>>.value(
       initialData: [],
       value: _teamsService.streamTeams(),

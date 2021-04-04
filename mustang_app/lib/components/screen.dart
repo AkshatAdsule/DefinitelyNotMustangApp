@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/components/bottom_nav_bar.dart';
 import 'package:mustang_app/components/header.dart';
 
+// ignore: must_be_immutable
 class Screen extends StatelessWidget {
   Widget child, floatingActionButton;
   String title;
