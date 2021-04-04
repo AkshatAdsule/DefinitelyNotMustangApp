@@ -31,7 +31,6 @@ class DefenseScoutingSide extends StatelessWidget {
 
   void actionDeterminer(BuildContext context, String action) {
     List<String> types = [
-      // 'Reg',
       'Tech',
       'Red',
       'Yellow',
