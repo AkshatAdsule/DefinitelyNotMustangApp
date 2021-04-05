@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 
@@ -39,6 +41,16 @@ class GameMap extends StatelessWidget {
         _offenseOnRightSide == false) {
       imageName = 'assets/rightblue_leftred.png';
     }
+    //1159 width 604 height
+    Image image = Image.asset(imageName);
+    Completer<ui.Image> completer = new Completer<ui.Image>();
+    image.image.resolve(new ImageConfiguration()).addListener(
+      ImageStreamListener(
+        (ImageInfo info, bool _) {
+          completer.complete(info.image);
+        },
+      ),
+    );
 
     return Container(
         child: Row(
@@ -47,21 +59,33 @@ class GameMap extends StatelessWidget {
           flex: 7,
           child: LayoutBuilder(
             builder: (context, constraints) {
-              return Container(
-                height: (604 * constraints.maxWidth) / 1159 + 1,
-                child: Container(
-                  child: Stack(
-                    alignment: Alignment.centerLeft,
-                    children: [
-                      Image.asset(
-                        imageName,
-                        fit: BoxFit.fitWidth,
+              return FutureBuilder<ui.Image>(
+                future: completer.future,
+                builder:
+                    (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
+                  //Default dimensions of the asset image
+                  double width = 1159, height = 604;
+                  if (snapshot.hasData) {
+                    width = snapshot.data.width.toDouble();
+                    height = snapshot.data.height.toDouble();
+                  }
+                  return Container(
+                    height: (height * constraints.maxWidth) / width + 1,
+                    child: Container(
+                      child: Stack(
+                        alignment: Alignment.centerLeft,
+                        children: [
+                          Image.asset(
+                            imageName,
+                            fit: BoxFit.fitWidth,
+                          ),
+                          _zoneGrid ?? Container(),
+                          ..._imageChildren,
+                        ],
                       ),
-                      _zoneGrid ?? Container(),
-                      ..._imageChildren,
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               );
             },
           ),
