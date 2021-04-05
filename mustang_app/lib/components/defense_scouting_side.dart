@@ -6,23 +6,16 @@ import './game_buttons.dart' as game_button;
 // ignore: must_be_immutable
 class DefenseScoutingSide extends StatelessWidget {
   bool Function(ActionType type, BuildContext context) _addAction;
-  void Function() _toggleMode;
-  // void Function(List<int> newPrev) _setPrev;
-  void Function(bool newVal) _setPush;
-  List<int> _prev = [0, 0];
-  bool _pushTextStart = false;
+  void Function() _toggleMode, _setPush;
+  bool _pushTextStart;
 
   DefenseScoutingSide(
       {Key key,
       void Function() toggleMode,
+      void Function() setPush,
       bool Function(ActionType type, BuildContext context) addAction,
-      // void Function(List<int> newPrev) setPrev,
-      void Function(bool newVal) setPush,
-      // List<int> prev,
       bool pushTextStart})
       : super(key: key) {
-    // _prev = prev;
-    // _setPrev = setPrev;
     _toggleMode = toggleMode;
     _addAction = addAction;
     _setPush = setPush;
@@ -30,13 +23,7 @@ class DefenseScoutingSide extends StatelessWidget {
   }
 
   void actionDeterminer(BuildContext context, String action) {
-    List<String> types = [
-      'Tech',
-      'Red',
-      'Yellow',
-      'Disabled',
-      'Disqual'
-    ];
+    List<String> types = ['Tech', 'Red', 'Yellow', 'Disabled', 'Disqual'];
     List<TextButton> optionButtons = [];
 
     for (String type in types) {
@@ -52,14 +39,13 @@ class DefenseScoutingSide extends StatelessWidget {
       );
       optionButtons.add(option);
     }
-    // set up the AlertDialog
+
     AlertDialog popUp = AlertDialog(
       title: Text(action),
       content: Text('Type of Foul'),
       actions: optionButtons,
     );
 
-    // show the dialog
     showDialog(
       routeSettings: RouteSettings(arguments: ScreenOrientation.landscapeOnly),
       context: context,
@@ -98,19 +84,28 @@ class DefenseScoutingSide extends StatelessWidget {
                   style: game_button.ButtonStyle.RAISED,
                   type: game_button.ButtonType.ELEMENT,
                   onPressed: () {
-                    // if (
+                    // List<int> actionLoc =
                     _addAction(ActionType.PREV_INTAKE, context);
-                    // )
-                    // _setPrev([_prev[0] + 1, _prev[1]]);
+                    // actionLoc.add(0);
+                    // print("actionLoc: " + actionLoc.toString());
+                    // print("prevActionLoc: " + _prevActionLoc.toString());
+                    // if (actionLoc[0] == _prevActionLoc[0] &&
+                    //     actionLoc[1] == _prevActionLoc[1] &&
+                    //     actionLoc[2] == _prevActionLoc[2]) {
+                    //   _setCounter(_counter++);
+                    // } else {
+                    //   _setCounter(0);
+                    //   _prevActionLoc[0] = actionLoc[0];
+                    //   _prevActionLoc[1] = actionLoc[1];
+                    //   _prevActionLoc[2] = actionLoc[2];
+                    // }
+                    // print(" AFTER  actionLoc: " + actionLoc.toString());
+                    // print(
+                    //     " AFTER  prevActionLoc: " + _prevActionLoc.toString());
+                    // print("intake: " + _counter.toString());
                   },
                   text: 'Prevent Intake',
                 ),
-                game_button.ScoutingButton(
-                    style: game_button.ButtonStyle.FLAT,
-                    type: game_button.ButtonType.COUNTER,
-                    onPressed: () {},
-                    text: ""),
-                // _prev[0].toString()),
               ],
             ),
           ),
@@ -123,19 +118,10 @@ class DefenseScoutingSide extends StatelessWidget {
                   style: game_button.ButtonStyle.RAISED,
                   type: game_button.ButtonType.ELEMENT,
                   onPressed: () {
-                    // if (
                     _addAction(ActionType.PREV_INTAKE, context);
-                    // )
-                    // _setPrev([_prev[0], _prev[1] + 1]);
                   },
                   text: 'Prevent Shot',
                 ),
-                game_button.ScoutingButton(
-                    style: game_button.ButtonStyle.FLAT,
-                    type: game_button.ButtonType.COUNTER,
-                    onPressed: () {},
-                    text: ""),
-                // _prev[1].toString()),
               ],
             ),
           ),
@@ -154,31 +140,12 @@ class DefenseScoutingSide extends StatelessWidget {
                           side: BorderSide(color: Colors.black, width: 1)),
                     ),
                     onPressed: () {
-                      if (_pushTextStart) {
-                        if (_addAction(ActionType.PUSH_END, context))
-                          _setPush(false);
-                      } else {
-                        if (_addAction(ActionType.PUSH_START, context))
-                          _setPush(true);
-                      }
-                      // _prev = [0, 0];
+                      if (_pushTextStart
+                          ? _addAction(ActionType.PUSH_END, context)
+                          : _addAction(ActionType.PUSH_START, context))
+                        _setPush();
                     },
-                    child: Text(!_pushTextStart ? "Push Start" : "Push End"))
-                // game_button.ScoutingButton(
-                //   style: game_button.ButtonStyle.RAISED,
-                //   type: game_button.ButtonType.ELEMENT,
-                //   onPressed: () {
-                //     if (_pushTextStart) {
-                //       if (_addAction(ActionType.PUSH_END, context))
-                //         _setPush(false);
-                //     } else {
-                //       if (_addAction(ActionType.PUSH_START, context))
-                //         _setPush(true);
-                //     }
-                //     _prev = [0, 0];
-                //   },
-                //   text: !_pushTextStart ? "Push Start" : "Push End",
-                // ),
+                    child: Text(_pushTextStart ? "Push End" : "Push Start"))
               ],
             ),
           ),
@@ -192,7 +159,6 @@ class DefenseScoutingSide extends StatelessWidget {
                   type: game_button.ButtonType.ELEMENT,
                   onPressed: () {
                     actionDeterminer(context, 'Foul');
-                    // _prev = [0, 0];
                   },
                   text: 'Foul',
                 ),

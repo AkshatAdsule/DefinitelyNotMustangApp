@@ -48,7 +48,9 @@ class _MapScoutingState extends State<MapScouting> {
       _completedPositionControl,
       _crossedInitiationLine;
   double _sliderVal;
-  // List<int> _prev;
+  int counter;
+  // 0 = x, 1 = y, 2 = action type (anything with shot, missed, prev, intake)
+  List<int> _prevActionLoc = [0, 0, 0];
   bool _pushTextStart;
   Timer _endgameTimer, _endTimer, _teleopTimer;
 
@@ -66,7 +68,7 @@ class _MapScoutingState extends State<MapScouting> {
     _completedPositionControl = false;
     _crossedInitiationLine = false;
     _actions = [];
-    // _prev = [0, 0];
+    counter = 0;
     _pushTextStart = false;
     _sliderLastChanged = 0;
     _sliderVal = 2;
@@ -104,15 +106,15 @@ class _MapScoutingState extends State<MapScouting> {
     });
   }
 
-  // void _setPrev(List<int> newPrev) {
-  //   setState(() {
-  //     _prev = newPrev;
-  //   });
-  // }
-
-  void _setPush(bool newVal) {
+  void _setPush() {
     setState(() {
-      _pushTextStart = newVal;
+      _pushTextStart = !_pushTextStart;
+    });
+  }
+
+  void _setCounter(int newCount) {
+    setState(() {
+      counter = newCount;
     });
   }
 
@@ -148,6 +150,23 @@ class _MapScoutingState extends State<MapScouting> {
       return false;
     }
     _actions.add(action);
+    // TODO: add method to change the counter
+    List<int> actionLoc = [x, y, type.index];
+    print("actionLoc: " + actionLoc.toString());
+    print("prevActionLoc: " + _prevActionLoc.toString());
+    for (int i = 0; i < _prevActionLoc.length; i++) {
+      if (actionLoc[i] != _prevActionLoc[i]) {
+        counter = 0;
+        _prevActionLoc[0] = actionLoc[0];
+        _prevActionLoc[1] = actionLoc[1];
+        _prevActionLoc[2] = actionLoc[2];
+      }
+    }
+    if (counter != 0) {
+      counter++;
+    }
+    print("counter: " + counter.toString());
+
     return true;
   }
 
@@ -222,6 +241,7 @@ class _MapScoutingState extends State<MapScouting> {
         setClimb: _setClimb,
         sliderValue: _sliderVal,
         setCrossedInitiationLine: _setCrossedInitiationLine);
+
     Widget scoutingSide = IndexedStack(
       index: _onOffense ? 0 : 1,
       children: [
@@ -232,8 +252,6 @@ class _MapScoutingState extends State<MapScouting> {
         DefenseScoutingSide(
           addAction: _addAction,
           toggleMode: _toggleMode,
-          // prev: _prev,
-          // setPrev: _setPrev,
           pushTextStart: _pushTextStart,
           setPush: _setPush,
         ),
@@ -243,6 +261,16 @@ class _MapScoutingState extends State<MapScouting> {
     return Screen(
       title: 'Map Scouting',
       headerButtons: [
+        Container(
+          margin: EdgeInsets.only(
+            right: 10,
+          ),
+          child: game_button.ScoutingButton(
+              style: game_button.ButtonStyle.FLAT,
+              type: game_button.ButtonType.COUNTER,
+              onPressed: () {},
+              text: "Counter: " + counter.toString()),
+        ),
         Container(
           margin: EdgeInsets.only(
             right: 10,
@@ -283,6 +311,22 @@ class _MapScoutingState extends State<MapScouting> {
               ),
       ),
     );
+  }
+}
+
+// ignore: must_be_immutable
+class CounterText extends StatelessWidget {
+  int counter;
+
+  CounterText(this.counter);
+
+  @override
+  Widget build(BuildContext context) {
+    return game_button.ScoutingButton(
+        style: game_button.ButtonStyle.FLAT,
+        type: game_button.ButtonType.COUNTER,
+        onPressed: () {},
+        text: "Counter: " + counter.toString());
   }
 }
 

@@ -6,9 +6,8 @@ class ScoutingButton extends StatelessWidget {
   ButtonType type;
   void Function() onPressed;
   String text = '';
-  String id = '';
 
-  ScoutingButton({this.style, this.type, this.onPressed, this.text, this.id});
+  ScoutingButton({this.style, this.type, this.onPressed, this.text});
 
   @override
   Widget build(BuildContext context) {

@@ -4,11 +4,11 @@ import './game_buttons.dart' as game_button;
 
 // ignore: must_be_immutable
 class OffenseScoutingSide extends StatelessWidget {
-  void Function(ActionType type, BuildContext context) _addAction;
+  bool Function(ActionType type, BuildContext context) _addAction;
   void Function() _toggleMode;
 
   OffenseScoutingSide({
-    void Function(ActionType type, BuildContext context) addAction,
+    bool Function(ActionType type, BuildContext context) addAction,
     void Function() toggleMode,
   }) {
     _toggleMode = toggleMode;

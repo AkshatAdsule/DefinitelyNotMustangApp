@@ -29,6 +29,7 @@ class GameAction {
   double get timeStamp => _timeStamp;
   double get x => _x;
   double get y => _y;
+  
   //for push, timeStamp is at the beginning of the push
   double get pushTime => _pushTime;
   ActionType get action => _action;
