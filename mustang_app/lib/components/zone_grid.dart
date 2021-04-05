@@ -39,8 +39,8 @@ class ZoneGrid extends StatefulWidget {
 }
 
 class _ZoneGridState extends State<ZoneGrid> {
-  int _selectedX, _selectedY;
-  bool _hasSelected;
+  int _selectedX = 0, _selectedY = 0;
+  bool _hasSelected = false;
   int _rows, _cols;
 
   Function(int x, int y) _onTap;
@@ -53,9 +53,6 @@ class _ZoneGridState extends State<ZoneGrid> {
   @override
   void initState() {
     super.initState();
-    _hasSelected = false;
-    _selectedX = 0;
-    _selectedY = 0;
   }
 
   int get x => _selectedX;

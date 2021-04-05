@@ -49,10 +49,9 @@ class _MapScoutingState extends State<MapScouting> {
       _crossedInitiationLine;
   double _sliderVal;
   int counter;
-  // 0 = x, 1 = y, 2 = action type (anything with shot, missed, prev, intake)
-  List<int> _prevActionLoc = [0, 0, 0];
   bool _pushTextStart;
   Timer _endgameTimer, _endTimer, _teleopTimer;
+  int _prevX = -1, _prevY = -1;
 
   _MapScoutingState(this._teamNumber, this._matchNumber, this._allianceColor,
       this._offenseOnRightSide);
@@ -63,7 +62,15 @@ class _MapScoutingState extends State<MapScouting> {
     _onOffense = true;
     _startedScouting = false;
     _stopwatch = new Stopwatch();
-    _zoneGrid = SelectableZoneGrid(UniqueKey(), (int x, int y) {});
+    _zoneGrid = SelectableZoneGrid(GlobalKey(), (int x, int y) {
+      if (x != _prevX || y != _prevY) {
+        _prevX = x;
+        _prevY = y;
+        setState(() {
+          counter = 0;
+        });
+      }
+    });
     _completedRotationControl = false;
     _completedPositionControl = false;
     _crossedInitiationLine = false;
@@ -150,24 +157,25 @@ class _MapScoutingState extends State<MapScouting> {
       return false;
     }
     _actions.add(action);
-    // TODO: add method to change the counter
-    List<int> actionLoc = [x, y, type.index];
-    print("actionLoc: " + actionLoc.toString());
-    print("prevActionLoc: " + _prevActionLoc.toString());
-    for (int i = 0; i < _prevActionLoc.length; i++) {
-      if (actionLoc[i] != _prevActionLoc[i]) {
-        counter = 0;
-        _prevActionLoc[0] = actionLoc[0];
-        _prevActionLoc[1] = actionLoc[1];
-        _prevActionLoc[2] = actionLoc[2];
-      }
-    }
-    if (counter != 0) {
-      counter++;
-    }
-    print("counter: " + counter.toString());
+    _updateCounter(action);
 
     return true;
+  }
+
+  void _updateCounter(GameAction action) {
+    String type = action.action.toString();
+    if (type.contains("SHOT") ||
+        type.contains("MISSED") ||
+        type.contains("INTAKE") ||
+        type.contains("PREV")) {
+      setState(() {
+        counter++;
+      });
+    } else {
+      setState(() {
+        counter = 0;
+      });
+    }
   }
 
   void _setClimb(double newVal) {
@@ -223,6 +231,11 @@ class _MapScoutingState extends State<MapScouting> {
           break;
         default:
           break;
+      }
+      if (counter > 0) {
+        setState(() {
+          counter--;
+        });
       }
       return action;
     }

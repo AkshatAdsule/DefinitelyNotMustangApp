@@ -7,7 +7,7 @@ class GameMap extends StatelessWidget {
   Widget _sideWidget;
   String _allianceColor;
   bool _offenseOnRightSide;
-  
+
   ZoneGrid _zoneGrid;
 
   GameMap({
@@ -27,24 +27,18 @@ class GameMap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String imageName = '';
-      if (_allianceColor.toUpperCase() == "BLUE" && _offenseOnRightSide == true){
-        debugPrint("right blue, left red");
-        imageName = 'assets/rightblue_leftred.png';
-      }
-      else if (_allianceColor.toUpperCase() == "BLUE" && _offenseOnRightSide == false){
-                debugPrint("right red, left blue");
-
-        imageName = 'assets/rightred_leftblue.png';
-      }
-      else if (_allianceColor.toUpperCase() == "RED" && _offenseOnRightSide == true){
-                       debugPrint("right red, left blue");
-
-        imageName = 'assets/rightred_leftblue.png';
-      }
-      else if (_allianceColor.toUpperCase() == "RED" && _offenseOnRightSide == false){
-        debugPrint("right blue, left red");
-        imageName = 'assets/rightblue_leftred.png';
-      }
+    if (_allianceColor.toUpperCase() == "BLUE" && _offenseOnRightSide == true) {
+      imageName = 'assets/rightblue_leftred.png';
+    } else if (_allianceColor.toUpperCase() == "BLUE" &&
+        _offenseOnRightSide == false) {
+      imageName = 'assets/rightred_leftblue.png';
+    } else if (_allianceColor.toUpperCase() == "RED" &&
+        _offenseOnRightSide == true) {
+      imageName = 'assets/rightred_leftblue.png';
+    } else if (_allianceColor.toUpperCase() == "RED" &&
+        _offenseOnRightSide == false) {
+      imageName = 'assets/rightblue_leftred.png';
+    }
 
     return Container(
         child: Row(
