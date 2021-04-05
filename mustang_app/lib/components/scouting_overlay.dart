@@ -46,7 +46,7 @@ class ScoutingOverlay extends StatelessWidget {
             : GameMapChild(
                 right: 65,
                 bottom: 17.5,
-                align: Alignment(-0.14, 0.73),
+                align: Alignment(-0.135, 0.815),
                 child: CircleAvatar(
                   backgroundColor:
                       !_completedRotationControl ? Colors.green : Colors.blue,
@@ -60,7 +60,7 @@ class ScoutingOverlay extends StatelessWidget {
                 )),
         _stopwatch.elapsedMilliseconds >= Constants.endgameStartMillis
             ? GameMapChild(
-                align: Alignment(-0.07, -0.17),
+                align: Alignment(-0.06, -0.2),
                 child: Transform.rotate(
                   angle: -pi / 8,
                   child: Container(

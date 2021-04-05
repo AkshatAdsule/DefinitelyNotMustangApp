@@ -45,18 +45,25 @@ class GameMap extends StatelessWidget {
       children: [
         Flexible(
           flex: 7,
-          child: Stack(
-            alignment: Alignment.centerLeft,
-            children: [
-              Image.asset(imageName),
-              /*
-              Image.asset(_allianceColor.toUpperCase() == "BLUE"
-                  ? 'assets/blue_field.png'
-                  : 'assets/red_field.png'),
-                  */
-              _zoneGrid ?? Container(),
-              ..._imageChildren,
-            ],
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Container(
+                height: (604 * constraints.maxWidth) / 1159 + 1,
+                child: Container(
+                  child: Stack(
+                    alignment: Alignment.centerLeft,
+                    children: [
+                      Image.asset(
+                        imageName,
+                        fit: BoxFit.fitWidth,
+                      ),
+                      _zoneGrid ?? Container(),
+                      ..._imageChildren,
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
         ),
         Flexible(

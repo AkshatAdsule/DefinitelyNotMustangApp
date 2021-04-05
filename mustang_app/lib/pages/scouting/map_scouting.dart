@@ -48,7 +48,7 @@ class _MapScoutingState extends State<MapScouting> {
       _completedPositionControl,
       _crossedInitiationLine;
   double _sliderVal;
-  int counter;
+  int _counter = 0;
   bool _pushTextStart;
   Timer _endgameTimer, _endTimer, _teleopTimer;
   int _prevX = -1, _prevY = -1;
@@ -67,7 +67,7 @@ class _MapScoutingState extends State<MapScouting> {
         _prevX = x;
         _prevY = y;
         setState(() {
-          counter = 0;
+          _counter = 0;
         });
       }
     });
@@ -75,7 +75,7 @@ class _MapScoutingState extends State<MapScouting> {
     _completedPositionControl = false;
     _crossedInitiationLine = false;
     _actions = [];
-    counter = 0;
+    _counter = 0;
     _pushTextStart = false;
     _sliderLastChanged = 0;
     _sliderVal = 2;
@@ -84,10 +84,16 @@ class _MapScoutingState extends State<MapScouting> {
   @override
   void dispose() {
     super.dispose();
-    _endTimer.cancel();
-    _endgameTimer.cancel();
-    _teleopTimer.cancel();
-    _stopwatch.stop();
+    if (_endTimer != null) {
+      _endTimer.cancel();
+    }
+    if (_endgameTimer != null) {
+      _endgameTimer.cancel();
+    }
+    if (_teleopTimer != null) {
+      _teleopTimer.cancel();
+    }
+    if (_stopwatch != null && _stopwatch.isRunning) _stopwatch.stop();
   }
 
   void _initTimers() {
@@ -121,7 +127,7 @@ class _MapScoutingState extends State<MapScouting> {
 
   void _setCounter(int newCount) {
     setState(() {
-      counter = newCount;
+      _counter = newCount;
     });
   }
 
@@ -169,11 +175,11 @@ class _MapScoutingState extends State<MapScouting> {
         type.contains("INTAKE") ||
         type.contains("PREV")) {
       setState(() {
-        counter++;
+        _counter++;
       });
     } else {
       setState(() {
-        counter = 0;
+        _counter = 0;
       });
     }
   }
@@ -232,9 +238,9 @@ class _MapScoutingState extends State<MapScouting> {
         default:
           break;
       }
-      if (counter > 0) {
+      if (_counter > 0) {
         setState(() {
-          counter--;
+          _counter--;
         });
       }
       return action;
@@ -282,7 +288,7 @@ class _MapScoutingState extends State<MapScouting> {
               style: game_button.ButtonStyle.FLAT,
               type: game_button.ButtonType.COUNTER,
               onPressed: () {},
-              text: "Counter: " + counter.toString()),
+              text: "Counter: " + (_counter ?? 0).toString()),
         ),
         Container(
           margin: EdgeInsets.only(
@@ -329,9 +335,9 @@ class _MapScoutingState extends State<MapScouting> {
 
 // ignore: must_be_immutable
 class CounterText extends StatelessWidget {
-  int counter;
+  int _counter;
 
-  CounterText(this.counter);
+  CounterText(this._counter);
 
   @override
   Widget build(BuildContext context) {
@@ -339,7 +345,7 @@ class CounterText extends StatelessWidget {
         style: game_button.ButtonStyle.FLAT,
         type: game_button.ButtonType.COUNTER,
         onPressed: () {},
-        text: "Counter: " + counter.toString());
+        text: "Counter: " + _counter.toString());
   }
 }
 
