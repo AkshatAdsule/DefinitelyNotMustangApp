@@ -1,4 +1,4 @@
-package com.example.mustang_app
+package com.homestead.mustangApp
 
 import io.flutter.embedding.android.FlutterActivity
 
