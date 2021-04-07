@@ -1,18 +1,21 @@
 import 'package:mustang_app/constants/constants.dart';
 
 class DataCollectionYearData {
-  final int year;
-  final List<DataCollectionEventData> matchData;
-
-  DataCollectionYearData({this.year, this.matchData});
-}
-
-class DataCollectionEventData {
-  String eventName;
+  int year;
   List<DataCollectionMatchData> data;
   DataCollectionMatchData avgData;
+  int winRate;
   int rankBeforeAllianceSelection;
   int endRank;
+
+  DataCollectionYearData({
+    this.year,
+    this.data,
+    this.avgData,
+    this.winRate,
+    this.rankBeforeAllianceSelection,
+    this.endRank,
+  });
 }
 
 class DataCollectionMatchData {
@@ -30,8 +33,8 @@ class DataCollectionMatchData {
   DataCollectionMatchData.fromRow(List<dynamic> row) {
     dataVersion = Constants.DATA_COLLECTION_DATA_VERSION;
     matchName = row[0];
-    gamePiecesAttempted = row[1] as int;
-    gamePiecesScored = row[2] as int;
+    gamePiecesAttempted = row[1];
+    gamePiecesScored = row[2];
     percentageScored = row[3] as double;
 
     if (row[4] == "Y") {
@@ -49,13 +52,13 @@ class DataCollectionMatchData {
     }
 
     try {
-      driverSkill = row[6] as int;
+      driverSkill = row[6];
     } catch (e) {
       print("Invalid input, defaulting to 0 driver skill");
       driverSkill = 0;
     }
 
-    rankingPoints = row[7] as int;
+    rankingPoints = row[7];
 
     if (row[9] == 'W') {
       matchResult = MatchResult.Win;
