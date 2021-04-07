@@ -50,7 +50,7 @@ class _MapScoutingState extends State<MapScouting> {
   double _sliderVal;
   int _counter = 0;
   bool _pushTextStart;
-  Timer _endgameTimer, _endTimer, _teleopTimer;
+  Timer _endgameTimer, _endTimer, _teleopTimer, _periodicUpdateTimer;
   int _prevX = -1, _prevY = -1;
 
   _MapScoutingState(this._teamNumber, this._matchNumber, this._allianceColor,
@@ -93,6 +93,9 @@ class _MapScoutingState extends State<MapScouting> {
     if (_teleopTimer != null) {
       _teleopTimer.cancel();
     }
+    if (_periodicUpdateTimer != null) {
+      _periodicUpdateTimer.cancel();
+    }
     if (_stopwatch != null && _stopwatch.isRunning) _stopwatch.stop();
   }
 
@@ -111,6 +114,10 @@ class _MapScoutingState extends State<MapScouting> {
           Duration(milliseconds: Constants.teleopStartMillis),
           () => setState(() {}));
     }
+    _periodicUpdateTimer =
+        new Timer.periodic(new Duration(milliseconds: 30), (timer) {
+      setState(() {});
+    });
   }
 
   void _toggleMode() {
@@ -248,6 +255,13 @@ class _MapScoutingState extends State<MapScouting> {
     return null;
   }
 
+  String formatTime(int milliseconds) {
+    int secs = milliseconds ~/ 1000;
+    String minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
+    String seconds = (secs % 60).toString().padLeft(2, '0');
+    return "$minutes:$seconds";
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget scoutingOverlay = ScoutingOverlay(
@@ -280,6 +294,18 @@ class _MapScoutingState extends State<MapScouting> {
     return Screen(
       title: 'Map Scouting',
       headerButtons: [
+        Container(
+          margin: EdgeInsets.only(
+            right: 10,
+          ),
+          child: Text(
+            formatTime(_stopwatch.elapsedMilliseconds),
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
         Container(
           margin: EdgeInsets.only(
             right: 10,

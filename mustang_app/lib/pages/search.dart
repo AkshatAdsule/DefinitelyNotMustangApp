@@ -106,63 +106,64 @@ class _SearchState extends State<Search> {
     }
     return new Screen(
       title: 'Search Data',
-      child: ListView(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(10.0),
-            child: TextField(
-              controller: _queryController,
-              onChanged: (val) {
-                initiateSearch(val);
-              },
-              decoration: InputDecoration(
-                  prefixIcon: IconButton(
-                    color: Colors.black,
-                    icon: Icon(Icons.arrow_back),
-                    iconSize: 20.0,
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  contentPadding: EdgeInsets.only(left: 25.0),
-                  hintText: 'Search by name',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(4.0))),
-            ),
-          ),
-          // SizedBox(height: 10.0),
-          Container(
-            height: 500,
-            child: (ListView.builder(
-              itemCount: _tempSearchStore.length,
-              itemBuilder: (context, index) => ListTile(
-                onTap: () {
-                  showAlertDialog(context, _tempSearchStore[index]);
+      child: Container(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: TextField(
+                controller: _queryController,
+                onChanged: (val) {
+                  initiateSearch(val);
                 },
-                leading: Icon(Icons.people),
-                title: RichText(
-                  text: TextSpan(
-                    text: _tempSearchStore[index]
-                        .substring(0, _queryController.text.length),
-                    style: TextStyle(
+                decoration: InputDecoration(
+                    prefixIcon: IconButton(
                       color: Colors.black,
-                      fontWeight: FontWeight.bold,
+                      icon: Icon(Icons.arrow_back),
+                      iconSize: 20.0,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
                     ),
-                    children: [
-                      TextSpan(
-                        text: _tempSearchStore[index]
-                            .substring(_queryController.text.length),
-                        style: TextStyle(
-                          color: Colors.grey,
-                        ),
-                      )
-                    ],
+                    contentPadding: EdgeInsets.only(left: 25.0),
+                    hintText: 'Search by name',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4.0))),
+              ),
+            ),
+            Expanded(
+              child: (ListView.builder(
+                shrinkWrap: true,
+                itemCount: _tempSearchStore.length,
+                itemBuilder: (context, index) => ListTile(
+                  onTap: () {
+                    showAlertDialog(context, _tempSearchStore[index]);
+                  },
+                  leading: Icon(Icons.people),
+                  title: RichText(
+                    text: TextSpan(
+                      text: _tempSearchStore[index]
+                          .substring(0, _queryController.text.length),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: _tempSearchStore[index]
+                              .substring(_queryController.text.length),
+                          style: TextStyle(
+                            color: Colors.grey,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            )),
-          ),
-        ],
+              )),
+            ),
+          ],
+        ),
       ),
     );
   }
