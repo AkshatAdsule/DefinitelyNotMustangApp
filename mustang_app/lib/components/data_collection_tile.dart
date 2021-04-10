@@ -1,27 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/utils/data_collection_data.dart';
 
-class DataCollectionDataTile extends StatefulWidget {
-  final List<DataCollectionYearData> data;
-
-  DataCollectionDataTile({this.data});
-  @override
-  _DataCollectionDataTileState createState() => _DataCollectionDataTileState();
-}
-
-class _DataCollectionDataTileState extends State<DataCollectionDataTile> {
-  @override
-  Widget build(BuildContext context) {
-    final List<DataCollectionYearData> data = widget.data;
-    return ListView.builder(
-      itemCount: data.length,
-      itemBuilder: (context, index) => DataCollectionYearTile(
-        data[index],
-      ),
-    );
-  }
-}
-
 class DataCollectionYearTile extends StatelessWidget {
   final DataCollectionYearData _yearData;
 
