@@ -33,16 +33,38 @@ class DataCollectionMatchData {
   DataCollectionMatchData.fromRow(List<dynamic> row) {
     dataVersion = Constants.DATA_COLLECTION_DATA_VERSION;
     matchName = row[0];
-    gamePiecesAttempted = row[1];
-    gamePiecesScored = row[2];
-    percentageScored = row[3] as double;
-
-    if (row[4] == "Y") {
-      climbed = true;
-    } else {
-      climbed = false;
+    try {
+      gamePiecesAttempted = row[1];
+    } catch (e) {
+      print("Invalid input, defaulting to 0 game pieces attempted");
+      gamePiecesAttempted = 0;
     }
 
+    try {
+      gamePiecesScored = row[2];
+    } catch (e) {
+      print("Invalid input, defaulting to 0 game pieces scored");
+      gamePiecesScored = 0;
+    }
+
+    try {
+      percentageScored = row[3] as double;
+    } catch (e) {
+      print("Invalid input, defaulting to 0% scored");
+      percentageScored = 0;
+    }
+    
+    try {
+      if (row[4] == "Y") {
+        climbed = true;
+      } else {
+        climbed = false;
+      }
+    } catch (e) {
+      print("Invalid input, defaulting to no climb");
+      climbed = false;
+    }
+    
     if (row[5] == "Defense") {
       strategy = Strategy.Defensive;
     } else if (row[5] == "Offense") {
@@ -58,13 +80,18 @@ class DataCollectionMatchData {
       driverSkill = 0;
     }
 
-    rankingPoints = row[7];
+    try {
+      rankingPoints = row[7];
+    } catch (e) {
+      print("Invalid input, defaulting to 0 ranking points");
+      rankingPoints = 0;
+    }
 
     if (row[9] == 'W') {
       matchResult = MatchResult.Win;
     } else if (row[9] == 'L') {
       matchResult = MatchResult.Lose;
-    } else {
+    } else if (row[9] == "T") {
       matchResult = MatchResult.Tie;
     }
   }
