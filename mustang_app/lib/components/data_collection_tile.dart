@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/utils/data_collection_data.dart';
 
@@ -15,10 +16,17 @@ class DataCollectionYearTile extends StatelessWidget {
               ? []
               : [
                   Text(
-                      "Average points scored: ${_yearData.avgData.gamePiecesScored ?? "N/A"}"),
+                      "Average pieces attempted: ${_yearData.avgData.gamePiecesAttempted.toStringAsFixed(3)}"),
                   Text(
-                      "Average accuracy: ${_yearData.avgData.percentageScored ?? "N/A"}"),
-                  Text("Win rate: ${_yearData.winRate ?? "N/A"}"),
+                      "Average pieces scored: ${_yearData.avgData.gamePiecesScored.toStringAsFixed(3)}"),
+                  Text(
+                      "Average accuracy: ${(_yearData.avgData.percentageScored * 100).toStringAsFixed(3)}%"),
+                  Text(
+                      "Average driver skill: ${_yearData.avgData.driverSkill.toStringAsFixed(3)}"),
+                  Text(
+                      "Average ranking points scored: ${_yearData.avgData.rankingPoints.toStringAsFixed(3)}"),
+                  Text(
+                      "Win rate: ${(_yearData.winRate * 100).toStringAsFixed(3)}%"),
                   for (DataCollectionMatchData matchData
                       in _yearData.data ?? "N/A")
                     Padding(
@@ -29,13 +37,18 @@ class DataCollectionYearTile extends StatelessWidget {
                             ? null
                             : [
                                 Text(
-                                    "Points scored: ${matchData.gamePiecesScored ?? "N/A"}"),
+                                  "Pieces scored: ${matchData.gamePiecesScored}",
+                                ),
                                 Text(
-                                    "Accuracy: ${matchData.percentageScored ?? "N/A"}"),
+                                  "Pieces attempted: ${matchData.gamePiecesAttempted}",
+                                ),
                                 Text(
-                                    "Result: ${matchData.matchResult ?? "N/A"}"),
+                                    "Accuracy: ${(matchData.percentageScored * 100).toStringAsFixed(1)}%"),
                                 Text(
-                                    "Driver Rating: ${matchData.driverSkill ?? "N/A"}")
+                                    "Result: ${describeEnum(matchData.matchResult)}"),
+                                Text("Driver Rating: ${matchData.driverSkill}"),
+                                Text(
+                                    "Strategy used: ${describeEnum(matchData.strategy)}"),
                               ],
                       ),
                     )
