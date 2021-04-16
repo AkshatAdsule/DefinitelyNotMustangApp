@@ -38,8 +38,6 @@ class _DataViewScreenState extends State<DataViewScreen> {
         DataCollectionYearData(
           year: year,
           data: matchData,
-          winRate: 20,
-          avgData: matchData.length == 0 ? null : matchData[0],
           rankBeforeAllianceSelection: 0,
           endRank: 10,
         ),
