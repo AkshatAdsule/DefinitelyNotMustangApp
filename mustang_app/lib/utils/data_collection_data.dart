@@ -40,11 +40,12 @@ class DataCollectionYearData {
     double avgRankingPoints = totalRankingPoints / len;
 
     this.avgData = new DataCollectionAverageYearData(
-        gamePiecesAttempted: avgGamePiecesAttempted,
-        gamePiecesScored: avgGamePiecesScored,
-        percentageScored: avgPercentageScored,
-        driverSkill: avgDriverSkill,
-        rankingPoints: avgRankingPoints);
+      gamePiecesAttempted: avgGamePiecesAttempted,
+      gamePiecesScored: avgGamePiecesScored,
+      percentageScored: avgPercentageScored,
+      driverSkill: avgDriverSkill,
+      rankingPoints: avgRankingPoints,
+    );
   }
 }
 
@@ -65,6 +66,8 @@ class DataCollectionAverageYearData {
 }
 
 class DataCollectionMatchData {
+  static const int DATA_VALIDITY_THRESHOLD = 3;
+
   double dataVersion;
   String matchName;
   int gamePiecesAttempted;
@@ -77,6 +80,8 @@ class DataCollectionMatchData {
   MatchResult matchResult;
 
   DataCollectionMatchData.fromRow(List<dynamic> row) {
+    int failed_data = 0;
+
     dataVersion = Constants.DATA_COLLECTION_DATA_VERSION;
     matchName = row[0];
     try {
@@ -84,6 +89,7 @@ class DataCollectionMatchData {
     } catch (e) {
       print("Invalid input, defaulting to 0 game pieces attempted");
       gamePiecesAttempted = 0;
+      failed_data++;
     }
 
     try {
@@ -91,6 +97,7 @@ class DataCollectionMatchData {
     } catch (e) {
       print("Invalid input, defaulting to 0 game pieces scored");
       gamePiecesScored = 0;
+      failed_data++;
     }
 
     try {
@@ -98,6 +105,7 @@ class DataCollectionMatchData {
     } catch (e) {
       print("Invalid input, defaulting to 0% scored");
       percentageScored = 0;
+      failed_data++;
     }
 
     try {
@@ -109,6 +117,7 @@ class DataCollectionMatchData {
     } catch (e) {
       print("Invalid input, defaulting to no climb");
       climbed = false;
+      failed_data++;
     }
 
     if (row[5] == "Defense") {
@@ -124,6 +133,7 @@ class DataCollectionMatchData {
     } catch (e) {
       print("Invalid input, defaulting to 0 driver skill");
       driverSkill = 0;
+      failed_data++;
     }
 
     try {
@@ -131,6 +141,7 @@ class DataCollectionMatchData {
     } catch (e) {
       print("Invalid input, defaulting to 0 ranking points");
       rankingPoints = 0;
+      failed_data++;
     }
 
     // Check row[9] and row[10] due to inconsistency with data
@@ -141,7 +152,13 @@ class DataCollectionMatchData {
     } else if (row[9] == "T" || row[10] == 'T') {
       matchResult = MatchResult.Tie;
     } else {
-      print("====== INVALID MATCH RESULT; ${row[9]} and ${row[10]}");
+      print("====== INVALID MATCH RESULT; ${row[9]} and ${row[10]} ======");
+      failed_data++;
+    }
+
+    // Check if data is valid
+    if (failed_data >= DATA_VALIDITY_THRESHOLD) {
+      throw Exception("Data is too invalid! Fail count is $failed_data");
     }
   }
 }
