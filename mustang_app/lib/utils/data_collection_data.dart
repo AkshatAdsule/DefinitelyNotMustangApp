@@ -3,18 +3,64 @@ import 'package:mustang_app/constants/constants.dart';
 class DataCollectionYearData {
   int year;
   List<DataCollectionMatchData> data;
-  DataCollectionMatchData avgData;
-  int winRate;
+  DataCollectionAverageYearData avgData;
+  double winRate;
   int rankBeforeAllianceSelection;
   int endRank;
 
   DataCollectionYearData({
     this.year,
     this.data,
-    this.avgData,
-    this.winRate,
     this.rankBeforeAllianceSelection,
     this.endRank,
+  }) {
+    // Calculate win rate
+    int winCount =
+        data.where((element) => element.matchResult == MatchResult.Win).length;
+    this.winRate = winCount / data.length;
+
+    // Calculate avg data
+    int totalGamePiecesAttempted = 0;
+    int totalGamePiecesScored = 0;
+    double totalPercentageScored = 0;
+    int totalDriverSkill = 0;
+    int totalRankingPoints = 0;
+    for (DataCollectionMatchData match_data in data) {
+      totalGamePiecesAttempted += match_data.gamePiecesAttempted;
+      totalGamePiecesScored += match_data.gamePiecesScored;
+      totalPercentageScored += match_data.percentageScored;
+      totalDriverSkill += match_data.driverSkill;
+      totalRankingPoints += match_data.rankingPoints;
+    }
+    int len = data.length;
+    double avgGamePiecesAttempted = totalGamePiecesAttempted / len;
+    double avgGamePiecesScored = totalGamePiecesScored / len;
+    double avgPercentageScored = totalPercentageScored / len;
+    double avgDriverSkill = totalDriverSkill / len;
+    double avgRankingPoints = totalRankingPoints / len;
+
+    this.avgData = new DataCollectionAverageYearData(
+        gamePiecesAttempted: avgGamePiecesAttempted,
+        gamePiecesScored: avgGamePiecesScored,
+        percentageScored: avgPercentageScored,
+        driverSkill: avgDriverSkill,
+        rankingPoints: avgRankingPoints);
+  }
+}
+
+class DataCollectionAverageYearData {
+  double gamePiecesAttempted;
+  double gamePiecesScored;
+  double percentageScored;
+  double driverSkill;
+  double rankingPoints;
+
+  DataCollectionAverageYearData({
+    this.gamePiecesAttempted,
+    this.gamePiecesScored,
+    this.percentageScored,
+    this.driverSkill,
+    this.rankingPoints,
   });
 }
 
@@ -53,7 +99,7 @@ class DataCollectionMatchData {
       print("Invalid input, defaulting to 0% scored");
       percentageScored = 0;
     }
-    
+
     try {
       if (row[4] == "Y") {
         climbed = true;
@@ -64,7 +110,7 @@ class DataCollectionMatchData {
       print("Invalid input, defaulting to no climb");
       climbed = false;
     }
-    
+
     if (row[5] == "Defense") {
       strategy = Strategy.Defensive;
     } else if (row[5] == "Offense") {
@@ -87,12 +133,15 @@ class DataCollectionMatchData {
       rankingPoints = 0;
     }
 
-    if (row[9] == 'W') {
+    // Check row[9] and row[10] due to inconsistency with data
+    if (row[9] == 'W' || row[10] == 'W') {
       matchResult = MatchResult.Win;
-    } else if (row[9] == 'L') {
+    } else if (row[9] == 'L' || row[10] == 'L') {
       matchResult = MatchResult.Lose;
-    } else if (row[9] == "T") {
+    } else if (row[9] == "T" || row[10] == 'T') {
       matchResult = MatchResult.Tie;
+    } else {
+      print("====== INVALID MATCH RESULT; ${row[9]} and ${row[10]}");
     }
   }
 }
