@@ -103,9 +103,12 @@ class DataCollectionMatchData {
     try {
       percentageScored = row[3] as double;
     } catch (e) {
-      print("Invalid input, defaulting to 0% scored");
-      percentageScored = 0;
-      failed_data++;
+      if (row[3] == 1) {
+        percentageScored = 1;
+      } else {
+        percentageScored = 0;
+        failed_data++;
+      }
     }
 
     try {
