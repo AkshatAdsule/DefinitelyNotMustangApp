@@ -102,9 +102,6 @@ class DataCollectionMatchData {
 
     try {
       percentageScored = row[3] as double;
-      if (matchName == "Quals 17") {
-        print("----- Got ${row[3]} as data");
-      }
     } catch (e) {
       if (row[3] == 1) {
         percentageScored = 1;
