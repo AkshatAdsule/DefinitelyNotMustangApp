@@ -35,6 +35,7 @@ class DataCollectionYearTile extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 15),
                       child: ExpansionTile(
                         title: Text(matchData.matchName),
+                        childrenPadding: EdgeInsets.only(bottom: 20),
                         children: matchData == null
                             ? null
                             : [
