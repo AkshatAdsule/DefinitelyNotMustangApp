@@ -8,6 +8,9 @@ class Constants {
   // Data collection analysis data version
   static const double DATA_COLLECTION_DATA_VERSION = 1.0;
 
+  // Validity threshold
+  static const int DATA_VALIDITY_THRESHOLD = 3;
+
   // Data collection constants
   static const Map<int, double> GAME_PIECE_VALUE = {
     2013: 4,

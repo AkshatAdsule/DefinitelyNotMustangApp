@@ -74,8 +74,6 @@ class DataCollectionAverageYearData {
 }
 
 class DataCollectionMatchData {
-  static const int DATA_VALIDITY_THRESHOLD = 3;
-
   double dataVersion;
   String matchName;
   int gamePiecesAttempted;
@@ -169,7 +167,7 @@ class DataCollectionMatchData {
     }
 
     // Check if data is valid
-    if (failCount >= DATA_VALIDITY_THRESHOLD) {
+    if (failCount >= Constants.DATA_VALIDITY_THRESHOLD) {
       throw Exception("Data is too invalid! Fail count is $failCount");
     }
 
