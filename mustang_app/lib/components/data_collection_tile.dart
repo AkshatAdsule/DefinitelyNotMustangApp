@@ -20,6 +20,8 @@ class DataCollectionYearTile extends StatelessWidget {
                   Text(
                       "Average pieces scored: ${_yearData.avgData.gamePiecesScored.toStringAsFixed(3)}"),
                   Text(
+                      "Average points scored: ${_yearData.avgData.pointsScored.toStringAsFixed(3)}"),
+                  Text(
                       "Average accuracy: ${(_yearData.avgData.percentageScored * 100).toStringAsFixed(3)}%"),
                   Text(
                       "Average driver skill: ${_yearData.avgData.driverSkill.toStringAsFixed(3)}"),
@@ -42,6 +44,8 @@ class DataCollectionYearTile extends StatelessWidget {
                                 Text(
                                   "Pieces attempted: ${matchData.gamePiecesAttempted}",
                                 ),
+                                Text(
+                                    "Points scored: ${matchData.pointsScored.toStringAsFixed(1)}"),
                                 Text(
                                     "Accuracy: ${(matchData.percentageScored * 100).toStringAsFixed(1)}%"),
                                 Text(

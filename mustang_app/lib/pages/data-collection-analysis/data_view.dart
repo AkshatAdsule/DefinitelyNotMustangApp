@@ -27,7 +27,7 @@ class _DataViewScreenState extends State<DataViewScreen> {
       for (List<dynamic> row in values) {
         // Check if row is empty
         try {
-          var sampleData = DataCollectionMatchData.fromRow(row);
+          var sampleData = DataCollectionMatchData.fromRow(row, year);
           matchData.add(sampleData);
         } catch (e) {
           print(e);
