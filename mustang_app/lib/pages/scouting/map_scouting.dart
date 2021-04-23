@@ -52,6 +52,7 @@ class _MapScoutingState extends State<MapScouting> {
   bool _pushTextStart;
   Timer _endgameTimer, _endTimer, _teleopTimer, _periodicUpdateTimer;
   int _prevX = -1, _prevY = -1;
+  List<bool> _toggleModes = [true, false];
 
   _MapScoutingState(this._teamNumber, this._matchNumber, this._allianceColor,
       this._offenseOnRightSide);
@@ -275,16 +276,37 @@ class _MapScoutingState extends State<MapScouting> {
         sliderValue: _sliderVal,
         setCrossedInitiationLine: _setCrossedInitiationLine);
 
+    Widget modeToggle = ModeToggle(
+      children: [
+        Icon(
+          Icons.gps_fixed,
+          color: _toggleModes[0] ? Colors.white : Colors.green,
+        ),
+        Icon(
+          Icons.shield,
+          color: _toggleModes[1] ? Colors.white : Colors.green,
+        ),
+      ],
+      onPressed: (int ind) {
+        setState(() {
+          for (int i = 0; i < _toggleModes.length; i++) {
+            _toggleModes[i] = i == ind ? true : false;
+          }
+        });
+      },
+      isSelected: _toggleModes,
+    );
+
     Widget scoutingSide = IndexedStack(
-      index: _onOffense ? 0 : 1,
+      index: _toggleModes.indexOf(true),
       children: [
         OffenseScoutingSide(
           addAction: _addAction,
-          toggleMode: _toggleMode,
+          toggleMode: modeToggle,
         ),
         DefenseScoutingSide(
           addAction: _addAction,
-          toggleMode: _toggleMode,
+          toggleMode: modeToggle,
           pushTextStart: _pushTextStart,
           setPush: _setPush,
         ),
@@ -411,5 +433,29 @@ class FinishGameButton extends StatelessWidget {
               text: 'Finish Game',
             ))
         : Container();
+  }
+}
+
+class ModeToggle extends StatelessWidget {
+  void Function(int) onPressed;
+  List<bool> isSelected;
+  List<Widget> children;
+  ModeToggle({this.children, this.onPressed, this.isSelected});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: ToggleButtons(
+        children: children,
+        onPressed: onPressed,
+        isSelected: isSelected,
+        selectedColor: Colors.green,
+        borderRadius: BorderRadius.circular(30),
+        borderColor: Colors.green,
+        borderWidth: 3,
+        selectedBorderColor: Colors.green,
+        fillColor: Colors.green,
+      ),
+    );
   }
 }

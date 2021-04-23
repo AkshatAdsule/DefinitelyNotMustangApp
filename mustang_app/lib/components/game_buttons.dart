@@ -16,10 +16,6 @@ class ScoutingButton extends StatelessWidget {
     double borderWidth = 1;
     switch (type) {
       case ButtonType.MAKE:
-        if (this.text == 'In') {
-          borderColor = Colors.white;
-          borderWidth = 3;
-        }
         break;
       case ButtonType.MISS:
         color = Colors.deepPurple;

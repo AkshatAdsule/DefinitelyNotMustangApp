@@ -6,12 +6,13 @@ import './game_buttons.dart' as game_button;
 // ignore: must_be_immutable
 class DefenseScoutingSide extends StatelessWidget {
   bool Function(ActionType type, BuildContext context) _addAction;
-  void Function() _toggleMode, _setPush;
+  void Function() _setPush;
+  Widget _toggleMode;
   bool _pushTextStart;
 
   DefenseScoutingSide(
       {Key key,
-      void Function() toggleMode,
+      Widget toggleMode,
       void Function() setPush,
       bool Function(ActionType type, BuildContext context) addAction,
       bool pushTextStart})
@@ -63,17 +64,7 @@ class DefenseScoutingSide extends StatelessWidget {
         children: [
           Flexible(
             flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                game_button.ScoutingButton(
-                  style: game_button.ButtonStyle.RAISED,
-                  type: game_button.ButtonType.TOGGLE,
-                  onPressed: _toggleMode,
-                  text: 'Offense',
-                ),
-              ],
-            ),
+            child: _toggleMode,
           ),
           Flexible(
             flex: 1,
