@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:mustang_app/components/climb_scouting_side.dart';
 import 'package:vibration/vibration.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/blur_overlay.dart';
@@ -52,7 +53,7 @@ class _MapScoutingState extends State<MapScouting> {
   bool _pushTextStart;
   Timer _endgameTimer, _endTimer, _teleopTimer, _periodicUpdateTimer;
   int _prevX = -1, _prevY = -1;
-  List<bool> _toggleModes = [true, false];
+  List<bool> _toggleModes = [true, false, false];
 
   _MapScoutingState(this._teamNumber, this._matchNumber, this._allianceColor,
       this._offenseOnRightSide);
@@ -205,6 +206,24 @@ class _MapScoutingState extends State<MapScouting> {
     });
   }
 
+  void _addClimb(ActionType actionType) {
+    _actions.removeWhere((element) {
+      String type = element.action.toString();
+      return type.contains("PARKED") ||
+          type.contains("CLIMB") ||
+          type.contains("LEVELLED");
+    });
+
+    _actions.add(
+      GameAction(
+        actionType,
+        _sliderLastChanged.toDouble() ?? Constants.endgameStartMillis,
+        _sliderVal,
+        _sliderVal,
+      ),
+    );
+  }
+
   void _setCrossedInitiationLine(bool newVal) {
     setState(() {
       _crossedInitiationLine = newVal;
@@ -212,14 +231,6 @@ class _MapScoutingState extends State<MapScouting> {
   }
 
   void _finishGame(BuildContext context) {
-    _actions.add(
-      GameAction(
-        ActionType.OTHER_CLIMB,
-        _sliderLastChanged.toDouble() ?? Constants.endgameStartMillis,
-        _sliderVal,
-        _sliderVal,
-      ),
-    );
     Navigator.pushNamed(context, MatchEndScouter.route, arguments: {
       'teamNumber': _teamNumber,
       'matchNumber': _matchNumber,
@@ -292,6 +303,10 @@ class _MapScoutingState extends State<MapScouting> {
           Icons.shield,
           color: _toggleModes[1] ? Colors.white : Colors.green,
         ),
+        Icon(
+          Icons.precision_manufacturing_sharp,
+          color: _toggleModes[2] ? Colors.white : Colors.green,
+        ),
       ],
       onPressed: (int ind) {
         setState(() {
@@ -315,6 +330,12 @@ class _MapScoutingState extends State<MapScouting> {
           toggleMode: modeToggle,
           pushTextStart: _pushTextStart,
           setPush: _setPush,
+        ),
+        ClimbScoutingSide(
+          addAction: _addAction,
+          toggleMode: modeToggle,
+          setClimb: _setClimb,
+          addClimb: _addClimb,
         ),
       ],
     );
