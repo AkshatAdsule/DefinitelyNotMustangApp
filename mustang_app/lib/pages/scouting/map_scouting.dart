@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:vibration/vibration.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/blur_overlay.dart';
 import 'package:mustang_app/backend/game_action.dart';
@@ -172,8 +172,14 @@ class _MapScoutingState extends State<MapScouting> {
     }
     _actions.add(action);
     _updateCounter(action);
-
+    _vibrate();
     return true;
+  }
+
+  Future<void> _vibrate() async {
+    if (Constants.enableVibrations && await Vibration.hasVibrator()) {
+      Vibration.vibrate();
+    }
   }
 
   void _updateCounter(GameAction action) {

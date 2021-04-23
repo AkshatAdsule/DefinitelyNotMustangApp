@@ -19,4 +19,5 @@
         </activity>
         <meta-data android:name="flutterEmbedding" android:value="2" />
     </application>
+    <uses-permission android:name="android.permission.VIBRATE"/>
 </manifest>

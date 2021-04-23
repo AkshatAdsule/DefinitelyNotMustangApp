@@ -54,6 +54,7 @@ class Constants {
 
   static const Duration offlineTimeoutMillis = Duration(milliseconds: 5000);
 
+  static const bool enableVibrations = true;
   // CREDITS
   static const List<String> creators = [
     "Akshat Adsule",
