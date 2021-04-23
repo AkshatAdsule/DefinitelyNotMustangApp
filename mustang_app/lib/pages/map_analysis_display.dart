@@ -5,7 +5,7 @@ import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/backend/team_service.dart';
 import 'package:mustang_app/components/game_map.dart';
 import 'package:mustang_app/components/game_replay.dart';
-import 'package:mustang_app/components/map_analysis_text.dart';
+//import 'package:mustang_app/components/map_analysis_text.dart';
 import 'package:mustang_app/components/map_switch_button.dart';
 import 'package:mustang_app/components/screen.dart';
 import 'package:mustang_app/components/zone_grid.dart';
@@ -56,7 +56,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
   Analyzer myAnalyzer;
   bool _showScoringMap = true;
   bool _accuracyMap = true;
-  String _teamNumber;
 
   GameMap gameMap;
   MapSwitchButton switchButton;
@@ -71,7 +70,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
 
   _MapAnalysisDisplayState(String teamNumber) {
     myAnalyzer = new Analyzer(teamNumber);
-    _teamNumber = teamNumber;
   }
 
   @override
@@ -109,9 +107,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
     int returnVal = (colorValue - lowerBound > upperBound - colorValue)
         ? upperBound
         : lowerBound;
-    if (returnVal > 0) {
-      //debugPrint("zone: (" + x.toString() + ", " + y.toString() + ")  points at zone per game: " + ptsAtZonePerGame.toString() + " color value: " + returnVal.toString());
-    }
     if (returnVal > 900) {
       return 900;
     }
@@ -222,7 +217,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
       textAlign: TextAlign.center,
       style: TextStyle(
           color: Colors.grey[800],
-          //fontWeight: FontWeight.bold,
           fontSize: 14,
           height: 1),
     );
@@ -253,7 +247,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
     );
 
     var children2 = <Widget>[
-      MapAnalysisText(myAnalyzer),
       switchButton,
       Container(child: Center(child: dropDownList)),
       normalizedToRightSideText,
@@ -276,7 +269,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
         ));
 
     return Screen(
-      title: 'Analysis for Team: ' + myAnalyzer.teamNum,
+      title: 'Map Analysis for Team: ' + myAnalyzer.teamNum,
       headerButtons: [gameReplay],
       includeBottomNav: false,
       child: Container(

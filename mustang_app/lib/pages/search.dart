@@ -5,6 +5,7 @@ import 'package:mustang_app/backend/teams_service.dart';
 import 'package:mustang_app/components/screen.dart';
 import 'package:provider/provider.dart';
 import 'map_analysis_display.dart';
+import 'written_analysis_display.dart';
 import 'team_info_display.dart';
 
 // ignore: must_be_immutable
@@ -58,11 +59,20 @@ class _SearchState extends State<Search> {
         Navigator.pop(context);
       },
     );
-    TextButton goToAnalysis = TextButton(
-      child: Text("Analysis"),
+    TextButton goToMapAnalysis = TextButton(
+      child: Text("Map Analysis"),
       onPressed: () {
         Navigator.pop(context);
         Navigator.pushNamed(context, MapAnalysisDisplay.route, arguments: {
+          'teamNumber': teamNumber,
+        });
+      },
+    );
+    TextButton goToWrittenAnalysis = TextButton(
+      child: Text("Written Analysis"),
+      onPressed: () {
+        Navigator.pop(context);
+        Navigator.pushNamed(context, WrittenAnalysisDisplay.route, arguments: {
           'teamNumber': teamNumber,
         });
       },
@@ -79,8 +89,8 @@ class _SearchState extends State<Search> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Data View"),
-      content: Text("Would you like to see defense analysis or data?"),
-      actions: [cancelButton, goToAnalysis, goToData],
+      content: Text("What would you like to see?"),
+      actions: [cancelButton, goToMapAnalysis, goToWrittenAnalysis, goToData],
     );
 
     // show the dialog
