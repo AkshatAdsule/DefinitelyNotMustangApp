@@ -67,30 +67,8 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
         duration: Duration(milliseconds: 1500),
       ));
       return;
-    } else if (_endState == null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Please select an ending state"),
-        duration: Duration(milliseconds: 1500),
-      ));
-      return;
     }
 
-    GameAction climb = _actions.removeLast();
-    switch (_endState) {
-      case "Climbed":
-        _actions.add(climb);
-        break;
-      case "Parked":
-        climb.action = ActionType.OTHER_PARKED;
-        _actions.add(climb);
-        break;
-      case "Levelled":
-        climb.action = ActionType.OTHER_LEVELLED;
-        _actions.add(climb);
-        break;
-      default:
-        break;
-    }
     ScoutingOperations.setMatchData(
       new Match(_matchNumber, _teamNumber, _allianceColor, _offenseOnRightSide,
           _matchResult, _finalCommentsController.text, _actions),
@@ -140,31 +118,6 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
                     setState(() {
                       _matchResult = value;
                     });
-                  },
-                ),
-              ),
-              Container(
-                padding:
-                    EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
-                child: DropdownButton<String>(
-                  value: _endState,
-                  hint: Text('Choose Ending State',
-                      style: TextStyle(color: Colors.black, fontSize: 20)),
-                  items: <String>['Parked', 'Climbed', 'Levelled', 'None']
-                      .map<DropdownMenuItem<String>>(
-                    (String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    },
-                  ).toList(),
-                  onChanged: (value) {
-                    setState(
-                      () {
-                        _endState = value;
-                      },
-                    );
                   },
                 ),
               ),
