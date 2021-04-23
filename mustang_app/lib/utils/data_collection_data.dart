@@ -1,5 +1,15 @@
 import 'package:mustang_app/constants/constants.dart';
 
+class DataCollectionAllTimeData {
+  List<DataCollectionYearData> data;
+
+  DataCollectionAllTimeData({
+    this.data
+  }) {
+    
+  }
+}
+
 class DataCollectionYearData {
   int year;
   List<DataCollectionMatchData> data;
