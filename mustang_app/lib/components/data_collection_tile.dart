@@ -22,6 +22,9 @@ class DataCollectionYearTile extends StatelessWidget {
                   Text(
                       "Average points scored: ${_yearData.avgData.pointsScored.toStringAsFixed(3)}"),
                   Text(
+                    "Average point rate: ${_yearData.avgData.pointRate.toStringAsFixed(3)}",
+                  ),
+                  Text(
                       "Average accuracy: ${(_yearData.avgData.percentageScored * 100).toStringAsFixed(3)}%"),
                   Text(
                       "Average driver skill: ${_yearData.avgData.driverSkill.toStringAsFixed(3)}"),
@@ -46,14 +49,19 @@ class DataCollectionYearTile extends StatelessWidget {
                                   "Pieces attempted: ${matchData.gamePiecesAttempted}",
                                 ),
                                 Text(
-                                    "Points scored: ${matchData.pointsScored.toStringAsFixed(1)}"),
+                                    "Points scored: ${matchData.pointsScored.toStringAsFixed(3)}"),
                                 Text(
-                                    "Accuracy: ${(matchData.percentageScored * 100).toStringAsFixed(1)}%"),
+                                    "Accuracy: ${(matchData.percentageScored * 100).toStringAsFixed(3)}%"),
                                 Text(
-                                    "Result: ${describeEnum(matchData.matchResult)}"),
-                                Text("Driver Rating: ${matchData.driverSkill}"),
+                                    "Point Rate: ${matchData.pointRate.toStringAsFixed(3)}"),
                                 Text(
-                                    "Strategy used: ${describeEnum(matchData.strategy)}"),
+                                  "Result: ${describeEnum(matchData.matchResult)}",
+                                ),
+                                Text(
+                                  "Driver Rating: ${matchData.driverSkill}",
+                                ),
+                                Text(
+                                    "Strategy used: ${describeEnum(matchData.strategy)},"),
                               ],
                       ),
                     )

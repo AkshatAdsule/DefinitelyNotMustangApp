@@ -4,11 +4,7 @@ import 'package:mustang_app/constants/constants.dart';
 class DataCollectionAllTimeData {
   List<DataCollectionYearData> data;
 
-  DataCollectionAllTimeData({
-    this.data
-  }) {
-    
-  }
+  DataCollectionAllTimeData({this.data}) {}
 }
 
 class DataCollectionYearData {
@@ -36,12 +32,14 @@ class DataCollectionYearData {
     double totalPercentageScored = 0;
     int totalDriverSkill = 0;
     int totalRankingPoints = 0;
+    double totalPointRate = 0;
     for (DataCollectionMatchData match_data in data) {
       totalGamePiecesAttempted += match_data.gamePiecesAttempted;
       totalGamePiecesScored += match_data.gamePiecesScored;
       totalPercentageScored += match_data.percentageScored;
       totalDriverSkill += match_data.driverSkill;
       totalRankingPoints += match_data.rankingPoints;
+      totalPointRate += match_data.pointRate;
     }
     int len = data.length;
     double avgGamePiecesAttempted = totalGamePiecesAttempted / len;
@@ -49,6 +47,7 @@ class DataCollectionYearData {
     double avgPercentageScored = totalPercentageScored / len;
     double avgDriverSkill = totalDriverSkill / len;
     double avgRankingPoints = totalRankingPoints / len;
+    double avgPointRate = totalPointRate / len;
 
     // Calculate avg points scored
     double pointsScored =
@@ -61,6 +60,7 @@ class DataCollectionYearData {
       driverSkill: avgDriverSkill,
       rankingPoints: avgRankingPoints,
       pointsScored: pointsScored,
+      pointRate: avgPointRate,
     );
   }
 }
@@ -72,6 +72,7 @@ class DataCollectionAverageYearData {
   double driverSkill;
   double rankingPoints;
   double pointsScored;
+  double pointRate;
 
   DataCollectionAverageYearData({
     @required this.gamePiecesAttempted,
@@ -80,6 +81,7 @@ class DataCollectionAverageYearData {
     @required this.driverSkill,
     @required this.rankingPoints,
     @required this.pointsScored,
+    @required this.pointRate,
   });
 }
 
@@ -89,6 +91,7 @@ class DataCollectionMatchData {
   int gamePiecesAttempted;
   int gamePiecesScored;
   double pointsScored;
+  double pointRate;
   double percentageScored;
   bool climbed;
   Strategy strategy;
@@ -183,6 +186,9 @@ class DataCollectionMatchData {
 
     // Calculate points scored
     pointsScored = Constants.GAME_PIECE_VALUE[year] * gamePiecesScored;
+
+    // Calculate point rate
+    pointRate = pointsScored / Constants.GAME_LENGTH;
   }
 }
 

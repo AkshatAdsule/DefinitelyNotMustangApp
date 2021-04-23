@@ -23,6 +23,9 @@ class Constants {
     2020: 2,
   };
 
+  // Game length refers to auton + teleop
+  static int GAME_LENGTH = 150; //seconds
+
   //DEFENSE ANAYLSIS
   static const double intakeValue = 1.5;
   static const double shotValue = 2; //avg of low, outer, inner
