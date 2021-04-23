@@ -8,6 +8,21 @@ class Constants {
   // Data collection analysis data version
   static const double DATA_COLLECTION_DATA_VERSION = 1.0;
 
+  // Validity threshold
+  static const int DATA_VALIDITY_THRESHOLD = 3;
+
+  // Data collection constants
+  static const Map<int, double> GAME_PIECE_VALUE = {
+    2013: 4,
+    2014: 10,
+    2015: 4,
+    2016: 5,
+    2017: 0.1667,
+    2018: 1,
+    2019: 2.5,
+    2020: 2,
+  };
+
   //DEFENSE ANAYLSIS
   static const double intakeValue = 1.5;
   static const double shotValue = 2; //avg of low, outer, inner
