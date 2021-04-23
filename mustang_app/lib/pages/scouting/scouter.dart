@@ -97,45 +97,46 @@ class _ScouterState extends State<Scouter> {
         ),
         Container(
           padding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
-          child: Row(children: [
-            // DropdownButton<DriveBase>(
-            //   value: _matchType,
-            //   icon: Icon(Icons.arrow_downward),
-            //   iconSize: 24,
-            //   elevation: 16,
-            //   style: TextStyle(color: Colors.green, fontSize: 20.0),
-            //   underline: Container(
-            //     height: 2,
-            //     color: Colors.green,
-            //   ),
-            //   onChanged: (MatchType match) {
-            //     setState(() {
-            //       _matchType = match;
-            //     });
-            //   },
-            //   items: <MatchType>[
-            //     MatchType.QUAL,
-            //     MatchType.PRELIM,
-            //     MatchType.SEMIF,
-            //     MatchType.FINAL,
-            //   ].map<DropdownMenuItem<DriveBase>>((MatchType matchType) {
-            //     return DropdownMenuItem<DriveBase>(
-            //       value: matchType,
-            //       child: Center(
-            //           child: Text(matchType
-            //               .toString()
-            //               .substring(mathType.toString().indexOf('.') + 1))),
-            //     );
-            //   }).toList(),
-            // ),
-            TextField(
-              controller: _matchNumberController,
-              decoration: InputDecoration(
-                labelText: 'Match Number',
-                border: OutlineInputBorder(),
-              ),
+          child:
+              // Row(children: [
+              // DropdownButton<DriveBase>(
+              //   value: _matchType,
+              //   icon: Icon(Icons.arrow_downward),
+              //   iconSize: 24,
+              //   elevation: 16,
+              //   style: TextStyle(color: Colors.green, fontSize: 20.0),
+              //   underline: Container(
+              //     height: 2,
+              //     color: Colors.green,
+              //   ),
+              //   onChanged: (MatchType match) {
+              //     setState(() {
+              //       _matchType = match;
+              //     });
+              //   },
+              //   items: <MatchType>[
+              //     MatchType.QUAL,
+              //     MatchType.PRELIM,
+              //     MatchType.SEMIF,
+              //     MatchType.FINAL,
+              //   ].map<DropdownMenuItem<DriveBase>>((MatchType matchType) {
+              //     return DropdownMenuItem<DriveBase>(
+              //       value: matchType,
+              //       child: Center(
+              //           child: Text(matchType
+              //               .toString()
+              //               .substring(mathType.toString().indexOf('.') + 1))),
+              //     );
+              //   }).toList(),
+              // ),
+              TextField(
+            controller: _matchNumberController,
+            decoration: InputDecoration(
+              labelText: 'Match Number',
+              border: OutlineInputBorder(),
             ),
-          ]),
+          ),
+          //]),
         ),
         Container(
           padding: EdgeInsets.all(8.0),

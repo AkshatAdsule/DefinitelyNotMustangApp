@@ -9,6 +9,7 @@ class ZoneGrid extends StatefulWidget {
           int x, int y, bool isSelected, double cellWidth, double cellHeight)
       _createCell;
   int _rows, _cols;
+  bool _multiSelect;
 
   ZoneGrid(
     Key key,
@@ -18,11 +19,14 @@ class ZoneGrid extends StatefulWidget {
         createCell, {
     int rows = Constants.zoneRows,
     int cols = Constants.zoneColumns,
-  })  : _zoneGridState = _ZoneGridState(onTap, createCell, rows, cols),
+    bool multiSelect = false,
+  })  : _zoneGridState =
+            _ZoneGridState(onTap, createCell, rows, cols, multiSelect),
         _rows = rows,
         _cols = cols,
         _onTap = onTap,
         _createCell = createCell,
+        _multiSelect = multiSelect,
         super(key: key);
 
   int get x => _zoneGridState.x;
@@ -31,35 +35,59 @@ class ZoneGrid extends StatefulWidget {
 
   bool get hasSelected => _zoneGridState.hasSelected;
 
+  int get numSelected => _zoneGridState.numSelected;
+
   @override
   _ZoneGridState createState() {
-    _zoneGridState = _ZoneGridState(_onTap, _createCell, _rows, _cols);
+    _zoneGridState =
+        _ZoneGridState(_onTap, _createCell, _rows, _cols, _multiSelect);
     return _zoneGridState;
   }
 }
 
 class _ZoneGridState extends State<ZoneGrid> {
   int _selectedX = 0, _selectedY = 0;
-  bool _hasSelected = false;
   int _rows, _cols;
-
+  Widget overlay;
+  List<List<bool>> _selected;
+  bool _multiSelect;
   Function(int x, int y) _onTap;
   Widget Function(
           int x, int y, bool isSelected, double cellWidth, double cellHeight)
       _createCell;
 
-  _ZoneGridState(this._onTap, this._createCell, this._rows, this._cols);
+  _ZoneGridState(
+      this._onTap, this._createCell, this._rows, this._cols, this._multiSelect);
 
   @override
   void initState() {
     super.initState();
+    _selected = List.generate(
+      _rows,
+      (index) => List.generate(
+        _cols,
+        (index) => false,
+      ),
+    );
   }
 
   int get x => _selectedX;
 
   int get y => _selectedY;
 
-  bool get hasSelected => _hasSelected;
+  bool get hasSelected => _selected.any((element) => element.contains(true));
+
+  int get numSelected {
+    int counter = 0;
+    _selected.forEach((element) {
+      element.forEach((element) {
+        if (element) {
+          counter++;
+        }
+      });
+    });
+    return counter;
+  }
 
   List<TableRow> _getTableContents(double width, double height) {
     List<TableRow> tableRows = [];
@@ -75,18 +103,16 @@ class _ZoneGridState extends State<ZoneGrid> {
               onTap: () {
                 _onTap(j, i);
                 setState(() {
-                  _hasSelected =
-                      _selectedX != j || _selectedY != i ? true : !_hasSelected;
+                  _selected[i][j] = !_selected[i][j];
+                  if (_selectedX != j || _selectedY != i) {
+                    _selected[_selectedY][_selectedX] =
+                        _multiSelect ? true : false;
+                  }
                   _selectedX = j;
                   _selectedY = i;
                 });
               },
-              child: _createCell(
-                  j,
-                  i,
-                  _hasSelected && _selectedX == j && _selectedY == i,
-                  cellWidth,
-                  cellHeight),
+              child: _createCell(j, i, _selected[i][j], cellWidth, cellHeight),
             ),
           ),
         );

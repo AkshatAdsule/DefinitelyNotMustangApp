@@ -30,5 +30,6 @@ class SelectableZoneGrid extends ZoneGrid {
               width: cellWidth,
             );
           },
+          multiSelect: false,
         );
 }
