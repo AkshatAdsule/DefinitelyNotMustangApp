@@ -1,6 +1,5 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
-import 'package:mustang_app/utils/team_statistic.dart';
 import 'package:mustang_app/utils/data_collection_data.dart';
 
 enum DataType { OPR, DPR, CCWM, WINRATE, CONTRIBUTION }
@@ -29,9 +28,12 @@ class LineChartWidget extends StatelessWidget {
   static List<charts.Series<LinearStats, DateTime>> createData(
       DataCollectionAverageYearData stats) {
     List<LinearStats> accuracyData = [];
-    
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
 }
 
 /// Sample linear data type.
