@@ -41,6 +41,8 @@ class _MapScoutingState extends State<MapScouting> {
   bool _onOffense, _startedScouting;
   Stopwatch _stopwatch;
   String _teamNumber, _matchNumber, _allianceColor;
+  Color _bgColor = Colors.grey.shade600;
+
   bool _offenseOnRightSide;
   ZoneGrid _zoneGrid;
   List<GameAction> _actions;
@@ -105,16 +107,23 @@ class _MapScoutingState extends State<MapScouting> {
     if (_stopwatch.elapsedMilliseconds <= Constants.endgameStartMillis) {
       _endgameTimer = new Timer(
           Duration(milliseconds: Constants.endgameStartMillis),
-          () => setState(() {}));
+          () => setState(() {
+                _bgColor = Colors.red.shade300;
+              }));
     }
     if (_stopwatch.elapsedMilliseconds <= Constants.matchEndMillis) {
-      _endTimer = new Timer(Duration(milliseconds: Constants.matchEndMillis),
-          () => setState(() {}));
+      _endTimer = new Timer(
+          Duration(milliseconds: Constants.matchEndMillis),
+          () => setState(() {
+                _bgColor = Colors.white;
+              }));
     }
     if (_stopwatch.elapsedMilliseconds <= Constants.teleopStartMillis) {
       _teleopTimer = new Timer(
           Duration(milliseconds: Constants.teleopStartMillis),
-          () => setState(() {}));
+          () => setState(() {
+                _bgColor = Colors.orange.shade300;
+              }));
     }
     _periodicUpdateTimer =
         new Timer.periodic(new Duration(milliseconds: 30), (timer) {
@@ -318,26 +327,28 @@ class _MapScoutingState extends State<MapScouting> {
       isSelected: _toggleModes,
     );
 
-    Widget scoutingSide = IndexedStack(
-      index: _toggleModes.indexOf(true),
-      children: [
-        OffenseScoutingSide(
-          addAction: _addAction,
-          toggleMode: modeToggle,
-        ),
-        DefenseScoutingSide(
-          addAction: _addAction,
-          toggleMode: modeToggle,
-          pushTextStart: _pushTextStart,
-          setPush: _setPush,
-        ),
-        ClimbScoutingSide(
-          addAction: _addAction,
-          toggleMode: modeToggle,
-          setClimb: _setClimb,
-          addClimb: _addClimb,
-        ),
-      ],
+    Widget scoutingSide = Container(
+      child: IndexedStack(
+        index: _toggleModes.indexOf(true),
+        children: [
+          OffenseScoutingSide(
+            addAction: _addAction,
+            toggleMode: modeToggle,
+          ),
+          DefenseScoutingSide(
+            addAction: _addAction,
+            toggleMode: modeToggle,
+            pushTextStart: _pushTextStart,
+            setPush: _setPush,
+          ),
+          ClimbScoutingSide(
+            addAction: _addAction,
+            toggleMode: modeToggle,
+            setClimb: _setClimb,
+            addClimb: _addClimb,
+          ),
+        ],
+      ),
     );
 
     return Screen(
@@ -378,6 +389,7 @@ class _MapScoutingState extends State<MapScouting> {
       ],
       includeBottomNav: false,
       child: Container(
+        color: _bgColor,
         child: !_startedScouting
             ? BlurOverlay(
                 background: GameMap(
@@ -385,15 +397,28 @@ class _MapScoutingState extends State<MapScouting> {
                   offenseOnRightSide: _offenseOnRightSide,
                   zoneGrid: _zoneGrid,
                   imageChildren: [scoutingOverlay],
-                  sideWidget: scoutingSide,
+                  sideWidget: Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        modeToggle,
+                        Flexible(
+                          flex: 1,
+                          child: scoutingSide,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 text: Text('Start'),
                 onEnd: () {
-                  setState(() {
-                    _startedScouting = true;
-                    _stopwatch.start();
-                    _initTimers();
-                  });
+                  setState(
+                    () {
+                      _startedScouting = true;
+                      _stopwatch.start();
+                      _initTimers();
+                    },
+                  );
                 },
               )
             : GameMap(
@@ -401,7 +426,21 @@ class _MapScoutingState extends State<MapScouting> {
                 offenseOnRightSide: _offenseOnRightSide,
                 zoneGrid: _zoneGrid,
                 imageChildren: [scoutingOverlay],
-                sideWidget: scoutingSide,
+                sideWidget: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: modeToggle,
+                      ),
+                      Flexible(
+                        flex: 1,
+                        child: scoutingSide,
+                      ),
+                    ],
+                  ),
+                ),
               ),
       ),
     );
@@ -433,10 +472,11 @@ class UndoButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return game_button.ScoutingButton(
-        style: game_button.ButtonStyle.RAISED,
-        type: game_button.ButtonType.PAGEBUTTON,
-        onPressed: _onClick,
-        text: "UNDO");
+      style: game_button.ButtonStyle.RAISED,
+      type: game_button.ButtonType.PAGEBUTTON,
+      onPressed: _onClick,
+      text: "UNDO",
+    );
   }
 }
 
@@ -458,7 +498,8 @@ class FinishGameButton extends StatelessWidget {
               type: game_button.ButtonType.ELEMENT,
               onPressed: () => _onClick(),
               text: 'Finish Game',
-            ))
+            ),
+          )
         : Container();
   }
 }

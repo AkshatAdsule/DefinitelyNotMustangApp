@@ -21,10 +21,10 @@ class OffenseScoutingSide extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Flexible(
-            flex: 1,
-            child: _toggleMode,
-          ),
+          // Flexible(
+          //   flex: 1,
+          //   child: _toggleMode,
+          // ),
           Flexible(
             flex: 2,
             child: Row(
