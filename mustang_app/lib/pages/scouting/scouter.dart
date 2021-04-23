@@ -97,23 +97,55 @@ class _ScouterState extends State<Scouter> {
         ),
         Container(
           padding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
-          child: TextField(
-            controller: _matchNumberController,
-            decoration: InputDecoration(
-              labelText: 'Match Number',
-              border: OutlineInputBorder(),
+          child: Row(children: [
+            // DropdownButton<DriveBase>(
+            //   value: _matchType,
+            //   icon: Icon(Icons.arrow_downward),
+            //   iconSize: 24,
+            //   elevation: 16,
+            //   style: TextStyle(color: Colors.green, fontSize: 20.0),
+            //   underline: Container(
+            //     height: 2,
+            //     color: Colors.green,
+            //   ),
+            //   onChanged: (MatchType match) {
+            //     setState(() {
+            //       _matchType = match;
+            //     });
+            //   },
+            //   items: <MatchType>[
+            //     MatchType.QUAL,
+            //     MatchType.PRELIM,
+            //     MatchType.SEMIF,
+            //     MatchType.FINAL,
+            //   ].map<DropdownMenuItem<DriveBase>>((MatchType matchType) {
+            //     return DropdownMenuItem<DriveBase>(
+            //       value: matchType,
+            //       child: Center(
+            //           child: Text(matchType
+            //               .toString()
+            //               .substring(mathType.toString().indexOf('.') + 1))),
+            //     );
+            //   }).toList(),
+            // ),
+            TextField(
+              controller: _matchNumberController,
+              decoration: InputDecoration(
+                labelText: 'Match Number',
+                border: OutlineInputBorder(),
+              ),
             ),
-          ),
+          ]),
         ),
         Container(
           padding: EdgeInsets.all(8.0),
-          child: new Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              new Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  new Radio(
+                  Radio(
                       value: 0,
                       groupValue: _allianceNum,
                       onChanged: (int value) {
@@ -122,11 +154,11 @@ class _ScouterState extends State<Scouter> {
                           _allianceColor = 'Blue';
                         });
                       }),
-                  new Text(
+                  Text(
                     'Blue Alliance',
-                    style: new TextStyle(fontSize: 16.0),
+                    style: TextStyle(fontSize: 16.0),
                   ),
-                  new Radio(
+                  Radio(
                       value: 1,
                       groupValue: _allianceNum,
                       onChanged: (int value) {
@@ -135,19 +167,23 @@ class _ScouterState extends State<Scouter> {
                           _allianceColor = 'Red';
                         });
                       }),
-                  new Text(
+                  Text(
                     'Red Alliance',
-                    style: new TextStyle(
+                    style: TextStyle(
                       fontSize: 16.0,
                     ),
                   ),
                 ],
               ),
-              new Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   //offense on right/left side
-                  new Radio(
+                  Text(
+                    'Driver Station Side',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                  Radio(
                       value: 0,
                       groupValue: _offenseNum,
                       onChanged: (int value) {
@@ -156,11 +192,11 @@ class _ScouterState extends State<Scouter> {
                           _offenseOnRightSide = false;
                         });
                       }),
-                  new Text(
-                    'Offense Left Side',
-                    style: new TextStyle(fontSize: 16.0),
+                  Text(
+                    'Left',
+                    style: TextStyle(fontSize: 16.0),
                   ),
-                  new Radio(
+                  Radio(
                       value: 1,
                       groupValue: _offenseNum,
                       onChanged: (int value) {
@@ -169,9 +205,9 @@ class _ScouterState extends State<Scouter> {
                           _offenseOnRightSide = true;
                         });
                       }),
-                  new Text(
-                    'Offense Right Side',
-                    style: new TextStyle(
+                  Text(
+                    'Right',
+                    style: TextStyle(
                       fontSize: 16.0,
                     ),
                   ),
@@ -180,7 +216,7 @@ class _ScouterState extends State<Scouter> {
               Container(
                 padding:
                     EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
-                child: new Builder(
+                child: Builder(
                   builder: (BuildContext buildContext) => ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       primary: Colors.green,
@@ -219,7 +255,7 @@ class _ScouterState extends State<Scouter> {
               Container(
                 padding:
                     EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
-                child: new Builder(
+                child: Builder(
                   builder: (BuildContext buildContext) => ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       primary: Colors.green,

@@ -118,6 +118,10 @@ class _PitScouterState extends State<PitScouter> {
                     }).toList(),
                   ),
                 ),
+                Text(
+                    'Fill in each box with either yes (green), or no (red)',
+                    style: new TextStyle(fontSize: 16.0),
+                ),
                 createTitle("Shooting Capability"),
                 createCheckBox("Inner"),
                 createCheckBox("Outer"),
