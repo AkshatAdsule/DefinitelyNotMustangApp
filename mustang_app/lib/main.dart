@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
           builder: (context) => WrittenAnalysisDisplay(
             teamNumber: args['teamNumber'],
           ),
-          settings: rotationSettings(settings, ScreenOrientation.landscapeOnly),
+          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
         );
       case SketchPage.route:
         return MaterialPageRoute(

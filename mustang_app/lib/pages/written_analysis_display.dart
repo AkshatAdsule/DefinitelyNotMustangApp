@@ -64,7 +64,7 @@ class _WrittenAnalysisDisplayState extends State<WrittenAnalysisDisplayPage> {
     }
 
     return Screen(
-      title: 'Written Analysis for Team: ' + myAnalyzer.teamNum,
+      title: 'Written Analysis for Team ' + myAnalyzer.teamNum,
       includeBottomNav: false,
       child: Container(
         child: SingleChildScrollView(

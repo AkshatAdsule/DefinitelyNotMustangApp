@@ -52,15 +52,19 @@ class _SearchState extends State<Search> {
     });
   }
 
+  int font = 12;
+
   showAlertDialog(BuildContext context, String teamNumber) {
     TextButton cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: Text("Cancel", 
+        style: TextStyle(fontSize: 11)),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     TextButton goToMapAnalysis = TextButton(
-      child: Text("Map Analysis"),
+      child: Text("Map", 
+        style: TextStyle(fontSize: 11)),
       onPressed: () {
         Navigator.pop(context);
         Navigator.pushNamed(context, MapAnalysisDisplay.route, arguments: {
@@ -69,7 +73,8 @@ class _SearchState extends State<Search> {
       },
     );
     TextButton goToWrittenAnalysis = TextButton(
-      child: Text("Written Analysis"),
+      child: Text("Written Analysis", 
+        style: TextStyle(fontSize: 11)),
       onPressed: () {
         Navigator.pop(context);
         Navigator.pushNamed(context, WrittenAnalysisDisplay.route, arguments: {
@@ -78,7 +83,8 @@ class _SearchState extends State<Search> {
       },
     );
     TextButton goToData = TextButton(
-      child: Text("Data"),
+      child: Text("Data", 
+        style: TextStyle(fontSize: 11)),
       onPressed: () {
         Navigator.pop(context);
         Navigator.pushNamed(context, TeamInfoDisplay.route, arguments: {

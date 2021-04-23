@@ -269,7 +269,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
         ));
 
     return Screen(
-      title: 'Map Analysis for Team: ' + myAnalyzer.teamNum,
+      title: 'Map Analysis for Team ' + myAnalyzer.teamNum,
       headerButtons: [gameReplay],
       includeBottomNav: false,
       child: Container(
