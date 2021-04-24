@@ -533,6 +533,7 @@ class ModeToggle extends StatelessWidget {
           ),
         ],
         onPressed: (int val) {
+          print('pressed!: $val');
           onPressed(val);
         },
         isSelected: isSelected,

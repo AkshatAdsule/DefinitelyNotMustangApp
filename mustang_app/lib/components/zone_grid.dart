@@ -167,7 +167,7 @@ class _ZoneGridState extends State<ZoneGrid> {
                       left: constraints.maxWidth / _cols * _selectedX,
                       top: constraints.maxHeight / _rows * _selectedY,
                       curve: Curves.fastOutSlowIn,
-                      duration: Duration(milliseconds: 1500),
+                      duration: Duration(milliseconds: 1000),
                     )
                   : Container()
             ],
