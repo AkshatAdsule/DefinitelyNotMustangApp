@@ -185,19 +185,6 @@ class _ScouterState extends State<Scouter> {
                     style: TextStyle(fontSize: 16.0),
                   ),
                   Radio(
-                      value: 0,
-                      groupValue: _offenseNum,
-                      onChanged: (int value) {
-                        setState(() {
-                          _offenseNum = value;
-                          _offenseOnRightSide = false;
-                        });
-                      }),
-                  Text(
-                    'Left',
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                  Radio(
                       value: 1,
                       groupValue: _offenseNum,
                       onChanged: (int value) {
@@ -207,10 +194,23 @@ class _ScouterState extends State<Scouter> {
                         });
                       }),
                   Text(
-                    'Right',
+                    'Left',
                     style: TextStyle(
                       fontSize: 16.0,
                     ),
+                  ),
+                  Radio(
+                      value: 0,
+                      groupValue: _offenseNum,
+                      onChanged: (int value) {
+                        setState(() {
+                          _offenseNum = value;
+                          _offenseOnRightSide = false;
+                        });
+                      }),
+                  Text(
+                    'Right',
+                    style: TextStyle(fontSize: 16.0),
                   ),
                 ],
               ),
