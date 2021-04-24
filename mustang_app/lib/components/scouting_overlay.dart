@@ -50,12 +50,9 @@ class ScoutingOverlay extends StatelessWidget {
                 child: CircleAvatar(
                   backgroundColor:
                       !_completedRotationControl ? Colors.green : Colors.blue,
-                  child: IconButton(
-                    onPressed: _onWheelPress,
-                    icon: Icon(
-                      Icons.donut_large,
-                      color: Colors.white,
-                    ),
+                  child: Text(
+                    !_completedRotationControl ? 'R' : 'P',
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 )),
         _stopwatch.elapsedMilliseconds >= Constants.endgameStartMillis
