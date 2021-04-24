@@ -5,11 +5,12 @@ class BlurOverlay extends StatefulWidget {
   final Widget background;
   final void Function() onEnd;
   final Text text;
-  BlurOverlay({this.background, this.onEnd, this.text});
+  bool unlocked;
+  BlurOverlay({this.background, this.onEnd, this.text, this.unlocked});
 
   @override
-  _BlurOverlayState createState() =>
-      _BlurOverlayState(background: background, onEnd: onEnd, text: text);
+  _BlurOverlayState createState() => _BlurOverlayState(
+      background: background, onEnd: onEnd, text: text, unlocked: unlocked);
 }
 
 class _BlurOverlayState extends State<BlurOverlay> {
@@ -18,21 +19,21 @@ class _BlurOverlayState extends State<BlurOverlay> {
   final Text text;
   final Duration duration = Duration(milliseconds: 200);
   final Curve curve = Curves.linear;
-  bool _unlocked, _animating;
+  bool unlocked, _animating;
   double _targetValue;
 
-  _BlurOverlayState({this.background, this.overlay, this.onEnd, this.text});
+  _BlurOverlayState(
+      {this.background, this.overlay, this.onEnd, this.text, this.unlocked});
   @override
   void initState() {
     super.initState();
     _targetValue = 3;
-    _unlocked = false;
     _animating = false;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_unlocked) {
+    if (!unlocked) {
       return Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -51,7 +52,6 @@ class _BlurOverlayState extends State<BlurOverlay> {
             child: IgnorePointer(child: background),
             onEnd: () {
               setState(() {
-                _unlocked = true;
                 onEnd();
               });
             },

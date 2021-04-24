@@ -9,10 +9,11 @@ class GameMap extends StatelessWidget {
   Widget _sideWidget;
   String _allianceColor;
   bool _offenseOnRightSide;
-
+  Stopwatch _stopwatch;
   ZoneGrid _zoneGrid;
 
   GameMap({
+    Stopwatch stopwatch,
     List<Widget> imageChildren = const [],
     Widget sideWidget,
     ZoneGrid zoneGrid,
@@ -24,6 +25,7 @@ class GameMap extends StatelessWidget {
     _zoneGrid = zoneGrid;
     _allianceColor = allianceColor;
     _offenseOnRightSide = offenseOnRightSide;
+    _stopwatch = stopwatch;
   }
 
   @override
@@ -115,7 +117,9 @@ class GameMapChild extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    return Align(
+    return AnimatedAlign(
+      curve: Curves.fastOutSlowIn,
+      duration: Duration(milliseconds: 5000),
       alignment: align,
       child: child,
     );

@@ -4,7 +4,7 @@ import './zone_grid.dart';
 // ignore: must_be_immutable
 class SelectableZoneGrid extends ZoneGrid {
   SelectableZoneGrid(Key key, Function(int x, int y) onTap,
-      {bool multiSelect = false})
+      {bool multiSelect = false, AnimationType type = AnimationType.TRANSLATE})
       : super(
           key,
           onTap,
@@ -14,7 +14,7 @@ class SelectableZoneGrid extends ZoneGrid {
               curve: Curves.easeOut,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  gradient: isSelected
+                  gradient: isSelected && type != AnimationType.TRANSLATE
                       ? RadialGradient(
                           // center: ,
                           // begin: Alignment.bottomLeft,
@@ -31,6 +31,7 @@ class SelectableZoneGrid extends ZoneGrid {
               width: cellWidth,
             );
           },
+          type: type,
           multiSelect: multiSelect,
         );
 }

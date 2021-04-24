@@ -47,7 +47,6 @@ class _MapScoutingState extends State<MapScouting> {
 
   bool _offenseOnRightSide;
   ZoneGrid _zoneGrid;
-  ModeToggle _modeToggle;
 
   List<GameAction> _actions;
   int _sliderLastChanged;
@@ -70,24 +69,19 @@ class _MapScoutingState extends State<MapScouting> {
     _onOffense = true;
     _startedScouting = false;
     _stopwatch = new Stopwatch();
-    _zoneGrid = SelectableZoneGrid(GlobalKey(), (int x, int y) {
-      if (x != _prevX || y != _prevY) {
-        _prevX = x;
-        _prevY = y;
-        setState(() {
-          _counter = 0;
-        });
-      }
-    });
-    _modeToggle = ModeToggle(
-      onPressed: (int ind) {
-        setState(() {
-          List<bool> newToggle =
-              List.generate(_toggleModes.length, (index) => index == ind);
-          _toggleModes = newToggle;
-        });
+    _zoneGrid = SelectableZoneGrid(
+      GlobalKey(),
+      (int x, int y) {
+        if (x != _prevX || y != _prevY) {
+          setState(() {
+            _prevX = x;
+            _prevY = y;
+            _counter = 0;
+          });
+        }
       },
-      isSelected: _toggleModes,
+      type: AnimationType.TRANSLATE,
+      multiSelect: true,
     );
     _completedRotationControl = false;
     _completedPositionControl = false;
@@ -139,10 +133,10 @@ class _MapScoutingState extends State<MapScouting> {
                 _bgColor = Colors.orange.shade300;
               }));
     }
-    // _periodicUpdateTimer =
-    //     new Timer.periodic(new Duration(milliseconds: 30), (timer) {
-    //   setState(() {});
-    // });
+    _periodicUpdateTimer =
+        new Timer.periodic(new Duration(milliseconds: 30), (timer) {
+      setState(() {});
+    });
   }
 
   void _setPush() {
@@ -316,16 +310,6 @@ class _MapScoutingState extends State<MapScouting> {
 
   @override
   Widget build(BuildContext context) {
-    _modeToggle = ModeToggle(
-      onPressed: (int ind) {
-        setState(() {
-          List<bool> newToggle =
-              List.generate(_toggleModes.length, (index) => index == ind);
-          _toggleModes = newToggle;
-        });
-      },
-      isSelected: _toggleModes,
-    );
     Widget scoutingOverlay = Container(
       child: IndexedStack(
         index: _toggleModes.indexOf(true),
@@ -360,23 +344,23 @@ class _MapScoutingState extends State<MapScouting> {
         children: [
           OffenseScoutingSide(
             addAction: _addAction,
-            toggleMode: _modeToggle,
           ),
           DefenseScoutingSide(
             addAction: _addAction,
-            toggleMode: _modeToggle,
             pushTextStart: _pushTextStart,
             setPush: _setPush,
           ),
           ClimbScoutingSide(
             addAction: _addAction,
-            toggleMode: _modeToggle,
             setClimb: _setClimb,
             addClimb: _addClimb,
           ),
         ],
       ),
     );
+
+    double height = 2 / Constants.zoneRows, width = 2 / Constants.zoneColumns;
+    double x = _prevX * width - 1, y = (_prevY) * height - 1;
 
     return Screen(
       title: 'Map Scouting',
@@ -416,60 +400,51 @@ class _MapScoutingState extends State<MapScouting> {
       ],
       includeBottomNav: false,
       child: Container(
-        color: _bgColor,
-        child: !_startedScouting
-            ? BlurOverlay(
-                background: GameMap(
-                  allianceColor: _allianceColor,
-                  offenseOnRightSide: _offenseOnRightSide,
-                  zoneGrid: _zoneGrid,
-                  imageChildren: [scoutingOverlay],
-                  sideWidget: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _modeToggle,
-                        Flexible(
-                          flex: 1,
-                          child: scoutingSide,
-                        ),
-                      ],
+          color: _bgColor,
+          child: BlurOverlay(
+            unlocked: _startedScouting,
+            background: GameMap(
+              stopwatch: _stopwatch,
+              allianceColor: _allianceColor,
+              offenseOnRightSide: _offenseOnRightSide,
+              zoneGrid: _zoneGrid,
+              imageChildren: [scoutingOverlay],
+              sideWidget: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: ModeToggle(
+                        onPressed: (int ind) {
+                          setState(() {
+                            List<bool> newToggle = List.generate(
+                                _toggleModes.length, (index) => index == ind);
+                            _toggleModes = newToggle;
+                          });
+                        },
+                        isSelected: _toggleModes,
+                      ),
                     ),
-                  ),
-                ),
-                text: Text('Start'),
-                onEnd: () {
-                  setState(
-                    () {
-                      _startedScouting = true;
-                      _stopwatch.start();
-                      _initTimers();
-                    },
-                  );
-                },
-              )
-            : GameMap(
-                allianceColor: _allianceColor,
-                offenseOnRightSide: _offenseOnRightSide,
-                zoneGrid: _zoneGrid,
-                imageChildren: [scoutingOverlay],
-                sideWidget: Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: _modeToggle,
-                      ),
-                      Flexible(
-                        flex: 1,
-                        child: scoutingSide,
-                      ),
-                    ],
-                  ),
+                    Flexible(
+                      flex: 1,
+                      child: scoutingSide,
+                    ),
+                  ],
                 ),
               ),
-      ),
+            ),
+            text: Text('Start'),
+            onEnd: () {
+              setState(
+                () {
+                  _startedScouting = true;
+                  _stopwatch.start();
+                  _initTimers();
+                },
+              );
+            },
+          )),
     );
   }
 }
