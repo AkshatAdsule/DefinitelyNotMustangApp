@@ -1,12 +1,14 @@
 import 'dart:async';
+import 'package:mustang_app/components/climb_scouting_overlay.dart';
 import 'package:mustang_app/components/climb_scouting_side.dart';
+import 'package:mustang_app/components/defense_scouting_overlay.dart';
+import 'package:mustang_app/components/offense_scouting_overlay.dart';
 import 'package:vibration/vibration.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/blur_overlay.dart';
 import 'package:mustang_app/backend/game_action.dart';
 import 'package:mustang_app/components/defense_scouting_side.dart';
 import 'package:mustang_app/components/game_map.dart';
-import 'package:mustang_app/components/scouting_overlay.dart';
 import 'package:mustang_app/components/offense_scouting_side.dart';
 import 'package:mustang_app/components/screen.dart';
 import 'package:mustang_app/components/selectable_zone_grid.dart';
@@ -194,7 +196,24 @@ class _MapScoutingState extends State<MapScouting> {
 
   Future<void> _vibrate() async {
     if (Constants.enableVibrations && await Vibration.hasVibrator()) {
-      Vibration.vibrate();
+      if (await Vibration.hasCustomVibrationsSupport()) {
+        if (await Vibration.hasAmplitudeControl()) {
+          Vibration.vibrate(
+            amplitude: 60,
+            duration: 100,
+          );
+        } else {
+          Vibration.vibrate(
+            duration: 100,
+          );
+        }
+      } else {
+        if (await Vibration.hasAmplitudeControl()) {
+          Vibration.vibrate(amplitude: 60);
+        } else {
+          Vibration.vibrate();
+        }
+      }
     }
   }
 
@@ -233,8 +252,8 @@ class _MapScoutingState extends State<MapScouting> {
       GameAction(
         actionType,
         _sliderLastChanged.toDouble() ?? Constants.endgameStartMillis,
-        _sliderVal,
-        _sliderVal,
+        actionType == ActionType.OTHER_CLIMB_MISS ? _zoneGrid.x : _sliderVal,
+        actionType == ActionType.OTHER_CLIMB_MISS ? _zoneGrid.y : _sliderVal,
       ),
     );
   }
@@ -307,16 +326,33 @@ class _MapScoutingState extends State<MapScouting> {
       },
       isSelected: _toggleModes,
     );
-    Widget scoutingOverlay = ScoutingOverlay(
-        addAction: _addAction,
-        stopwatch: _stopwatch,
-        completedPositionControl: _completedPositionControl,
-        completedRotationControl: _completedRotationControl,
-        crossedInitiationLine: _crossedInitiationLine,
-        onWheelPress: _onWheelPress,
-        setClimb: _setClimb,
-        sliderValue: _sliderVal,
-        setCrossedInitiationLine: _setCrossedInitiationLine);
+    Widget scoutingOverlay = Container(
+      child: IndexedStack(
+        index: _toggleModes.indexOf(true),
+        children: [
+          OffenseScoutingOverlay(
+            addAction: _addAction,
+            stopwatch: _stopwatch,
+            completedPositionControl: _completedPositionControl,
+            completedRotationControl: _completedRotationControl,
+            crossedInitiationLine: _crossedInitiationLine,
+            onWheelPress: _onWheelPress,
+            setClimb: _setClimb,
+            setCrossedInitiationLine: _setCrossedInitiationLine,
+          ),
+          DefenseScoutingOverlay(
+            addAction: _addAction,
+            stopwatch: _stopwatch,
+          ),
+          ClimbScoutingOverlay(
+            addAction: _addAction,
+            stopwatch: _stopwatch,
+            setClimb: _setClimb,
+            sliderValue: _sliderVal,
+          ),
+        ],
+      ),
+    );
 
     Widget scoutingSide = Container(
       child: IndexedStack(
@@ -522,7 +558,6 @@ class ModeToggle extends StatelessWidget {
           ),
         ],
         onPressed: (int val) {
-          print('pressed!: $val');
           onPressed(val);
         },
         isSelected: isSelected,

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/constants/constants.dart';
-import 'dart:math';
 import '../backend/game_action.dart';
 import './game_map.dart';
 
 // ignore: must_be_immutable
-class ScoutingOverlay extends StatelessWidget {
+class OffenseScoutingOverlay extends StatelessWidget {
   void Function(ActionType type, BuildContext context) _addAction;
   void Function(double millisecondsElapsed) _setClimb;
   void Function() _onWheelPress;
@@ -14,8 +13,8 @@ class ScoutingOverlay extends StatelessWidget {
   bool _completedRotationControl = false;
   bool _completedPositionControl = false;
   bool _crossedInitiationLine = false;
-  double _sliderValue = 2;
-  ScoutingOverlay({
+
+  OffenseScoutingOverlay({
     void Function(double millisecondsElapsed) setClimb,
     void Function(ActionType type, BuildContext context) addAction,
     void Function() onWheelPress,
@@ -24,7 +23,6 @@ class ScoutingOverlay extends StatelessWidget {
     bool completedRotationControl,
     bool completedPositionControl,
     bool crossedInitiationLine,
-    double sliderValue,
   }) {
     _stopwatch = stopwatch;
     _addAction = addAction;
@@ -34,7 +32,6 @@ class ScoutingOverlay extends StatelessWidget {
     _completedRotationControl = completedRotationControl;
     _completedPositionControl = completedPositionControl;
     _crossedInitiationLine = crossedInitiationLine;
-    _sliderValue = sliderValue;
   }
 
   @override
@@ -47,35 +44,18 @@ class ScoutingOverlay extends StatelessWidget {
                 right: 65,
                 bottom: 17.5,
                 align: Alignment(-0.135, 0.815),
-                child: CircleAvatar(
-                  backgroundColor: !_completedRotationControl
-                      ? Colors.green
-                      : Colors.green.shade900,
-                  child: Text(
-                    !_completedRotationControl ? 'R' : 'P',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                )),
-        _stopwatch.elapsedMilliseconds >= Constants.endgameStartMillis
-            ? GameMapChild(
-                align: Alignment(-0.06, -0.2),
-                child: Transform.rotate(
-                  angle: -pi / 8,
-                  child: Container(
-                    height: 30,
-                    width: 200,
-                    child: Slider(
-                      divisions: 2,
-                      label: _sliderValue.round().toString(),
-                      onChanged: (newVal) => _setClimb(newVal),
-                      min: 1,
-                      max: 3,
-                      value: _sliderValue,
+                child: GestureDetector(
+                  onTap: () => _onWheelPress(),
+                  child: CircleAvatar(
+                    backgroundColor: !_completedRotationControl
+                        ? Colors.green
+                        : Colors.green.shade900,
+                    child: Text(
+                      !_completedRotationControl ? 'R' : 'P',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
-                ),
-              )
-            : Container(),
+                )),
         (_stopwatch.elapsedMilliseconds <= Constants.teleopStartMillis &&
                 !_crossedInitiationLine)
             ? GameMapChild(
