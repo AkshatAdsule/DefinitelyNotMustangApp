@@ -49,11 +49,15 @@ class DataCollectionYearTile extends StatelessWidget {
                                   "Pieces attempted: ${matchData.gamePiecesAttempted}",
                                 ),
                                 Text(
-                                    "Points scored: ${matchData.pointsScored.toStringAsFixed(3)}"),
+                                    "Points scored: ${matchData.matchPoints.toStringAsFixed(3)}"),
                                 Text(
                                     "Accuracy: ${(matchData.percentageScored * 100).toStringAsFixed(3)}%"),
                                 Text(
-                                    "Point Rate: ${matchData.pointRate.toStringAsFixed(3)}"),
+                                  "Climbed: ${matchData.climbed}",
+                                ),
+                                Text(
+                                  "Point Rate: ${matchData.pointRate.toStringAsFixed(3)}",
+                                ),
                                 Text(
                                   "Result: ${describeEnum(matchData.matchResult)}",
                                 ),
@@ -61,7 +65,8 @@ class DataCollectionYearTile extends StatelessWidget {
                                   "Driver Rating: ${matchData.driverSkill}",
                                 ),
                                 Text(
-                                    "Strategy used: ${describeEnum(matchData.strategy)},"),
+                                  "Strategy used: ${describeEnum(matchData.strategy)}",
+                                ),
                               ],
                       ),
                     )

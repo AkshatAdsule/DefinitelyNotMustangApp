@@ -90,14 +90,16 @@ class DataCollectionMatchData {
   String matchName;
   int gamePiecesAttempted;
   int gamePiecesScored;
-  double pointsScored;
+  double gamePiecePoints;
   double pointRate;
   double percentageScored;
   bool climbed;
+  int climbPoints;
   Strategy strategy;
   int driverSkill;
   int rankingPoints;
   MatchResult matchResult;
+  double matchPoints = 0;
 
   DataCollectionMatchData.fromRow(List<dynamic> row, int year) {
     int failCount = 0;
@@ -134,6 +136,8 @@ class DataCollectionMatchData {
     try {
       if (row[4] == "Y") {
         climbed = true;
+        climbPoints = Constants.CLIMB_POINTS[year];
+        matchPoints += climbPoints;
       } else {
         climbed = false;
       }
@@ -184,11 +188,12 @@ class DataCollectionMatchData {
       throw Exception("Data is too invalid! Fail count is $failCount");
     }
 
-    // Calculate points scored
-    pointsScored = Constants.GAME_PIECE_VALUE[year] * gamePiecesScored;
+    // Calculate game piece points
+    gamePiecePoints = Constants.GAME_PIECE_VALUE[year] * gamePiecesScored;
+    matchPoints += gamePiecePoints;
 
     // Calculate point rate
-    pointRate = pointsScored / Constants.GAME_LENGTH;
+    pointRate = matchPoints / Constants.GAME_LENGTH;
   }
 }
 

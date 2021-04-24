@@ -24,7 +24,19 @@ class Constants {
   };
 
   // Game length refers to auton + teleop
-  static int GAME_LENGTH = 150; //seconds
+  static const int GAME_LENGTH = 150; //seconds
+
+  // Points scored by climbing
+  static const Map<int, int> CLIMB_POINTS = {
+    2013: 20,
+    2014: 0,
+    2015: 0,
+    2016: 15,
+    2017: 50,
+    2018: 30,
+    2019: 6,
+    2020: 25,
+  };
 
   //DEFENSE ANAYLSIS
   static const double intakeValue = 1.5;
