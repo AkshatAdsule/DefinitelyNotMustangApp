@@ -41,7 +41,7 @@ class _MapScoutingState extends State<MapScouting> {
   bool _onOffense, _startedScouting;
   Stopwatch _stopwatch;
   String _teamNumber, _matchNumber, _allianceColor;
-  Color _bgColor = Colors.grey.shade600;
+  Color _bgColor = Colors.blueGrey.shade300;
 
   bool _offenseOnRightSide;
   ZoneGrid _zoneGrid;
