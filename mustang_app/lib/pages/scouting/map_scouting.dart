@@ -45,6 +45,8 @@ class _MapScoutingState extends State<MapScouting> {
 
   bool _offenseOnRightSide;
   ZoneGrid _zoneGrid;
+  ModeToggle _modeToggle;
+
   List<GameAction> _actions;
   int _sliderLastChanged;
   bool _completedRotationControl,
@@ -75,6 +77,16 @@ class _MapScoutingState extends State<MapScouting> {
         });
       }
     });
+    _modeToggle = ModeToggle(
+      onPressed: (int ind) {
+        setState(() {
+          List<bool> newToggle =
+              List.generate(_toggleModes.length, (index) => index == ind);
+          _toggleModes = newToggle;
+        });
+      },
+      isSelected: _toggleModes,
+    );
     _completedRotationControl = false;
     _completedPositionControl = false;
     _crossedInitiationLine = false;
@@ -125,16 +137,10 @@ class _MapScoutingState extends State<MapScouting> {
                 _bgColor = Colors.orange.shade300;
               }));
     }
-    _periodicUpdateTimer =
-        new Timer.periodic(new Duration(milliseconds: 30), (timer) {
-      setState(() {});
-    });
-  }
-
-  void _toggleMode() {
-    setState(() {
-      _onOffense = !_onOffense;
-    });
+    // _periodicUpdateTimer =
+    //     new Timer.periodic(new Duration(milliseconds: 30), (timer) {
+    //   setState(() {});
+    // });
   }
 
   void _setPush() {
@@ -291,6 +297,16 @@ class _MapScoutingState extends State<MapScouting> {
 
   @override
   Widget build(BuildContext context) {
+    _modeToggle = ModeToggle(
+      onPressed: (int ind) {
+        setState(() {
+          List<bool> newToggle =
+              List.generate(_toggleModes.length, (index) => index == ind);
+          _toggleModes = newToggle;
+        });
+      },
+      isSelected: _toggleModes,
+    );
     Widget scoutingOverlay = ScoutingOverlay(
         addAction: _addAction,
         stopwatch: _stopwatch,
@@ -302,48 +318,23 @@ class _MapScoutingState extends State<MapScouting> {
         sliderValue: _sliderVal,
         setCrossedInitiationLine: _setCrossedInitiationLine);
 
-    Widget modeToggle = ModeToggle(
-      children: [
-        Icon(
-          Icons.gps_fixed,
-          color: _toggleModes[0] ? Colors.white : Colors.green,
-        ),
-        Icon(
-          Icons.shield,
-          color: _toggleModes[1] ? Colors.white : Colors.green,
-        ),
-        Icon(
-          Icons.precision_manufacturing_sharp,
-          color: _toggleModes[2] ? Colors.white : Colors.green,
-        ),
-      ],
-      onPressed: (int ind) {
-        setState(() {
-          for (int i = 0; i < _toggleModes.length; i++) {
-            _toggleModes[i] = i == ind ? true : false;
-          }
-        });
-      },
-      isSelected: _toggleModes,
-    );
-
     Widget scoutingSide = Container(
       child: IndexedStack(
         index: _toggleModes.indexOf(true),
         children: [
           OffenseScoutingSide(
             addAction: _addAction,
-            toggleMode: modeToggle,
+            toggleMode: _modeToggle,
           ),
           DefenseScoutingSide(
             addAction: _addAction,
-            toggleMode: modeToggle,
+            toggleMode: _modeToggle,
             pushTextStart: _pushTextStart,
             setPush: _setPush,
           ),
           ClimbScoutingSide(
             addAction: _addAction,
-            toggleMode: modeToggle,
+            toggleMode: _modeToggle,
             setClimb: _setClimb,
             addClimb: _addClimb,
           ),
@@ -401,7 +392,7 @@ class _MapScoutingState extends State<MapScouting> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        modeToggle,
+                        _modeToggle,
                         Flexible(
                           flex: 1,
                           child: scoutingSide,
@@ -432,7 +423,7 @@ class _MapScoutingState extends State<MapScouting> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 10),
-                        child: modeToggle,
+                        child: _modeToggle,
                       ),
                       Flexible(
                         flex: 1,
@@ -508,16 +499,36 @@ class ModeToggle extends StatelessWidget {
   void Function(int) onPressed;
   List<bool> isSelected;
   List<Widget> children;
-  ModeToggle({this.children, this.onPressed, this.isSelected});
+  Key key;
+  ModeToggle({this.children, this.onPressed, this.isSelected, this.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: ToggleButtons(
-        children: children,
-        onPressed: onPressed,
+        key: key,
+        children: [
+          Icon(
+            Icons.gps_fixed,
+            color: isSelected[0] ? Colors.white : Colors.green,
+          ),
+          Icon(
+            Icons.shield,
+            color: isSelected[1] ? Colors.white : Colors.green,
+          ),
+          Icon(
+            Icons.precision_manufacturing_sharp,
+            color: isSelected[2] ? Colors.white : Colors.green,
+          ),
+        ],
+        onPressed: (int val) {
+          print('pressed!: $val');
+          onPressed(val);
+        },
         isSelected: isSelected,
         selectedColor: Colors.green,
+        renderBorder: true,
+        direction: Axis.horizontal,
         borderRadius: BorderRadius.circular(30),
         borderColor: Colors.green,
         borderWidth: 3,

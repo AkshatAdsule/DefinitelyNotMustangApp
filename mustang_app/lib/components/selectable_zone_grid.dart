@@ -3,7 +3,8 @@ import './zone_grid.dart';
 
 // ignore: must_be_immutable
 class SelectableZoneGrid extends ZoneGrid {
-  SelectableZoneGrid(Key key, Function(int x, int y) onTap)
+  SelectableZoneGrid(Key key, Function(int x, int y) onTap,
+      {bool multiSelect = false})
       : super(
           key,
           onTap,
@@ -30,6 +31,6 @@ class SelectableZoneGrid extends ZoneGrid {
               width: cellWidth,
             );
           },
-          multiSelect: false,
+          multiSelect: multiSelect,
         );
 }
