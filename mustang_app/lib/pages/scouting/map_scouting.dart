@@ -3,6 +3,7 @@ import 'package:mustang_app/components/climb_scouting_overlay.dart';
 import 'package:mustang_app/components/climb_scouting_side.dart';
 import 'package:mustang_app/components/defense_scouting_overlay.dart';
 import 'package:mustang_app/components/offense_scouting_overlay.dart';
+import 'package:mustang_app/components/stopwatch_display.dart';
 import 'package:vibration/vibration.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/blur_overlay.dart';
@@ -56,7 +57,7 @@ class _MapScoutingState extends State<MapScouting> {
   double _sliderVal;
   int _counter = 0;
   bool _pushTextStart;
-  Timer _endgameTimer, _endTimer, _teleopTimer, _periodicUpdateTimer;
+  Timer _endgameTimer, _endTimer, _teleopTimer;
   int _prevX = -1, _prevY = -1;
   List<bool> _toggleModes = [true, false, false];
 
@@ -105,9 +106,7 @@ class _MapScoutingState extends State<MapScouting> {
     if (_teleopTimer != null) {
       _teleopTimer.cancel();
     }
-    if (_periodicUpdateTimer != null) {
-      _periodicUpdateTimer.cancel();
-    }
+
     if (_stopwatch != null && _stopwatch.isRunning) _stopwatch.stop();
   }
 
@@ -133,10 +132,6 @@ class _MapScoutingState extends State<MapScouting> {
                 _bgColor = Colors.orange.shade300;
               }));
     }
-    _periodicUpdateTimer =
-        new Timer.periodic(new Duration(milliseconds: 30), (timer) {
-      setState(() {});
-    });
   }
 
   void _setPush() {
@@ -301,13 +296,6 @@ class _MapScoutingState extends State<MapScouting> {
     return null;
   }
 
-  String formatTime(int milliseconds) {
-    int secs = milliseconds ~/ 1000;
-    String minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
-    String seconds = (secs % 60).toString().padLeft(2, '0');
-    return "$minutes:$seconds";
-  }
-
   @override
   Widget build(BuildContext context) {
     Widget scoutingOverlay = Container(
@@ -359,9 +347,6 @@ class _MapScoutingState extends State<MapScouting> {
       ),
     );
 
-    double height = 2 / Constants.zoneRows, width = 2 / Constants.zoneColumns;
-    double x = _prevX * width - 1, y = (_prevY) * height - 1;
-
     return Screen(
       title: 'Map Scouting',
       headerButtons: [
@@ -369,13 +354,7 @@ class _MapScoutingState extends State<MapScouting> {
           margin: EdgeInsets.only(
             right: 10,
           ),
-          child: Text(
-            formatTime(_stopwatch.elapsedMilliseconds),
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          child: _startedScouting ? StopwatchDisplay() : Container(),
         ),
         Container(
           margin: EdgeInsets.only(
@@ -533,7 +512,6 @@ class ModeToggle extends StatelessWidget {
           ),
         ],
         onPressed: (int val) {
-          print('pressed!: $val');
           onPressed(val);
         },
         isSelected: isSelected,
