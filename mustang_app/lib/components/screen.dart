@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/bottom_nav_bar.dart';
 import 'package:mustang_app/components/header.dart';
+import 'package:mustang_app/components/nav_drawer.dart';
 
 // ignore: must_be_immutable
 class Screen extends StatelessWidget {
@@ -9,6 +10,7 @@ class Screen extends StatelessWidget {
   List<Widget> headerButtons;
   bool includeHeader, includeBottomNav;
   bool left, right, top, bottom;
+  static NavDrawer drawer = NavDrawer();
 
   Screen({
     this.child,
@@ -42,6 +44,7 @@ class Screen extends StatelessWidget {
         key: UniqueKey(),
         child: child,
       ),
+      drawer: drawer,
       bottomNavigationBar: includeBottomNav
           ? BottomNavBar(
               context,
