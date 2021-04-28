@@ -4,7 +4,7 @@ import 'package:mustang_app/backend/auth_service.dart';
 import 'exports/pages.dart';
 import 'utils/orientation_helpers.dart';
 import 'package:provider/provider.dart';
-
+import 'package:webview_flutter/webview_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SetupService.setup();
@@ -84,6 +84,11 @@ class MyApp extends StatelessWidget {
       case SearchPage.route:
         return MaterialPageRoute(
           builder: (context) => SearchPage(),
+          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
+        );
+      case GlossaryPage.route:
+        return MaterialPageRoute(
+          builder: (context) => GlossaryPage(),
           settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
         );
       case TeamInfoDisplay.route:

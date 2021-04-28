@@ -51,12 +51,7 @@ class _WrittenAnalysisDisplayState extends State<WrittenAnalysisDisplayPage> {
   _WrittenAnalysisDisplayState(String teamNumber) {
     myAnalyzer = new Analyzer(teamNumber);
   }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
-
+  
   @override
   Widget build(BuildContext context) {
     if (!myAnalyzer.initialized) {

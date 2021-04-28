@@ -4,6 +4,7 @@ import 'package:mustang_app/pages/homepage.dart';
 import 'package:mustang_app/pages/pre-event-analysis/input_screen.dart';
 import 'package:mustang_app/pages/scouting/scouter.dart';
 import 'package:mustang_app/pages/search.dart';
+import 'package:mustang_app/pages/glossarypage.dart';
 import 'package:mustang_app/pages/sketcher.dart';
 
 class NavDrawer extends StatelessWidget {
@@ -13,6 +14,7 @@ class NavDrawer extends StatelessWidget {
     Scouter.route,
     InputScreen.route,
     SearchPage.route,
+    GlossaryPage.route,
     SketchPage.route,
   ];
   int _selectedIndex;
@@ -84,6 +86,14 @@ class NavDrawer extends StatelessWidget {
           ),
           NavItem(
             _selectedIndex == 4,
+            'Glossary',
+            Icons.account_tree,
+            () {
+              navigate(context, GlossaryPage.route);
+            },
+          ),
+          NavItem(
+            _selectedIndex == 5,
             'Draw',
             Icons.edit,
             () {

@@ -3,6 +3,7 @@ export '../pages/map_analysis_display.dart';
 export '../pages/calendar.dart';
 export '../pages/scouting/scouter.dart';
 export '../pages/search.dart';
+export '../pages/glossarypage.dart';
 export '../pages/login.dart';
 export '../pages/homepage.dart';
 export '../pages/sketcher.dart';

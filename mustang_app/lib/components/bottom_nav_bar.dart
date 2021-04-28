@@ -4,6 +4,8 @@ import 'package:mustang_app/pages/pre-event-analysis/input_screen.dart';
 import '../pages/sketcher.dart';
 import '../pages/scouting/scouter.dart';
 import '../pages/search.dart';
+import '../pages/glossarypage.dart';
+
 
 
 class BottomNavBar extends BottomNavigationBar {
@@ -15,6 +17,7 @@ class BottomNavBar extends BottomNavigationBar {
     Scouter.route,
     InputScreen.route,
     SearchPage.route,
+    GlossaryPage.route,
     SketchPage.route,
   ];
 
@@ -46,6 +49,10 @@ class BottomNavBar extends BottomNavigationBar {
             BottomNavigationBarItem(
               icon: Icon(Icons.search),
               label: 'Data',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_tree),
+              label: 'Glossary',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.edit),
