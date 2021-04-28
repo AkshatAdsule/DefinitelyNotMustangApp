@@ -13,7 +13,7 @@ class Scouter extends StatefulWidget {
   }
 }
 
-enum MatchType { QUAL, QUARTER, SEMI, FINAL, OTHER }
+enum MatchType { QUAL, QUARTER, SEMI, FINAL, OTHER, TYPE }
 
 class _ScouterState extends State<Scouter> {
   TextEditingController _teamNumberController = TextEditingController();
@@ -102,58 +102,61 @@ class _ScouterState extends State<Scouter> {
           ),
         ),
         Container(
-          // child: Flexible(
-          //   flex: 1,
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //     children: <Widget>[
-          padding: EdgeInsets.all(10),
-          child: DropdownButton<MatchType>(
-            value: _matchType,
-            icon: Icon(Icons.arrow_downward),
-            iconSize: 24,
-            elevation: 16,
-            style: TextStyle(color: Colors.green, fontSize: 20.0),
-            underline: Container(
-              height: 2,
-              color: Colors.green,
-            ),
-            onChanged: (MatchType matchType) {
-              setState(() {
-                _matchType = matchType;
-              });
-            },
-            items: <MatchType>[
-              MatchType.OTHER,
-              MatchType.QUAL,
-              MatchType.QUARTER,
-              MatchType.SEMI,
-              MatchType.FINAL,
-            ].map<DropdownMenuItem<MatchType>>((MatchType matchType) {
-              return DropdownMenuItem<MatchType>(
-                value: matchType,
-                child: Center(
-                    child: Text(matchType
-                        .toString()
-                        .substring(matchType.toString().indexOf('.') + 1))),
-              );
-            }).toList(),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Flexible(
+                flex: 2,
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  child: DropdownButton<MatchType>(
+                    value: _matchType,
+                    icon: Icon(Icons.arrow_downward),
+                    iconSize: 24,
+                    elevation: 16,
+                    style: TextStyle(color: Colors.green, fontSize: 20.0),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.green,
+                    ),
+                    onChanged: (MatchType matchType) {
+                      setState(() {
+                        _matchType = matchType;
+                      });
+                    },
+                    items: <MatchType>[
+                      MatchType.OTHER,
+                      MatchType.QUAL,
+                      MatchType.QUARTER,
+                      MatchType.SEMI,
+                      MatchType.FINAL,
+                    ].map<DropdownMenuItem<MatchType>>((MatchType matchType) {
+                      return DropdownMenuItem<MatchType>(
+                        value: matchType,
+                        child: Center(
+                            child: Text(matchType.toString().substring(
+                                matchType.toString().indexOf('.') + 1))),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+              Flexible(
+                flex: 3,
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    controller: _matchNumberController,
+                    decoration: InputDecoration(
+                      labelText: 'Match Number',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        Container(
-          padding: EdgeInsets.all(10),
-          child: TextField(
-            controller: _matchNumberController,
-            decoration: InputDecoration(
-              labelText: 'Match Number',
-              border: OutlineInputBorder(),
-            ),
-          ),
-        ),
-        //     ],
-        //   ),
-        // ),
-        // ),
         Container(
           padding: EdgeInsets.all(8.0),
           child: Column(
