@@ -51,10 +51,6 @@ class BottomNavBar extends BottomNavigationBar {
               icon: Icon(Icons.edit),
               label: 'Draw',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.edit),
-              label: 'Glossary',
-            ),
           ],
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.green,

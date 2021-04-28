@@ -90,14 +90,6 @@ class NavDrawer extends StatelessWidget {
               navigate(context, SketchPage.route);
             },
           ),
-          NavItem(
-            _selectedIndex == 5,
-            'Glossary',
-            Icons.edit,
-            () {
-              navigate(context, SketchPage.route);
-            },
-          ),
         ],
       ),
     );
