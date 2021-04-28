@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'dart:math';
-import 'package:mustang_app/components/LinePainter.dart';
+import 'package:mustang_app/components/PathPainter.dart';
 import 'package:mustang_app/components/climb_scouting_overlay.dart';
 import 'package:mustang_app/components/climb_scouting_side.dart';
 import 'package:mustang_app/components/defense_scouting_overlay.dart';
@@ -42,7 +41,10 @@ class MapScouting extends StatefulWidget {
       _teamNumber, _matchNumber, _allianceColor, _offenseOnRightSide);
 }
 
-class _MapScoutingState extends State<MapScouting> {
+class _MapScoutingState extends State<MapScouting>
+// with SingleTickerProviderStateMixin
+{
+  AnimationController _controller;
   bool _pushMode, _startedScouting;
   Stopwatch _stopwatch;
   String _teamNumber, _matchNumber, _allianceColor;
@@ -60,7 +62,7 @@ class _MapScoutingState extends State<MapScouting> {
   int _counter = 0;
   bool _pushTextStart;
   Timer _endgameTimer, _endTimer, _teleopTimer;
-  int _prevX = -1, _prevY = -1;
+  int _prevX = -1, _prevY = -1, _pushStartX = -1, _pushStartY = -1;
   List<bool> _toggleModes = [true, false, false];
 
   _MapScoutingState(
@@ -73,6 +75,10 @@ class _MapScoutingState extends State<MapScouting> {
   @override
   void initState() {
     super.initState();
+    // _controller = new AnimationController(
+    //     vsync: this,
+    //   duration: Duration(milliseconds: 1000),
+    // );
     _pushMode = false;
     _startedScouting = false;
     _stopwatch = new Stopwatch();
@@ -86,10 +92,13 @@ class _MapScoutingState extends State<MapScouting> {
             _counter = 0;
           });
         }
+        // if (_pushTextStart) {
+        //   _startAnimation();
+        // }
       },
       type: AnimationType.TRANSLATE,
       multiSelect: true,
-      createOverlay: (BoxConstraints constraints, List<Point<int>> selections,
+      createOverlay: (BoxConstraints constraints, List<Offset> selections,
           double cellWidth, double cellHeight) {
         if (selections.length == 0) {
           return [];
@@ -99,20 +108,22 @@ class _MapScoutingState extends State<MapScouting> {
             ...(selections.length > 1
                 ? [
                     CustomPaint(
-                      painter: LinePainter(
-                        cellWidth * selections[selections.length - 2].x +
-                            cellWidth / 2,
-                        cellHeight * selections[selections.length - 2].y +
-                            cellHeight / 2,
-                        cellWidth * selections.last.x + cellWidth / 2,
-                        cellHeight * selections.last.y + cellHeight / 2,
-                      ),
+                      painter: PathPainter([
+                        Offset(
+                          cellWidth * _pushStartX + cellWidth / 2,
+                          cellHeight * _pushStartY + cellHeight / 2,
+                        ),
+                        Offset(
+                          cellWidth * selections.last.dx + cellWidth / 2,
+                          cellHeight * selections.last.dy + cellHeight / 2,
+                        ),
+                      ], animation: _controller),
                     ),
                     AnimatedPositioned(
                       curve: Curves.fastOutSlowIn,
                       duration: Duration(milliseconds: 1000),
-                      left: cellWidth * selections[selections.length - 2].x,
-                      top: cellHeight * selections[selections.length - 2].y,
+                      left: cellWidth * _pushStartX,
+                      top: cellHeight * _pushStartY,
                       child: Container(
                         width: cellWidth,
                         height: cellHeight,
@@ -141,8 +152,8 @@ class _MapScoutingState extends State<MapScouting> {
                 height: cellHeight,
                 child: Image.asset('assets/bb8.gif'),
               ),
-              left: cellWidth * selections.last.x,
-              top: cellHeight * selections.last.y,
+              left: cellWidth * selections.last.dx,
+              top: cellHeight * selections.last.dy,
               curve: Curves.fastOutSlowIn,
               duration: Duration(milliseconds: 1000),
             ),
@@ -165,8 +176,8 @@ class _MapScoutingState extends State<MapScouting> {
                 height: cellHeight,
                 child: Image.asset('assets/bb8.gif'),
               ),
-              left: cellWidth * selections.last.x,
-              top: cellHeight * selections.last.y,
+              left: cellWidth * selections.last.dx,
+              top: cellHeight * selections.last.dy,
               curve: Curves.fastOutSlowIn,
               duration: Duration(milliseconds: 1000),
             )
@@ -187,6 +198,8 @@ class _MapScoutingState extends State<MapScouting> {
   @override
   void dispose() {
     super.dispose();
+    _controller.dispose();
+
     if (_endTimer != null) {
       _endTimer.cancel();
     }
@@ -198,6 +211,12 @@ class _MapScoutingState extends State<MapScouting> {
     }
 
     if (_stopwatch != null && _stopwatch.isRunning) _stopwatch.stop();
+  }
+
+  void _startAnimation() {
+    _controller.stop();
+    _controller.reset();
+    _controller.forward();
   }
 
   void _initTimers() {
@@ -228,6 +247,8 @@ class _MapScoutingState extends State<MapScouting> {
     setState(() {
       if (!_pushTextStart) {
         _zoneGrid.clearSelections();
+        _pushStartX = _zoneGrid.x;
+        _pushStartY = _zoneGrid.y;
       }
       _pushTextStart = !_pushTextStart;
     });

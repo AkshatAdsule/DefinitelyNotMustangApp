@@ -12,7 +12,7 @@ class ZoneGrid extends StatefulWidget {
   Widget Function(
           int x, int y, bool isSelected, double cellWidth, double cellHeight)
       _createCell;
-  List<Widget> Function(BoxConstraints constraints, List<Point<int>> selections,
+  List<Widget> Function(BoxConstraints constraints, List<Offset> selections,
       double cellWidth, double cellHeight) _createOverlay;
   int _rows, _cols;
   bool _multiSelect;
@@ -28,8 +28,8 @@ class ZoneGrid extends StatefulWidget {
       int cols = Constants.zoneColumns,
       bool multiSelect = false,
       AnimationType type = AnimationType.TRANSLATE,
-      List<Widget> Function(BoxConstraints constraints,
-              List<Point<int>> selections, double cellWidth, double cellHeight)
+      List<Widget> Function(BoxConstraints constraints, List<Offset> selections,
+              double cellWidth, double cellHeight)
           createOverlay})
       : _zoneGridState = _ZoneGridState(
             onTap, createCell, rows, cols, multiSelect, type, createOverlay),
@@ -50,7 +50,7 @@ class ZoneGrid extends StatefulWidget {
 
   int get numSelected => _zoneGridState.numSelected;
 
-  List<Point<int>> get selections => _zoneGridState.selections;
+  List<Offset> get selections => _zoneGridState.selections;
 
   void clearSelections() => _zoneGridState.clearSelections();
 
@@ -67,7 +67,7 @@ class _ZoneGridState extends State<ZoneGrid> {
   int _rows, _cols;
   Widget overlay;
   List<List<bool>> _selected;
-  List<Point<int>> _selections;
+  List<Offset> _selections;
   bool _multiSelect;
   Function(int x, int y) _onTap;
   AnimationType _type;
@@ -75,7 +75,7 @@ class _ZoneGridState extends State<ZoneGrid> {
           int x, int y, bool isSelected, double cellWidth, double cellHeight)
       _createCell;
 
-  List<Widget> Function(BoxConstraints constraints, List<Point<int>> selections,
+  List<Widget> Function(BoxConstraints constraints, List<Offset> selections,
       double cellWidth, double cellHeight) _createOverlay;
 
   _ZoneGridState(this._onTap, this._createCell, this._rows, this._cols,
@@ -112,7 +112,7 @@ class _ZoneGridState extends State<ZoneGrid> {
     return counter;
   }
 
-  List<Point<int>> get selections => _selections;
+  List<Offset> get selections => _selections;
 
   void clearSelections() {
     _selections = [_selections.last];
@@ -133,10 +133,10 @@ class _ZoneGridState extends State<ZoneGrid> {
                 _onTap(j, i);
                 setState(() {
                   if (_selected[i][j]) {
-                    _selections.removeWhere(
-                        (element) => element.x == j && element.y == j);
+                    _selections.removeWhere((element) =>
+                        element.dx.toInt() == j && element.dy.toInt() == j);
                   } else {
-                    _selections.add(Point<int>(j, i));
+                    _selections.add(Offset(j.toDouble(), i.toDouble()));
                   }
                   _selected[i][j] = !_selected[i][j];
                   if (_selectedX != j || _selectedY != i) {

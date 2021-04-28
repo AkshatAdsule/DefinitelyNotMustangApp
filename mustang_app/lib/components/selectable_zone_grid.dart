@@ -7,8 +7,8 @@ class SelectableZoneGrid extends ZoneGrid {
   SelectableZoneGrid(Key key, Function(int x, int y) onTap,
       {bool multiSelect = false,
       AnimationType type = AnimationType.TRANSLATE,
-      List<Widget> Function(BoxConstraints constraints,
-              List<Point<int>> selections, double cellWidth, double cellHeight)
+      List<Widget> Function(BoxConstraints constraints, List<Offset> selections,
+              double cellWidth, double cellHeight)
           createOverlay})
       : super(
           key,

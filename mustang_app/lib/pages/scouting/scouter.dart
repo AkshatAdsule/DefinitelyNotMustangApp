@@ -106,6 +106,19 @@ class _ScouterState extends State<Scouter> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Flexible(
+                flex: 3,
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    controller: _matchNumberController,
+                    decoration: InputDecoration(
+                      labelText: 'Match Number',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+              ),
+              Flexible(
                 flex: 2,
                 child: Container(
                   padding: EdgeInsets.all(10),
@@ -138,19 +151,6 @@ class _ScouterState extends State<Scouter> {
                                 matchType.toString().indexOf('.') + 1))),
                       );
                     }).toList(),
-                  ),
-                ),
-              ),
-              Flexible(
-                flex: 3,
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  child: TextField(
-                    controller: _matchNumberController,
-                    decoration: InputDecoration(
-                      labelText: 'Match Number',
-                      border: OutlineInputBorder(),
-                    ),
                   ),
                 ),
               ),
