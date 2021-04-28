@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/components/screen.dart';
 import 'web_view_container.dart';
-class GlossaryPage extends StatelessWidget {
-       static const String route = './GlossaryPage';
 
-  // final _links = ['https://camellabs.com'];
-     final _links = ['http://bit.ly/670glossary'];
+class GlossaryPage extends StatelessWidget {
+  static const String route = './GlossaryPage';
+  final _links = ['http://bit.ly/670appglossary'];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
+    return Screen(
+        title: 'Glossary ',
+        includeBottomNav: true,
+        child: Container(
             child: SingleChildScrollView(
                 child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: _links.map((link) => _urlButton(context, link)).toList(),
-    ))));
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: _links.map((link) => _urlButton(context, link)).toList(),
+        ))));
   }
+
   Widget _urlButton(BuildContext context, String url) {
     return Container(
         padding: EdgeInsets.all(20.0),
@@ -27,6 +30,7 @@ class GlossaryPage extends StatelessWidget {
           onPressed: () => _handleURLButtonPress(context, url),
         ));
   }
+
   void _handleURLButtonPress(BuildContext context, String url) {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => WebViewContainer(url)));
@@ -63,7 +67,6 @@ class GlossaryPage extends StatelessWidget {
 // }
 
 // class _GlossaryPageState extends State<GlossaryPage> {
-
 
 //   @override
 //   Widget build(BuildContext context) {
