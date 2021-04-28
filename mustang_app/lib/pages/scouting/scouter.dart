@@ -13,9 +13,12 @@ class Scouter extends StatefulWidget {
   }
 }
 
+enum MatchType { QUAL, QUARTER, SEMI, FINAL, OTHER }
+
 class _ScouterState extends State<Scouter> {
   TextEditingController _teamNumberController = TextEditingController();
   TextEditingController _matchNumberController = TextEditingController();
+  MatchType _matchType = MatchType.OTHER;
 
   String _allianceColor = "Blue";
   int _allianceNum = 0;
@@ -44,7 +47,10 @@ class _ScouterState extends State<Scouter> {
         } else {
           Navigator.pushNamed(context, MapScouting.route, arguments: {
             'teamNumber': _teamNumberController.text,
-            'matchNumber': _matchNumberController.text,
+            'matchNumber': _matchType
+                    .toString()
+                    .substring(_matchType.toString().indexOf('.') + 1) +
+                _matchNumberController.text,
             'allianceColor': _allianceColor,
             'offenseOnRightSide': _offenseOnRightSide,
           });
@@ -96,48 +102,58 @@ class _ScouterState extends State<Scouter> {
           ),
         ),
         Container(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
-          child:
-              // Row(children: [
-              // DropdownButton<DriveBase>(
-              //   value: _matchType,
-              //   icon: Icon(Icons.arrow_downward),
-              //   iconSize: 24,
-              //   elevation: 16,
-              //   style: TextStyle(color: Colors.green, fontSize: 20.0),
-              //   underline: Container(
-              //     height: 2,
-              //     color: Colors.green,
-              //   ),
-              //   onChanged: (MatchType match) {
-              //     setState(() {
-              //       _matchType = match;
-              //     });
-              //   },
-              //   items: <MatchType>[
-              //     MatchType.QUAL,
-              //     MatchType.PRELIM,
-              //     MatchType.SEMIF,
-              //     MatchType.FINAL,
-              //   ].map<DropdownMenuItem<DriveBase>>((MatchType matchType) {
-              //     return DropdownMenuItem<DriveBase>(
-              //       value: matchType,
-              //       child: Center(
-              //           child: Text(matchType
-              //               .toString()
-              //               .substring(mathType.toString().indexOf('.') + 1))),
-              //     );
-              //   }).toList(),
-              // ),
-              TextField(
+          // child: Flexible(
+          //   flex: 1,
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //     children: <Widget>[
+          padding: EdgeInsets.all(10),
+          child: DropdownButton<MatchType>(
+            value: _matchType,
+            icon: Icon(Icons.arrow_downward),
+            iconSize: 24,
+            elevation: 16,
+            style: TextStyle(color: Colors.green, fontSize: 20.0),
+            underline: Container(
+              height: 2,
+              color: Colors.green,
+            ),
+            onChanged: (MatchType matchType) {
+              setState(() {
+                _matchType = matchType;
+              });
+            },
+            items: <MatchType>[
+              MatchType.OTHER,
+              MatchType.QUAL,
+              MatchType.QUARTER,
+              MatchType.SEMI,
+              MatchType.FINAL,
+            ].map<DropdownMenuItem<MatchType>>((MatchType matchType) {
+              return DropdownMenuItem<MatchType>(
+                value: matchType,
+                child: Center(
+                    child: Text(matchType
+                        .toString()
+                        .substring(matchType.toString().indexOf('.') + 1))),
+              );
+            }).toList(),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.all(10),
+          child: TextField(
             controller: _matchNumberController,
             decoration: InputDecoration(
               labelText: 'Match Number',
               border: OutlineInputBorder(),
             ),
           ),
-          //]),
         ),
+        //     ],
+        //   ),
+        // ),
+        // ),
         Container(
           padding: EdgeInsets.all(8.0),
           child: Column(
@@ -268,6 +284,12 @@ class _ScouterState extends State<Scouter> {
                           ScaffoldMessenger.of(buildContext)
                               .showSnackBar(SnackBar(
                             content: Text("Enter a team number"),
+                          ));
+                          return;
+                        } else if (_matchType.toString().isEmpty) {
+                          ScaffoldMessenger.of(buildContext)
+                              .showSnackBar(SnackBar(
+                            content: Text("Enter a match type"),
                           ));
                           return;
                         } else if (_matchNumberController.text.isEmpty) {
