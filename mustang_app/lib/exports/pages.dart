@@ -7,7 +7,6 @@ export '../pages/login.dart';
 export '../pages/homepage.dart';
 export '../pages/sketcher.dart';
 export '../pages/written_analysis_display.dart';
-export '../pages/glossary.dart';
 export '../pages/scouting/post_scouter.dart';
 export '../pages/scouting/match_end_scouting.dart';
 export '../pages/scouting/pit_scouting.dart';

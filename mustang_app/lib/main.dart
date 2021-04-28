@@ -81,11 +81,6 @@ class MyApp extends StatelessWidget {
           builder: (context) => SketchPage(),
           settings: rotationSettings(settings, ScreenOrientation.landscapeOnly),
         );
-      case Glossary.route:
-        return MaterialPageRoute(
-          builder: (context) => Glossary(),
-          settings: rotationSettings(settings, ScreenOrientation.landscapeOnly),
-        );
       case SearchPage.route:
         return MaterialPageRoute(
           builder: (context) => SearchPage(),
