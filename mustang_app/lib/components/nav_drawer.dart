@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/logo.dart';
 import 'package:mustang_app/pages/homepage.dart';
+import 'package:mustang_app/pages/glossary.dart';
 import 'package:mustang_app/pages/pre-event-analysis/input_screen.dart';
 import 'package:mustang_app/pages/scouting/scouter.dart';
 import 'package:mustang_app/pages/search.dart';
@@ -14,6 +15,7 @@ class NavDrawer extends StatelessWidget {
     InputScreen.route,
     SearchPage.route,
     SketchPage.route,
+    Glossary.route,
   ];
   int _selectedIndex;
 
@@ -85,6 +87,14 @@ class NavDrawer extends StatelessWidget {
           NavItem(
             _selectedIndex == 4,
             'Draw',
+            Icons.edit,
+            () {
+              navigate(context, SketchPage.route);
+            },
+          ),
+          NavItem(
+            _selectedIndex == 5,
+            'Glossary',
             Icons.edit,
             () {
               navigate(context, SketchPage.route);

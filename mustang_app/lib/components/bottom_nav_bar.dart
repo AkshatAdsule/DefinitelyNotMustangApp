@@ -4,6 +4,8 @@ import 'package:mustang_app/pages/pre-event-analysis/input_screen.dart';
 import '../pages/sketcher.dart';
 import '../pages/scouting/scouter.dart';
 import '../pages/search.dart';
+import '../pages/glossary.dart';
+
 
 class BottomNavBar extends BottomNavigationBar {
   static int _selectedIndex = 0;
@@ -15,6 +17,7 @@ class BottomNavBar extends BottomNavigationBar {
     InputScreen.route,
     SearchPage.route,
     SketchPage.route,
+    Glossary.route,
   ];
 
   static void setSelected(String route) {
@@ -49,6 +52,10 @@ class BottomNavBar extends BottomNavigationBar {
             BottomNavigationBarItem(
               icon: Icon(Icons.edit),
               label: 'Draw',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.edit),
+              label: 'Glossary',
             ),
           ],
           currentIndex: _selectedIndex,

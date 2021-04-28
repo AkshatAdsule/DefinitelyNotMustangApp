@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/setup_service.dart';
 import 'package:mustang_app/backend/auth_service.dart';
 import 'exports/pages.dart';
-import 'pages/written_analysis_display.dart';
 import 'utils/orientation_helpers.dart';
 import 'package:provider/provider.dart';
 
@@ -80,6 +79,11 @@ class MyApp extends StatelessWidget {
       case SketchPage.route:
         return MaterialPageRoute(
           builder: (context) => SketchPage(),
+          settings: rotationSettings(settings, ScreenOrientation.landscapeOnly),
+        );
+      case Glossary.route:
+        return MaterialPageRoute(
+          builder: (context) => Glossary(),
           settings: rotationSettings(settings, ScreenOrientation.landscapeOnly),
         );
       case SearchPage.route:
