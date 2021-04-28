@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:math';
+import 'package:mustang_app/components/LinePainter.dart';
 import 'package:mustang_app/components/climb_scouting_overlay.dart';
 import 'package:mustang_app/components/climb_scouting_side.dart';
 import 'package:mustang_app/components/defense_scouting_overlay.dart';
@@ -41,7 +43,7 @@ class MapScouting extends StatefulWidget {
 }
 
 class _MapScoutingState extends State<MapScouting> {
-  bool _onOffense, _startedScouting;
+  bool _pushMode, _startedScouting;
   Stopwatch _stopwatch;
   String _teamNumber, _matchNumber, _allianceColor;
   Color _bgColor = Colors.blueGrey.shade300;
@@ -61,13 +63,17 @@ class _MapScoutingState extends State<MapScouting> {
   int _prevX = -1, _prevY = -1;
   List<bool> _toggleModes = [true, false, false];
 
-  _MapScoutingState(this._teamNumber, this._matchNumber, this._allianceColor,
-      this._offenseOnRightSide);
+  _MapScoutingState(
+    this._teamNumber,
+    this._matchNumber,
+    this._allianceColor,
+    this._offenseOnRightSide,
+  );
 
   @override
   void initState() {
     super.initState();
-    _onOffense = true;
+    _pushMode = false;
     _startedScouting = false;
     _stopwatch = new Stopwatch();
     _zoneGrid = SelectableZoneGrid(
@@ -83,6 +89,90 @@ class _MapScoutingState extends State<MapScouting> {
       },
       type: AnimationType.TRANSLATE,
       multiSelect: true,
+      createOverlay: (BoxConstraints constraints, List<Point<int>> selections,
+          double cellWidth, double cellHeight) {
+        if (selections.length == 0) {
+          return [];
+        }
+        if (_pushTextStart) {
+          return [
+            ...(selections.length > 1
+                ? [
+                    CustomPaint(
+                      painter: LinePainter(
+                        cellWidth * selections[selections.length - 2].x +
+                            cellWidth / 2,
+                        cellHeight * selections[selections.length - 2].y +
+                            cellHeight / 2,
+                        cellWidth * selections.last.x + cellWidth / 2,
+                        cellHeight * selections.last.y + cellHeight / 2,
+                      ),
+                    ),
+                    AnimatedPositioned(
+                      curve: Curves.fastOutSlowIn,
+                      duration: Duration(milliseconds: 1000),
+                      left: cellWidth * selections[selections.length - 2].x,
+                      top: cellHeight * selections[selections.length - 2].y,
+                      child: Container(
+                        width: cellWidth,
+                        height: cellHeight,
+                        child: Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: RadialGradient(
+                                colors: [
+                                  Colors.lightGreenAccent.withOpacity(0.9),
+                                  Colors.green,
+                                ],
+                              ),
+                            ),
+                            width: 15,
+                            height: 15,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]
+                : []),
+            AnimatedPositioned(
+              child: Container(
+                width: cellWidth,
+                height: cellHeight,
+                child: Image.asset('assets/bb8.gif'),
+              ),
+              left: cellWidth * selections.last.x,
+              top: cellHeight * selections.last.y,
+              curve: Curves.fastOutSlowIn,
+              duration: Duration(milliseconds: 1000),
+            ),
+          ];
+        } else {
+          return [
+            AnimatedPositioned(
+              child: Container(
+                // decoration: BoxDecoration(
+                //   borderRadius: BorderRadius.circular(10),
+                //   gradient: RadialGradient(
+                //     colors: [
+                //       Colors.green,
+                //       Colors.green, //.withOpacity(0.9),
+                //       Colors.lightGreenAccent.withOpacity(0.9),
+                //     ],
+                //   ),
+                // ),
+                width: cellWidth,
+                height: cellHeight,
+                child: Image.asset('assets/bb8.gif'),
+              ),
+              left: cellWidth * selections.last.x,
+              top: cellHeight * selections.last.y,
+              curve: Curves.fastOutSlowIn,
+              duration: Duration(milliseconds: 1000),
+            )
+          ];
+        }
+      },
     );
     _completedRotationControl = false;
     _completedPositionControl = false;
@@ -136,6 +226,9 @@ class _MapScoutingState extends State<MapScouting> {
 
   void _setPush() {
     setState(() {
+      if (!_pushTextStart) {
+        _zoneGrid.clearSelections();
+      }
       _pushTextStart = !_pushTextStart;
     });
   }

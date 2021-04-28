@@ -1,10 +1,15 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import './zone_grid.dart';
 
 // ignore: must_be_immutable
 class SelectableZoneGrid extends ZoneGrid {
   SelectableZoneGrid(Key key, Function(int x, int y) onTap,
-      {bool multiSelect = false, AnimationType type = AnimationType.TRANSLATE})
+      {bool multiSelect = false,
+      AnimationType type = AnimationType.TRANSLATE,
+      List<Widget> Function(BoxConstraints constraints,
+              List<Point<int>> selections, double cellWidth, double cellHeight)
+          createOverlay})
       : super(
           key,
           onTap,
@@ -33,5 +38,6 @@ class SelectableZoneGrid extends ZoneGrid {
           },
           type: type,
           multiSelect: multiSelect,
+          createOverlay: createOverlay,
         );
 }
