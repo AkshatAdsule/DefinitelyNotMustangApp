@@ -1,14 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:mustang_app/constants/constants.dart';
 
-class DataCollectionAllTimeData {
-  List<DataCollectionYearData> data;
-
-  DataCollectionAllTimeData({this.data}) {}
-}
-
 class DataCollectionYearData {
-  int year;
+  DateTime year;
   List<DataCollectionMatchData> data;
   DataCollectionAverageYearData avgData;
   double winRate;
@@ -101,7 +95,7 @@ class DataCollectionMatchData {
   MatchResult matchResult;
   double matchPoints = 0;
 
-  DataCollectionMatchData.fromRow(List<dynamic> row, int year) {
+  DataCollectionMatchData.fromRow(List<dynamic> row, DateTime year) {
     int failCount = 0;
 
     dataVersion = Constants.DATA_COLLECTION_DATA_VERSION;

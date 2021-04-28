@@ -2,6 +2,7 @@ import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mustang_app/components/data_collection_tile.dart';
+import 'package:mustang_app/pages/data-collection-analysis/view_graph_screen.dart';
 import 'package:mustang_app/utils/data_collection_data.dart';
 
 class DataViewScreen extends StatefulWidget {
@@ -16,7 +17,7 @@ class _DataViewScreenState extends State<DataViewScreen> {
   Future<List<DataCollectionYearData>> getData() async {
     List<DataCollectionYearData> yearData = [];
     for (int i = 0; i <= 7; i++) {
-      int year = 2013 + i;
+      DateTime year = new DateTime(2013 + i);
 
       String csvData =
           await rootBundle.loadString('assets/data_collection/$year.csv');
@@ -51,6 +52,7 @@ class _DataViewScreenState extends State<DataViewScreen> {
     getData().then(
       (data) => {
         setState(() {
+          print(data);
           this.data = data;
         })
       },
@@ -64,13 +66,34 @@ class _DataViewScreenState extends State<DataViewScreen> {
       appBar: AppBar(
         title: Text("Data Collection Analysis"),
       ),
-      body: data.length == 0 || data == null
+      body: SafeArea(
+        child: Column(
+          children: [
+            data.length == 0 || data == null
           ? Container()
           : ListView(
               children: [
                 for (var yearData in data) DataCollectionYearTile(yearData)
               ],
             ),
+            ElevatedButton(
+                  child: Text(
+                    "View Overall Data",
+                  ),
+                  onPressed: data.length > 0
+                      ? () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  View670GraphScreen(statistic: data),
+                            ),
+                          );
+                        }
+                      : null,
+                ),
+          ])
+    )
     );
   }
 }

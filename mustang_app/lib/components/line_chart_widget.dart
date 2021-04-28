@@ -5,25 +5,11 @@ import 'package:mustang_app/utils/team_statistic.dart';
 enum DataType { OPR, DPR, CCWM, WINRATE, CONTRIBUTION }
 
 class LineChartWidget extends StatelessWidget {
-  // final List<charts.Series> seriesList;
-  // final bool animate;
-  // final String teamCode;
-  // final List<double> oprs;
+  
   final List<charts.Series<LinearStats, DateTime>> data;
   final double height, width;
 
   LineChartWidget({this.data, this.height: 300, this.width: 50});
-
-  // LineChartWidget(this.seriesList, {this.animate});
-
-  // /// Creates a [LineChart] with sample data and no transition.
-  // LineChartWidget.withSampleData(String teamCode, List<double> oprs) {
-  //   new LineChartWidget(
-  //     _createData(teamCode, oprs),
-  //     // Disable animations for image tests.
-  //     animate: false,
-  //   );
-  // }
 
   static List<charts.Series<LinearStats, DateTime>> createTeamData(
       TeamStatistic stats) {
