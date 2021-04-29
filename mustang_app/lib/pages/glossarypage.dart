@@ -4,12 +4,14 @@ import 'web_view_container.dart';
 
 class GlossaryPage extends StatelessWidget {
   static const String route = './GlossaryPage';
-  final _links = ['http://bit.ly/670appglossary'];
+  final _links = ['http://bit.ly/670glossaryold'];
+  //final _links = ['http://bit.ly/670appglossary'];
+  
 
   @override
   Widget build(BuildContext context) {
     return Screen(
-        title: 'Glossary ',
+        title: 'Glossary',
         includeBottomNav: true,
         child: Container(
             child: SingleChildScrollView(
@@ -17,18 +19,22 @@ class GlossaryPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: _links.map((link) => _urlButton(context, link)).toList(),
+          
         ))));
   }
 
-  Widget _urlButton(BuildContext context, String url) {
+  Widget _urlButton(BuildContext context, String url1) {
     return Container(
         padding: EdgeInsets.all(20.0),
+        //glossary google doc
         child: FlatButton(
+          child: Text('Glossary Google Doc'),
           color: Theme.of(context).primaryColor,
           padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
-          child: Text(url),
-          onPressed: () => _handleURLButtonPress(context, url),
-        ));
+          //child: Text(url),
+          onPressed: () => _handleURLButtonPress(context, url1),
+        )
+    );
   }
 
   void _handleURLButtonPress(BuildContext context, String url) {
