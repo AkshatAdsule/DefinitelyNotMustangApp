@@ -1,27 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/constants/constants.dart';
+import 'package:mustang_app/pages/scouting/map_scouting.dart';
 import 'dart:math';
 import '../backend/game_action.dart';
 import './game_map.dart';
 
 // ignore: must_be_immutable
 class ClimbScoutingOverlay extends StatelessWidget {
-  void Function(ActionType type, BuildContext context) _addAction;
-  void Function(double millisecondsElapsed) _setClimb;
-  Stopwatch _stopwatch;
-  double _sliderValue = 2;
+  GlobalKey<ZoneGridState> zoneGridKey;
+  GlobalKey<MapScoutingState> mapScoutingKey;
 
   ClimbScoutingOverlay({
-    void Function(double millisecondsElapsed) setClimb,
-    void Function(ActionType type, BuildContext context) addAction,
-    Stopwatch stopwatch,
-    double sliderValue,
-  }) {
-    _stopwatch = stopwatch;
-    _addAction = addAction;
-    _setClimb = setClimb;
-    _sliderValue = sliderValue;
-  }
+    this.zoneGridKey,
+    this.mapScoutingKey,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +29,12 @@ class ClimbScoutingOverlay extends StatelessWidget {
               width: 200,
               child: Slider(
                 divisions: 2,
-                label: _sliderValue.round().toString(),
-                onChanged: (newVal) => _setClimb(newVal),
+                label: mapScoutingKey.currentState.sliderVal.round().toString(),
+                onChanged: (newVal) =>
+                    mapScoutingKey.currentState.setClimb(newVal),
                 min: 1,
                 max: 3,
-                value: _sliderValue,
+                value: mapScoutingKey.currentState.sliderVal,
               ),
             ),
           ),

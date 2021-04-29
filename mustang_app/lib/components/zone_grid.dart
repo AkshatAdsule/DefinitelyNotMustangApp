@@ -7,7 +7,6 @@ enum AnimationType { TRANSLATE, FADE }
 
 // ignore: must_be_immutable
 class ZoneGrid extends StatefulWidget {
-  _ZoneGridState _zoneGridState;
   Function(int x, int y) _onTap;
   Widget Function(
           int x, int y, bool isSelected, double cellWidth, double cellHeight)
@@ -31,38 +30,24 @@ class ZoneGrid extends StatefulWidget {
       List<Widget> Function(BoxConstraints constraints, List<Offset> selections,
               double cellWidth, double cellHeight)
           createOverlay})
-      : _zoneGridState = _ZoneGridState(
-            onTap, createCell, rows, cols, multiSelect, type, createOverlay),
-        _rows = rows,
-        _cols = cols,
-        _onTap = onTap,
-        _createCell = createCell,
-        _multiSelect = multiSelect,
-        _type = type,
-        _createOverlay = createOverlay,
-        super(key: key);
-
-  int get x => _zoneGridState.x;
-
-  int get y => _zoneGridState.y;
-
-  bool get hasSelected => _zoneGridState.hasSelected;
-
-  int get numSelected => _zoneGridState.numSelected;
-
-  List<Offset> get selections => _zoneGridState.selections;
-
-  void clearSelections() => _zoneGridState.clearSelections();
+      : super(key: key) {
+    _rows = rows;
+    _cols = cols;
+    _onTap = onTap;
+    _createCell = createCell;
+    _multiSelect = multiSelect;
+    _type = type;
+    _createOverlay = createOverlay;
+  }
 
   @override
-  _ZoneGridState createState() {
-    _zoneGridState = _ZoneGridState(
+  ZoneGridState createState() {
+    return ZoneGridState(
         _onTap, _createCell, _rows, _cols, _multiSelect, _type, _createOverlay);
-    return _zoneGridState;
   }
 }
 
-class _ZoneGridState extends State<ZoneGrid> {
+class ZoneGridState extends State<ZoneGrid> {
   int _selectedX = 0, _selectedY = 0;
   int _rows, _cols;
   Widget overlay;
@@ -78,7 +63,7 @@ class _ZoneGridState extends State<ZoneGrid> {
   List<Widget> Function(BoxConstraints constraints, List<Offset> selections,
       double cellWidth, double cellHeight) _createOverlay;
 
-  _ZoneGridState(this._onTap, this._createCell, this._rows, this._cols,
+  ZoneGridState(this._onTap, this._createCell, this._rows, this._cols,
       this._multiSelect, this._type, this._createOverlay);
 
   @override

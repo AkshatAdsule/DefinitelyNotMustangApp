@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/components/zone_grid.dart';
+import 'package:mustang_app/pages/scouting/map_scouting.dart';
 import '../backend/game_action.dart';
 
 // ignore: must_be_immutable
 class DefenseScoutingOverlay extends StatelessWidget {
-  void Function(ActionType type, BuildContext context) _addAction;
-  Stopwatch _stopwatch;
+  GlobalKey<ZoneGridState> zoneGridKey;
+  GlobalKey<MapScoutingState> mapScoutingKey;
 
   DefenseScoutingOverlay({
-    void Function(ActionType type, BuildContext context) addAction,
-    Stopwatch stopwatch,
-  }) {
-    _stopwatch = stopwatch;
-    _addAction = addAction;
-  }
+    this.zoneGridKey,
+    this.mapScoutingKey,
+  });
 
   @override
   Widget build(BuildContext context) {

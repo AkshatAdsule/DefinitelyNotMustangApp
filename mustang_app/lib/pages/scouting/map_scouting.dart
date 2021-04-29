@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:mustang_app/components/PathPainter.dart';
 import 'package:mustang_app/components/climb_scouting_overlay.dart';
 import 'package:mustang_app/components/climb_scouting_side.dart';
+import 'package:mustang_app/components/default_zone_grid_overlay.dart';
 import 'package:mustang_app/components/defense_scouting_overlay.dart';
 import 'package:mustang_app/components/offense_scouting_overlay.dart';
 import 'package:mustang_app/components/stopwatch_display.dart';
@@ -24,181 +24,81 @@ class MapScouting extends StatefulWidget {
   static const String route = '/MapScouter';
   String _teamNumber, _matchNumber, _allianceColor;
   bool _offenseOnRightSide;
+  GlobalKey<MapScoutingState> _key;
 
-  MapScouting(
-      {String teamNumber,
-      String matchNumber,
-      String allianceColor,
-      bool offenseOnRightSide}) {
+  MapScouting({
+    GlobalKey<MapScoutingState> key,
+    String teamNumber,
+    String matchNumber,
+    String allianceColor,
+    bool offenseOnRightSide,
+  }) : super(key: key) {
     _teamNumber = teamNumber;
     _matchNumber = matchNumber;
     _allianceColor = allianceColor;
     _offenseOnRightSide = offenseOnRightSide;
+    _key = key;
   }
 
   @override
-  _MapScoutingState createState() => _MapScoutingState(
-      _teamNumber, _matchNumber, _allianceColor, _offenseOnRightSide);
+  MapScoutingState createState() => MapScoutingState(
+        _key,
+        _teamNumber,
+        _matchNumber,
+        _allianceColor,
+        _offenseOnRightSide,
+      );
 }
 
-class _MapScoutingState extends State<MapScouting>
-// with SingleTickerProviderStateMixin
-{
-  AnimationController _controller;
-  bool _pushMode, _startedScouting;
-  Stopwatch _stopwatch;
-  String _teamNumber, _matchNumber, _allianceColor;
+class MapScoutingState extends State<MapScouting> {
+  bool startedScouting;
+  Stopwatch stopwatch;
+  String teamNumber, matchNumber, allianceColor;
   Color _bgColor = Colors.blueGrey.shade300;
-
-  bool _offenseOnRightSide;
-  ZoneGrid _zoneGrid;
-
-  List<GameAction> _actions;
-  int _sliderLastChanged;
-  bool _completedRotationControl,
-      _completedPositionControl,
-      _crossedInitiationLine;
-  double _sliderVal;
-  int _counter = 0;
-  bool _pushTextStart;
+  bool offenseOnRightSide;
+  List<GameAction> actions;
+  int sliderLastChanged;
+  bool completedRotationControl,
+      completedPositionControl,
+      crossedInitiationLine;
+  double sliderVal;
+  int counter = 0;
+  bool pushTextStart;
   Timer _endgameTimer, _endTimer, _teleopTimer;
-  int _prevX = -1, _prevY = -1, _pushStartX = -1, _pushStartY = -1;
-  List<bool> _toggleModes = [true, false, false];
+  int prevX = -1, prevY = -1, pushStartX = -1, pushStartY = -1;
+  List<bool> toggleModes = [true, false, false];
 
-  _MapScoutingState(
-    this._teamNumber,
-    this._matchNumber,
-    this._allianceColor,
-    this._offenseOnRightSide,
+  GlobalKey<MapScoutingState> mapScoutingKey;
+  final GlobalKey<ZoneGridState> zoneGridKey = GlobalKey<ZoneGridState>();
+  final GlobalKey<AnimatedPushLineState> pushLineKey =
+      GlobalKey<AnimatedPushLineState>();
+
+  MapScoutingState(
+    this.mapScoutingKey,
+    this.teamNumber,
+    this.matchNumber,
+    this.allianceColor,
+    this.offenseOnRightSide,
   );
 
   @override
   void initState() {
     super.initState();
-    // _controller = new AnimationController(
-    //     vsync: this,
-    //   duration: Duration(milliseconds: 1000),
-    // );
-    _pushMode = false;
-    _startedScouting = false;
-    _stopwatch = new Stopwatch();
-    _zoneGrid = SelectableZoneGrid(
-      GlobalKey(),
-      (int x, int y) {
-        if (x != _prevX || y != _prevY) {
-          setState(() {
-            _prevX = x;
-            _prevY = y;
-            _counter = 0;
-          });
-        }
-        // if (_pushTextStart) {
-        //   _startAnimation();
-        // }
-      },
-      type: AnimationType.TRANSLATE,
-      multiSelect: true,
-      createOverlay: (BoxConstraints constraints, List<Offset> selections,
-          double cellWidth, double cellHeight) {
-        if (selections.length == 0) {
-          return [];
-        }
-        if (_pushTextStart) {
-          return [
-            ...(selections.length > 1
-                ? [
-                    CustomPaint(
-                      painter: PathPainter([
-                        Offset(
-                          cellWidth * _pushStartX + cellWidth / 2,
-                          cellHeight * _pushStartY + cellHeight / 2,
-                        ),
-                        Offset(
-                          cellWidth * selections.last.dx + cellWidth / 2,
-                          cellHeight * selections.last.dy + cellHeight / 2,
-                        ),
-                      ], animation: _controller),
-                    ),
-                    AnimatedPositioned(
-                      curve: Curves.fastOutSlowIn,
-                      duration: Duration(milliseconds: 1000),
-                      left: cellWidth * _pushStartX,
-                      top: cellHeight * _pushStartY,
-                      child: Container(
-                        width: cellWidth,
-                        height: cellHeight,
-                        child: Center(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: RadialGradient(
-                                colors: [
-                                  Colors.lightGreenAccent.withOpacity(0.9),
-                                  Colors.green,
-                                ],
-                              ),
-                            ),
-                            width: 15,
-                            height: 15,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ]
-                : []),
-            AnimatedPositioned(
-              child: Container(
-                width: cellWidth,
-                height: cellHeight,
-                child: Image.asset('assets/bb8.gif'),
-              ),
-              left: cellWidth * selections.last.dx,
-              top: cellHeight * selections.last.dy,
-              curve: Curves.fastOutSlowIn,
-              duration: Duration(milliseconds: 1000),
-            ),
-          ];
-        } else {
-          return [
-            AnimatedPositioned(
-              child: Container(
-                // decoration: BoxDecoration(
-                //   borderRadius: BorderRadius.circular(10),
-                //   gradient: RadialGradient(
-                //     colors: [
-                //       Colors.green,
-                //       Colors.green, //.withOpacity(0.9),
-                //       Colors.lightGreenAccent.withOpacity(0.9),
-                //     ],
-                //   ),
-                // ),
-                width: cellWidth,
-                height: cellHeight,
-                child: Image.asset('assets/bb8.gif'),
-              ),
-              left: cellWidth * selections.last.dx,
-              top: cellHeight * selections.last.dy,
-              curve: Curves.fastOutSlowIn,
-              duration: Duration(milliseconds: 1000),
-            )
-          ];
-        }
-      },
-    );
-    _completedRotationControl = false;
-    _completedPositionControl = false;
-    _crossedInitiationLine = false;
-    _actions = [];
-    _counter = 0;
-    _pushTextStart = false;
-    _sliderLastChanged = 0;
-    _sliderVal = 2;
+    startedScouting = false;
+    stopwatch = new Stopwatch();
+    completedRotationControl = false;
+    completedPositionControl = false;
+    crossedInitiationLine = false;
+    actions = [];
+    counter = 0;
+    pushTextStart = false;
+    sliderLastChanged = 0;
+    sliderVal = 2;
   }
 
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
 
     if (_endTimer != null) {
       _endTimer.cancel();
@@ -210,31 +110,25 @@ class _MapScoutingState extends State<MapScouting>
       _teleopTimer.cancel();
     }
 
-    if (_stopwatch != null && _stopwatch.isRunning) _stopwatch.stop();
-  }
-
-  void _startAnimation() {
-    _controller.stop();
-    _controller.reset();
-    _controller.forward();
+    if (stopwatch != null && stopwatch.isRunning) stopwatch.stop();
   }
 
   void _initTimers() {
-    if (_stopwatch.elapsedMilliseconds <= Constants.endgameStartMillis) {
+    if (stopwatch.elapsedMilliseconds <= Constants.endgameStartMillis) {
       _endgameTimer = new Timer(
           Duration(milliseconds: Constants.endgameStartMillis),
           () => setState(() {
                 _bgColor = Colors.red.shade300;
               }));
     }
-    if (_stopwatch.elapsedMilliseconds <= Constants.matchEndMillis) {
+    if (stopwatch.elapsedMilliseconds <= Constants.matchEndMillis) {
       _endTimer = new Timer(
           Duration(milliseconds: Constants.matchEndMillis),
           () => setState(() {
                 _bgColor = Colors.white;
               }));
     }
-    if (_stopwatch.elapsedMilliseconds <= Constants.teleopStartMillis) {
+    if (stopwatch.elapsedMilliseconds <= Constants.teleopStartMillis) {
       _teleopTimer = new Timer(
           Duration(milliseconds: Constants.teleopStartMillis),
           () => setState(() {
@@ -243,42 +137,36 @@ class _MapScoutingState extends State<MapScouting>
     }
   }
 
-  void _setPush() {
+  void setPush() {
     setState(() {
-      if (!_pushTextStart) {
-        _zoneGrid.clearSelections();
-        _pushStartX = _zoneGrid.x;
-        _pushStartY = _zoneGrid.y;
+      if (!pushTextStart) {
+        zoneGridKey.currentState.clearSelections();
+        pushStartX = zoneGridKey.currentState.x;
+        pushStartY = zoneGridKey.currentState.y;
       }
-      _pushTextStart = !_pushTextStart;
+      pushTextStart = !pushTextStart;
     });
   }
 
-  void _setCounter(int newCount) {
-    setState(() {
-      _counter = newCount;
-    });
-  }
-
-  void _onWheelPress() {
-    if (!_completedRotationControl) {
-      _addAction(ActionType.OTHER_WHEEL_ROTATION, context);
+  void onWheelPress() {
+    if (!completedRotationControl) {
+      addAction(ActionType.OTHER_WHEEL_ROTATION, context);
       setState(() {
-        _completedRotationControl = true;
+        completedRotationControl = true;
       });
     } else {
-      _addAction(ActionType.OTHER_WHEEL_POSITION, context);
+      addAction(ActionType.OTHER_WHEEL_POSITION, context);
       setState(() {
-        _completedPositionControl = true;
+        completedPositionControl = true;
       });
     }
   }
 
-  bool _addAction(ActionType type, BuildContext context) {
-    int now = _stopwatch.elapsedMilliseconds;
-    int x = _zoneGrid.x;
-    int y = _zoneGrid.y;
-    bool hasSelected = _zoneGrid.hasSelected;
+  bool addAction(ActionType type, BuildContext context) {
+    int now = stopwatch.elapsedMilliseconds;
+    int x = zoneGridKey.currentState.x;
+    int y = zoneGridKey.currentState.y;
+    bool hasSelected = zoneGridKey.currentState.hasSelected;
     GameAction action;
     if (hasSelected && GameAction.requiresLocation(type)) {
       action = new GameAction(type, now.toDouble(), x.toDouble(), y.toDouble());
@@ -291,13 +179,13 @@ class _MapScoutingState extends State<MapScouting>
       ));
       return false;
     }
-    _actions.add(action);
-    _updateCounter(action);
-    _vibrate();
+    actions.add(action);
+    updateCounter(action);
+    vibrate();
     return true;
   }
 
-  Future<void> _vibrate() async {
+  Future<void> vibrate() async {
     if (Constants.enableVibrations && await Vibration.hasVibrator()) {
       if (await Vibration.hasCustomVibrationsSupport()) {
         if (await Vibration.hasAmplitudeControl()) {
@@ -320,89 +208,94 @@ class _MapScoutingState extends State<MapScouting>
     }
   }
 
-  void _updateCounter(GameAction action) {
+  void updateCounter(GameAction action) {
     String type = action.action.toString();
     if (type.contains("SHOT") ||
         type.contains("MISSED") ||
         type.contains("INTAKE") ||
         type.contains("PREV")) {
       setState(() {
-        _counter++;
+        counter++;
       });
     } else {
       setState(() {
-        _counter = 0;
+        counter = 0;
       });
     }
   }
 
-  void _setClimb(double newVal) {
+  void setClimb(double newVal) {
     setState(() {
-      _sliderVal = newVal;
-      _sliderLastChanged = _stopwatch.elapsedMilliseconds;
+      sliderVal = newVal;
+      sliderLastChanged = stopwatch.elapsedMilliseconds;
     });
   }
 
-  void _addClimb(ActionType actionType) {
-    _actions.removeWhere((element) {
+  void addClimb(ActionType actionType) {
+    actions.removeWhere((element) {
       String type = element.action.toString();
       return type.contains("PARKED") ||
           type.contains("CLIMB") ||
           type.contains("LEVELLED");
     });
 
-    _actions.add(
+    actions.add(
       GameAction(
         actionType,
-        _sliderLastChanged.toDouble() ?? Constants.endgameStartMillis,
-        actionType == ActionType.OTHER_CLIMB_MISS ? _zoneGrid.x : _sliderVal,
-        actionType == ActionType.OTHER_CLIMB_MISS ? _zoneGrid.y : _sliderVal,
+        sliderLastChanged.toDouble() ?? Constants.endgameStartMillis,
+        actionType == ActionType.OTHER_CLIMB_MISS
+            ? zoneGridKey.currentState.x
+            : sliderVal,
+        actionType == ActionType.OTHER_CLIMB_MISS
+            ? zoneGridKey.currentState.y
+            : sliderVal,
       ),
     );
+    vibrate();
   }
 
-  void _setCrossedInitiationLine(bool newVal) {
+  void setCrossedInitiationLine(bool newVal) {
     setState(() {
-      _crossedInitiationLine = newVal;
+      crossedInitiationLine = newVal;
     });
   }
 
   void _finishGame(BuildContext context) {
     Navigator.pushNamed(context, MatchEndScouter.route, arguments: {
-      'teamNumber': _teamNumber,
-      'matchNumber': _matchNumber,
-      'actions': _actions,
-      'allianceColor': _allianceColor,
-      'offenseOnRightSide': _offenseOnRightSide,
-      'climbLocation': _sliderVal,
+      'teamNumber': teamNumber,
+      'matchNumber': matchNumber,
+      'actions': actions,
+      'allianceColor': allianceColor,
+      'offenseOnRightSide': offenseOnRightSide,
+      'climbLocation': sliderVal,
     });
   }
 
   GameAction _undo() {
-    if (_actions.length > 0) {
-      GameAction action = _actions.removeLast();
+    if (actions.length > 0) {
+      GameAction action = actions.removeLast();
       switch (action.action) {
         case ActionType.OTHER_WHEEL_ROTATION:
           setState(() {
-            _completedRotationControl = false;
+            completedRotationControl = false;
           });
           break;
         case ActionType.OTHER_WHEEL_POSITION:
           setState(() {
-            _completedPositionControl = false;
+            completedPositionControl = false;
           });
           break;
         case ActionType.OTHER_CROSSED_INITIATION_LINE:
           setState(() {
-            _crossedInitiationLine = false;
+            crossedInitiationLine = false;
           });
           break;
         default:
           break;
       }
-      if (_counter > 0) {
+      if (counter > 0) {
         setState(() {
-          _counter--;
+          counter--;
         });
       }
       return action;
@@ -412,63 +305,15 @@ class _MapScoutingState extends State<MapScouting>
 
   @override
   Widget build(BuildContext context) {
-    Widget scoutingOverlay = Container(
-      child: IndexedStack(
-        index: _toggleModes.indexOf(true),
-        children: [
-          OffenseScoutingOverlay(
-            addAction: _addAction,
-            stopwatch: _stopwatch,
-            completedPositionControl: _completedPositionControl,
-            completedRotationControl: _completedRotationControl,
-            crossedInitiationLine: _crossedInitiationLine,
-            onWheelPress: _onWheelPress,
-            setClimb: _setClimb,
-            setCrossedInitiationLine: _setCrossedInitiationLine,
-          ),
-          DefenseScoutingOverlay(
-            addAction: _addAction,
-            stopwatch: _stopwatch,
-          ),
-          ClimbScoutingOverlay(
-            addAction: _addAction,
-            stopwatch: _stopwatch,
-            setClimb: _setClimb,
-            sliderValue: _sliderVal,
-          ),
-        ],
-      ),
-    );
-
-    Widget scoutingSide = Container(
-      child: IndexedStack(
-        index: _toggleModes.indexOf(true),
-        children: [
-          OffenseScoutingSide(
-            addAction: _addAction,
-          ),
-          DefenseScoutingSide(
-            addAction: _addAction,
-            pushTextStart: _pushTextStart,
-            setPush: _setPush,
-          ),
-          ClimbScoutingSide(
-            addAction: _addAction,
-            setClimb: _setClimb,
-            addClimb: _addClimb,
-          ),
-        ],
-      ),
-    );
-
     return Screen(
       title: 'Map Scouting',
+      includeBottomNav: false,
       headerButtons: [
         Container(
           margin: EdgeInsets.only(
             right: 10,
           ),
-          child: _startedScouting ? StopwatchDisplay() : Container(),
+          child: startedScouting ? StopwatchDisplay() : Container(),
         ),
         Container(
           margin: EdgeInsets.only(
@@ -478,7 +323,7 @@ class _MapScoutingState extends State<MapScouting>
               style: game_button.ButtonStyle.FLAT,
               type: game_button.ButtonType.COUNTER,
               onPressed: () {},
-              text: "Counter: " + (_counter ?? 0).toString()),
+              text: "Counter: " + (counter ?? 0).toString()),
         ),
         Container(
           margin: EdgeInsets.only(
@@ -488,56 +333,125 @@ class _MapScoutingState extends State<MapScouting>
         ),
         FinishGameButton(
           () => _finishGame(context),
-          _stopwatch,
+          stopwatch,
         )
       ],
-      includeBottomNav: false,
       child: Container(
-          color: _bgColor,
-          child: BlurOverlay(
-            unlocked: _startedScouting,
-            background: GameMap(
-              stopwatch: _stopwatch,
-              allianceColor: _allianceColor,
-              offenseOnRightSide: _offenseOnRightSide,
-              zoneGrid: _zoneGrid,
-              imageChildren: [scoutingOverlay],
-              sideWidget: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        color: _bgColor,
+        child: BlurOverlay(
+          unlocked: startedScouting,
+          background: GameMap(
+            stopwatch: stopwatch,
+            allianceColor: allianceColor,
+            offenseOnRightSide: offenseOnRightSide,
+            zoneGrid: SelectableZoneGrid(
+              zoneGridKey,
+              (int x, int y) {
+                if (x != prevX || y != prevY) {
+                  setState(() {
+                    prevX = x;
+                    prevY = y;
+                    counter = 0;
+                  });
+                }
+                // if (pushTextStart) {
+                //   pushLineKey.currentState.startAnimation();
+                // }
+              },
+              type: AnimationType.TRANSLATE,
+              multiSelect: true,
+              createOverlay: (BoxConstraints constraints,
+                      List<Offset> selections,
+                      double cellWidth,
+                      double cellHeight) =>
+                  defaultOverlay(
+                constraints,
+                selections,
+                cellWidth,
+                cellHeight,
+                zoneGridKey,
+                mapScoutingKey,
+                pushLineKey,
+              ),
+            ),
+            imageChildren: [
+              Container(
+                child: IndexedStack(
+                  index: toggleModes.indexOf(true),
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 10),
-                      child: ModeToggle(
-                        onPressed: (int ind) {
-                          setState(() {
-                            List<bool> newToggle = List.generate(
-                                _toggleModes.length, (index) => index == ind);
-                            _toggleModes = newToggle;
-                          });
-                        },
-                        isSelected: _toggleModes,
-                      ),
+                    OffenseScoutingOverlay(
+                      mapScoutingKey: mapScoutingKey,
+                      zoneGridKey: zoneGridKey,
                     ),
-                    Flexible(
-                      flex: 1,
-                      child: scoutingSide,
+                    DefenseScoutingOverlay(
+                      mapScoutingKey: mapScoutingKey,
+                      zoneGridKey: zoneGridKey,
+                    ),
+                    ClimbScoutingOverlay(
+                      mapScoutingKey: mapScoutingKey,
+                      zoneGridKey: zoneGridKey,
                     ),
                   ],
                 ),
+              )
+            ],
+            sideWidget: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: ModeToggle(
+                      onPressed: (int ind) {
+                        setState(
+                          () {
+                            List<bool> newToggle = List.generate(
+                                toggleModes.length, (index) => index == ind);
+                            toggleModes = newToggle;
+                          },
+                        );
+                      },
+                      isSelected: toggleModes,
+                    ),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: Container(
+                      child: IndexedStack(
+                        index: toggleModes.indexOf(true),
+                        children: [
+                          OffenseScoutingSide(
+                            mapScoutingKey: mapScoutingKey,
+                            zoneGridKey: zoneGridKey,
+                          ),
+                          DefenseScoutingSide(
+                            mapScoutingKey: mapScoutingKey,
+                            zoneGridKey: zoneGridKey,
+                          ),
+                          ClimbScoutingSide(
+                            mapScoutingKey: mapScoutingKey,
+                            zoneGridKey: zoneGridKey,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            text: Text('Start'),
-            onEnd: () {
-              setState(
-                () {
-                  _startedScouting = true;
-                  _stopwatch.start();
-                  _initTimers();
-                },
-              );
-            },
-          )),
+          ),
+          text: Text('Start'),
+          onEnd: () {
+            setState(
+              () {
+                startedScouting = true;
+                stopwatch.start();
+                _initTimers();
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 }
@@ -578,12 +492,12 @@ class UndoButton extends StatelessWidget {
 // ignore: must_be_immutable
 class FinishGameButton extends StatelessWidget {
   void Function() _onClick;
-  Stopwatch _stopwatch;
-  FinishGameButton(this._onClick, this._stopwatch);
+  Stopwatch stopwatch;
+  FinishGameButton(this._onClick, this.stopwatch);
 
   @override
   Widget build(BuildContext context) {
-    return _stopwatch.elapsedMilliseconds >= Constants.matchEndMillis
+    return stopwatch.elapsedMilliseconds >= Constants.matchEndMillis
         ? Container(
             margin: EdgeInsets.only(
               right: 10,

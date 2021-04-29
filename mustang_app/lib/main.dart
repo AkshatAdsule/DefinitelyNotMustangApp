@@ -15,7 +15,8 @@ void main() async {
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   final _observer = NavigatorObserverWithOrientation();
-
+  final GlobalKey<MapScoutingState> mapScoutingKey =
+      GlobalKey<MapScoutingState>();
   // AuthService _AuthService = AuthService();
 
   Route<dynamic> _onGenerateRoute(RouteSettings settings) {
@@ -93,6 +94,7 @@ class MyApp extends StatelessWidget {
           offenseOnRightSide: args['offenseOnRightSide'],
           teamNumber: args['teamNumber'],
           matchNumber: args['matchNumber'],
+          key: mapScoutingKey,
         );
         orientation = ScreenOrientation.landscapeOnly;
         break;
