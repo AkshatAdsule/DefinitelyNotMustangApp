@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/pages/scouting/map_scouting.dart';
 
-import 'PathPainter.dart';
+import 'path_painter.dart';
 
 class AnimatedPushLine extends StatefulWidget {
   final List<Offset> points;
@@ -16,6 +16,7 @@ class AnimatedPushLine extends StatefulWidget {
 class AnimatedPushLineState extends State<AnimatedPushLine>
     with TickerProviderStateMixin {
   AnimationController _controller;
+  CurvedAnimation _animation;
   List<Offset> points;
 
   AnimatedPushLineState({
@@ -28,7 +29,10 @@ class AnimatedPushLineState extends State<AnimatedPushLine>
     _controller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 1000),
+      reverseDuration: Duration(milliseconds: 500),
     );
+    _animation =
+        CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn);
   }
 
   @override
@@ -37,10 +41,24 @@ class AnimatedPushLineState extends State<AnimatedPushLine>
     _controller.dispose();
   }
 
+  void setPoints(List<Offset> newPoints) {
+    setState(() {
+      points = newPoints;
+    });
+  }
+
   void startAnimation() {
     _controller.stop();
     _controller.reset();
     _controller.forward();
+  }
+
+  void selectNewLocation(List<Offset> newPoints) {
+    _controller.reverse().then((value) {
+      setState(() {
+        points = newPoints;
+      });
+    });
   }
 
   @override
@@ -49,7 +67,7 @@ class AnimatedPushLineState extends State<AnimatedPushLine>
       painter: PathPainter(
         points,
         shouldAnimate: true,
-        animation: _controller,
+        animation: _animation,
       ),
     );
   }
@@ -84,7 +102,7 @@ class MovingRobot extends StatelessWidget {
 
 class PushStartPoint extends StatelessWidget {
   final double cellWidth, cellHeight;
-  int x, y;
+  final int x, y;
 
   PushStartPoint(
     this.x,
@@ -138,40 +156,51 @@ List<Widget> defaultOverlay(
   if (selections.length == 0) {
     return [];
   }
+
+  List<Offset> newPoints = [
+    Offset(
+      cellWidth * mapScoutingKey.currentState.pushStartX + cellWidth / 2,
+      cellHeight * mapScoutingKey.currentState.pushStartY + cellHeight / 2,
+    ),
+    Offset(
+      cellWidth * selections.last.dx + cellWidth / 2,
+      cellHeight * selections.last.dy + cellHeight / 2,
+    ),
+  ];
+
+  if (pushLineKey.currentState != null &&
+      pushLineKey.currentState.points != newPoints) {
+    pushLineKey.currentState.setPoints(newPoints);
+  }
   if (mapScoutingKey.currentState.pushTextStart) {
     return [
-      ...(selections.length > 1
-          ? [
-              ...children,
-              // AnimatedPushLine(
-              //   key: pushLineKey,
-              //   points: [
-              //     Offset(
-              //       cellWidth * mapScoutingKey.currentState.pushStartX +
-              //           cellWidth / 2,
-              //       cellHeight * mapScoutingKey.currentState.pushStartY +
-              //           cellHeight / 2,
-              //     ),
-              //     Offset(
-              //       cellWidth * selections.last.dx + cellWidth / 2,
-              //       cellHeight * selections.last.dy + cellHeight / 2,
-              //     ),
-              //   ],
-              // ),
-              PushStartPoint(
-                mapScoutingKey.currentState.pushStartX,
-                mapScoutingKey.currentState.pushStartY,
-                cellWidth,
-                cellHeight,
-              )
-            ]
-          : []),
+      AnimatedPushLine(
+        key: pushLineKey,
+        points: [
+          Offset(
+            cellWidth * mapScoutingKey.currentState.pushStartX + cellWidth / 2,
+            cellHeight * mapScoutingKey.currentState.pushStartY +
+                cellHeight / 2,
+          ),
+          Offset(
+            cellWidth * selections.last.dx + cellWidth / 2,
+            cellHeight * selections.last.dy + cellHeight / 2,
+          ),
+        ],
+      ),
+      PushStartPoint(
+        mapScoutingKey.currentState.pushStartX,
+        mapScoutingKey.currentState.pushStartY,
+        cellWidth,
+        cellHeight,
+      ),
       MovingRobot(
         selections.last.dx,
         selections.last.dy,
         cellWidth,
         cellHeight,
       ),
+      ...children,
     ];
   } else {
     return [

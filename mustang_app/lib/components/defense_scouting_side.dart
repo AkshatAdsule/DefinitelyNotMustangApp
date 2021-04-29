@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/game_action.dart';
 import 'package:mustang_app/components/zone_grid.dart';
@@ -119,8 +120,22 @@ class DefenseScoutingSide extends StatelessWidget {
                   child: Text(mapScoutingKey.currentState.pushTextStart
                       ? "Push End"
                       : "Push Start"),
-                )
-              ],
+                ),
+                mapScoutingKey.currentState.pushTextStart
+                    ? ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.red,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(1),
+                              side: BorderSide(color: Colors.black, width: 1)),
+                        ),
+                        onPressed: () {
+                          mapScoutingKey.currentState.setPush();
+                        },
+                        child: Text("Cancel"),
+                      )
+                    : null,
+              ].where((w) => w != null).toList(),
             ),
           ),
           Flexible(

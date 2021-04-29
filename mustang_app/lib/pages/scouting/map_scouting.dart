@@ -354,9 +354,10 @@ class MapScoutingState extends State<MapScouting> {
                     counter = 0;
                   });
                 }
-                // if (pushTextStart) {
-                //   pushLineKey.currentState.startAnimation();
-                // }
+                if (pushTextStart) {
+                  zoneGridKey.currentState.clearSelections();
+                  pushLineKey.currentState.startAnimation();
+                }
               },
               type: AnimationType.TRANSLATE,
               multiSelect: true,

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:mustang_app/constants/constants.dart';
 
@@ -100,6 +98,13 @@ class ZoneGridState extends State<ZoneGrid> {
   List<Offset> get selections => _selections;
 
   void clearSelections() {
+    _selected = List.generate(
+      _rows,
+      (y) => List.generate(
+        _cols,
+        (x) => _selections.last.dy.toInt() == y && _selections.last.dx == x,
+      ),
+    );
     _selections = [_selections.last];
   }
 
@@ -115,7 +120,6 @@ class ZoneGridState extends State<ZoneGrid> {
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () {
-                _onTap(j, i);
                 setState(() {
                   if (_selected[i][j]) {
                     _selections.removeWhere((element) =>
@@ -131,6 +135,7 @@ class ZoneGridState extends State<ZoneGrid> {
                   _selectedX = j;
                   _selectedY = i;
                 });
+                _onTap(j, i);
               },
               child: _createCell(j, i, _selected[i][j], cellWidth, cellHeight),
             ),
@@ -144,8 +149,6 @@ class ZoneGridState extends State<ZoneGrid> {
 
   @override
   Widget build(BuildContext context) {
-    double height = 2 / _rows, width = 2 / _cols;
-    double x = _selectedX * width - 1, y = (_selectedY) * height - 1;
     return Positioned.fill(
       child: LayoutBuilder(
         builder: (context, constraints) {
