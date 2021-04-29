@@ -5,6 +5,7 @@ import 'exports/pages.dart';
 import 'utils/orientation_helpers.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SetupService.setup();
@@ -19,103 +20,100 @@ class MyApp extends StatelessWidget {
 
   Route<dynamic> _onGenerateRoute(RouteSettings settings) {
     Map<String, dynamic> args = settings.arguments;
+    Widget nextPage;
+    ScreenOrientation orientation;
+
     switch (settings.name) {
       case Splash.route:
-        return MaterialPageRoute(
-          builder: (context) => Splash(),
-          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
-        );
+        nextPage = Splash();
+        orientation = ScreenOrientation.portraitOnly;
+        break;
       case Login.route:
-        return MaterialPageRoute(
-          builder: (context) => Login(),
-          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
-        );
+        nextPage = Login();
+        orientation = ScreenOrientation.portraitOnly;
+        break;
       case HomePage.route:
-        return MaterialPageRoute(
-          builder: (context) => HomePage(),
-          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
-        );
-      // case Calendar.route:
-      //   return MaterialPageRoute(
-      //     builder: (context) => Calendar(),
-      //     settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
-      //   );
+        nextPage = HomePage();
+        orientation = ScreenOrientation.portraitOnly;
+        break;
       case Scouter.route:
-        return MaterialPageRoute(
-          builder: (context) => Scouter(),
-          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
-        );
+        nextPage = Scouter();
+        orientation = ScreenOrientation.portraitOnly;
+        break;
       case MatchEndScouter.route:
-        return MaterialPageRoute(
-          builder: (context) => MatchEndScouter(
-            teamNumber: args['teamNumber'],
-            matchNumber: args['matchNumber'],
-            actions: args['actions'],
-            allianceColor: args['allianceColor'],
-            offenseOnRightSide: args['offenseOnRightSide'],
-            climbLocation: args['climbLocation'],
-          ),
-          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
+        nextPage = MatchEndScouter(
+          teamNumber: args['teamNumber'],
+          matchNumber: args['matchNumber'],
+          actions: args['actions'],
+          allianceColor: args['allianceColor'],
+          offenseOnRightSide: args['offenseOnRightSide'],
+          climbLocation: args['climbLocation'],
         );
+        orientation = ScreenOrientation.portraitOnly;
+        break;
       case PostScouter.route:
-        return MaterialPageRoute(
-          builder: (context) => PostScouter(),
-          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
-        );
+        nextPage = PostScouter();
+        orientation = ScreenOrientation.portraitOnly;
+        break;
       case MapAnalysisDisplay.route:
-        return MaterialPageRoute(
-          builder: (context) => MapAnalysisDisplay(
-            teamNumber: args['teamNumber'],
-          ),
-          settings: rotationSettings(settings, ScreenOrientation.landscapeOnly),
+        nextPage = MapAnalysisDisplay(
+          teamNumber: args['teamNumber'],
         );
+        orientation = ScreenOrientation.landscapeOnly;
+        break;
       case WrittenAnalysisDisplay.route:
-        return MaterialPageRoute(
-          builder: (context) => WrittenAnalysisDisplay(
-            teamNumber: args['teamNumber'],
-          ),
-          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
+        nextPage = WrittenAnalysisDisplay(
+          teamNumber: args['teamNumber'],
         );
+        orientation = ScreenOrientation.portraitOnly;
+        break;
       case SketchPage.route:
-        return MaterialPageRoute(
-          builder: (context) => SketchPage(),
-          settings: rotationSettings(settings, ScreenOrientation.landscapeOnly),
-        );
+        nextPage = SketchPage();
+        orientation = ScreenOrientation.landscapeOnly;
+        break;
       case SearchPage.route:
-        return MaterialPageRoute(
-          builder: (context) => SearchPage(),
-          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
-        );
+        nextPage = SearchPage();
+        orientation = ScreenOrientation.portraitOnly;
+        break;
       case GlossaryPage.route:
-        return MaterialPageRoute(
-          builder: (context) => GlossaryPage(),
-          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
-        );
+        nextPage = GlossaryPage();
+        orientation = ScreenOrientation.portraitOnly;
+        break;
       case TeamInfoDisplay.route:
-        return MaterialPageRoute(
-          builder: (context) => TeamInfoDisplay(teamNumber: args['teamNumber']),
-          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
-        );
+        nextPage = TeamInfoDisplay(teamNumber: args['teamNumber']);
+        orientation = ScreenOrientation.portraitOnly;
+        break;
       case PitScouter.route:
-        return MaterialPageRoute(
-          builder: (context) => PitScouter(teamNumber: args['teamNumber']),
-          settings: rotationSettings(settings, ScreenOrientation.portraitOnly),
-        );
+        nextPage = PitScouter(teamNumber: args['teamNumber']);
+        orientation = ScreenOrientation.portraitOnly;
+        break;
       case MapScouting.route:
-        return MaterialPageRoute(
-          builder: (context) => MapScouting(
-            allianceColor: args['allianceColor'],
-            offenseOnRightSide: args['offenseOnRightSide'],
-            teamNumber: args['teamNumber'],
-            matchNumber: args['matchNumber'],
-          ),
-          settings: rotationSettings(settings, ScreenOrientation.landscapeOnly),
+        nextPage = MapScouting(
+          allianceColor: args['allianceColor'],
+          offenseOnRightSide: args['offenseOnRightSide'],
+          teamNumber: args['teamNumber'],
+          matchNumber: args['matchNumber'],
         );
+        orientation = ScreenOrientation.landscapeOnly;
+        break;
       case InputScreen.route:
-        return MaterialPageRoute(builder: (context) => InputScreen());
+        nextPage = InputScreen();
+        orientation = ScreenOrientation.portraitOnly;
+        break;
       default:
-        return null;
+        nextPage = HomePage();
+        orientation = ScreenOrientation.portraitOnly;
+        break;
     }
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => nextPage,
+      settings: orientation != null
+          ? rotationSettings(settings, orientation)
+          : settings,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return child;
+      },
+    );
   }
 
   @override
