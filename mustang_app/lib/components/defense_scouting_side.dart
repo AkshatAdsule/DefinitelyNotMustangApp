@@ -1,27 +1,21 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/game_action.dart';
+import 'package:mustang_app/components/zone_grid.dart';
+import 'package:mustang_app/pages/scouting/map_scouting.dart';
 import 'package:mustang_app/utils/orientation_helpers.dart';
 import './game_buttons.dart' as game_button;
 
 // ignore: must_be_immutable
 class DefenseScoutingSide extends StatelessWidget {
-  bool Function(ActionType type, BuildContext context) _addAction;
-  void Function() _setPush;
-  Widget _toggleMode;
-  bool _pushTextStart;
+  GlobalKey<ZoneGridState> zoneGridKey;
+  GlobalKey<MapScoutingState> mapScoutingKey;
 
-  DefenseScoutingSide(
-      {Key key,
-      Widget toggleMode,
-      void Function() setPush,
-      bool Function(ActionType type, BuildContext context) addAction,
-      bool pushTextStart})
-      : super(key: key) {
-    _toggleMode = toggleMode;
-    _addAction = addAction;
-    _setPush = setPush;
-    _pushTextStart = pushTextStart;
-  }
+  DefenseScoutingSide({
+    Key key,
+    this.zoneGridKey,
+    this.mapScoutingKey,
+  }) : super(key: key);
 
   void actionDeterminer(BuildContext context, String action) {
     List<String> types = ['Tech', 'Red', 'Yellow', 'Disabled', 'Disqual'];
@@ -31,7 +25,7 @@ class DefenseScoutingSide extends StatelessWidget {
       TextButton option = TextButton(
         child: Text(type),
         onPressed: () {
-          _addAction(
+          mapScoutingKey.currentState.addAction(
               GameAction.stringToActionType(
                   action.toUpperCase() + "_" + type.toUpperCase()),
               context);
@@ -75,25 +69,8 @@ class DefenseScoutingSide extends StatelessWidget {
                   style: game_button.ButtonStyle.RAISED,
                   type: game_button.ButtonType.ELEMENT,
                   onPressed: () {
-                    // List<int> actionLoc =
-                    _addAction(ActionType.PREV_INTAKE, context);
-                    // actionLoc.add(0);
-                    // print("actionLoc: " + actionLoc.toString());
-                    // print("prevActionLoc: " + _prevActionLoc.toString());
-                    // if (actionLoc[0] == _prevActionLoc[0] &&
-                    //     actionLoc[1] == _prevActionLoc[1] &&
-                    //     actionLoc[2] == _prevActionLoc[2]) {
-                    //   _setCounter(_counter++);
-                    // } else {
-                    //   _setCounter(0);
-                    //   _prevActionLoc[0] = actionLoc[0];
-                    //   _prevActionLoc[1] = actionLoc[1];
-                    //   _prevActionLoc[2] = actionLoc[2];
-                    // }
-                    // print(" AFTER  actionLoc: " + actionLoc.toString());
-                    // print(
-                    //     " AFTER  prevActionLoc: " + _prevActionLoc.toString());
-                    // print("intake: " + _counter.toString());
+                    mapScoutingKey.currentState
+                        .addAction(ActionType.PREV_INTAKE, context);
                   },
                   text: 'Prevent Intake',
                 ),
@@ -109,7 +86,8 @@ class DefenseScoutingSide extends StatelessWidget {
                   style: game_button.ButtonStyle.RAISED,
                   type: game_button.ButtonType.ELEMENT,
                   onPressed: () {
-                    _addAction(ActionType.PREV_INTAKE, context);
+                    mapScoutingKey.currentState
+                        .addAction(ActionType.PREV_INTAKE, context);
                   },
                   text: 'Prevent Shot',
                 ),
@@ -123,21 +101,41 @@ class DefenseScoutingSide extends StatelessWidget {
               children: [
                 // TODO: make Game_Button take in a method to change the color for something
                 ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary:
-                          !_pushTextStart ? Colors.green : Colors.deepPurple,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(1),
-                          side: BorderSide(color: Colors.black, width: 1)),
-                    ),
-                    onPressed: () {
-                      if (_pushTextStart
-                          ? _addAction(ActionType.PUSH_END, context)
-                          : _addAction(ActionType.PUSH_START, context))
-                        _setPush();
-                    },
-                    child: Text(_pushTextStart ? "Push End" : "Push Start"))
-              ],
+                  style: ElevatedButton.styleFrom(
+                    primary: !mapScoutingKey.currentState.pushTextStart
+                        ? Colors.green
+                        : Colors.deepPurple,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(1),
+                        side: BorderSide(color: Colors.black, width: 1)),
+                  ),
+                  onPressed: () {
+                    if (mapScoutingKey.currentState.pushTextStart
+                        ? mapScoutingKey.currentState
+                            .addAction(ActionType.PUSH_END, context)
+                        : mapScoutingKey.currentState
+                            .addAction(ActionType.PUSH_START, context))
+                      mapScoutingKey.currentState.setPush();
+                  },
+                  child: Text(mapScoutingKey.currentState.pushTextStart
+                      ? "Push End"
+                      : "Push Start"),
+                ),
+                mapScoutingKey.currentState.pushTextStart
+                    ? ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.red,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(1),
+                              side: BorderSide(color: Colors.black, width: 1)),
+                        ),
+                        onPressed: () {
+                          mapScoutingKey.currentState.setPush();
+                        },
+                        child: Text("Cancel"),
+                      )
+                    : null,
+              ].where((w) => w != null).toList(),
             ),
           ),
           Flexible(

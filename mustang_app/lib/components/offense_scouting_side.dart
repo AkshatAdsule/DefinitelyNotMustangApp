@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/components/zone_grid.dart';
+import 'package:mustang_app/pages/scouting/map_scouting.dart';
 import '../backend/game_action.dart';
 import './game_buttons.dart' as game_button;
 
 // ignore: must_be_immutable
 class OffenseScoutingSide extends StatelessWidget {
-  bool Function(ActionType type, BuildContext context) _addAction;
-  Widget _toggleMode;
+  GlobalKey<ZoneGridState> zoneGridKey;
+  GlobalKey<MapScoutingState> mapScoutingKey;
 
   OffenseScoutingSide({
-    bool Function(ActionType type, BuildContext context) addAction,
-    Widget toggleMode,
-  }) {
-    _toggleMode = toggleMode;
-    _addAction = addAction;
-  }
-
+    this.zoneGridKey,
+    this.mapScoutingKey,
+  });
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,14 +35,16 @@ class OffenseScoutingSide extends StatelessWidget {
                         style: game_button.ButtonStyle.RAISED,
                         type: game_button.ButtonType.MAKE,
                         onPressed: () {
-                          _addAction(ActionType.SHOT_OUTER, context);
+                          mapScoutingKey.currentState
+                              .addAction(ActionType.SHOT_OUTER, context);
                         },
                         text: 'Out'),
                     game_button.ScoutingButton(
                         style: game_button.ButtonStyle.RAISED,
                         type: game_button.ButtonType.MAKE,
                         onPressed: () {
-                          _addAction(ActionType.SHOT_INNER, context);
+                          mapScoutingKey.currentState
+                              .addAction(ActionType.SHOT_INNER, context);
                         },
                         text: 'In'),
                   ],
@@ -53,7 +53,8 @@ class OffenseScoutingSide extends StatelessWidget {
                     style: game_button.ButtonStyle.RAISED,
                     type: game_button.ButtonType.MISS,
                     onPressed: () {
-                      _addAction(ActionType.MISSED_OUTER, context);
+                      mapScoutingKey.currentState
+                          .addAction(ActionType.MISSED_OUTER, context);
                     },
                     text: 'Miss'),
               ],
@@ -68,14 +69,16 @@ class OffenseScoutingSide extends StatelessWidget {
                     style: game_button.ButtonStyle.RAISED,
                     type: game_button.ButtonType.MAKE,
                     onPressed: () {
-                      _addAction(ActionType.SHOT_LOW, context);
+                      mapScoutingKey.currentState
+                          .addAction(ActionType.SHOT_LOW, context);
                     },
                     text: 'Low'),
                 game_button.ScoutingButton(
                     style: game_button.ButtonStyle.RAISED,
                     type: game_button.ButtonType.MISS,
                     onPressed: () {
-                      _addAction(ActionType.MISSED_LOW, context);
+                      mapScoutingKey.currentState
+                          .addAction(ActionType.MISSED_LOW, context);
                     },
                     text: 'Miss')
               ],
@@ -90,14 +93,16 @@ class OffenseScoutingSide extends StatelessWidget {
                     style: game_button.ButtonStyle.RAISED,
                     type: game_button.ButtonType.MAKE,
                     onPressed: () {
-                      _addAction(ActionType.INTAKE, context);
+                      mapScoutingKey.currentState
+                          .addAction(ActionType.INTAKE, context);
                     },
                     text: 'Intake'),
                 game_button.ScoutingButton(
                     style: game_button.ButtonStyle.RAISED,
                     type: game_button.ButtonType.MISS,
                     onPressed: () {
-                      _addAction(ActionType.MISSED_INTAKE, context);
+                      mapScoutingKey.currentState
+                          .addAction(ActionType.MISSED_INTAKE, context);
                     },
                     text: 'Miss')
               ],

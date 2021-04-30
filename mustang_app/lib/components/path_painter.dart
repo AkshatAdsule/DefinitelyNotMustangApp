@@ -18,6 +18,7 @@ class PathPainter extends CustomPainter {
     paint.strokeWidth = 5;
     Path path = new Path();
     path.moveTo(points.first.dx, points.first.dy);
+
     points.sublist(1).forEach((element) {
       path.lineTo(element.dx, element.dy);
     });

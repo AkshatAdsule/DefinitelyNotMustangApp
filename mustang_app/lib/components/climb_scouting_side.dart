@@ -1,28 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/game_action.dart';
+import 'package:mustang_app/components/zone_grid.dart';
+import 'package:mustang_app/exports/pages.dart';
 import 'package:mustang_app/utils/orientation_helpers.dart';
 import './game_buttons.dart' as game_button;
 
 // ignore: must_be_immutable
 class ClimbScoutingSide extends StatelessWidget {
-  bool Function(ActionType type, BuildContext context) _addAction;
-  void Function(double val) _setClimb;
-  void Function(ActionType type) _addClimb;
-
-  Widget _toggleMode;
+  GlobalKey<ZoneGridState> zoneGridKey;
+  GlobalKey<MapScoutingState> mapScoutingKey;
 
   ClimbScoutingSide({
     Key key,
-    Widget toggleMode,
-    void Function(double val) setClimb,
-    void Function(ActionType type) addClimb,
-    bool Function(ActionType type, BuildContext context) addAction,
-  }) : super(key: key) {
-    _toggleMode = toggleMode;
-    _addAction = addAction;
-    _setClimb = setClimb;
-    _addClimb = addClimb;
-  }
+    this.zoneGridKey,
+    this.mapScoutingKey,
+  }) : super(key: key);
 
   void actionDeterminer(BuildContext context, String action) {
     List<String> types = ['Tech', 'Red', 'Yellow', 'Disabled', 'Disqual'];
@@ -32,7 +24,7 @@ class ClimbScoutingSide extends StatelessWidget {
       TextButton option = TextButton(
         child: Text(type),
         onPressed: () {
-          _addAction(
+          mapScoutingKey.currentState.addAction(
               GameAction.stringToActionType(
                   action.toUpperCase() + "_" + type.toUpperCase()),
               context);
@@ -76,7 +68,8 @@ class ClimbScoutingSide extends StatelessWidget {
                   style: game_button.ButtonStyle.RAISED,
                   type: game_button.ButtonType.ELEMENT,
                   onPressed: () {
-                    _addClimb(ActionType.OTHER_CLIMB_MISS);
+                    mapScoutingKey.currentState
+                        .addClimb(ActionType.OTHER_CLIMB_MISS);
                   },
                   text: 'No Park',
                 ),
@@ -92,7 +85,8 @@ class ClimbScoutingSide extends StatelessWidget {
                   style: game_button.ButtonStyle.RAISED,
                   type: game_button.ButtonType.ELEMENT,
                   onPressed: () {
-                    _addClimb(ActionType.OTHER_PARKED);
+                    mapScoutingKey.currentState
+                        .addClimb(ActionType.OTHER_PARKED);
                   },
                   text: 'Parked',
                 ),
@@ -108,7 +102,8 @@ class ClimbScoutingSide extends StatelessWidget {
                   style: game_button.ButtonStyle.RAISED,
                   type: game_button.ButtonType.ELEMENT,
                   onPressed: () {
-                    _addClimb(ActionType.OTHER_CLIMB);
+                    mapScoutingKey.currentState
+                        .addClimb(ActionType.OTHER_CLIMB);
                   },
                   text: 'Climbed',
                 ),
@@ -124,7 +119,8 @@ class ClimbScoutingSide extends StatelessWidget {
                   style: game_button.ButtonStyle.RAISED,
                   type: game_button.ButtonType.ELEMENT,
                   onPressed: () {
-                    _addClimb(ActionType.OTHER_LEVELLED);
+                    mapScoutingKey.currentState
+                        .addClimb(ActionType.OTHER_LEVELLED);
                   },
                   text: 'Levelled',
                 ),
