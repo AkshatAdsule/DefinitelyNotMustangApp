@@ -118,23 +118,25 @@ class _GameReplayState extends State<GameReplay> {
       init(matches.first);
     }
 
-    GameMap scoringMap = GameMap(
-        imageChildren: [],
-        sideWidget: null,
-        zoneGrid: ZoneGrid(GlobalKey(), (int x, int y) {}, (int x, int y,
-            bool isSelected, double cellWidth, double cellHeight) {
-          return Container(
-            width: cellWidth,
-            height: cellHeight,
-            decoration: (x != 0 && y != 0)
-                ? BoxDecoration(
-                    gradient: RadialGradient(
-                      colors: _getColorCombo(x, y),
-                    ),
-                  )
-                : BoxDecoration(color: Colors.transparent),
-          );
-        }));
+    Widget scoringMap = Container(
+        padding: EdgeInsets.all(20),
+        child: GameMap(
+            imageChildren: [],
+            sideWidget: null,
+            zoneGrid: ZoneGrid(GlobalKey(), (int x, int y) {}, (int x, int y,
+                bool isSelected, double cellWidth, double cellHeight) {
+              return Container(
+                width: cellWidth,
+                height: cellHeight,
+                decoration: (x != 0 && y != 0)
+                    ? BoxDecoration(
+                        gradient: RadialGradient(
+                          colors: _getColorCombo(x, y),
+                        ),
+                      )
+                    : BoxDecoration(color: Colors.transparent),
+              );
+            })));
 
     Widget dropDownList = ListTile(
       title: Text(
