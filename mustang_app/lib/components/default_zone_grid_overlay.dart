@@ -17,11 +17,13 @@ class AnimatedPushLineState extends State<AnimatedPushLine>
     with TickerProviderStateMixin {
   AnimationController _controller;
   CurvedAnimation _animation;
-  List<Offset> points;
+  List<Offset> points, oldPoints;
 
   AnimatedPushLineState({
     @required this.points,
-  });
+  }) {
+    oldPoints = [];
+  }
 
   @override
   void initState() {
@@ -47,18 +49,15 @@ class AnimatedPushLineState extends State<AnimatedPushLine>
     });
   }
 
+  Future<void> reverse() async {
+    _controller.duration = Duration(milliseconds: 500);
+    return _controller.reverse(from: 1.0).then((value) {});
+  }
+
   void startAnimation() {
     _controller.stop();
     _controller.reset();
     _controller.forward();
-  }
-
-  void selectNewLocation(List<Offset> newPoints) {
-    _controller.reverse().then((value) {
-      setState(() {
-        points = newPoints;
-      });
-    });
   }
 
   @override
@@ -170,7 +169,15 @@ List<Widget> defaultOverlay(
 
   if (pushLineKey.currentState != null &&
       pushLineKey.currentState.points != newPoints) {
-    pushLineKey.currentState.setPoints(newPoints);
+    if (pushLineKey.currentState.points.first !=
+        pushLineKey.currentState.points.last) {
+      pushLineKey.currentState.reverse().then((val) {
+        pushLineKey.currentState.setPoints(newPoints);
+        pushLineKey.currentState.startAnimation();
+      });
+    } else {
+      pushLineKey.currentState.setPoints(newPoints);
+    }
   }
   if (mapScoutingKey.currentState.pushTextStart) {
     return [
