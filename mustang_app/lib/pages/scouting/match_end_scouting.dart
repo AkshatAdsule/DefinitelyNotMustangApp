@@ -17,6 +17,7 @@ class MatchEndScouter extends StatefulWidget {
   List<GameAction> _actions;
   double _climbLocation;
   bool _offenseOnRightSide;
+  double _driverSkill;
 
   MatchEndScouter(
       {String teamNumber,
@@ -24,13 +25,15 @@ class MatchEndScouter extends StatefulWidget {
       List<GameAction> actions,
       String allianceColor,
       bool offenseOnRightSide,
-      double climbLocation}) {
+      double climbLocation,
+      double driverSkill}) {
     _climbLocation = climbLocation;
     _teamNumber = teamNumber;
     _matchNumber = matchNumber;
     _actions = actions;
     _allianceColor = allianceColor;
     _offenseOnRightSide = offenseOnRightSide;
+    _driverSkill = driverSkill;
   }
 
   @override
@@ -40,7 +43,8 @@ class MatchEndScouter extends StatefulWidget {
       _allianceColor,
       _offenseOnRightSide,
       _actions,
-      _climbLocation);
+      _climbLocation,
+      _driverSkill);
 }
 
 class _MatchEndScouterState extends State<MatchEndScouter> {
@@ -51,6 +55,7 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
   bool _brokeDown;
   double _climbLocation;
   bool _offenseOnRightSide;
+  double _driverSkill;
 
   _MatchEndScouterState(
       this._teamNumber,
@@ -58,7 +63,8 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
       this._allianceColor,
       this._offenseOnRightSide,
       this._actions,
-      this._climbLocation);
+      this._climbLocation,
+      this._driverSkill);
 
   void _finishGame(BuildContext context, User user) {
     if (_matchResult == null) {
@@ -71,7 +77,7 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
 
     ScoutingOperations.setMatchData(
       new Match(_matchNumber, _teamNumber, _allianceColor, _offenseOnRightSide,
-          _matchResult, _finalCommentsController.text, _actions),
+          _matchResult, _finalCommentsController.text, _driverSkill, _actions),
       user != null ? user.uid : 'Anonymous',
       user != null ? user.displayName : 'Anonymous',
     );
@@ -132,6 +138,32 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
                 onChanged: (newVal) => setState(() => _brokeDown = newVal),
               ),
               Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Flexible(
+                      flex: 1,
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        child: Text("Driver's skill",
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.white)),
+                      ),
+                    ),
+                    Flexible(
+                      flex: 2,
+                      child: Container(
+                          padding: EdgeInsets.all(10),
+                          child: StarRating(
+                            rating: _driverSkill,
+                            onRatingChanged: (rating) =>
+                                setState(() => this._driverSkill = rating),
+                          )),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
                 padding:
                     EdgeInsets.only(left: 30, right: 30, top: 15, bottom: 30),
                 child: TextField(
@@ -165,5 +197,52 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
         ),
       ),
     );
+  }
+}
+
+typedef void RatingChangeCallback(double rating);
+
+class StarRating extends StatelessWidget {
+  final int starCount;
+  final double rating;
+  final RatingChangeCallback onRatingChanged;
+  final Color color;
+
+  StarRating(
+      {this.starCount = 5,
+      this.rating = .0,
+      this.onRatingChanged,
+      this.color = Colors.green});
+
+  Widget buildStar(BuildContext context, int index) {
+    Icon icon;
+    if (index >= rating) {
+      icon = new Icon(
+        Icons.star_border,
+        color: Theme.of(context).buttonColor,
+      );
+    } else if (index > rating - 1 && index < rating) {
+      icon = new Icon(
+        Icons.star_half,
+        color: color ?? Theme.of(context).primaryColor,
+      );
+    } else {
+      icon = new Icon(
+        Icons.star,
+        color: color ?? Theme.of(context).primaryColor,
+      );
+    }
+    return new InkResponse(
+      onTap:
+          onRatingChanged == null ? null : () => onRatingChanged(index + 1.0),
+      child: icon,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Row(
+        children:
+            List.generate(starCount, (index) => buildStar(context, index)));
   }
 }

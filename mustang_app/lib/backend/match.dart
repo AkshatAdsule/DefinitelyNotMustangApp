@@ -5,9 +5,17 @@ class Match {
   String _matchNumber, _teamNumber, _allianceColor, _matchResult, _notes;
   List<GameAction> _actions;
   bool _offenseOnRightSide;
+  double _driverSkill;
 
-  Match(this._matchNumber, this._teamNumber, this._allianceColor,
-      this._offenseOnRightSide, this._matchResult, this._notes, this._actions);
+  Match(
+      this._matchNumber,
+      this._teamNumber,
+      this._allianceColor,
+      this._offenseOnRightSide,
+      this._matchResult,
+      this._notes,
+      this._driverSkill,
+      this._actions);
 
   factory Match.fromJson(Map<String, dynamic> data) {
     return Match(
@@ -17,6 +25,7 @@ class Match {
       data['offenseOnRightSide'] ?? false,
       data['matchResult'] ?? 'Lose',
       data['finalComments'] ?? '',
+      data['driverSkill'] ?? 0,
       data['actions'] != null
           ? data['actions']
               .map((action) => GameAction.fromJson(action))
@@ -37,6 +46,7 @@ class Match {
       data['offenseOnRightSide'] ?? false,
       data['matchResult'] ?? 'Lose',
       data['finalComments'] ?? '',
+      data['driverSkill'] ?? 0,
       data['actions'] != null
           ? List<dynamic>.of(data['actions'])
               .map((e) => GameAction.fromJson(Map<String, dynamic>.from(e)))
@@ -65,6 +75,7 @@ class Match {
   bool get offenseOnRightSide => _offenseOnRightSide;
   String get matchResult => _matchResult;
   String get notes => _notes;
+  double get driverSkill => _driverSkill;
   List<GameAction> get actions => _actions;
 
   set matchNumber(String matchNumber) => _matchNumber = matchNumber;
@@ -74,5 +85,6 @@ class Match {
       _offenseOnRightSide = offenseOnRightSide;
   set matchResult(String matchResult) => _matchResult = matchResult;
   set notes(String notes) => _notes = notes;
+  set driverSkill(double driverSkill) => _driverSkill = driverSkill;
   set actions(List<GameAction> actions) => _actions = actions;
 }
