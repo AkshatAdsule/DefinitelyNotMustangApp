@@ -89,17 +89,14 @@ class _ScouterState extends State<Scouter> {
     return Screen(
       title: 'Pre Game Notes',
       child: ListView(children: <Widget>[
-        Flexible(
-          flex: 1,
-          child: Container(
-            padding: EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 15),
-            child: TextField(
-              controller: _teamNumberController,
-              decoration: InputDecoration(
-                labelText: 'Team Number',
-                errorText: _showError ? 'Team number is required' : null,
-                border: OutlineInputBorder(),
-              ),
+        Container(
+          padding: EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 15),
+          child: TextField(
+            controller: _teamNumberController,
+            decoration: InputDecoration(
+              labelText: 'Team Number',
+              errorText: _showError ? 'Team number is required' : null,
+              border: OutlineInputBorder(),
             ),
           ),
         ),

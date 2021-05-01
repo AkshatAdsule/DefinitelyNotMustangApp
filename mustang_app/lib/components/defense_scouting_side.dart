@@ -4,20 +4,17 @@ import 'package:mustang_app/backend/game_action.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/pages/scouting/map_scouting.dart';
 import 'package:mustang_app/utils/orientation_helpers.dart';
+import 'package:provider/provider.dart';
 import './game_buttons.dart' as game_button;
 
 // ignore: must_be_immutable
 class DefenseScoutingSide extends StatelessWidget {
-  GlobalKey<ZoneGridState> zoneGridKey;
-  GlobalKey<MapScoutingState> mapScoutingKey;
-
-  DefenseScoutingSide({
-    Key key,
-    this.zoneGridKey,
-    this.mapScoutingKey,
-  }) : super(key: key);
+  DefenseScoutingSide();
 
   void actionDeterminer(BuildContext context, String action) {
+    GlobalKey<MapScoutingState> mapScoutingKey =
+        Provider.of<GlobalKey<MapScoutingState>>(context);
+
     List<String> types = ['Tech', 'Red', 'Yellow', 'Disabled', 'Disqual'];
     List<TextButton> optionButtons = [];
 
@@ -52,6 +49,11 @@ class DefenseScoutingSide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    GlobalKey<ZoneGridState> zoneGridKey =
+        Provider.of<GlobalKey<ZoneGridState>>(context);
+    GlobalKey<MapScoutingState> mapScoutingKey =
+        Provider.of<GlobalKey<MapScoutingState>>(context);
+
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

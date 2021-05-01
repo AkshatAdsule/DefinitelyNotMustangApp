@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/constants/constants.dart';
 import 'package:mustang_app/pages/scouting/map_scouting.dart';
+import 'package:provider/provider.dart';
 import 'dart:math';
 import '../backend/game_action.dart';
 import './game_map.dart';
 
 // ignore: must_be_immutable
 class ClimbScoutingOverlay extends StatelessWidget {
-  GlobalKey<ZoneGridState> zoneGridKey;
-  GlobalKey<MapScoutingState> mapScoutingKey;
-
-  ClimbScoutingOverlay({
-    this.zoneGridKey,
-    this.mapScoutingKey,
-  });
+  ClimbScoutingOverlay();
 
   @override
   Widget build(BuildContext context) {
+    GlobalKey<ZoneGridState> zoneGridKey =
+        Provider.of<GlobalKey<ZoneGridState>>(context);
+    GlobalKey<MapScoutingState> mapScoutingKey =
+        Provider.of<GlobalKey<MapScoutingState>>(context);
+
     return Stack(
       children: [
         GameMapChild(

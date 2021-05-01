@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'package:mustang_app/components/animated_push_line.dart';
 import 'package:mustang_app/components/climb_scouting_overlay.dart';
 import 'package:mustang_app/components/climb_scouting_side.dart';
-import 'package:mustang_app/components/default_zone_grid_overlay.dart';
 import 'package:mustang_app/components/defense_scouting_overlay.dart';
 import 'package:mustang_app/components/offense_scouting_overlay.dart';
+import 'package:mustang_app/components/scouting_zone_grid.dart';
 import 'package:mustang_app/components/stopwatch_display.dart';
+import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/blur_overlay.dart';
@@ -303,6 +305,14 @@ class MapScoutingState extends State<MapScouting> {
     return null;
   }
 
+  void onZoneGridTap(int x, int y) {
+    setState(() {
+      prevX = x;
+      prevY = y;
+      counter = 0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Screen(
@@ -336,122 +346,91 @@ class MapScoutingState extends State<MapScouting> {
           stopwatch,
         )
       ],
-      child: Container(
-        color: _bgColor,
-        child: BlurOverlay(
-          unlocked: startedScouting,
-          background: GameMap(
-            stopwatch: stopwatch,
-            allianceColor: allianceColor,
-            offenseOnRightSide: offenseOnRightSide,
-            zoneGrid: SelectableZoneGrid(
-              zoneGridKey,
-              (int x, int y) {
-                if (x != prevX || y != prevY) {
-                  setState(() {
-                    prevX = x;
-                    prevY = y;
-                    counter = 0;
-                  });
-                }
-                if (pushTextStart) {
-                  zoneGridKey.currentState.clearSelections();
-                  pushLineKey.currentState.startAnimation();
-                }
-              },
-              type: AnimationType.TRANSLATE,
-              multiSelect: true,
-              createOverlay: (BoxConstraints constraints,
-                      List<Offset> selections,
-                      double cellWidth,
-                      double cellHeight) =>
-                  defaultOverlay(
-                constraints,
-                selections,
-                cellWidth,
-                cellHeight,
-                zoneGridKey,
-                mapScoutingKey,
-                pushLineKey,
+      child: MultiProvider(
+        providers: [
+          Provider(
+            create: (BuildContext context) => zoneGridKey,
+          ),
+          Provider(
+            create: (BuildContext context) => mapScoutingKey,
+          ),
+          Provider(
+            create: (BuildContext context) => pushLineKey,
+          ),
+        ],
+        child: Container(
+          color: _bgColor,
+          child: BlurOverlay(
+            unlocked: startedScouting,
+            background: GameMap(
+              stopwatch: stopwatch,
+              allianceColor: allianceColor,
+              offenseOnRightSide: offenseOnRightSide,
+              zoneGrid: ScoutingZoneGrid(
+                zoneGridKey: zoneGridKey,
+                mapScoutingKey: mapScoutingKey,
+                pushLineKey: pushLineKey,
               ),
-            ),
-            imageChildren: [
-              Container(
-                child: IndexedStack(
-                  index: toggleModes.indexOf(true),
+              imageChildren: [
+                Container(
+                  child: IndexedStack(
+                    index: toggleModes.indexOf(true),
+                    children: [
+                      OffenseScoutingOverlay(),
+                      DefenseScoutingOverlay(),
+                      ClimbScoutingOverlay(),
+                    ],
+                  ),
+                )
+              ],
+              sideWidget: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    OffenseScoutingOverlay(
-                      mapScoutingKey: mapScoutingKey,
-                      zoneGridKey: zoneGridKey,
+                    Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: ModeToggle(
+                        onPressed: (int ind) {
+                          setState(
+                            () {
+                              List<bool> newToggle = List.generate(
+                                  toggleModes.length, (index) => index == ind);
+                              toggleModes = newToggle;
+                            },
+                          );
+                        },
+                        isDisabled: pushTextStart,
+                        isSelected: toggleModes,
+                      ),
                     ),
-                    DefenseScoutingOverlay(
-                      mapScoutingKey: mapScoutingKey,
-                      zoneGridKey: zoneGridKey,
-                    ),
-                    ClimbScoutingOverlay(
-                      mapScoutingKey: mapScoutingKey,
-                      zoneGridKey: zoneGridKey,
+                    Flexible(
+                      flex: 1,
+                      child: Container(
+                        child: IndexedStack(
+                          index: toggleModes.indexOf(true),
+                          children: [
+                            OffenseScoutingSide(),
+                            DefenseScoutingSide(),
+                            ClimbScoutingSide(),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              )
-            ],
-            sideWidget: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: ModeToggle(
-                      onPressed: (int ind) {
-                        setState(
-                          () {
-                            List<bool> newToggle = List.generate(
-                                toggleModes.length, (index) => index == ind);
-                            toggleModes = newToggle;
-                          },
-                        );
-                      },
-                      isDisabled: pushTextStart,
-                      isSelected: toggleModes,
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Container(
-                      child: IndexedStack(
-                        index: toggleModes.indexOf(true),
-                        children: [
-                          OffenseScoutingSide(
-                            mapScoutingKey: mapScoutingKey,
-                            zoneGridKey: zoneGridKey,
-                          ),
-                          DefenseScoutingSide(
-                            mapScoutingKey: mapScoutingKey,
-                            zoneGridKey: zoneGridKey,
-                          ),
-                          ClimbScoutingSide(
-                            mapScoutingKey: mapScoutingKey,
-                            zoneGridKey: zoneGridKey,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ),
+            text: Text('Start'),
+            onEnd: () {
+              setState(
+                () {
+                  startedScouting = true;
+                  stopwatch.start();
+                  _initTimers();
+                },
+              );
+            },
           ),
-          text: Text('Start'),
-          onEnd: () {
-            setState(
-              () {
-                startedScouting = true;
-                stopwatch.start();
-                _initTimers();
-              },
-            );
-          },
         ),
       ),
     );
