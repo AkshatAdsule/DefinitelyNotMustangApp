@@ -98,14 +98,16 @@ class ZoneGridState extends State<ZoneGrid> {
   List<Offset> get selections => _selections;
 
   void clearSelections() {
-    _selected = List.generate(
-      _rows,
-      (y) => List.generate(
-        _cols,
-        (x) => _selections.last.dy.toInt() == y && _selections.last.dx == x,
-      ),
-    );
-    _selections = [_selections.last];
+    if (_selections.length > 0) {
+      _selected = List.generate(
+        _rows,
+        (y) => List.generate(
+          _cols,
+          (x) => _selections.last.dy.toInt() == y && _selections.last.dx == x,
+        ),
+      );
+      _selections = [_selections.last];
+    }
   }
 
   List<TableRow> _getTableContents(double width, double height) {

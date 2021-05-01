@@ -3,6 +3,7 @@ import 'package:mustang_app/components/animated_push_line.dart';
 import 'package:mustang_app/components/climb_scouting_overlay.dart';
 import 'package:mustang_app/components/climb_scouting_side.dart';
 import 'package:mustang_app/components/defense_scouting_overlay.dart';
+import 'package:mustang_app/components/mode_toggle.dart';
 import 'package:mustang_app/components/offense_scouting_overlay.dart';
 import 'package:mustang_app/components/scouting_zone_grid.dart';
 import 'package:mustang_app/components/stopwatch_display.dart';
@@ -401,6 +402,21 @@ class MapScoutingState extends State<MapScouting> {
                         },
                         isDisabled: pushTextStart,
                         isSelected: toggleModes,
+                        direction: Axis.horizontal,
+                        children: [
+                          ModeToggleChild(
+                            icon: Icons.gps_fixed,
+                            isSelected: toggleModes[0],
+                          ),
+                          ModeToggleChild(
+                            icon: Icons.shield,
+                            isSelected: toggleModes[1],
+                          ),
+                          ModeToggleChild(
+                            icon: Icons.precision_manufacturing_sharp,
+                            isSelected: toggleModes[2],
+                          ),
+                        ],
                       ),
                     ),
                     Flexible(
@@ -491,58 +507,5 @@ class FinishGameButton extends StatelessWidget {
             ),
           )
         : Container();
-  }
-}
-
-class ModeToggle extends StatelessWidget {
-  void Function(int) onPressed;
-  List<bool> isSelected;
-  List<Widget> children;
-  Key key;
-  bool isDisabled;
-  ModeToggle(
-      {this.children,
-      this.onPressed,
-      this.isSelected,
-      this.key,
-      this.isDisabled = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: ToggleButtons(
-        key: key,
-        children: [
-          Icon(
-            Icons.gps_fixed,
-            color: isSelected[0] ? Colors.white : Colors.green,
-          ),
-          Icon(
-            Icons.shield,
-            color: isSelected[1] ? Colors.white : Colors.green,
-          ),
-          Icon(
-            Icons.precision_manufacturing_sharp,
-            color: isSelected[2] ? Colors.white : Colors.green,
-          ),
-        ],
-        onPressed: isDisabled
-            ? null
-            : (int val) {
-                onPressed(val);
-              },
-        isSelected: isSelected,
-        selectedColor: Colors.green,
-        disabledColor: Colors.green,
-        disabledBorderColor: Colors.green,
-        renderBorder: true,
-        direction: Axis.horizontal,
-        borderRadius: BorderRadius.circular(30),
-        borderColor: Colors.green,
-        borderWidth: 3,
-        selectedBorderColor: Colors.green,
-        fillColor: Colors.green,
-      ),
-    );
   }
 }
