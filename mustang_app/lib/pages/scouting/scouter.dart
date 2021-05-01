@@ -165,37 +165,57 @@ class _ScouterState extends State<Scouter> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: <
-                  Widget>[
-                Container(
-                  padding: EdgeInsets.all(15), //(left: 10, right: 10),
-                  child: ElevatedButton(
-                      child: Text("Blue"),
-                      onPressed: () {
-                        setState(() {
-                          _allianceColor = 'Blue';
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(primary: Colors.blue)),
-                ),
-                Container(
-                    padding: EdgeInsets.only(left: 20, right: 20),
-                    child: Text('Alliance', style: TextStyle(fontSize: 16.0))),
-                Container(
-                  padding: EdgeInsets.only(left: 10, right: 10),
-                  child: ElevatedButton(
-                    child: Text(
-                      "Red",
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(15), //(left: 10, right: 10),
+                      child: ElevatedButton(
+                          child: Text("Blue"),
+                          onPressed: () {
+                            setState(() {
+                              _allianceColor = 'Blue';
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.blue,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(2),
+                                side: BorderSide(
+                                    color: _allianceColor == 'Blue'
+                                        ? Colors.yellow
+                                        : Colors.blue,
+                                    width: 2)),
+                          )),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _allianceColor = 'Red';
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(primary: Colors.red),
-                  ),
-                ),
-              ]),
+                    Container(
+                        padding: EdgeInsets.only(left: 20, right: 20),
+                        child:
+                            Text('Alliance', style: TextStyle(fontSize: 16.0))),
+                    Container(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: ElevatedButton(
+                        child: Text(
+                          "Red",
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _allianceColor = 'Red';
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.red,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(2),
+                              side: BorderSide(
+                                  color: _allianceColor == 'Red'
+                                      ? Colors.yellow
+                                      : Colors.red,
+                                  width: 2)),
+                        ),
+                      ),
+                    ),
+                  ]),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -203,12 +223,22 @@ class _ScouterState extends State<Scouter> {
                   Container(
                     padding: EdgeInsets.only(left: 10, right: 10),
                     child: ElevatedButton(
-                        child: Text("Left"),
-                        onPressed: () {
-                          setState(() {
-                            _offenseOnRightSide = true;
-                          });
-                        }),
+                      child: Text("Left"),
+                      onPressed: () {
+                        setState(() {
+                          _offenseOnRightSide = true;
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(2),
+                            side: BorderSide(
+                                color: _offenseOnRightSide
+                                    ? Colors.yellow
+                                    : Colors.green,
+                                width: 2)),
+                      ),
+                    ),
                   ),
                   Container(
                       padding: EdgeInsets.only(left: 20, right: 20),
@@ -223,6 +253,15 @@ class _ScouterState extends State<Scouter> {
                           _offenseOnRightSide = false;
                         });
                       },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(2),
+                            side: BorderSide(
+                                color: !_offenseOnRightSide
+                                    ? Colors.yellow
+                                    : Colors.green,
+                                width: 2)),
+                      ),
                     ),
                   ),
                 ],
