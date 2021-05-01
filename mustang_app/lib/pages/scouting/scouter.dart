@@ -21,7 +21,6 @@ class _ScouterState extends State<Scouter> {
   MatchType _matchType = MatchType.OTHER;
 
   String _allianceColor = "Blue";
-  int _allianceNum = 0;
 
   bool _offenseOnRightSide = false;
   int _offenseNum = 0;
@@ -90,14 +89,17 @@ class _ScouterState extends State<Scouter> {
     return Screen(
       title: 'Pre Game Notes',
       child: ListView(children: <Widget>[
-        Container(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 15),
-          child: TextField(
-            controller: _teamNumberController,
-            decoration: InputDecoration(
-              labelText: 'Team Number',
-              errorText: _showError ? 'Team number is required' : null,
-              border: OutlineInputBorder(),
+        Flexible(
+          flex: 1,
+          child: Container(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 15),
+            child: TextField(
+              controller: _teamNumberController,
+              decoration: InputDecoration(
+                labelText: 'Team Number',
+                errorText: _showError ? 'Team number is required' : null,
+                border: OutlineInputBorder(),
+              ),
             ),
           ),
         ),
@@ -108,7 +110,8 @@ class _ScouterState extends State<Scouter> {
               Flexible(
                 flex: 3,
                 child: Container(
-                  padding: EdgeInsets.all(10),
+                  padding:
+                      EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 10),
                   child: TextField(
                     controller: _matchNumberController,
                     decoration: InputDecoration(
@@ -162,74 +165,65 @@ class _ScouterState extends State<Scouter> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Radio(
-                      value: 0,
-                      groupValue: _allianceNum,
-                      onChanged: (int value) {
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: <
+                  Widget>[
+                Container(
+                  padding: EdgeInsets.all(15), //(left: 10, right: 10),
+                  child: ElevatedButton(
+                      child: Text("Blue"),
+                      onPressed: () {
                         setState(() {
-                          _allianceNum = value;
                           _allianceColor = 'Blue';
                         });
-                      }),
-                  Text(
-                    'Blue Alliance',
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                  Radio(
-                      value: 1,
-                      groupValue: _allianceNum,
-                      onChanged: (int value) {
-                        setState(() {
-                          _allianceNum = value;
-                          _allianceColor = 'Red';
-                        });
-                      }),
-                  Text(
-                    'Red Alliance',
-                    style: TextStyle(
-                      fontSize: 16.0,
+                      },
+                      style: ElevatedButton.styleFrom(primary: Colors.blue)),
+                ),
+                Container(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    child: Text('Alliance', style: TextStyle(fontSize: 16.0))),
+                Container(
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  child: ElevatedButton(
+                    child: Text(
+                      "Red",
                     ),
+                    onPressed: () {
+                      setState(() {
+                        _allianceColor = 'Red';
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(primary: Colors.red),
                   ),
-                ],
-              ),
+                ),
+              ]),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   //offense on right/left side
-                  Text(
-                    'Driver Station Side',
-                    style: TextStyle(fontSize: 16.0),
+                  Container(
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    child: ElevatedButton(
+                        child: Text("Left"),
+                        onPressed: () {
+                          setState(() {
+                            _offenseOnRightSide = true;
+                          });
+                        }),
                   ),
-                  Radio(
-                      value: 1,
-                      groupValue: _offenseNum,
-                      onChanged: (int value) {
+                  Container(
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                      child: Text('Driver Station Side',
+                          style: TextStyle(fontSize: 16.0))),
+                  Container(
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    child: ElevatedButton(
+                      child: Text("Right"),
+                      onPressed: () {
                         setState(() {
-                          _offenseNum = value;
-                          _offenseOnRightSide = true;
-                        });
-                      }),
-                  Text(
-                    'Left',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  Radio(
-                      value: 0,
-                      groupValue: _offenseNum,
-                      onChanged: (int value) {
-                        setState(() {
-                          _offenseNum = value;
                           _offenseOnRightSide = false;
                         });
-                      }),
-                  Text(
-                    'Right',
-                    style: TextStyle(fontSize: 16.0),
+                      },
+                    ),
                   ),
                 ],
               ),
