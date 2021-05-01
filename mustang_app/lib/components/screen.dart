@@ -42,7 +42,7 @@ class Screen extends StatelessWidget {
         left: left,
         right: right,
         key: UniqueKey(),
-        child: child,
+        child: Container(child: child),
       ),
       drawer: drawer,
       bottomNavigationBar: includeBottomNav
