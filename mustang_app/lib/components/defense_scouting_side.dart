@@ -72,6 +72,7 @@ class DefenseScoutingSide extends StatelessWidget {
                     mapScoutingKey.currentState
                         .addAction(ActionType.PREV_INTAKE, context);
                   },
+                  isDisabled: mapScoutingKey.currentState.pushTextStart,
                   text: 'Prevent Intake',
                 ),
               ],
@@ -89,6 +90,7 @@ class DefenseScoutingSide extends StatelessWidget {
                     mapScoutingKey.currentState
                         .addAction(ActionType.PREV_INTAKE, context);
                   },
+                  isDisabled: mapScoutingKey.currentState.pushTextStart,
                   text: 'Prevent Shot',
                 ),
               ],
@@ -149,6 +151,7 @@ class DefenseScoutingSide extends StatelessWidget {
                   onPressed: () {
                     actionDeterminer(context, 'Foul');
                   },
+                  isDisabled: mapScoutingKey.currentState.pushTextStart,
                   text: 'Foul',
                 ),
               ],
