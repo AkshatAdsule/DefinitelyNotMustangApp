@@ -6,8 +6,15 @@ class ScoutingButton extends StatelessWidget {
   ButtonType type;
   void Function() onPressed;
   String text = '';
+  bool isDisabled;
 
-  ScoutingButton({this.style, this.type, this.onPressed, this.text});
+  ScoutingButton({
+    this.style,
+    this.type,
+    this.onPressed,
+    this.text,
+    this.isDisabled = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +41,7 @@ class ScoutingButton extends StatelessWidget {
       default:
         break;
     }
+    color = isDisabled ? Colors.grey : color;
     switch (style) {
       case ButtonStyle.RAISED:
         return ElevatedButton(
@@ -45,7 +53,7 @@ class ScoutingButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(borderWidth),
                 side: BorderSide(color: borderColor, width: borderWidth)),
           ),
-          onPressed: this.onPressed,
+          onPressed: isDisabled ? null : this.onPressed,
           child: Text(text),
         );
         break;
@@ -57,7 +65,7 @@ class ScoutingButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(borderWidth),
                 side: BorderSide(color: borderColor, width: borderWidth)),
           ),
-          onPressed: this.onPressed,
+          onPressed: isDisabled ? null : this.onPressed,
           child: Text(text),
         );
         break;
@@ -70,7 +78,7 @@ class ScoutingButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(borderWidth),
                 side: BorderSide(color: borderColor, width: borderWidth)),
           ),
-          onPressed: this.onPressed,
+          onPressed: isDisabled ? null : this.onPressed,
           child: Text(text),
           // minWidth: 20,
         );

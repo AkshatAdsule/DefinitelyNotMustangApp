@@ -412,6 +412,7 @@ class MapScoutingState extends State<MapScouting> {
                           },
                         );
                       },
+                      isDisabled: pushTextStart,
                       isSelected: toggleModes,
                     ),
                   ),
@@ -519,7 +520,13 @@ class ModeToggle extends StatelessWidget {
   List<bool> isSelected;
   List<Widget> children;
   Key key;
-  ModeToggle({this.children, this.onPressed, this.isSelected, this.key});
+  bool isDisabled;
+  ModeToggle(
+      {this.children,
+      this.onPressed,
+      this.isSelected,
+      this.key,
+      this.isDisabled = false});
 
   @override
   Widget build(BuildContext context) {
@@ -540,11 +547,15 @@ class ModeToggle extends StatelessWidget {
             color: isSelected[2] ? Colors.white : Colors.green,
           ),
         ],
-        onPressed: (int val) {
-          onPressed(val);
-        },
+        onPressed: isDisabled
+            ? null
+            : (int val) {
+                onPressed(val);
+              },
         isSelected: isSelected,
         selectedColor: Colors.green,
+        disabledColor: Colors.green,
+        disabledBorderColor: Colors.green,
         renderBorder: true,
         direction: Axis.horizontal,
         borderRadius: BorderRadius.circular(30),

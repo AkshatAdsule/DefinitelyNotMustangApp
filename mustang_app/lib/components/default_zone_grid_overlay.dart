@@ -33,14 +33,16 @@ class AnimatedPushLineState extends State<AnimatedPushLine>
       duration: Duration(milliseconds: 1000),
       reverseDuration: Duration(milliseconds: 500),
     );
-    _animation =
-        CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn);
+    _animation = CurvedAnimation(
+        parent: _controller,
+        curve: Curves.fastOutSlowIn,
+        reverseCurve: Curves.fastOutSlowIn);
   }
 
   @override
   void dispose() {
-    super.dispose();
     _controller.dispose();
+    super.dispose();
   }
 
   void setPoints(List<Offset> newPoints) {
@@ -172,8 +174,10 @@ List<Widget> defaultOverlay(
     if (pushLineKey.currentState.points.first !=
         pushLineKey.currentState.points.last) {
       pushLineKey.currentState.reverse().then((val) {
-        pushLineKey.currentState.setPoints(newPoints);
-        pushLineKey.currentState.startAnimation();
+        if (pushLineKey.currentState != null) {
+          pushLineKey.currentState.setPoints(newPoints);
+          pushLineKey.currentState.startAnimation();
+        }
       });
     } else {
       pushLineKey.currentState.setPoints(newPoints);

@@ -33,6 +33,7 @@ dependencies:
   google_sign_in: ^4.5.9
   vibration: ^1.7.3
   webview_flutter: ^0.3.3
+  font_awesome_flutter: ^9.0.0
 
   flutter:
     sdk: flutter
