@@ -26,6 +26,22 @@ class Constants {
   // Game length refers to auton + teleop
   static const int GAME_LENGTH = 150; //seconds
 
+  static const Map<int, List<RobotFeatures>> ROBOT_FEATURES = {
+    2013: [RobotFeatures.SHOOTER],
+    2014: [RobotFeatures.SHOOTER],
+    2015: [RobotFeatures.ELEVATOR],
+    2016: [RobotFeatures.SHOOTER],
+    2017: [RobotFeatures.CLIMBER, RobotFeatures.SHOOTER],
+    2018: [RobotFeatures.CLIMBER, RobotFeatures.ELEVATOR],
+    2019: [
+      RobotFeatures.SHOOTER,
+      RobotFeatures.ELEVATOR,
+      RobotFeatures.CLAW,
+      RobotFeatures.CLIMBER
+    ],
+    2020: [RobotFeatures.SHOOTER, RobotFeatures.CLIMBER]
+  };
+
   // Points scored by climbing
   static const Map<int, int> CLIMB_POINTS = {
     2013: 20,
@@ -100,3 +116,5 @@ class Constants {
     "Tarini Maram",
   ];
 }
+
+enum RobotFeatures { CLAW, SHOOTER, ELEVATOR, CLIMBER }

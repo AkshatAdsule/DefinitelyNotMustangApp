@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mustang_app/pages/data-collection-analysis/view_histogram_screen.dart';
 import 'package:mustang_app/utils/data_collection_data.dart';
 
 class DataCollectionYearTile extends StatelessWidget {
@@ -9,7 +10,7 @@ class DataCollectionYearTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-      title: Text(_yearData.year.toString()),
+      title: Text(_yearData.year.year.toString()),
       children: [
         Column(
           children: _yearData.avgData == null
@@ -32,6 +33,20 @@ class DataCollectionYearTile extends StatelessWidget {
                       "Average ranking points scored: ${_yearData.avgData.rankingPoints.toStringAsFixed(3)}"),
                   Text(
                       "Win rate: ${(_yearData.winRate * 100).toStringAsFixed(3)}%"),
+                  ElevatedButton(
+                    child: Text(
+                      "View Overall Data",
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              View670HistogramScreen(_yearData),
+                        ),
+                      );
+                    },
+                  ),
                   for (DataCollectionMatchData matchData
                       in _yearData.data ?? "N/A")
                     Padding(
