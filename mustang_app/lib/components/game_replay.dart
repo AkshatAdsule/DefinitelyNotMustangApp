@@ -38,7 +38,7 @@ class _GameReplayState extends State<GameReplay> {
   @override
   void initState() {
     super.initState();
-    timeInGame = 0;
+    timeInGame = 10;
   }
 
   void init(Match match) {
@@ -83,33 +83,6 @@ class _GameReplayState extends State<GameReplay> {
   //   String type = action.action.toString();
   //   if (type.contains("INTAKE") || type.contains("SHOT")) return "+1";
   // }
-
-  List<Widget> getShadingKey(int start, int end) {
-    List<Widget> shades = [];
-    Widget colorKey;
-    for (int i = start; i < end; i++) {
-      List<Object> shade = actionRelatedColors[i];
-      colorKey = Container(
-        margin: EdgeInsets.only(left: 20, right: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(Icons.circle, color: shade[1]),
-            Text(
-              shade[0].toString(),
-              style: TextStyle(
-                color: Colors.grey[850],
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-            )
-          ],
-        ),
-      );
-      shades.add(colorKey);
-    }
-    return shades;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -188,25 +161,6 @@ class _GameReplayState extends State<GameReplay> {
       ),
     );
 
-    Widget shadingKey = Container(
-        margin: EdgeInsets.all(2),
-        child: Column(children: [
-          Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: getShadingKey(0, 5)),
-          Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: getShadingKey(5, 10)),
-        ]));
-
-    Widget normalizedToRightSideText = Text(
-      "*data has been normalized so that offense is on the ride side*",
-      textAlign: TextAlign.center,
-      style: TextStyle(color: Colors.grey[800], fontSize: 14, height: 1),
-    );
-
     Widget timeSlider = Container(
         height: 30,
         width: 650,
@@ -227,17 +181,23 @@ class _GameReplayState extends State<GameReplay> {
           value: timeInGame,
         ));
 
-    return Container(
-        child: SingleChildScrollView(
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+   /* return Container(
+      child:
+          //   SingleChildScrollView(
+          // child:
+          Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
             dropDownList,
-            shadingKey,
             normalizedToRightSideText,
-            scoringMap,
+            Row(children: [
+              Flexible(flex: 2, child: scoringMap),
+              Flexible(flex: 1, child: shadingKey),
+            ]),
             timeSlider
           ]),
-    ));
+      // )
+    );
+    */
   }
 }

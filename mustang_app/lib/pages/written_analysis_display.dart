@@ -49,13 +49,17 @@ class _WrittenAnalysisDisplayState extends State<WrittenAnalysisDisplayPage> {
   Analyzer myAnalyzer;
 
   _WrittenAnalysisDisplayState(String teamNumber) {
-    myAnalyzer = new Analyzer(teamNumber);
+    myAnalyzer = new Analyzer();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     if (!myAnalyzer.initialized) {
-      myAnalyzer.init().then((value) => setState(() {}));
+      myAnalyzer.init(
+        Provider.of<Team>(context),
+        Provider.of<List<Match>>(context),
+      );
+      setState(() {});
     }
 
     return Screen(
