@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/team.dart';
 import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/backend/team_service.dart';
+import 'package:mustang_app/components/map_analysis_text.dart';
 import 'package:mustang_app/components/screen.dart';
 import 'package:provider/provider.dart';
 import '../components/analyzer.dart';
@@ -13,7 +14,7 @@ class AllDataDisplayPerMatch extends StatelessWidget {
   String _teamNumber = '';
   String _matchNum = '';
 
-  AllDataDisplayPerMatch({String teamNumber, String matchNum}) {
+  AllDataDisplayPerMatch({Analyzer analyzer, String teamNumber, String matchNum}) {
     _teamNumber = teamNumber;
     _matchNum = matchNum;
   }
@@ -53,17 +54,18 @@ class _AllDataDisplayPerMatchState extends State<AllDataDisplayPerMatchPage> {
   String _matchNum = '';
 
   _AllDataDisplayPerMatchState(String teamNumber, String matchNum) {
-    myAnalyzer = new Analyzer(teamNumber);
+    //TODO: FIX THIS!!!!
+    myAnalyzer = new Analyzer();
     _matchNum = matchNum;
   }
   
   @override
   Widget build(BuildContext context) {
     if (!myAnalyzer.initialized) {
-      myAnalyzer.init().then((value) => setState(() {}));
+      //myAnalyzer.init().then((value) => setState(() {}));
     }
 
-    Widget dataForMatch = Container(
+    Widget a = Container(
       margin: EdgeInsets.all(10),
       child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -74,9 +76,7 @@ class _AllDataDisplayPerMatchState extends State<AllDataDisplayPerMatchPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      "hey",
-                      //myAnalyzer.getReport(),
+                    Text(myAnalyzer.getReport(),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.grey[800],
@@ -103,8 +103,7 @@ class _AllDataDisplayPerMatchState extends State<AllDataDisplayPerMatchPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              //MapAnalysisText(myAnalyzer)
-              dataForMatch
+              MapAnalysisText(myAnalyzer)
               ],
           ),
         ),
