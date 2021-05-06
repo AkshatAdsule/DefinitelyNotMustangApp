@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/setup_service.dart';
 import 'package:mustang_app/backend/auth_service.dart';
+import 'package:mustang_app/components/all_data_display_per_match.dart';
+import 'package:mustang_app/pages/all_data_display.dart';
 import 'exports/pages.dart';
 import 'utils/orientation_helpers.dart';
 import 'package:provider/provider.dart';
@@ -68,6 +70,19 @@ class MyApp extends StatelessWidget {
         );
         orientation = ScreenOrientation.portraitOnly;
         break;
+      case AllDataDisplayPerMatch.route:
+        nextPage = AllDataDisplayPerMatch(
+          teamNumber: args['teamNumber'],
+          matchNum: args['matchNum'],
+        );
+        orientation = ScreenOrientation.portraitOnly;
+        break;
+      case AllDataDisplay.route:
+        nextPage = AllDataDisplay(
+          teamNumber: args['teamNumber'],
+        );
+        orientation = ScreenOrientation.portraitOnly;
+        break;
       case SketchPage.route:
         nextPage = SketchPage();
         orientation = ScreenOrientation.landscapeOnly;
@@ -80,10 +95,10 @@ class MyApp extends StatelessWidget {
         nextPage = GlossaryPage();
         orientation = ScreenOrientation.portraitOnly;
         break;
-      case TeamInfoDisplay.route:
-        nextPage = TeamInfoDisplay(teamNumber: args['teamNumber']);
-        orientation = ScreenOrientation.portraitOnly;
-        break;
+      // case TeamInfoDisplay.route:
+      //   nextPage = TeamInfoDisplay(teamNumber: args['teamNumber']);
+      //   orientation = ScreenOrientation.portraitOnly;
+      //   break;
       case PitScouter.route:
         nextPage = PitScouter(teamNumber: args['teamNumber']);
         orientation = ScreenOrientation.portraitOnly;

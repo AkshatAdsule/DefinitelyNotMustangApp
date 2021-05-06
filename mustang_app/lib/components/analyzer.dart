@@ -83,6 +83,12 @@ class Analyzer {
     return currActions;
   }
 
+  String getDataDisplayForMatch(String matchNum){
+     List<GameAction> actions = getMatch(matchNum);
+
+    return "hey";
+  }
+
   String getReport() {
     if (!_initialized || _allMatches.length == 0) {
       return "No analysis available";

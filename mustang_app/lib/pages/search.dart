@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/team.dart';
 import 'package:mustang_app/backend/teams_service.dart';
 import 'package:mustang_app/components/screen.dart';
+import 'package:mustang_app/pages/all_data_display.dart';
 import 'package:provider/provider.dart';
 import 'map_analysis_display.dart';
 import 'written_analysis_display.dart';
@@ -53,18 +54,19 @@ class _SearchState extends State<Search> {
   }
 
   int font = 12;
+  int size = 13;
 
   showAlertDialog(BuildContext context, String teamNumber) {
     TextButton cancelButton = TextButton(
       child: Text("Cancel", 
-        style: TextStyle(fontSize: 11)),
+        style: TextStyle(fontSize: 15)),
       onPressed: () {
         Navigator.pop(context);
       },
     );
     TextButton goToMapAnalysis = TextButton(
       child: Text("Map", 
-        style: TextStyle(fontSize: 11)),
+        style: TextStyle(fontSize: 15)),
       onPressed: () {
         Navigator.pop(context);
         Navigator.pushNamed(context, MapAnalysisDisplay.route, arguments: {
@@ -74,7 +76,7 @@ class _SearchState extends State<Search> {
     );
     TextButton goToWrittenAnalysis = TextButton(
       child: Text("Written Analysis", 
-        style: TextStyle(fontSize: 11)),
+        style: TextStyle(fontSize: 15)),
       onPressed: () {
         Navigator.pop(context);
         Navigator.pushNamed(context, WrittenAnalysisDisplay.route, arguments: {
@@ -82,12 +84,12 @@ class _SearchState extends State<Search> {
         });
       },
     );
-    TextButton goToData = TextButton(
+    TextButton goToAllData = TextButton(
       child: Text("Data", 
-        style: TextStyle(fontSize: 11)),
+        style: TextStyle(fontSize: 15)),
       onPressed: () {
         Navigator.pop(context);
-        Navigator.pushNamed(context, TeamInfoDisplay.route, arguments: {
+        Navigator.pushNamed(context, AllDataDisplay.route, arguments: {
           'teamNumber': teamNumber,
         });
       },
@@ -96,7 +98,9 @@ class _SearchState extends State<Search> {
     AlertDialog alert = AlertDialog(
       title: Text("Data View"),
       content: Text("What would you like to see?"),
-      actions: [cancelButton, goToMapAnalysis, goToWrittenAnalysis, goToData],
+      // actions: [cancelButton, goToMapAnalysis, goToWrittenAnalysis, goToAllData, goToData],
+      actions: [cancelButton, goToMapAnalysis, goToWrittenAnalysis, goToAllData],
+
     );
 
     // show the dialog
