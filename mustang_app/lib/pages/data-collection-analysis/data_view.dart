@@ -2,6 +2,7 @@ import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mustang_app/components/data_collection_tile.dart';
+import 'package:mustang_app/constants/constants.dart';
 import 'package:mustang_app/pages/data-collection-analysis/view_graph_screen.dart';
 import 'package:mustang_app/utils/data_collection_data.dart';
 
@@ -12,15 +13,30 @@ class DataViewScreen extends StatefulWidget {
 }
 
 class _DataViewScreenState extends State<DataViewScreen> {
+  Map<RobotFeatures, double> avgPointsPerFeature = {
+    RobotFeatures.SHOOTER: 0,
+    RobotFeatures.ELEVATOR: 0,
+    RobotFeatures.CLIMBER: 0,
+    RobotFeatures.CLAW: 0
+  };
+
   List<DataCollectionYearData> data = [];
 
   Future<List<DataCollectionYearData>> getData() async {
     List<DataCollectionYearData> yearData = [];
+
+    Map<RobotFeatures, List<double>> totalPointsPerFeature = {
+      RobotFeatures.SHOOTER: [],
+      RobotFeatures.ELEVATOR: [],
+      RobotFeatures.CLIMBER: [],
+      RobotFeatures.CLAW: [],
+    };
+
     for (int i = 0; i <= 7; i++) {
       DateTime year = new DateTime(2013 + i);
 
-      String csvData =
-          await rootBundle.loadString('assets/data_collection/$year.csv');
+      String csvData = await rootBundle
+          .loadString('assets/data_collection/${year.year}.csv');
       List<List<dynamic>> values = const CsvToListConverter().convert(csvData);
 
       List<DataCollectionMatchData> matchData = [];
@@ -28,22 +44,46 @@ class _DataViewScreenState extends State<DataViewScreen> {
       for (List<dynamic> row in values) {
         // Check if row is empty
         try {
-          var sampleData = DataCollectionMatchData.fromRow(row, year);
+          DataCollectionMatchData sampleData =
+              DataCollectionMatchData.fromRow(row, year);
           matchData.add(sampleData);
         } catch (e) {
           print(e);
         }
       }
 
+      DataCollectionYearData currentYearData = DataCollectionYearData(
+        year: year,
+        data: matchData,
+        rankBeforeAllianceSelection: 0,
+        endRank: 10,
+      );
+
+      for (RobotFeatures feature in Constants.ROBOT_FEATURES[year.year]) {
+        totalPointsPerFeature[feature]
+            .add(currentYearData.avgData.pointsScored);
+      }
+
       yearData.add(
-        DataCollectionYearData(
-          year: year,
-          data: matchData,
-          rankBeforeAllianceSelection: 0,
-          endRank: 10,
-        ),
+        currentYearData,
       );
     }
+
+    avgPointsPerFeature = {
+      RobotFeatures.CLAW:
+          totalPointsPerFeature[RobotFeatures.CLAW].fold(0, (p, c) => p + c) /
+              totalPointsPerFeature[RobotFeatures.CLAW].length,
+      RobotFeatures.CLIMBER: totalPointsPerFeature[RobotFeatures.CLIMBER]
+              .fold(0, (p, c) => p + c) /
+          totalPointsPerFeature[RobotFeatures.CLIMBER].length,
+      RobotFeatures.ELEVATOR: totalPointsPerFeature[RobotFeatures.ELEVATOR]
+              .fold(0, (p, c) => p + c) /
+          totalPointsPerFeature[RobotFeatures.ELEVATOR].length,
+      RobotFeatures.SHOOTER: totalPointsPerFeature[RobotFeatures.SHOOTER]
+              .fold(0, (p, c) => p + c) /
+          totalPointsPerFeature[RobotFeatures.SHOOTER].length,
+    };
+
     return yearData;
   }
 
@@ -52,7 +92,6 @@ class _DataViewScreenState extends State<DataViewScreen> {
     getData().then(
       (data) => {
         setState(() {
-          print(data);
           this.data = data;
         })
       },
@@ -66,34 +105,73 @@ class _DataViewScreenState extends State<DataViewScreen> {
       appBar: AppBar(
         title: Text("Data Collection Analysis"),
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            data.length == 0 || data == null
-          ? Container()
-          : ListView(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                for (var yearData in data) DataCollectionYearTile(yearData)
+                Text(
+                  "On average...",
+                  style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "Robots that had claws earned ${avgPointsPerFeature[RobotFeatures.CLAW].toStringAsFixed(2)} points",
+                ),
+                Text(
+                  "Robots that had elevators earned ${avgPointsPerFeature[RobotFeatures.ELEVATOR].toStringAsFixed(2)} points",
+                ),
+                Text(
+                  "Robots that had climbers earned ${avgPointsPerFeature[RobotFeatures.CLIMBER].toStringAsFixed(2)} points",
+                ),
+                Text(
+                  "Robots that had shooters earned ${avgPointsPerFeature[RobotFeatures.SHOOTER].toStringAsFixed(2)} points",
+                ),
               ],
             ),
-            ElevatedButton(
-                  child: Text(
-                    "View Overall Data",
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15.0, top: 10),
+            child: Text(
+              "Year Data",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+          ),
+          data.length == 0 || data == null
+              ? Container()
+              : Expanded(
+                  flex: 10,
+                  child: ListView(
+                    children: [
+                      for (var yearData in data)
+                        DataCollectionYearTile(yearData)
+                    ],
                   ),
-                  onPressed: data.length > 0
-                      ? () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  View670GraphScreen(statistic: data),
-                            ),
-                          );
-                        }
-                      : null,
                 ),
-          ])
-    )
+          Expanded(
+            child: Center(
+              child: ElevatedButton(
+                child: Text(
+                  "View Overall Data",
+                ),
+                onPressed: data.length > 0
+                    ? () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                View670GraphScreen(statistic: data),
+                          ),
+                        );
+                      }
+                    : null,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
