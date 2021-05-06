@@ -4,9 +4,10 @@ import 'package:mustang_app/backend/team.dart';
 import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/backend/team_service.dart';
 import 'package:mustang_app/components/game_map.dart';
-import 'package:mustang_app/components/game_replay.dart';
-//import 'package:mustang_app/components/map_analysis_text.dart';
+import 'package:mustang_app/components/game_replay_key.dart';
+// import 'package:mustang_app/components/map_analysis_text.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mustang_app/components/map_analysis_key.dart';
 import 'package:mustang_app/components/mode_toggle.dart';
 import 'package:mustang_app/components/screen.dart';
 import 'package:mustang_app/components/select.dart';
@@ -65,13 +66,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
   GameMap gameMap;
 
   ActionType currentActionType = ActionType.ALL;
-
-  String _scoringText = Constants.minPtValuePerZonePerGame.toString() +
-      " total pts                                                                     " +
-      Constants.maxPtValuePerZonePerGame.toString() +
-      " total pts";
-  String _accuracyText =
-      "0%                                                                  100%";
 
   _MapAnalysisDisplayState(String teamNumber) {
     myAnalyzer = new Analyzer();
@@ -270,9 +264,9 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
                     child: IndexedStack(
                       index: _toggleModes.indexOf(true),
                       children: [
-                        Container(),
-                        Container(),
-                        Container(),
+                        MapAnalysisKey(true),
+                        MapAnalysisKey(false),
+                        GameReplayKey(),
                       ],
                     ),
                   ),
@@ -285,33 +279,3 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
     );
   }
 }
-
-// Widget shadingKey = Ink(
-//   decoration: BoxDecoration(
-//     gradient: LinearGradient(
-//       colors: [Colors.green[50], Colors.green[900]],
-//       begin: Alignment.centerLeft,
-//       end: Alignment.centerRight,
-//     ),
-//     borderRadius: BorderRadius.horizontal(),
-//   ),
-//   child: Container(
-//     constraints: BoxConstraints(
-//         maxWidth: MediaQuery.of(context).size.width, minHeight: 60.0),
-//     alignment: Alignment.center,
-//     child: Text(
-//       _toggleModes.first
-//           ? "Scoring Map (avg per game)\n" + _scoringText
-//           : _toggleModes[1]
-//               ? "Accuracy Map (avg per game)\n" + _accuracyText
-//               : "",
-//       textAlign: TextAlign.center,
-//       style: TextStyle(
-//         color: Colors.grey[800],
-//         fontWeight: FontWeight.bold,
-//         fontSize: 16,
-//         height: 1,
-//       ),
-//     ),
-//   ),
-// );
