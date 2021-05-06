@@ -91,12 +91,13 @@ class Analyzer {
   }
 
   String getDataDisplayForMatch(String matchNum) {
-    _clearAllData();
-    _collectData();
+    //_clearAllData();
+   // _collectData();
     String result = "";
     bool crossedInitiationLine = false;
     double autonInnerScored = 0, autonOuterScored = 0, autonLowScored = 0;
     //double autonInnerMissed = 0, autonOuterMissed = 0, autonLowMissed = 0;
+
     List<GameAction> actions = getMatch(matchNum);
 
     //fill up variables above with values
