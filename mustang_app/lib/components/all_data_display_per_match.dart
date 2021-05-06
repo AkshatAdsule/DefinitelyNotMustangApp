@@ -83,11 +83,17 @@ class AllDataDisplayPerMatch extends StatefulWidget {
   @override
   Widget build(BuildContext context) {
     if (!myAnalyzer.initialized) {
+      debugPrint("analyzer not initialized");
       myAnalyzer.init(
         Provider.of<Team>(context),
         Provider.of<List<Match>>(context),
       );
       setState(() {});
+    }
+    else{
+            debugPrint("analyzer initialized");
+            debugPrint("team num: " + myAnalyzer.teamNum.toString());
+
     }
 
     Widget dataText = Container(

@@ -56,11 +56,13 @@ class _AllDataDisplayState extends State<AllDataDisplayPage> {
   Analyzer myAnalyzer;
 
   _AllDataDisplayState(Analyzer analyzer, String teamNumber) {
+    //TODO: here is why everything is null!! fix this!!
     myAnalyzer = new Analyzer();
   }
 
   @override
   Widget build(BuildContext context) {
+    
     if (!myAnalyzer.initialized) {
       myAnalyzer.init(
         Provider.of<Team>(context),

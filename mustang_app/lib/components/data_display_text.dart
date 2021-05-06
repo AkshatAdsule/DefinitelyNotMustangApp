@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/match.dart';
+import 'package:mustang_app/backend/team.dart';
 import 'package:mustang_app/components/all_data_display_per_match.dart';
 import 'package:mustang_app/components/analyzer.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +32,15 @@ class _DataDisplayTextState extends State<DataDisplayText> {
 
   @override
   Widget build(BuildContext context) {
+    if (!myAnalyzer.initialized) {
+      debugPrint("analyzer not initialized in data display text");
+      myAnalyzer.init(
+        Provider.of<Team>(context),
+        Provider.of<List<Match>>(context),
+      );
+      setState(() {});
+    }
+    
     List<Match> matches = Provider.of<List<Match>>(context);
     if (!_initialized && matches.length > 0) {
       init(matches.first);
