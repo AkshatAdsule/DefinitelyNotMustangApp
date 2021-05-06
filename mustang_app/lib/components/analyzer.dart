@@ -99,25 +99,32 @@ class Analyzer {
     //double autonInnerMissed = 0, autonOuterMissed = 0, autonLowMissed = 0;
 
     List<GameAction> actions = getMatch(matchNum);
-    
+
     //fill up variables above with values
-    for (GameAction a in actions){
-      if (a.action == ActionType.OTHER_CROSSED_INITIATION_LINE){
+    for (GameAction a in actions) {
+      if (a.action == ActionType.OTHER_CROSSED_INITIATION_LINE) {
         crossedInitiationLine = true;
-      } else if (a.action == ActionType.SHOT_INNER && a.timeStamp <= Constants.autonMillisecondLength){
-        autonInnerScored ++;
-      }else if (a.action == ActionType.SHOT_OUTER && a.timeStamp <= Constants.autonMillisecondLength){
-        autonOuterScored ++;
-      } else if (a.action == ActionType.SHOT_LOW && a.timeStamp <= Constants.autonMillisecondLength){
-        autonLowScored ++;
+      } else if (a.action == ActionType.SHOT_INNER &&
+          a.timeStamp <= Constants.autonMillisecondLength) {
+        autonInnerScored++;
+      } else if (a.action == ActionType.SHOT_OUTER &&
+          a.timeStamp <= Constants.autonMillisecondLength) {
+        autonOuterScored++;
+      } else if (a.action == ActionType.SHOT_LOW &&
+          a.timeStamp <= Constants.autonMillisecondLength) {
+        autonLowScored++;
       }
     }
 
     //add all filled variables to string and return
-    result = "Crossed Initiation Line: " + crossedInitiationLine.toString()
-    +"\n Auton Inner Shots Scored: " + autonInnerScored.toString()
-    +"\n Auton Outer Shots Scored: " + autonOuterScored.toString()
-    +"\n Auton Low Shots Scored: " + autonLowScored.toString();
+    result = "Crossed Initiation Line: " +
+        crossedInitiationLine.toString() +
+        "\n Auton Inner Shots Scored: " +
+        autonInnerScored.toString() +
+        "\n Auton Outer Shots Scored: " +
+        autonOuterScored.toString() +
+        "\n Auton Low Shots Scored: " +
+        autonLowScored.toString();
 
     return result;
   }
