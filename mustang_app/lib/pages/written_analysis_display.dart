@@ -46,30 +46,20 @@ class WrittenAnalysisDisplayPage extends StatefulWidget {
 }
 
 class _WrittenAnalysisDisplayState extends State<WrittenAnalysisDisplayPage> {
-  Analyzer myAnalyzer;
-
-  _WrittenAnalysisDisplayState(String teamNumber) {
-    myAnalyzer = new Analyzer();
-  }
+  _WrittenAnalysisDisplayState(String teamNumber) {}
 
   @override
   Widget build(BuildContext context) {
-    if (!myAnalyzer.initialized) {
-      myAnalyzer.init(
-        Provider.of<Team>(context),
-        Provider.of<List<Match>>(context),
-      );
-      setState(() {});
-    }
-
+    Team team = Provider.of<Team>(context);
     return Screen(
-      title: 'Written Analysis for Team ' + myAnalyzer.teamNum,
+      title:
+          'Written Analysis for Team ' + (team != null ? team.teamNumber : ""),
       includeBottomNav: false,
       child: Container(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[MapAnalysisText(myAnalyzer)],
+            children: <Widget>[MapAnalysisText()],
           ),
         ),
       ),

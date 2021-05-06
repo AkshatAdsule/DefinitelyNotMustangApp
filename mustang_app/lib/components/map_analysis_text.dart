@@ -1,28 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/backend/team.dart';
+import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/components/analyzer.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class MapAnalysisText extends StatefulWidget {
-  Analyzer _analyzer;
-  MapAnalysisText(Analyzer analyzer) {
-    _analyzer = analyzer;
-  }
   @override
   State<StatefulWidget> createState() {
-    return new _MapAnalysisTextState(_analyzer);
+    return new _MapAnalysisTextState();
   }
 }
 
 class _MapAnalysisTextState extends State<MapAnalysisText> {
   Analyzer myAnalyzer;
 
-  _MapAnalysisTextState(Analyzer analyzer) {
-    myAnalyzer = analyzer;
+  _MapAnalysisTextState() {
+    myAnalyzer = new Analyzer();
   }
 
   @override
   Widget build(BuildContext context) {
-    
+    if (!myAnalyzer.initialized) {
+      myAnalyzer.init(
+        Provider.of<Team>(context),
+        Provider.of<List<Match>>(context),
+      );
+      setState(() {});
+    }
     return Container(
       margin: EdgeInsets.all(10),
       child: Row(

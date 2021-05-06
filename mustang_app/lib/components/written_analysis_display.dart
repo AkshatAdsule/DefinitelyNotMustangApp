@@ -38,9 +38,9 @@ class WrittenAnalysisDisplay extends StatelessWidget {
 // ignore: must_be_immutable
 class WrittenAnalysisDisplayPage extends StatefulWidget {
   String _teamNumber = '';
-    Analyzer _analyzer;
+  Analyzer _analyzer;
 
-  WrittenAnalysisDisplayPage({  Analyzer analyzer, String teamNumber}) {
+  WrittenAnalysisDisplayPage({Analyzer analyzer, String teamNumber}) {
     _analyzer = analyzer;
     _teamNumber = teamNumber;
   }
@@ -57,7 +57,7 @@ class _WrittenAnalysisDisplayState extends State<WrittenAnalysisDisplayPage> {
   _WrittenAnalysisDisplayState(Analyzer analyzer, String teamNumber) {
     _analyzer = analyzer;
   }
-  
+
   @override
   Widget build(BuildContext context) {
     if (!_analyzer.initialized) {
@@ -71,7 +71,7 @@ class _WrittenAnalysisDisplayState extends State<WrittenAnalysisDisplayPage> {
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[MapAnalysisText(_analyzer)],
+            children: <Widget>[MapAnalysisText()],
           ),
         ),
       ),

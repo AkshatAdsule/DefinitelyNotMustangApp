@@ -11,11 +11,9 @@ import '../components/analyzer.dart';
 class AllDataDisplay extends StatelessWidget {
   TeamService _teamService = TeamService();
   static const String route = '/AllDataDisplay';
-  //remove team num
   String _teamNumber = '';
-  Analyzer _analyzer;
-  AllDataDisplay({Analyzer analyzer, String teamNumber}) {
-    _analyzer = analyzer;
+
+  AllDataDisplay({String teamNumber}) {
     _teamNumber = teamNumber;
   }
   @override
@@ -27,7 +25,6 @@ class AllDataDisplay extends StatelessWidget {
         value: _teamService.streamMatches(_teamNumber),
         initialData: [],
         child: AllDataDisplayPage(
-          analyzer: _analyzer,
           teamNumber: _teamNumber,
         ),
       ),
@@ -38,47 +35,32 @@ class AllDataDisplay extends StatelessWidget {
 // ignore: must_be_immutable
 class AllDataDisplayPage extends StatefulWidget {
   String _teamNumber = '';
-  Analyzer _analyzer;
 
-  AllDataDisplayPage({Analyzer analyzer, String teamNumber}) {
-        _analyzer = analyzer;
-
+  AllDataDisplayPage({String teamNumber}) {
     _teamNumber = teamNumber;
   }
 
   @override
   State<StatefulWidget> createState() {
-    return new _AllDataDisplayState(_analyzer, _teamNumber);
+    return new _AllDataDisplayState(_teamNumber);
   }
 }
 
 class _AllDataDisplayState extends State<AllDataDisplayPage> {
-  Analyzer myAnalyzer;
-
-  _AllDataDisplayState(Analyzer analyzer, String teamNumber) {
-    //TODO: here is why everything is null!! fix this!!
-    myAnalyzer = new Analyzer();
-  }
+  _AllDataDisplayState(String teamNumber);
 
   @override
   Widget build(BuildContext context) {
-    
-    if (!myAnalyzer.initialized) {
-      myAnalyzer.init(
-        Provider.of<Team>(context),
-        Provider.of<List<Match>>(context),
-      );
-      setState(() {});
-    }
+    Team team = Provider.of<Team>(context);
 
     return Screen(
-      title: 'All Data for team: ' + myAnalyzer.teamNum,
+      title: 'All Data for team: ' + (team != null ? team.teamNumber : ""),
       includeBottomNav: false,
       child: Container(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[DataDisplayText(myAnalyzer)],
+            children: <Widget>[DataDisplayText()],
           ),
         ),
       ),

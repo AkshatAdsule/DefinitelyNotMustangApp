@@ -6,13 +6,9 @@ import 'package:mustang_app/components/analyzer.dart';
 import 'package:provider/provider.dart';
 
 class DataDisplayText extends StatefulWidget {
-  Analyzer _analyzer;
-  DataDisplayText(Analyzer analyzer) {
-    _analyzer = analyzer;
-  }
   @override
   State<StatefulWidget> createState() {
-    return new _DataDisplayTextState(_analyzer);
+    return new _DataDisplayTextState();
   }
 }
 
@@ -20,8 +16,8 @@ class _DataDisplayTextState extends State<DataDisplayText> {
   Analyzer myAnalyzer;
   bool _initialized = false;
 
-  _DataDisplayTextState(Analyzer analyzer) {
-    myAnalyzer = analyzer;
+  _DataDisplayTextState() {
+    myAnalyzer = new Analyzer();
   }
 
   void init(Match match) {
@@ -30,55 +26,54 @@ class _DataDisplayTextState extends State<DataDisplayText> {
     });
   }
 
+  Widget getRow(List<Match> matches, int i, BuildContext context) {
+    String matchNum = matches[i].matchNumber;
+
+    return GestureDetector(
+        child: Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+          color: Colors.green[i * 100],
+          elevation: 10,
+          child: Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
+            ListTile(
+              contentPadding: EdgeInsets.all(10.0),
+              title: Text(
+                matchNum,
+                style: TextStyle(letterSpacing: 3.0),
+              ),
+              trailing: Icon(
+                Icons.keyboard_arrow_right,
+                size: 40,
+                color: Colors.green[900],
+              ),
+            ),
+          ]),
+        ),
+        onTap: () {
+          Navigator.pushNamed(context, AllDataDisplayPerMatch.route,
+              arguments: {
+                // 'analyzer': myAnalyzer,
+                'teamNumber':
+                    Provider.of<Team>(context, listen: false).teamNumber,
+                'matchNum': matchNum,
+              });
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!myAnalyzer.initialized) {
-      debugPrint("analyzer not initialized in data display text");
       myAnalyzer.init(
         Provider.of<Team>(context),
         Provider.of<List<Match>>(context),
       );
       setState(() {});
     }
-    
+
     List<Match> matches = Provider.of<List<Match>>(context);
     if (!_initialized && matches.length > 0) {
       init(matches.first);
-    }
-
-    Widget getRow(int i) {
-      String matchNum = matches[i].matchNumber;
-
-      return GestureDetector(
-          child: Card(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0)),
-            color: Colors.green[i * 100],
-            elevation: 10,
-            child: Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
-              ListTile(
-                contentPadding: EdgeInsets.all(10.0),
-                title: Text(
-                  matchNum,
-                  style: TextStyle(letterSpacing: 3.0),
-                ),
-                trailing: Icon(
-                  Icons.keyboard_arrow_right,
-                  size: 40,
-                  color: Colors.green[900],
-                ),
-              ),
-            ]),
-          ),
-
-          onTap: () {
-            Navigator.pushNamed(context, AllDataDisplayPerMatch.route,
-                arguments: {
-                  'analyzer' : myAnalyzer,
-                  //'teamNumber': myAnalyzer.teamNum,
-                  //'matchNum' : matchNum,
-                });
-          });
     }
 
     return new Container(
@@ -86,7 +81,7 @@ class _DataDisplayTextState extends State<DataDisplayText> {
       child: new ListView.builder(
           itemCount: matches.length,
           itemBuilder: (BuildContext context, int position) {
-            return getRow(position);
+            return getRow(matches, position, context);
           }),
     );
 
