@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/team.dart';
 import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/backend/team_service.dart';
+import 'package:mustang_app/components/map_analysis_text.dart';
 import 'package:mustang_app/components/screen.dart';
-import 'package:mustang_app/components/data_display_text.dart';
 import 'package:provider/provider.dart';
 import '../components/analyzer.dart';
 
 // ignore: must_be_immutable
-class AllDataDisplay extends StatelessWidget {
+class WrittenAnalysisDisplay extends StatelessWidget {
   TeamService _teamService = TeamService();
-  static const String route = '/AllDataDisplay';
+  static const String route = '/WrittenAnalysisDisplay';
   //remove team num
   String _teamNumber = '';
   Analyzer _analyzer;
-  AllDataDisplay({Analyzer analyzer, String teamNumber}) {
+  WrittenAnalysisDisplay({Analyzer analyzer, String teamNumber}) {
     _analyzer = analyzer;
     _teamNumber = teamNumber;
   }
@@ -26,7 +26,7 @@ class AllDataDisplay extends StatelessWidget {
       child: StreamProvider<List<Match>>.value(
         value: _teamService.streamMatches(_teamNumber),
         initialData: [],
-        child: AllDataDisplayPage(
+        child: WrittenAnalysisDisplayPage(
           analyzer: _analyzer,
           teamNumber: _teamNumber,
         ),
@@ -36,47 +36,42 @@ class AllDataDisplay extends StatelessWidget {
 }
 
 // ignore: must_be_immutable
-class AllDataDisplayPage extends StatefulWidget {
+class WrittenAnalysisDisplayPage extends StatefulWidget {
   String _teamNumber = '';
-  Analyzer _analyzer;
+    Analyzer _analyzer;
 
-  AllDataDisplayPage({Analyzer analyzer, String teamNumber}) {
-        _analyzer = analyzer;
-
+  WrittenAnalysisDisplayPage({  Analyzer analyzer, String teamNumber}) {
+    _analyzer = analyzer;
     _teamNumber = teamNumber;
   }
 
   @override
   State<StatefulWidget> createState() {
-    return new _AllDataDisplayState(_analyzer, _teamNumber);
+    return new _WrittenAnalysisDisplayState(_analyzer, _teamNumber);
   }
 }
 
-class _AllDataDisplayState extends State<AllDataDisplayPage> {
-  Analyzer myAnalyzer;
+class _WrittenAnalysisDisplayState extends State<WrittenAnalysisDisplayPage> {
+  Analyzer _analyzer;
 
-  _AllDataDisplayState(Analyzer analyzer, String teamNumber) {
-    myAnalyzer = new Analyzer();
+  _WrittenAnalysisDisplayState(Analyzer analyzer, String teamNumber) {
+    _analyzer = analyzer;
   }
-
+  
   @override
   Widget build(BuildContext context) {
-    if (!myAnalyzer.initialized) {
-      myAnalyzer.init(
-        Provider.of<Team>(context),
-        Provider.of<List<Match>>(context),
-      );
-      setState(() {});
+    if (!_analyzer.initialized) {
+      //myAnalyzer.init().then((value) => setState(() {}));
     }
 
     return Screen(
-      title: 'All Data for team: ' + myAnalyzer.teamNum,
+      title: 'Written Analysis for Team ' + _analyzer.teamNum,
       includeBottomNav: false,
       child: Container(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[DataDisplayText(myAnalyzer)],
+            children: <Widget>[MapAnalysisText(_analyzer)],
           ),
         ),
       ),

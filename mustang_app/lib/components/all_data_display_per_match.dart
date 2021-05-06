@@ -2,70 +2,95 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/team.dart';
 import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/backend/team_service.dart';
-import 'package:mustang_app/components/map_analysis_text.dart';
 import 'package:mustang_app/components/screen.dart';
 import 'package:provider/provider.dart';
 import '../components/analyzer.dart';
 
 // ignore: must_be_immutable
-class AllDataDisplayPerMatch extends StatelessWidget {
-  TeamService _teamService = TeamService();
+class AllDataDisplayPerMatch extends StatefulWidget {
+  Analyzer _analyzer;
   static const String route = '/AllDataDisplayPerMatch';
-  String _teamNumber = '';
-  String _matchNum = '';
 
-  AllDataDisplayPerMatch({Analyzer analyzer, String teamNumber, String matchNum}) {
-    _teamNumber = teamNumber;
-    _matchNum = matchNum;
+  AllDataDisplayPerMatch( {Analyzer analyzer}) {
+    _analyzer = analyzer;
   }
-  @override
-  Widget build(BuildContext context) {
-    return StreamProvider<Team>.value(
-      initialData: null,
-      value: _teamService.streamTeam(_teamNumber),
-      child: StreamProvider<List<Match>>.value(
-        value: _teamService.streamMatches(_teamNumber),
-        initialData: [],
-        child: AllDataDisplayPerMatchPage(
-          teamNumber: _teamNumber,
-          matchNum: _matchNum,
-        ),
-      ),
-    );
-  }
-}
-
-// ignore: must_be_immutable
-class AllDataDisplayPerMatchPage extends StatefulWidget {
-  String _teamNumber = '', _matchNum = '';
-  AllDataDisplayPerMatchPage({String teamNumber, String matchNum}) {
-    _teamNumber = teamNumber;
-    _matchNum = matchNum;
-  }
-
   @override
   State<StatefulWidget> createState() {
-    return new _AllDataDisplayPerMatchState(_teamNumber, _matchNum);
+    return new _AllDataDisplayPerMatchState(_analyzer);
   }
 }
 
-class _AllDataDisplayPerMatchState extends State<AllDataDisplayPerMatchPage> {
+// class AllDataDisplayPerMatch extends StatelessWidget {
+//   TeamService _teamService = TeamService();
+//   static const String route = '/AllDataDisplayPerMatch';
+//   String _teamNumber = '';
+//   String _matchNum = '';
+//   Analyzer _analyzer;
+
+//   AllDataDisplayPerMatch({Analyzer analyzer, String teamNumber, String matchNum}) {
+//     this._analyzer = analyzer;
+//     _teamNumber = teamNumber;
+//     _matchNum = matchNum;
+//   }
+//   @override
+//   Widget build(BuildContext context) {
+//     return StreamProvider<Team>.value(
+//       initialData: null,
+//       value: _teamService.streamTeam(_teamNumber),
+//       child: StreamProvider<List<Match>>.value(
+//         value: _teamService.streamMatches(_teamNumber),
+//         initialData: [],
+//         child: AllDataDisplayPerMatchPage(
+//           analyzer: _analyzer,
+//           teamNumber: _teamNumber,
+//           matchNum: _matchNum,
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// ignore: must_be_immutable
+// class AllDataDisplayPerMatchPage extends StatefulWidget {
+//   String _teamNumber = '', _matchNum = '';
+//   Analyzer _analyzer;
+//   AllDataDisplayPerMatchPage({Analyzer analyzer, String teamNumber, String matchNum}) {
+//     _analyzer = analyzer;
+//     _teamNumber = teamNumber;
+//     _matchNum = matchNum;
+//   }
+
+//   @override
+//   State<StatefulWidget> createState() {
+//     return new _AllDataDisplayPerMatchState(_analyzer, _teamNumber, _matchNum);
+//   }
+// }
+
+// class _AllDataDisplayPerMatchState extends State<AllDataDisplayPerMatchPage> {
+  class _AllDataDisplayPerMatchState extends State<AllDataDisplayPerMatch> {
+
   Analyzer myAnalyzer;
   String _matchNum = '';
 
-  _AllDataDisplayPerMatchState(String teamNumber, String matchNum) {
+  //_AllDataDisplayPerMatchState(Analyzer analyzer, String teamNumber, String matchNum) {
+  _AllDataDisplayPerMatchState(Analyzer analyzer) {
+
     //TODO: FIX THIS!!!!
-    myAnalyzer = new Analyzer();
-    _matchNum = matchNum;
+    myAnalyzer = analyzer;
+   // _matchNum = matchNum;
   }
   
   @override
   Widget build(BuildContext context) {
     if (!myAnalyzer.initialized) {
-      //myAnalyzer.init().then((value) => setState(() {}));
+      myAnalyzer.init(
+        Provider.of<Team>(context),
+        Provider.of<List<Match>>(context),
+      );
+      setState(() {});
     }
 
-    Widget a = Container(
+    Widget dataText = Container(
       margin: EdgeInsets.all(10),
       child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -103,7 +128,7 @@ class _AllDataDisplayPerMatchState extends State<AllDataDisplayPerMatchPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              MapAnalysisText(myAnalyzer)
+              dataText
               ],
           ),
         ),

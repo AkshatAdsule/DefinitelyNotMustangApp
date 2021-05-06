@@ -64,8 +64,9 @@ class _DataDisplayTextState extends State<DataDisplayText> {
           onTap: () {
             Navigator.pushNamed(context, AllDataDisplayPerMatch.route,
                 arguments: {
-                  'teamNumber': myAnalyzer.teamNum,
-                  'matchNum' : matchNum,
+                  'analyzer' : myAnalyzer,
+                  //'teamNumber': myAnalyzer.teamNum,
+                  //'matchNum' : matchNum,
                 });
           });
     }
