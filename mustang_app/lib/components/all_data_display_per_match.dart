@@ -107,7 +107,7 @@ class AllDataDisplayPerMatch extends StatefulWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(myAnalyzer.getReport(),
+                    Text(myAnalyzer.getDataDisplayForMatch(_matchNum),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.grey[800],

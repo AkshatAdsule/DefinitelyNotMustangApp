@@ -91,22 +91,50 @@ class Analyzer {
   }
 
   String getDataDisplayForMatch(String matchNum){
-     List<GameAction> actions = getMatch(matchNum);
+  String getDataDisplayForMatch(String matchNum) {
+    _clearAllData();
+    _collectData();
+    String result = "";
+    bool crossedInitiationLine = false;
+    double autonInnerScored = 0, autonOuterScored = 0, autonLowScored = 0;
+    //double autonInnerMissed = 0, autonOuterMissed = 0, autonLowMissed = 0;
+    List<GameAction> actions = getMatch(matchNum);
+    
+    //fill up variables above with values
+    for (GameAction a in actions){
+      if (a.action == ActionType.OTHER_CROSSED_INITIATION_LINE){
+        crossedInitiationLine = true;
+      } else if (a.action == ActionType.SHOT_INNER && a.timeStamp <= Constants.autonMillisecondLength){
+        autonInnerScored ++;
+      }else if (a.action == ActionType.SHOT_OUTER && a.timeStamp <= Constants.autonMillisecondLength){
+        autonOuterScored ++;
+      } else if (a.action == ActionType.SHOT_LOW && a.timeStamp <= Constants.autonMillisecondLength){
+        autonLowScored ++;
+      }
+    }
 
-    return "heyoo";
+    //add all filled variables to string and return
+    result = "Crossed Initiation Line: " + crossedInitiationLine.toString()
+    +"\n Auton Inner Shots Scored: " + autonInnerScored.toString()
+    +"\n Auton Outer Shots Scored: " + autonOuterScored.toString()
+    +"\n Auton Low Shots Scored: " + autonLowScored.toString();
+
+    return result;
   }
 
   String getReport() {
     if (!_initialized || _allMatches.length == 0) {
       return "No analysis available";
     }
+    _clearAllData();
+    _collectData();
 
-    if (_allMatches.length > _oldAllMatchLength) {
-      _oldAllMatchLength = _allMatches.length;
-      //need to reset everything to 0 (simpler than checking what parts need to be updated)
-      _clearAllData();
-      _collectData();
-    }
+    // if (_allMatches.length > _oldAllMatchLength) {
+    //   _oldAllMatchLength = _allMatches.length;
+    //   //need to reset everything to 0 (simpler than checking what parts need to be updated)
+    //   _clearAllData();
+    //   _collectData();
+    // }
 
     int _shootingPtsPerGame =
         (calcOffenseShootingPts() / _totalNumGames).round();

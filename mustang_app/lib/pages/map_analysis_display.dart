@@ -238,7 +238,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
     }
 
     return Screen(
-      title: 'Map Analysis',
+      title: 'Map Analysis for Team: ' + myAnalyzer.teamNum.toString(),
       includeBottomNav: false,
       child: Container(
         child: GameMap(
