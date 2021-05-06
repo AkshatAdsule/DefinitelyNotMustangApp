@@ -6,8 +6,10 @@ import 'package:mustang_app/backend/team_service.dart';
 import 'package:mustang_app/components/game_map.dart';
 import 'package:mustang_app/components/game_replay.dart';
 //import 'package:mustang_app/components/map_analysis_text.dart';
-import 'package:mustang_app/components/map_switch_button.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mustang_app/components/mode_toggle.dart';
 import 'package:mustang_app/components/screen.dart';
+import 'package:mustang_app/components/select.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/constants/constants.dart';
 import 'package:provider/provider.dart';
@@ -54,11 +56,14 @@ class MapAnalysisDisplayPage extends StatefulWidget {
 
 class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
   Analyzer myAnalyzer;
-  bool _showScoringMap = true;
-  bool _accuracyMap = true;
-
+  //Scoring, accuracy, replay
+  List<bool> _toggleModes = [
+    true,
+    false,
+    false,
+  ];
   GameMap gameMap;
-  MapSwitchButton switchButton;
+
   ActionType currentActionType = ActionType.ALL;
 
   String _scoringText = Constants.minPtValuePerZonePerGame.toString() +
@@ -75,18 +80,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
   @override
   void initState() {
     super.initState();
-  }
-
-  void toggle() {
-    setState(() {
-      _showScoringMap = !_showScoringMap;
-    });
-  }
-
-  void _toggleScreen() {
-    setState(() {
-      _accuracyMap = !_accuracyMap;
-    });
   }
 
   int _getScoringColorValue(ActionType actionType, int x, int y) {
@@ -129,161 +122,192 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
     }
   }
 
+  Widget _getCell(
+      int x, int y, bool isSelected, double cellWidth, double cellHeight) {
+    int ind = _toggleModes.indexOf(true);
+    switch (ind) {
+      case 0:
+        {
+          return Container(
+            width: cellWidth,
+            height: cellHeight,
+            decoration: BoxDecoration(
+              color: (Colors.green[
+                          _getScoringColorValue(currentActionType, x, y)] ==
+                      null)
+                  ? null
+                  : Colors.green[_getScoringColorValue(currentActionType, x, y)]
+                      .withOpacity(0.7),
+            ),
+          );
+        }
+      case 1:
+        {
+          return Container(
+            width: cellWidth,
+            height: cellHeight,
+            decoration: BoxDecoration(
+                color: (Colors.green[
+                            _getAccuracyColorValue(currentActionType, x, y)] ==
+                        null)
+                    ? null
+                    : Colors
+                        .green[_getAccuracyColorValue(currentActionType, x, y)]
+                        .withOpacity(0.7)),
+          );
+        }
+      case 2:
+        {
+          return Container();
+        }
+      default:
+        {
+          return Container();
+        }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!myAnalyzer.initialized) {
       myAnalyzer.init().then((value) => setState(() {}));
     }
 
-    ZoneGrid scoringGrid = ZoneGrid(GlobalKey(), (int x, int y) {},
-        (int x, int y, bool isSelected, double cellWidth, double cellHeight) {
-      return Container(
-        width: cellWidth,
-        height: cellHeight,
-        decoration: BoxDecoration(
-          color:
-              (Colors.green[_getScoringColorValue(currentActionType, x, y)] ==
-                      null)
-                  ? null
-                  : Colors.green[_getScoringColorValue(currentActionType, x, y)]
-                      .withOpacity(0.7),
-        ),
-      );
-    });
-
-    ZoneGrid accuracyGrid = ZoneGrid(GlobalKey(), (int x, int y) {},
-        (int x, int y, bool isSelected, double cellWidth, double cellHeight) {
-      return Container(
-        width: cellWidth,
-        height: cellHeight,
-        decoration: BoxDecoration(
-            color: (Colors.green[
-                        _getAccuracyColorValue(currentActionType, x, y)] ==
-                    null)
-                ? null
-                : Colors.green[_getAccuracyColorValue(currentActionType, x, y)]
-                    .withOpacity(0.7)),
-      );
-    });
-
-    if (_showScoringMap == true) {
-      gameMap =
-          GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
-    } else {
-      gameMap =
-          GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
-    }
-
-    GameMap scoringMap =
-        GameMap(imageChildren: [], sideWidget: null, zoneGrid: scoringGrid);
-    GameMap accuracyMap =
-        GameMap(imageChildren: [], sideWidget: null, zoneGrid: accuracyGrid);
-
-    switchButton = new MapSwitchButton(this.toggle, _showScoringMap);
-
-    Widget dropDownList = DropdownButton<ActionType>(
-      value: currentActionType,
-      icon: Icon(Icons.arrow_downward),
-      iconSize: 24,
-      elevation: 16,
-      style: TextStyle(
-          fontSize: 14, color: Colors.green[300], fontWeight: FontWeight.bold),
-      underline: Container(
-        height: 2,
-        color: Colors.grey[500],
-      ),
-      onChanged: (ActionType actionType) {
-        setState(() {
-          currentActionType = actionType;
-        });
-      },
-      items: <ActionType>[
-        ActionType.ALL,
-        ActionType.SHOT_LOW,
-        ActionType.SHOT_OUTER,
-        ActionType.SHOT_INNER
-      ].map<DropdownMenuItem<ActionType>>((ActionType actionType) {
-        return DropdownMenuItem<ActionType>(
-          value: actionType,
-          child: Center(
-              child: Text(actionType
-                  .toString()
-                  .substring(actionType.toString().indexOf('.') + 1))),
-        );
-      }).toList(),
-    );
-    Widget normalizedToRightSideText = Text(
-      "*data has been normalized so that offense is on the ride side*",
-      textAlign: TextAlign.center,
-      style: TextStyle(
-          color: Colors.grey[800],
-          fontSize: 14,
-          height: 1),
-    );
-    Widget shadingKey = Ink(
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.green[50], Colors.green[900]],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-          borderRadius: BorderRadius.horizontal()),
-      child: Container(
-        constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width, minHeight: 60.0),
-        alignment: Alignment.center,
-        child: Text(
-          switchButton.showScoringMap
-              ? "Scoring Map (avg per game)\n" + _scoringText
-              : "Accuracy Map (avg per game)\n" + _accuracyText,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              color: Colors.grey[800],
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              height: 1),
-        ),
-      ),
-    );
-
-    var children2 = <Widget>[
-      switchButton,
-      Container(child: Center(child: dropDownList)),
-      normalizedToRightSideText,
-      shadingKey,
-      switchButton.showScoringMap ? scoringMap : accuracyMap,
-    ];
-
-    Container gameReplay = Container(
-        alignment: Alignment.center,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(primary: Colors.green[900]),
-          onPressed: () {
-            _toggleScreen();
-          },
-          child: Text(
-            _accuracyMap ? "Game Replay" : "Overall Map Analysis",
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white, fontSize: 16, height: 1),
-          ),
-        ));
-
     return Screen(
-      title: 'Map Analysis for Team ' + myAnalyzer.teamNum,
-      headerButtons: [gameReplay],
+      title: 'Map Analysis',
       includeBottomNav: false,
       child: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: _accuracyMap
-                ? children2
-                : <Widget>[
-                    GameReplay(),
+        child: GameMap(
+          zoneGrid: ZoneGrid(
+            GlobalKey(),
+            (int x, int y) {},
+            (
+              int x,
+              int y,
+              bool isSelected,
+              double cellWidth,
+              double cellHeight,
+            ) =>
+                _getCell(
+              x,
+              y,
+              isSelected,
+              cellWidth,
+              cellHeight,
+            ),
+          ),
+          sideWidget: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: ModeToggle(
+                    onPressed: (int ind) {
+                      setState(
+                        () {
+                          List<bool> newToggle = List.generate(
+                              _toggleModes.length, (index) => index == ind);
+                          _toggleModes = newToggle;
+                        },
+                      );
+                    },
+                    isSelected: _toggleModes,
+                    direction: Axis.horizontal,
+                    children: [
+                      ModeToggleChild(
+                        icon: Icons.gps_fixed,
+                        isSelected: _toggleModes[0],
+                      ),
+                      ModeToggleChild(
+                        icon: FontAwesomeIcons.bullseye,
+                        isSelected: _toggleModes[1],
+                      ),
+                      ModeToggleChild(
+                        icon: FontAwesomeIcons.history,
+                        isSelected: _toggleModes[2],
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Select<ActionType>(
+                      value: currentActionType,
+                      onChanged: (val) => setState(() {
+                        currentActionType = val;
+                      }),
+                      items: [
+                        ActionType.ALL,
+                        ActionType.SHOT_LOW,
+                        ActionType.SHOT_OUTER,
+                        ActionType.SHOT_INNER
+                      ].map<DropdownMenuItem<ActionType>>(
+                        (ActionType actionType) {
+                          return DropdownMenuItem<ActionType>(
+                            value: actionType,
+                            child: Center(
+                              child: Text(
+                                actionType.toString().substring(
+                                      actionType.toString().indexOf('.') + 1,
+                                    ),
+                              ),
+                            ),
+                          );
+                        },
+                      ).toList(),
+                    ),
                   ],
+                ),
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                    child: IndexedStack(
+                      index: _toggleModes.indexOf(true),
+                      children: [
+                        Container(),
+                        Container(),
+                        Container(),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+
+// Widget shadingKey = Ink(
+//   decoration: BoxDecoration(
+//     gradient: LinearGradient(
+//       colors: [Colors.green[50], Colors.green[900]],
+//       begin: Alignment.centerLeft,
+//       end: Alignment.centerRight,
+//     ),
+//     borderRadius: BorderRadius.horizontal(),
+//   ),
+//   child: Container(
+//     constraints: BoxConstraints(
+//         maxWidth: MediaQuery.of(context).size.width, minHeight: 60.0),
+//     alignment: Alignment.center,
+//     child: Text(
+//       _toggleModes.first
+//           ? "Scoring Map (avg per game)\n" + _scoringText
+//           : _toggleModes[1]
+//               ? "Accuracy Map (avg per game)\n" + _accuracyText
+//               : "",
+//       textAlign: TextAlign.center,
+//       style: TextStyle(
+//         color: Colors.grey[800],
+//         fontWeight: FontWeight.bold,
+//         fontSize: 16,
+//         height: 1,
+//       ),
+//     ),
+//   ),
+// );
