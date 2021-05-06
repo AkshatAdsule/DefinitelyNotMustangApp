@@ -72,7 +72,7 @@ class _AllDataDisplayState extends State<AllDataDisplayPage> {
     }
 
     return Screen(
-      title: 'All Data for team: ' + myAnalyzer.teamNum,
+      title: 'All Data for team: ' + myAnalyzer.teamNum.toString(),
       includeBottomNav: false,
       child: Container(
         child: SingleChildScrollView(
