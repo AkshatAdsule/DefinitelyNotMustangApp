@@ -3,6 +3,8 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:mustang_app/utils/data_collection_data.dart';
 
+enum DataType { ATTEMPTED, SCORED }
+
 class DataCollectionHistogramWidget extends StatelessWidget {
   final List<charts.Series<HistogramStats, String>> data;
   final double height, width;
@@ -42,8 +44,7 @@ class DataCollectionHistogramWidget extends StatelessWidget {
   }
 
   /// Create one series with sample hard coded data.
-  static List<charts.Series<HistogramStats, String>> createData(
-      DataCollectionYearData yearData) {
+  static Map<DataType, List<charts.Series<HistogramStats, String>>> createData(DataCollectionYearData yearData) {
     List<HistogramStats> gamePiecesAttemptedData = [];
     List<HistogramStats> gamePiecesScoredData = [];
     List<DataCollectionMatchData> matches = yearData.data;
@@ -95,22 +96,26 @@ class DataCollectionHistogramWidget extends StatelessWidget {
           numOfGamePieces.toString(), gamePiecesScoredFrequencies[i]));
     }
 
-    return [
-      new charts.Series<HistogramStats, String>(
-        id: 'Attempted Game Pieces',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (HistogramStats stats, _) => stats.numOfGamePieces,
-        measureFn: (HistogramStats stats, _) => stats.frequency,
-        data: gamePiecesAttemptedData,
-      ),
-      new charts.Series<HistogramStats, String>(
-        id: 'Scored Game Pieces',
-        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
-        domainFn: (HistogramStats stats, _) => stats.numOfGamePieces,
-        measureFn: (HistogramStats stats, _) => stats.frequency,
-        data: gamePiecesScoredData,
-      ),
-    ];
+    return {
+      DataType.ATTEMPTED: [
+        new charts.Series<HistogramStats, String>(
+          id: 'Attempted Game Pieces',
+          colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+          domainFn: (HistogramStats stats, _) => stats.numOfGamePieces,
+          measureFn: (HistogramStats stats, _) => stats.frequency,
+          data: gamePiecesAttemptedData,
+        ), 
+      ], 
+      DataType.SCORED: [
+        new charts.Series<HistogramStats, String>(
+          id: 'Scored Game Pieces',
+          colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
+          domainFn: (HistogramStats stats, _) => stats.numOfGamePieces,
+          measureFn: (HistogramStats stats, _) => stats.frequency,
+          data: gamePiecesScoredData,
+        ),
+      ]
+    };
   }
 }
 
