@@ -2,23 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/constants/constants.dart';
 
 // ignore: must_be_immutable
-class MapAnalysisKey extends StatefulWidget {
+class MapAnalysisKey extends StatelessWidget {
   bool _mapScoring;
 
   MapAnalysisKey(bool mapScoring) {
-    _mapScoring = mapScoring;
-  }
-
-  @override
-  State<StatefulWidget> createState() {
-    return new _MapAnalysisKeyState(_mapScoring);
-  }
-}
-
-class _MapAnalysisKeyState extends State<MapAnalysisKey> {
-  bool _mapScoring;
-
-  _MapAnalysisKeyState(bool mapScoring) {
     _mapScoring = mapScoring;
   }
 

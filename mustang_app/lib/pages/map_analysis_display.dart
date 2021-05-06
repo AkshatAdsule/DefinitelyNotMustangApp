@@ -57,15 +57,27 @@ class MapAnalysisDisplayPage extends StatefulWidget {
 
 class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
   Analyzer myAnalyzer;
-  //Scoring, accuracy, replay
+  List<List<Object>> actionRelatedColors = [
+    ["OTHER", Colors.orange],
+    ["FOUL", Colors.yellow],
+    ["PUSH", Colors.deepPurple],
+    ["PREV", Colors.pink[200]],
+    ["MISSED", Colors.red],
+    ["INTAKE", Colors.blue],
+    ["SHOT", Colors.green],
+    ["LOW", Colors.white],
+    ["OUTER", Colors.grey],
+    ["INNER", Colors.black],
+  ];
   List<bool> _toggleModes = [
     true,
     false,
     false,
   ];
+  double timeInGame = 10;
   GameMap gameMap;
-
-  ActionType currentActionType = ActionType.ALL;
+  String selectedMatch = "ALL";
+  ActionType selectedActionType = ActionType.ALL;
 
   _MapAnalysisDisplayState(String teamNumber) {
     myAnalyzer = new Analyzer();
@@ -116,8 +128,51 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
     }
   }
 
-  Widget _getCell(
-      int x, int y, bool isSelected, double cellWidth, double cellHeight) {
+  List<GameAction> getAllMatchActions(BuildContext context) {
+    if (selectedMatch == "ALL") {
+      return Provider.of<List<Match>>(context)
+          .map((e) => e.actions)
+          .reduce((value, element) => [...value, ...element]);
+    }
+    return Provider.of<List<Match>>(context)
+        .where((element) => element.matchNumber == selectedMatch)
+        .map((e) => e.actions)
+        .reduce((value, element) => [...value, ...element]);
+  }
+
+  List<Color> _getColorCombo(BuildContext context, int x, int y) {
+    GameAction curr;
+    List<GameAction> currActions = getAllMatchActions(context)
+        .where((element) => element.timeStamp > timeInGame * 1000 - 5000)
+        .where((element) => element.timeStamp < timeInGame * 1000 + 1000)
+        .toList();
+    for (GameAction currentAction in currActions) {
+      if (currentAction.x == x && currentAction.y == y) {
+        curr = currentAction;
+        break;
+      }
+    }
+    if (curr == null) return [Colors.green[0], Colors.transparent];
+
+    List<Color> gradientCombo = [];
+    String actionType = curr.action.toString();
+
+    for (List<Object> shade in actionRelatedColors)
+      if (actionType.contains(shade[0])) gradientCombo.add(shade[1]);
+
+    if (gradientCombo.length < 2) {
+      if (actionType.contains("FOUL")) {
+        gradientCombo.add(Colors.yellow[600]);
+      } else if (actionType.contains("OTHER")) {
+        gradientCombo.add(Colors.orange[600]);
+      }
+    }
+
+    return gradientCombo;
+  }
+
+  Widget _getCell(BuildContext context, int x, int y, bool isSelected,
+      double cellWidth, double cellHeight) {
     int ind = _toggleModes.indexOf(true);
     switch (ind) {
       case 0:
@@ -127,10 +182,11 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             height: cellHeight,
             decoration: BoxDecoration(
               color: (Colors.green[
-                          _getScoringColorValue(currentActionType, x, y)] ==
+                          _getScoringColorValue(selectedActionType, x, y)] ==
                       null)
                   ? null
-                  : Colors.green[_getScoringColorValue(currentActionType, x, y)]
+                  : Colors
+                      .green[_getScoringColorValue(selectedActionType, x, y)]
                       .withOpacity(0.7),
             ),
           );
@@ -142,17 +198,28 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             height: cellHeight,
             decoration: BoxDecoration(
                 color: (Colors.green[
-                            _getAccuracyColorValue(currentActionType, x, y)] ==
+                            _getAccuracyColorValue(selectedActionType, x, y)] ==
                         null)
                     ? null
                     : Colors
-                        .green[_getAccuracyColorValue(currentActionType, x, y)]
+                        .green[_getAccuracyColorValue(selectedActionType, x, y)]
                         .withOpacity(0.7)),
           );
         }
       case 2:
         {
-          return Container();
+          return Container(
+            width: cellWidth,
+            height: cellHeight,
+            decoration: (x != 0 && y != 0)
+                ? BoxDecoration(
+                    color: _getColorCombo(context, x, y).first,
+                    // gradient: RadialGradient(
+                    //   colors: _getColorCombo(context, x, y),
+                    // ),
+                  )
+                : BoxDecoration(color: Colors.transparent),
+          );
         }
       default:
         {
@@ -187,6 +254,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
               double cellHeight,
             ) =>
                 _getCell(
+              context,
               x,
               y,
               isSelected,
@@ -232,9 +300,9 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Select<ActionType>(
-                      value: currentActionType,
+                      value: selectedActionType,
                       onChanged: (val) => setState(() {
-                        currentActionType = val;
+                        selectedActionType = val;
                       }),
                       items: [
                         ActionType.ALL,
@@ -256,6 +324,35 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
                         },
                       ).toList(),
                     ),
+                    Select<String>(
+                      value: selectedMatch,
+                      onChanged: (val) => setState(() {
+                        selectedMatch = val;
+                      }),
+                      items: [
+                        ...Provider.of<List<Match>>(context)
+                            .map<DropdownMenuItem<String>>(
+                          (Match match) {
+                            return DropdownMenuItem<String>(
+                              value: match.matchNumber,
+                              child: Center(
+                                child: Text(
+                                  match.matchNumber,
+                                ),
+                              ),
+                            );
+                          },
+                        ).toList(),
+                        DropdownMenuItem<String>(
+                          value: "ALL",
+                          child: Center(
+                            child: Text(
+                              "ALL",
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
                 Flexible(
@@ -271,6 +368,19 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
                     ),
                   ),
                 ),
+                _toggleModes[2]
+                    ? Slider(
+                        label: timeInGame.round().toString(),
+                        onChanged: (newVal) => setState(() {
+                          setState(() {
+                            timeInGame = newVal;
+                          });
+                        }),
+                        min: 0,
+                        max: 150, // number of seconds in a game
+                        value: timeInGame,
+                      )
+                    : Container(),
               ],
             ),
           ),

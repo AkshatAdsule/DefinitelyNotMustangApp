@@ -11,14 +11,14 @@ class GameReplayKey extends StatefulWidget {
 class _GameReplayKeyState extends State<GameReplayKey> {
   List<List<Object>> actionRelatedColors = [
     ["OTHER", Colors.orange],
-    ["MISS", Colors.red],
     ["FOUL", Colors.yellow],
-    ["SHOT", Colors.green],
     ["PUSH", Colors.deepPurple],
-    ["LOW", Colors.white],
     ["PREV", Colors.pink[200]],
-    ["OUT", Colors.grey],
     ["INTAKE", Colors.blue],
+    ["MISS", Colors.red],
+    ["SHOT", Colors.green],
+    ["LOW", Colors.white],
+    ["OUT", Colors.grey],
     ["IN", Colors.black],
   ];
 
@@ -54,38 +54,21 @@ class _GameReplayKeyState extends State<GameReplayKey> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Row(
         children: [
           Flexible(
             flex: 1,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: getShadingKey(0, 2)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: getShadingKey(0, 5),
+            ),
           ),
           Flexible(
             flex: 1,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: getShadingKey(2, 4)),
-          ),
-          Flexible(
-            flex: 1,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: getShadingKey(4, 6)),
-          ),
-          Flexible(
-            flex: 1,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: getShadingKey(6, 8)),
-          ),
-          Flexible(
-            flex: 1,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: getShadingKey(8, 10)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: getShadingKey(5, 10),
+            ),
           ),
         ],
       ),
