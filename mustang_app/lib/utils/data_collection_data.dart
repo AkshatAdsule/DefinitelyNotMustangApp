@@ -43,9 +43,17 @@ class DataCollectionYearData {
     double avgRankingPoints = totalRankingPoints / len;
     double avgPointRate = totalPointRate / len;
 
+    double pointsScored;
+
     // Calculate avg points scored
-    double pointsScored =
-        Constants.GAME_PIECE_VALUE[year] * avgGamePiecesScored;
+    try {
+      pointsScored =
+          Constants.GAME_PIECE_VALUE[year.year] * avgGamePiecesScored;
+    } catch (e) {
+      print(avgGamePiecesScored);
+
+      pointsScored = 0;
+    }
 
     this.avgData = new DataCollectionAverageYearData(
       gamePiecesAttempted: avgGamePiecesAttempted,
@@ -130,7 +138,7 @@ class DataCollectionMatchData {
     try {
       if (row[4] == "Y") {
         climbed = true;
-        climbPoints = Constants.CLIMB_POINTS[year];
+        climbPoints = Constants.CLIMB_POINTS[year.year];
         matchPoints += climbPoints;
       } else {
         climbed = false;
@@ -183,7 +191,7 @@ class DataCollectionMatchData {
     }
 
     // Calculate game piece points
-    gamePiecePoints = Constants.GAME_PIECE_VALUE[year] * gamePiecesScored;
+    gamePiecePoints = Constants.GAME_PIECE_VALUE[year.year] * gamePiecesScored;
     matchPoints += gamePiecePoints;
 
     // Calculate point rate

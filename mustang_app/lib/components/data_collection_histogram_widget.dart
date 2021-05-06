@@ -7,7 +7,7 @@ class DataCollectionHistogramWidget extends StatelessWidget {
   final List<charts.Series<HistogramStats, String>> data;
   final double height, width;
 
-  DataCollectionHistogramWidget({this.data, this.height: 300, this.width: 50});
+  DataCollectionHistogramWidget({this.data, this.height: 300, this.width: 500});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,8 @@ class DataCollectionHistogramWidget extends StatelessWidget {
   }
 
   /// Create one series with sample hard coded data.
-  static List<charts.Series<HistogramStats, String>> createData(DataCollectionYearData yearData) {
+  static List<charts.Series<HistogramStats, String>> createData(
+      DataCollectionYearData yearData) {
     List<HistogramStats> gamePiecesAttemptedData = [];
     List<HistogramStats> gamePiecesScoredData = [];
     List<DataCollectionMatchData> matches = yearData.data;
@@ -52,6 +53,7 @@ class DataCollectionHistogramWidget extends StatelessWidget {
     int scoredMin = 1000;
     int scoredMax = 0;
     for (DataCollectionMatchData matchData in matches) {
+      print("Points scored: ${matchData.gamePiecesScored}");
       if (matchData.gamePiecesAttempted < attemptedMin) {
         attemptedMin = matchData.gamePiecesAttempted;
       } else if (matchData.gamePiecesAttempted > attemptedMax) {
@@ -61,25 +63,36 @@ class DataCollectionHistogramWidget extends StatelessWidget {
       if (matchData.gamePiecesScored < scoredMin) {
         scoredMin = matchData.gamePiecesScored;
       } else if (matchData.gamePiecesScored > scoredMax) {
+        print("New max: ${matchData.gamePiecesScored}");
         scoredMax = matchData.gamePiecesScored;
       }
     }
 
-    var gamePiecesAttemptedFrequencies = new List(attemptedMax - attemptedMin);
-    var gamePiecesScoredFrequencies = new List(scoredMax - scoredMin);
+    // var gamePiecesAttemptedFrequencies = [attemptedMax - attemptedMin];
+
+    var gamePiecesAttemptedFrequencies =
+        new List.filled(attemptedMax - attemptedMin + 1, 0, growable: false);
+    print("Scored max: $scoredMax ");
+    var gamePiecesScoredFrequencies =
+        new List.filled(scoredMax - scoredMin + 1, 0, growable: false);
     for (DataCollectionMatchData matchData in matches) {
-      gamePiecesAttemptedFrequencies[matchData.gamePiecesAttempted - attemptedMin] += 1;
+      print(matchData.gamePiecesAttempted - attemptedMin);
+      gamePiecesAttemptedFrequencies[
+          matchData.gamePiecesAttempted - attemptedMin] += 1;
+      print("Value: ${scoredMin} out of ${gamePiecesScoredFrequencies.length}");
       gamePiecesScoredFrequencies[matchData.gamePiecesScored - scoredMin] += 1;
     }
 
     for (int i = 0; i < gamePiecesAttemptedFrequencies.length; i++) {
-      int numOfGamePieces = i+attemptedMax;
-      gamePiecesAttemptedData.add(new HistogramStats(numOfGamePieces.toString(), gamePiecesAttemptedFrequencies[i]));
+      int numOfGamePieces = i + attemptedMax;
+      gamePiecesAttemptedData.add(new HistogramStats(
+          numOfGamePieces.toString(), gamePiecesAttemptedFrequencies[i]));
     }
 
     for (int i = 0; i < gamePiecesScoredFrequencies.length; i++) {
-      int numOfGamePieces = i+scoredMin;
-      gamePiecesScoredData.add(new HistogramStats(numOfGamePieces.toString(), gamePiecesScoredFrequencies[i]));
+      int numOfGamePieces = i + scoredMin;
+      gamePiecesScoredData.add(new HistogramStats(
+          numOfGamePieces.toString(), gamePiecesScoredFrequencies[i]));
     }
 
     return [
@@ -89,7 +102,7 @@ class DataCollectionHistogramWidget extends StatelessWidget {
         domainFn: (HistogramStats stats, _) => stats.numOfGamePieces,
         measureFn: (HistogramStats stats, _) => stats.frequency,
         data: gamePiecesAttemptedData,
-      ), 
+      ),
       new charts.Series<HistogramStats, String>(
         id: 'Scored Game Pieces',
         colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
