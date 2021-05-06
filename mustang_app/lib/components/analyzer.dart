@@ -1,15 +1,18 @@
 import 'dart:math';
+import 'package:flutter/material.dart';
 import 'package:mustang_app/backend/game_action.dart';
 import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/backend/team.dart';
 import 'package:mustang_app/backend/team_service.dart';
 import 'package:mustang_app/constants/constants.dart';
+import '../backend/match.dart';
 
 // ignore: must_be_immutable
 class Analyzer {
+  Team team;
+  List<Match> matches;
   bool _initialized = false;
   String _teamNum = '', _driveBase = 'tank';
-  TeamService _teamService = TeamService();
   List<Match> _allMatches = []; //array that holds everything
   int _oldAllMatchLength = 0;
   //for testing if data needs to be collected again or not - if same then don't
@@ -38,21 +41,25 @@ class Analyzer {
       _otherParked = [],
       _otherLevelled = [];
 
-  Analyzer(String teamNum) {
-    _teamNum = teamNum;
+  Analyzer({this.team, this.matches}) {
+    init(team, matches);
   }
 
   bool get initialized => _initialized;
   String get teamNum => _teamNum;
   int totalNumGames() => _totalNumGames;
 
-  Future<void> init() async {
-    Team team = await _teamService.getTeam(_teamNum);
-    List<Match> matches = await _teamService.getMatches(_teamNum);
-    _driveBase = team.drivebaseType;
-    _allMatches = matches;
-    flipGameActionOffenseAllMatches();
-    _initialized = true;
+  void init(Team newTeam, List<Match> newMatches) {
+    if (newTeam != null && newMatches != null) {
+      team = newTeam;
+      matches = newMatches;
+      _driveBase = team.drivebaseType;
+      _allMatches = matches;
+      flipGameActionOffenseAllMatches();
+      _initialized = true;
+    } else {
+      _initialized = false;
+    }
   }
 
   List<String> getMatches() {
@@ -130,9 +137,9 @@ class Analyzer {
 
     return "Shooting points/game: " +
         _shootingPtsPerGame.toString() +
-         "\nNon-shooting points/game: " +
+        "\nNon-shooting points/game: " +
         _nonShootingsPtsPerGame.toString() +
-         "\nClimb Accuracy: " +
+        "\nClimb Accuracy: " +
         _climbAccuracy.toString() +
         "%\n    Shot Accuracy: " +
         _shotAccuracy.toString() +
