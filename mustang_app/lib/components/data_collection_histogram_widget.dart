@@ -57,13 +57,13 @@ class DataCollectionHistogramWidget extends StatelessWidget {
       print("Points scored: ${matchData.gamePiecesScored}");
       if (matchData.gamePiecesAttempted < attemptedMin) {
         attemptedMin = matchData.gamePiecesAttempted;
-      } else if (matchData.gamePiecesAttempted > attemptedMax) {
+      } if (matchData.gamePiecesAttempted > attemptedMax) {
         attemptedMax = matchData.gamePiecesAttempted;
       }
 
       if (matchData.gamePiecesScored < scoredMin) {
         scoredMin = matchData.gamePiecesScored;
-      } else if (matchData.gamePiecesScored > scoredMax) {
+      } if (matchData.gamePiecesScored > scoredMax) {
         print("New max: ${matchData.gamePiecesScored}");
         scoredMax = matchData.gamePiecesScored;
       }
