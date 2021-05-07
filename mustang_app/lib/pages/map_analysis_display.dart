@@ -281,7 +281,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
                     direction: Axis.horizontal,
                     children: [
                       ModeToggleChild(
-                        icon: Icons.gps_fixed,
+                        icon: FontAwesomeIcons.trophy,
                         isSelected: _toggleModes[0],
                       ),
                       ModeToggleChild(
