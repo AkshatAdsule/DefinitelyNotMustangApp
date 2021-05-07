@@ -35,7 +35,7 @@ class AllDataDisplayPerMatch extends StatelessWidget {
 
 class AllDataDisplayPerMatchPage extends StatefulWidget {
   String _teamNumber = '', _matchNum = '';
-  Analyzer _analyzer;
+  //Analyzer _analyzer;
   AllDataDisplayPerMatchPage({String teamNumber, String matchNum}) {
     _teamNumber = teamNumber;
     _matchNum = matchNum;
@@ -60,16 +60,13 @@ class _AllDataDisplayPerMatchState extends State<AllDataDisplayPerMatchPage> {
   @override
   Widget build(BuildContext context) {
     if (!myAnalyzer.initialized) {
-      debugPrint("analyzer not initialized");
       myAnalyzer.init(
         Provider.of<Team>(context),
         Provider.of<List<Match>>(context),
       );
       setState(() {});
-    } else {
-      debugPrint("analyzer initialized");
-      debugPrint("team num: " + myAnalyzer.teamNum.toString());
-    }
+    } 
+
     Team team = Provider.of<Team>(context);
     Widget dataText = Container(
       margin: EdgeInsets.all(10),
@@ -87,14 +84,8 @@ class _AllDataDisplayPerMatchState extends State<AllDataDisplayPerMatchPage> {
                         style: TextStyle(
                           color: Colors.grey[800],
                           fontWeight: FontWeight.bold,
-                          fontSize: 24,
-                          height: 4,
-
-                          // background: Paint()
-                          //   ..strokeWidth = 30.0
-                          //   ..color = Colors.green[300]
-                          //   ..style = PaintingStyle.stroke
-                          //   //..strokeJoin = StrokeJoin.bevel,
+                          fontSize: 16,
+                          height: 2,
                         ))
                   ],
                 )),

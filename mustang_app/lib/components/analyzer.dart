@@ -92,39 +92,230 @@ class Analyzer {
 
   String getDataDisplayForMatch(String matchNum) {
     //_clearAllData();
-   // _collectData();
+    // _collectData();
+
+    /* failed attempt at looping it. was hard to understand and replicate for future games anyways
+
+    //if val is >0, then it occurred
+    List<ActionType> actionsToDisplay = [ActionType.SHOT_INNER, ActionType.SHOT_OUTER, ActionType.SHOT_LOW, ActionType.INTAKE, ActionType.MISSED_OUTER, ActionType.MISSED_LOW, ActionType.MISSED_INTAKE, ActionType.OTHER_CLIMB, ActionType.OTHER_CLIMB_MISS, ActionType.OTHER_WHEEL_POSITION, ActionType.OTHER_WHEEL_ROTATION, ActionType.PREV_SHOT, ActionType.PREV_INTAKE, ActionType.OTHER_CROSSED_INITIATION_LINE, ActionType.OTHER_PARKED, ActionType.OTHER_LEVELLED];
+    //index of actionOccurences matches index of actionsToDisplay
+    List<int> teleopActionOccurences = [actionsToDisplay.length];
+
+    //first 7 indexes matches first 7 indexes of actionsToDisplay but auton version
+    //last 11 indexes will be empty
+    List<int> autonActionOccurences = [actionsToDisplay.length];
+
+    for (int a = 0; a < teleopActionOccurences.length; a++){
+      teleopActionOccurences[a] = 0;
+      autonActionOccurences[a] = 0;
+    }
+    
+    debugPrint("actions: " + actions.toString());
+    debugPrint("actions to display length: " + actionsToDisplay.length.toString());
+    //fill up variables above with values
+    for (int i = 0; i < actions.length; i++){
+      for (int j = 0; j < actionsToDisplay.length; j++){
+        GameAction currAction = actions[i];
+        if (currAction.action == actionsToDisplay[j]){
+          debugPrint("j: " + j.toString());
+          if (currAction.timeStamp <= Constants.autonMillisecondLength){ //happened during auton
+            //debugPrint("autonActionOccurences[j]: " + autonActionOccurences[j].toString());
+            //autonActionOccurences[j] ++; //use j to set same index as action
+          } else{
+            //teleopActionOccurences[j]++;
+          }
+        }
+      }
+    }
+    */
+
     String result = "";
-    bool crossedInitiationLine = false;
-    double autonInnerScored = 0, autonOuterScored = 0, autonLowScored = 0;
-    //double autonInnerMissed = 0, autonOuterMissed = 0, autonLowMissed = 0;
 
     List<GameAction> actions = getMatch(matchNum);
 
-    //fill up variables above with values
+    bool crossedInitiationLine = false,
+        wheelPosition = false,
+        wheelRotation = false,
+        climbed = false,
+        climbMissed = false,
+        climbLevelled = false,
+        climbParked = false;
+    int autonInnerScored = 0,
+        autonOuterScored = 0,
+        autonLowScored = 0,
+        autonOuterMissed = 0,
+        autonLowMissed = 0,
+        autonIntake = 0,
+        autonIntakeMissed = 0;
+    int teleopInnerScored = 0,
+        teleopOuterScored = 0,
+        teleopLowScored = 0,
+        teleopOuterMissed = 0,
+        teleopLowMissed = 0,
+        teleopIntake = 0,
+        teleopIntakeMissed = 0;
+    int shotsPrev = 0,
+        intakesPrev = 0,
+        pushes = 0;
+    int foulRegs = 0,
+        foulTechs = 0,
+        foulYellows = 0,
+        foulReds = 0,
+        foulDisableds = 0,
+        foulDisqualifieds = 0;
+
     for (GameAction a in actions) {
+      //happened during auton
+      if (a.timeStamp <= Constants.autonMillisecondLength) {
+        if (a.action == ActionType.SHOT_INNER) {
+          autonInnerScored++;
+        } else if (a.action == ActionType.SHOT_INNER) {
+          autonInnerScored++;
+        } else if (a.action == ActionType.SHOT_OUTER) {
+          autonOuterScored++;
+        } else if (a.action == ActionType.SHOT_LOW) {
+          autonLowScored++;
+        } else if (a.action == ActionType.MISSED_OUTER) {
+          autonOuterMissed++;
+        } else if (a.action == ActionType.MISSED_LOW) {
+          autonLowMissed++;
+        } else if (a.action == ActionType.INTAKE) {
+          autonIntake++;
+        } else if (a.action == ActionType.MISSED_INTAKE) {
+          autonIntakeMissed++;
+        }
+      }
+
+      //happened during teleop
+      else {
+        if (a.action == ActionType.SHOT_INNER) {
+          teleopInnerScored++;
+        } else if (a.action == ActionType.SHOT_INNER) {
+          teleopInnerScored++;
+        } else if (a.action == ActionType.SHOT_OUTER) {
+          teleopOuterScored++;
+        } else if (a.action == ActionType.SHOT_LOW) {
+          teleopLowScored++;
+        } else if (a.action == ActionType.MISSED_OUTER) {
+          teleopOuterMissed++;
+        } else if (a.action == ActionType.MISSED_LOW) {
+          teleopLowMissed++;
+        } else if (a.action == ActionType.INTAKE) {
+          teleopIntake++;
+        } else if (a.action == ActionType.MISSED_INTAKE) {
+          teleopIntakeMissed++;
+        } 
+      }
+
+      //defense
+      if (a.action == ActionType.PREV_SHOT) {
+        shotsPrev ++;
+      } else if (a.action == ActionType.PREV_INTAKE) {
+        intakesPrev ++;
+      } else if (a.action == ActionType.PUSH_START) {
+        pushes ++;
+      }
+
+      //fouls
+      if (a.action == ActionType.FOUL_REG) {
+        foulReds ++;
+      } else if (a.action == ActionType.FOUL_TECH) {
+        foulTechs ++;
+      } else if (a.action == ActionType.FOUL_YELLOW) {
+        foulYellows ++;
+      } else if (a.action == ActionType.FOUL_RED) {
+        foulReds ++;
+      } else if (a.action == ActionType.FOUL_DISABLED) {
+        foulDisableds ++;
+      } else if (a.action == ActionType.FOUL_DISQUAL) {
+        foulDisqualifieds ++;
+      }
+
+      //other actions, mainly booleans
       if (a.action == ActionType.OTHER_CROSSED_INITIATION_LINE) {
         crossedInitiationLine = true;
-      } else if (a.action == ActionType.SHOT_INNER &&
-          a.timeStamp <= Constants.autonMillisecondLength) {
-        autonInnerScored++;
-      } else if (a.action == ActionType.SHOT_OUTER &&
-          a.timeStamp <= Constants.autonMillisecondLength) {
-        autonOuterScored++;
-      } else if (a.action == ActionType.SHOT_LOW &&
-          a.timeStamp <= Constants.autonMillisecondLength) {
-        autonLowScored++;
+      } else if (a.action == ActionType.OTHER_WHEEL_POSITION) {
+        wheelPosition = true;
+      } else if (a.action == ActionType.OTHER_WHEEL_ROTATION) {
+        wheelRotation = true;
+      } else if (a.action == ActionType.OTHER_CLIMB) {
+        climbed = true;
+      } else if (a.action == ActionType.OTHER_CLIMB_MISS) {
+        climbMissed = true;
+      } else if (a.action == ActionType.OTHER_PARKED) {
+        climbParked = true;
+      } else if (a.action == ActionType.OTHER_LEVELLED) {
+        climbLevelled = true;
       }
     }
-
     //add all filled variables to string and return
-    result = "Crossed Initiation Line: " +
+    //(team != null ? team.teamNumber : "")
+
+    result = "AUTON:" +
+        "\nCrossed Initiation Line: " +
         crossedInitiationLine.toString() +
-        "\n Auton Inner Shots Scored: " +
+        "\nInner Shots Scored: " +
         autonInnerScored.toString() +
-        "\n Auton Outer Shots Scored: " +
+        "\nOuter Shots Scored: " +
         autonOuterScored.toString() +
-        "\n Auton Low Shots Scored: " +
-        autonLowScored.toString();
+        "\n Low Shots Scored: " +
+        autonLowScored.toString() +
+        "\n Outer Shots Missed: " +
+        autonOuterMissed.toString() +
+        "\n Low Shots Missed: " +
+        autonLowMissed.toString() +
+        "\n Intakes: " +
+        autonIntake.toString() +
+        "\n Missed Intakes: " +
+        autonIntakeMissed.toString() +
+        "\n\n TELEOP:" +
+        "\nInner Shots Scored: " +
+        teleopInnerScored.toString() +
+        "\nOuter Shots Scored: " +
+        teleopOuterScored.toString() +
+        "\n Low Shots Scored: " +
+        teleopLowScored.toString() +
+        "\n Outer Shots Missed: " +
+        teleopOuterMissed.toString() +
+        "\n Low Shots Missed: " +
+        teleopLowMissed.toString() +
+        "\n Intakes: " +
+        teleopIntake.toString() +
+        "\n Missed Intakes: " +
+        teleopIntakeMissed.toString() +
+        "\n Wheel Position: " +
+        wheelPosition.toString() +
+        "\n Wheel Rotation: " +
+        wheelRotation.toString() +
+        "\n\n DEFENSE:" +
+        "\n Shots Prevented: " +
+        shotsPrev.toString() +
+        "\n Intakes Prevented: " +
+        intakesPrev.toString() + 
+        "\n Pushes: " +
+        pushes.toString() +
+        "\n\n ENDGAME:" + 
+        "\n Parked: " +
+        climbParked.toString() + 
+        "\n Climbed: " +
+        climbed.toString() + 
+        "\n Climb Missed: " +
+        climbMissed.toString() + 
+        "\n Levelled: " +
+        climbLevelled.toString()+
+        "\n\n FOULS:" +
+        "\n Regular Fouls: " +
+        foulRegs.toString() +
+        "\n Tech Fouls: " +
+        foulTechs.toString() +
+        "\n Yellow Fouls: " +
+        foulYellows.toString() +
+        "\n Red Fouls: " +
+        foulReds.toString() +
+        "\n Disabled Fouls: " +
+        foulDisableds.toString() +
+        "\n Disqualified Fouls: " +
+        foulDisqualifieds.toString();
 
     return result;
   }
