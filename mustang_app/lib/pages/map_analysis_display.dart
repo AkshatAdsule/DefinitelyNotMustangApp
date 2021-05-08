@@ -440,7 +440,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
                               minHeight: 60.0),
                           alignment: Alignment.center,
                           child: Text(
-                            "TBA video is \n\n currently \n\n unavailable.",
+                            "idk what to put here \n\n so enjoy the video :)",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.grey[800],
