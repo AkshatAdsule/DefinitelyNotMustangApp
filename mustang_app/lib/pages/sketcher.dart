@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:mustang_app/components/screen.dart';
 import 'package:mustang_app/exports/pages.dart';
 
 class SketchPage extends StatefulWidget {
@@ -36,8 +37,10 @@ class _SketchPageState extends State<SketchPage> {
         DeviceOrientation.landscapeRight,
       ],
     );
-    return Scaffold(
-      body: GestureDetector(
+    return Screen(
+      includeBottomNav: false,
+      includeHeader: false,
+      child: GestureDetector(
         onPanUpdate: (details) {
           setState(
             () {
