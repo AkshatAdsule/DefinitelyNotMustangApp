@@ -51,6 +51,7 @@ class _ScouterState extends State<Scouter> {
                 _matchNumberController.text,
             'allianceColor': _allianceColor,
             'offenseOnRightSide': _offenseOnRightSide,
+            'matchType': _matchType,
           });
         }
       },
@@ -351,6 +352,7 @@ class _ScouterState extends State<Scouter> {
                                     'matchNumber': _matchNumberController.text,
                                     'allianceColor': _allianceColor,
                                     'offenseOnRightSide': _offenseOnRightSide,
+                                    'matchType': _matchType,
                                   });
                             });
                           }

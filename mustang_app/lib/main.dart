@@ -51,6 +51,7 @@ class MyApp extends StatelessWidget {
           allianceColor: args['allianceColor'],
           offenseOnRightSide: args['offenseOnRightSide'],
           climbLocation: args['climbLocation'],
+          matchType: args['matchType'],
         );
         orientation = ScreenOrientation.portraitOnly;
         break;
@@ -111,6 +112,7 @@ class MyApp extends StatelessWidget {
           teamNumber: args['teamNumber'],
           matchNumber: args['matchNumber'],
           key: mapScoutingKey,
+          matchType: args['matchType'],
         );
         orientation = ScreenOrientation.landscapeOnly;
         break;

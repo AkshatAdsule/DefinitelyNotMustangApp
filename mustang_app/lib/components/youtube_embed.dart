@@ -38,6 +38,16 @@ class _YoutubeEmbedState extends State<YoutubeEmbed> {
 
   @override
   Widget build(BuildContext context) {
+    if (videoID == null) {
+      return Container(
+        child: Center(
+          child: Text(
+            'No video for this match yet',
+            style: TextStyle(fontSize: 30),
+          ),
+        ),
+      );
+    }
     return Container(
       child: YoutubePlayer(
         width: MediaQuery.of(context).size.width,

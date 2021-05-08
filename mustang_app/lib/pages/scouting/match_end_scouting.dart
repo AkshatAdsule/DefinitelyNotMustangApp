@@ -18,15 +18,18 @@ class MatchEndScouter extends StatefulWidget {
   double _climbLocation;
   bool _offenseOnRightSide;
   double _driverSkill;
+  MatchType _matchType;
 
-  MatchEndScouter(
-      {String teamNumber,
-      String matchNumber,
-      List<GameAction> actions,
-      String allianceColor,
-      bool offenseOnRightSide,
-      double climbLocation,
-      double driverSkill}) {
+  MatchEndScouter({
+    String teamNumber,
+    String matchNumber,
+    List<GameAction> actions,
+    String allianceColor,
+    bool offenseOnRightSide,
+    double climbLocation,
+    double driverSkill,
+    MatchType matchType,
+  }) {
     _climbLocation = climbLocation;
     _teamNumber = teamNumber;
     _matchNumber = matchNumber;
@@ -34,17 +37,20 @@ class MatchEndScouter extends StatefulWidget {
     _allianceColor = allianceColor;
     _offenseOnRightSide = offenseOnRightSide;
     _driverSkill = driverSkill;
+    _matchType = matchType;
   }
 
   @override
   _MatchEndScouterState createState() => _MatchEndScouterState(
-      _teamNumber,
-      _matchNumber,
-      _allianceColor,
-      _offenseOnRightSide,
-      _actions,
-      _climbLocation,
-      _driverSkill);
+        _teamNumber,
+        _matchNumber,
+        _allianceColor,
+        _offenseOnRightSide,
+        _actions,
+        _climbLocation,
+        _driverSkill,
+        _matchType,
+      );
 }
 
 class _MatchEndScouterState extends State<MatchEndScouter> {
@@ -56,15 +62,18 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
   double _climbLocation;
   bool _offenseOnRightSide;
   double _driverSkill;
+  MatchType _matchType;
 
   _MatchEndScouterState(
-      this._teamNumber,
-      this._matchNumber,
-      this._allianceColor,
-      this._offenseOnRightSide,
-      this._actions,
-      this._climbLocation,
-      this._driverSkill);
+    this._teamNumber,
+    this._matchNumber,
+    this._allianceColor,
+    this._offenseOnRightSide,
+    this._actions,
+    this._climbLocation,
+    this._driverSkill,
+    this._matchType,
+  );
 
   void _finishGame(BuildContext context, User user) {
     if (_matchResult == null) {
@@ -74,10 +83,20 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
       ));
       return;
     }
-
+    //TODO implement event codes
     ScoutingOperations.setMatchData(
-      new Match(_matchNumber, _teamNumber, _allianceColor, _offenseOnRightSide,
-          _matchResult, _finalCommentsController.text, _driverSkill, _actions),
+      new Match(
+        _matchNumber,
+        _teamNumber,
+        _allianceColor,
+        _offenseOnRightSide,
+        _matchResult,
+        _finalCommentsController.text,
+        _driverSkill,
+        _actions,
+        _matchType,
+        'testing',
+      ),
       user != null ? user.uid : 'Anonymous',
       user != null ? user.displayName : 'Anonymous',
     );

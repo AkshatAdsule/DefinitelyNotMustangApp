@@ -14,6 +14,7 @@ import 'package:mustang_app/components/youtube_embed.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/constants/constants.dart';
 import 'package:mustang_app/pages/web_view_container.dart';
+import 'package:mustang_app/utils/get_statistics.dart';
 import 'package:provider/provider.dart';
 import '../components/analyzer.dart';
 
@@ -83,14 +84,28 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
   GameMap gameMap;
   String selectedMatch = "ALL";
   ActionType selectedActionType = ActionType.ALL;
+  String teamNumber;
+  Map<String, String> _videoLinks;
 
-  _MapAnalysisDisplayState(String teamNumber) {
+  _MapAnalysisDisplayState(this.teamNumber) {
     myAnalyzer = new Analyzer();
+    initVideoLinks();
   }
 
   @override
   void initState() {
     super.initState();
+  }
+
+  void initVideoLinks() async {
+    //TODO use event key properly
+    Map<String, String> links = (await GetStatistics.getMatchVideos(
+      'frc' + teamNumber,
+      Event(eventCode: '2018utwv'),
+    ));
+    setState(() {
+      _videoLinks = links;
+    });
   }
 
   int _getScoringColorValue(ActionType actionType, int x, int y) {
@@ -241,6 +256,21 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
     return "https://www.youtube.com/watch?v=flUVtcakEDA";
   }
 
+  String _getMatchKey(BuildContext context) {
+    String key = selectedMatch == "ALL" ||
+            Provider.of<List<Match>>(context)
+                    .where((element) => element.matchNumber == selectedMatch)
+                    .length ==
+                0
+        ? Provider.of<List<Match>>(context).first.matchKey
+        : Provider.of<List<Match>>(context)
+            .where((element) => element.matchNumber == selectedMatch)
+            .first
+            .matchKey;
+
+    return key;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!myAnalyzer.initialized) {
@@ -288,9 +318,12 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
                       ),
                       width: constraints.maxWidth,
                       height: constraints.maxHeight,
-                      child: YoutubeEmbed(
-                        'flUVtcakEDA',
-                      ),
+                      child: _videoLinks != null &&
+                              Provider.of<List<Match>>(context).length > 0
+                          ? YoutubeEmbed(
+                              _videoLinks[_getMatchKey(context)],
+                            )
+                          : Container(),
                     ),
                   ]
                 : [];

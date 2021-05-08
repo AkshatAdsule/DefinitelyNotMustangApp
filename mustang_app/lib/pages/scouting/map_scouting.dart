@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/components/animated_push_line.dart';
 import 'package:mustang_app/components/climb_scouting_overlay.dart';
 import 'package:mustang_app/components/climb_scouting_side.dart';
@@ -28,6 +29,7 @@ class MapScouting extends StatefulWidget {
   String _teamNumber, _matchNumber, _allianceColor;
   bool _offenseOnRightSide;
   GlobalKey<MapScoutingState> _key;
+  MatchType _matchType;
 
   MapScouting({
     GlobalKey<MapScoutingState> key,
@@ -35,22 +37,19 @@ class MapScouting extends StatefulWidget {
     String matchNumber,
     String allianceColor,
     bool offenseOnRightSide,
+    MatchType matchType,
   }) : super(key: key) {
     _teamNumber = teamNumber;
     _matchNumber = matchNumber;
     _allianceColor = allianceColor;
     _offenseOnRightSide = offenseOnRightSide;
     _key = key;
+    _matchType = matchType;
   }
 
   @override
-  MapScoutingState createState() => MapScoutingState(
-        _key,
-        _teamNumber,
-        _matchNumber,
-        _allianceColor,
-        _offenseOnRightSide,
-      );
+  MapScoutingState createState() => MapScoutingState(_key, _teamNumber,
+      _matchNumber, _allianceColor, _offenseOnRightSide, _matchType);
 }
 
 class MapScoutingState extends State<MapScouting> {
@@ -70,19 +69,15 @@ class MapScoutingState extends State<MapScouting> {
   Timer _endgameTimer, _endTimer, _teleopTimer;
   int prevX = -1, prevY = -1, pushStartX = -1, pushStartY = -1;
   List<bool> toggleModes = [true, false, false];
+  MatchType _matchType;
 
   GlobalKey<MapScoutingState> mapScoutingKey;
   final GlobalKey<ZoneGridState> zoneGridKey = GlobalKey<ZoneGridState>();
   final GlobalKey<AnimatedPushLineState> pushLineKey =
       GlobalKey<AnimatedPushLineState>();
 
-  MapScoutingState(
-    this.mapScoutingKey,
-    this.teamNumber,
-    this.matchNumber,
-    this.allianceColor,
-    this.offenseOnRightSide,
-  );
+  MapScoutingState(this.mapScoutingKey, this.teamNumber, this.matchNumber,
+      this.allianceColor, this.offenseOnRightSide, this._matchType);
 
   @override
   void initState() {
@@ -271,6 +266,7 @@ class MapScoutingState extends State<MapScouting> {
       'allianceColor': allianceColor,
       'offenseOnRightSide': offenseOnRightSide,
       'climbLocation': sliderVal,
+      'matchType': _matchType,
     });
   }
 

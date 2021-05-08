@@ -314,20 +314,32 @@ class GetStatistics {
     }
   }
 
-  Future<Map<String, String>> getMatchVideos(
-      String teamNumber, String matchNumber, Event event) async {
-    http.Response res = await http.get(
-        '$apiPrefix/team/$teamNumber/event/${event.eventCode}/matches',
-        headers: _header);
-
+  static Future<Map<String, String>> getMatchVideos(
+      String teamNumber, Event event) async {
     Map<String, String> matchLinks = {};
-    var resJson = jsonDecode(res.body);
-    for (var i in resJson) {
-      String matchKey = i['match_number'] + '-' + i['comp_level'];
-      for (var j in i['videos']) {
-        matchLinks[matchKey] = j['key'];
+
+    try {
+      http.Response res = await http.get(
+          '$apiPrefix/team/$teamNumber/event/${event.eventCode}/matches',
+          headers: {..._header, 'accept': 'application/json'});
+
+      var resJson = jsonDecode(res.body);
+      List<dynamic> json = resJson as List;
+
+      for (int i = 0; i < json.length; i++) {
+        dynamic matchdata = json[i];
+        String matchKey = matchdata['match_number'].toString() +
+            '-' +
+            matchdata['comp_level'];
+        List<dynamic> videos = matchdata['videos'] as List;
+        for (int j = 0; j < videos.length; j++) {
+          matchLinks[matchKey] = videos[j]['key'];
+        }
       }
+      return matchLinks;
+    } catch (error) {
+      print('error: $error');
+      return matchLinks;
     }
-    return matchLinks;
   }
 }
