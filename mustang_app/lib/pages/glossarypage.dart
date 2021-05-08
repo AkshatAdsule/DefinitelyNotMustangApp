@@ -5,25 +5,25 @@ import 'web_view_container.dart';
 class GlossaryPage extends StatelessWidget {
   static const String route = './GlossaryPage';
   final _links = ['http://bit.ly/670glossaryold'];
+  //infinite recharge game manual: ['https://firstfrc.blob.core.windows.net/frc2021/Manual/2021FRCGameManual.pdf']
   //final _links = ['http://bit.ly/670appglossary'];
-  
 
   @override
   Widget build(BuildContext context) {
     return Screen(
-        title: 'Glossary',
+        title: 'Links',
         includeBottomNav: true,
         child: Container(
             child: SingleChildScrollView(
                 child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: _links.map((link) => _urlButton(context, link)).toList(),
-          
-        ))));
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: _links
+                        .map((link) => _glossaryURL(context, link))
+                        .toList()))));
   }
 
-  Widget _urlButton(BuildContext context, String url1) {
+  Widget _glossaryURL(BuildContext context, String url1) {
     return Container(
         padding: EdgeInsets.all(20.0),
         //glossary google doc
@@ -33,8 +33,20 @@ class GlossaryPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
           //child: Text(url),
           onPressed: () => _handleURLButtonPress(context, url1),
-        )
-    );
+        ));
+  }
+
+  Widget _gameManualURL(BuildContext context, String url1) {
+    return Container(
+        padding: EdgeInsets.all(20.0),
+        //glossary google doc
+        child: FlatButton(
+          child: Text('Infinite Recharge Game Manual'),
+          color: Theme.of(context).primaryColor,
+          padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+          //child: Text(url),
+          onPressed: () => _handleURLButtonPress(context, url1),
+        ));
   }
 
   void _handleURLButtonPress(BuildContext context, String url) {
@@ -42,51 +54,3 @@ class GlossaryPage extends StatelessWidget {
         MaterialPageRoute(builder: (context) => WebViewContainer(url)));
   }
 }
-// import 'package:flutter/material.dart';
-// import 'package:mustang_app/components/screen.dart';
-
-// // ignore: must_be_immutable
-// // class GlossaryPage extends StatelessWidget {
-// //   TeamsService _teamsService = TeamsService();
-// //   static const String route = './Glossary';
-
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     return StreamProvider<List<Team>>.value(
-// //       initialData: [],
-// //       value: _teamsService.streamTeams(),
-// //       child: Glossary(),
-// //     );
-// //   }
-// // }
-
-// class GlossaryPage extends StatefulWidget {
-// //class GlossaryPage extends StatelessWidget {
-
-//     static const String route = './GlossaryPage';
-
-//   @override
-//   // _GlossaryPageState createState() => new _GlossaryPageState();
-//   State<StatefulWidget> createState() {
-//     return _GlossaryPageState();
-//   }
-// }
-
-// class _GlossaryPageState extends State<GlossaryPage> {
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Screen(
-//       title: 'Glossary ',
-//       includeBottomNav: false,
-//       child: Container(
-//         child: SingleChildScrollView(
-//           // child: Column(
-//           //   mainAxisAlignment: MainAxisAlignment.center,
-//           //   children: <Widget>[MapAnalysisText(myAnalyzer)],
-//           // ),
-//         ),
-//       ),
-//     );
-//   }
-// }

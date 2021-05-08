@@ -40,7 +40,11 @@ class _DataDisplayTextState extends State<DataDisplayText> {
               contentPadding: EdgeInsets.all(10.0),
               title: Text(
                 matchNum,
-                style: TextStyle(letterSpacing: 3.0),
+                style: TextStyle(
+                  letterSpacing: 3.0,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
               ),
               trailing: Icon(
                 Icons.keyboard_arrow_right,
@@ -53,7 +57,6 @@ class _DataDisplayTextState extends State<DataDisplayText> {
         onTap: () {
           Navigator.pushNamed(context, AllDataDisplayPerMatch.route,
               arguments: {
-                // 'analyzer': myAnalyzer,
                 'teamNumber':
                     Provider.of<Team>(context, listen: false).teamNumber,
                 'matchNum': matchNum,
@@ -84,28 +87,5 @@ class _DataDisplayTextState extends State<DataDisplayText> {
             return getRow(matches, position, context);
           }),
     );
-
-    //List<String> matches = myAnalyzer.getMatches();
-    // return new Container(
-    //   height: 500,
-    //     child: new ListView(
-
-    //     children: <Widget>[
-    //         ListTile(
-    //         // leading: CircleAvatar(
-    //         //   backgroundImage: NetworkImage(horseUrl),
-    //         // ),
-    //         title: Text('Match length' + matches.length.toString()),
-    //         //subtitle: Text('hi'),
-    //         trailing: Icon(Icons.keyboard_arrow_right),
-    //         onTap: () {
-    //           //print('match 1');
-    //         },
-    //         //selected: true,
-    //       ),
-
-    //     ],
-    // ),
-    //   );
   }
 }

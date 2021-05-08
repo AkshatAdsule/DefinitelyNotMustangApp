@@ -93,7 +93,7 @@ class _AllDataDisplayPerMatchState extends State<AllDataDisplayPerMatchPage> {
     );
 
     return Screen(
-      title: 'All Data for Team: ' +
+      title: 'Team: ' +
           (team != null ? team.teamNumber : "") +
           " - Match: " +
           _matchNum,

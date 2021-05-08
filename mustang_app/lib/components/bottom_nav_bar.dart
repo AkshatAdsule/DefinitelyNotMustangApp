@@ -52,7 +52,7 @@ class BottomNavBar extends BottomNavigationBar {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.account_tree),
-              label: 'Glossary',
+              label: 'Links',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.edit),
