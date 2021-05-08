@@ -233,9 +233,10 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             height: cellHeight,
             decoration: (x != 0 && y != 0)
                 ? BoxDecoration(
-                    gradient: RadialGradient(
-                      colors: _getColorCombo(context, x, y),
-                    ),
+                    // gradient: RadialGradient(
+                    //   colors: _getColorCombo(context, x, y),
+                    // ),
+                    color: _getColorCombo(context, x, y).first,
                   )
                 : BoxDecoration(color: Colors.transparent),
           );
