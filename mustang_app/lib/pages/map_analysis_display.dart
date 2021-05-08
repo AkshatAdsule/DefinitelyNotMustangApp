@@ -440,7 +440,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
                               minHeight: 60.0),
                           alignment: Alignment.center,
                           child: Text(
-                            "idk what to put here \n\n so enjoy the video :)",
+                            "idk what to put here \n\n so enjoy the video \n\n if its there :)",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.grey[800],
