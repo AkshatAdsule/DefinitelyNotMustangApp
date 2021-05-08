@@ -23,6 +23,7 @@ class GetStatistics {
     "X-TBA-Auth-Key":
         "JAuW8W8YRGoCk0zREOgnqkGPtfUX5UAfHvd6Ze1ixcPUB3F2tpwXV24l7qoUUnqL"
   };
+  static const String apiPrefix = 'https://www.thebluealliance.com/api/v3';
   FirebaseFirestore _firestore;
   CollectionReference _teams;
   GetStatistics getStatistics;
@@ -53,8 +54,7 @@ class GetStatistics {
     var response;
     List<Event> events = [];
     await http
-        .get("https://www.thebluealliance.com/api/v3/team/$teamCode/events",
-            headers: _header)
+        .get("$apiPrefix/team/$teamCode/events", headers: _header)
         .then((res) => response = res.body);
     var resJson = jsonDecode(response);
 
@@ -77,8 +77,7 @@ class GetStatistics {
     var response;
     List<String> teams = [];
     await http
-        .get("https://www.thebluealliance.com/api/v3/event/$eventCode/teams",
-            headers: _header)
+        .get("$apiPrefix/event/$eventCode/teams", headers: _header)
         .then((res) => response = res.body);
     var resJson = jsonDecode(response);
 
@@ -94,7 +93,7 @@ class GetStatistics {
     List<int> matchScores = [];
     await http
         .get(
-            "https://www.thebluealliance.com/api/v3/team/$teamCode/event/${event.eventCode}/matches/simple",
+            "$apiPrefix/team/$teamCode/event/${event.eventCode}/matches/simple",
             headers: _header)
         .then((res) => response = res.body);
     var resJson = jsonDecode(response);
@@ -134,9 +133,7 @@ class GetStatistics {
     var response;
     int sum = 0;
     await http
-        .get(
-            "https://www.thebluealliance.com/api/v3/event/$eventCode/matches/simple",
-            headers: _header)
+        .get("$apiPrefix/event/$eventCode/matches/simple", headers: _header)
         .then((res) => response = res.body);
     var resJson = jsonDecode(response);
     for (var match in resJson) {
@@ -153,8 +150,7 @@ class GetStatistics {
   Future<double> getWinRate(String teamCode, String eventCode) async {
     var response;
     await http
-        .get(
-            "https://www.thebluealliance.com/api/v3/team/$teamCode/event/$eventCode/matches/simple",
+        .get("$apiPrefix/team/$teamCode/event/$eventCode/matches/simple",
             headers: _header)
         .then((res) => response = res.body);
     var resJson = jsonDecode(response);
@@ -190,9 +186,7 @@ class GetStatistics {
   Future<EventStatistic> getEventStats(String team, Event event) async {
     var _response;
     await http
-        .get(
-            'https://www.thebluealliance.com/api/v3/event/${event.eventCode}/oprs',
-            headers: _header)
+        .get('$apiPrefix/event/${event.eventCode}/oprs', headers: _header)
         .then((res) => _response = res.body);
     try {
       var resJson = jsonDecode(_response);
@@ -253,9 +247,7 @@ class GetStatistics {
     var response;
     double contributionPercentage;
     await http
-        .get(
-            'https://www.thebluealliance.com/api/v3/event/${event.eventCode}/oprs',
-            headers: _header)
+        .get('$apiPrefix/event/${event.eventCode}/oprs', headers: _header)
         .then((res) => response = res.body);
     var resJson = jsonDecode(response);
     double opr = resJson['oprs'][teamCode];
@@ -320,5 +312,23 @@ class GetStatistics {
       _teams.doc(team).set(teamStatistic.toJson());
       return teamStatistic;
     }
+  }
+
+  Future<Map<String, String>> getMatchVideos(
+      String teamNumber, String matchNumber, Event event) async {
+    http.Response res = await http.get(
+        '$apiPrefix/team/$teamNumber/event/${event.eventCode}/matches',
+        headers: _header);
+
+    Map<String, String> matchLinks = {};
+    var resJson = jsonDecode(res.body);
+    for (var i in resJson) {
+      String matchKey = i['match_number'] + '-' + i['comp_level'];
+      for (var j in i['videos']) {
+        var key = j['key'];
+        matchLinks[matchKey] = 'https://www.youtube.com/watch?v=$key';
+      }
+    }
+    return matchLinks;
   }
 }
