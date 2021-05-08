@@ -314,6 +314,7 @@ class MapScoutingState extends State<MapScouting> {
   Widget build(BuildContext context) {
     return Screen(
       title: 'Map Scouting',
+      key: UniqueKey(),
       includeBottomNav: false,
       headerButtons: [
         Container(

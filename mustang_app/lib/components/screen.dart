@@ -11,6 +11,7 @@ class Screen extends StatelessWidget {
   bool includeHeader, includeBottomNav;
   bool left, right, top, bottom;
   static NavDrawer drawer = NavDrawer();
+  Key key;
 
   Screen({
     this.child,
@@ -23,6 +24,7 @@ class Screen extends StatelessWidget {
     this.top = true,
     this.bottom = true,
     this.floatingActionButton,
+    this.key,
   });
 
   @override
@@ -41,7 +43,10 @@ class Screen extends StatelessWidget {
         top: top,
         left: left,
         right: right,
-        child: Container(child: child),
+        child: Container(
+          child: child,
+          key: key,
+        ),
       ),
       drawer: drawer,
       bottomNavigationBar: includeBottomNav
