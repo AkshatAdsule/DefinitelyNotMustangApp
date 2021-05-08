@@ -3,6 +3,8 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:mustang_app/utils/data_collection_data.dart';
 
+import '../utils/data_collection_data.dart';
+
 enum DataType { ATTEMPTED, SCORED }
 
 class DataCollectionHistogramWidget extends StatelessWidget {
@@ -69,29 +71,46 @@ class DataCollectionHistogramWidget extends StatelessWidget {
       }
     }
 
-    // var gamePiecesAttemptedFrequencies = [attemptedMax - attemptedMin];
-
-    var gamePiecesAttemptedFrequencies =
+    var gamePiecesAttemptedFrequencies;
+    var gamePiecesScoredFrequencies;
+    int attemptedBinWidth;
+    int scoredBinWidth;
+    if (attemptedMax - attemptedMin + 1 <= 12) {
+      gamePiecesAttemptedFrequencies =
         new List.filled(attemptedMax - attemptedMin + 1, 0, growable: false);
-    print("Scored max: $scoredMax ");
-    var gamePiecesScoredFrequencies =
+        attemptedBinWidth = 1;
+    } else {
+      gamePiecesAttemptedFrequencies = new List.filled(12, 0, growable: false);
+      attemptedBinWidth = num.parse((((attemptedMax - attemptedMin)/12) + 0.5).toStringAsFixed(0));
+    }
+
+    if (scoredMax - scoredMin + 1 <= 12) {
+      gamePiecesScoredFrequencies =
         new List.filled(scoredMax - scoredMin + 1, 0, growable: false);
+        scoredBinWidth = 1;
+    } else {
+      gamePiecesScoredFrequencies = new List.filled(12, 0, growable: false);
+      scoredBinWidth = num.parse((((scoredMax - scoredMin)/12) + 0.5).toStringAsFixed(0));
+    }
+    
+    
     for (DataCollectionMatchData matchData in matches) {
       print(matchData.gamePiecesAttempted - attemptedMin);
       gamePiecesAttemptedFrequencies[
-          matchData.gamePiecesAttempted - attemptedMin] += 1;
+          num.parse(((matchData.gamePiecesAttempted - attemptedMin)/attemptedBinWidth).toStringAsFixed(0))] += 1;
       print("Value: ${scoredMin} out of ${gamePiecesScoredFrequencies.length}");
-      gamePiecesScoredFrequencies[matchData.gamePiecesScored - scoredMin] += 1;
+      gamePiecesScoredFrequencies[
+        num.parse(((matchData.gamePiecesScored - scoredMin)/scoredBinWidth).toStringAsFixed(0))] += 1;
     }
 
     for (int i = 0; i < gamePiecesAttemptedFrequencies.length; i++) {
-      int numOfGamePieces = i + attemptedMax;
+      int numOfGamePieces = i*attemptedBinWidth + attemptedMin;
       gamePiecesAttemptedData.add(new HistogramStats(
           numOfGamePieces.toString(), gamePiecesAttemptedFrequencies[i]));
     }
 
     for (int i = 0; i < gamePiecesScoredFrequencies.length; i++) {
-      int numOfGamePieces = i + scoredMin;
+      int numOfGamePieces = i*scoredBinWidth + scoredMin;
       gamePiecesScoredData.add(new HistogramStats(
           numOfGamePieces.toString(), gamePiecesScoredFrequencies[i]));
     }
