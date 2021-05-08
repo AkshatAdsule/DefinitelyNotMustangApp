@@ -17,9 +17,22 @@ class Header extends AppBar {
                         Navigator.pushNamed(context, '/');
                         BottomNavBar.setSelected('/');
                       },
-                    ))
+                    ),
+                  )
                 : Row(
-                    children: buttons,
+                    children: [
+                      ...buttons,
+                      ...(Navigator.canPop(context)
+                          ? [
+                              IconButton(
+                                icon: Icon(Icons.arrow_back_sharp),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              )
+                            ]
+                          : [])
+                    ],
                   )
           ],
         );

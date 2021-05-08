@@ -83,7 +83,8 @@ class _SplashState extends State<Splash> {
                 );
               },
               onEnd: () {
-                Navigator.of(context).pushNamed(HomePage.route);
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil(HomePage.route, (route) => false);
                 // Use below code block for production or dev, above for demo
                 /*
                 if (_user == null) {
