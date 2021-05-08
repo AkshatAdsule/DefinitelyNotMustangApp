@@ -41,7 +41,6 @@ class Screen extends StatelessWidget {
         top: top,
         left: left,
         right: right,
-        key: UniqueKey(),
         child: Container(child: child),
       ),
       drawer: drawer,
