@@ -88,3 +88,12 @@ class Match {
   set driverSkill(double driverSkill) => _driverSkill = driverSkill;
   set actions(List<GameAction> actions) => _actions = actions;
 }
+
+// TODO: change the value to be lower case when adding it to the match name
+enum MatchType {
+  QM, //qualifier
+  QF, //quarter final
+  SF, //semi final
+  F, // final
+  TYPE, // for drop downs
+}

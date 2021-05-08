@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/backend/match.dart';
 import 'package:mustang_app/components/screen.dart';
 import 'package:mustang_app/pages/scouting/map_scouting.dart';
 import 'pit_scouting.dart';
@@ -13,12 +14,10 @@ class Scouter extends StatefulWidget {
   }
 }
 
-enum MatchType { QUAL, QUARTER, SEMI, FINAL, OTHER, TYPE }
-
 class _ScouterState extends State<Scouter> {
   TextEditingController _teamNumberController = TextEditingController();
   TextEditingController _matchNumberController = TextEditingController();
-  MatchType _matchType = MatchType.OTHER;
+  MatchType _matchType = MatchType.TYPE;
 
   String _allianceColor = "Blue";
 
@@ -138,11 +137,11 @@ class _ScouterState extends State<Scouter> {
                       });
                     },
                     items: <MatchType>[
-                      MatchType.OTHER,
-                      MatchType.QUAL,
-                      MatchType.QUARTER,
-                      MatchType.SEMI,
-                      MatchType.FINAL,
+                      MatchType.TYPE,
+                      MatchType.QM,
+                      MatchType.QF,
+                      MatchType.SF,
+                      MatchType.F,
                     ].map<DropdownMenuItem<MatchType>>((MatchType matchType) {
                       return DropdownMenuItem<MatchType>(
                         value: matchType,
