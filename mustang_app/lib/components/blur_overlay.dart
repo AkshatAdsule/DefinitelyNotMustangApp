@@ -52,6 +52,7 @@ class _BlurOverlayState extends State<BlurOverlay> {
             child: IgnorePointer(child: background),
             onEnd: () {
               setState(() {
+                unlocked = true;
                 onEnd();
               });
             },
