@@ -19,11 +19,13 @@ import '../components/analyzer.dart';
 class MapAnalysisDisplay extends StatelessWidget {
   TeamService _teamService = TeamService();
   static const String route = '/MapAnalysisDisplay';
+
   //remove team num
   String _teamNumber = '';
   MapAnalysisDisplay({String teamNumber}) {
     _teamNumber = teamNumber;
   }
+
   @override
   Widget build(BuildContext context) {
     return StreamProvider<Team>.value(
@@ -44,6 +46,7 @@ class MapAnalysisDisplay extends StatelessWidget {
 class MapAnalysisDisplayPage extends StatefulWidget {
   //remove team num
   String _teamNumber = '';
+
   MapAnalysisDisplayPage({String teamNumber}) {
     _teamNumber = teamNumber;
   }
@@ -72,8 +75,9 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
     true,
     false,
     false,
+    false,
   ];
-  double timeInGame = 10;
+  double timeInGame = 0;
   GameMap gameMap;
   String selectedMatch = "ALL";
   ActionType selectedActionType = ActionType.ALL;
@@ -127,18 +131,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
     }
   }
 
-  List<GameAction> getAllMatchActions(BuildContext context) {
-    if (selectedMatch == "ALL") {
-      return Provider.of<List<Match>>(context)
-          .map((e) => e.actions)
-          .reduce((value, element) => [...value, ...element]);
-    }
-    return Provider.of<List<Match>>(context)
-        .where((element) => element.matchNumber == selectedMatch)
-        .map((e) => e.actions)
-        .reduce((value, element) => [...value, ...element]);
-  }
-
   List<Color> _getColorCombo(BuildContext context, int x, int y) {
     GameAction curr;
     List<GameAction> currActions = getAllMatchActions(context)
@@ -151,7 +143,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
         break;
       }
     }
-    if (curr == null) return [Colors.green[0], Colors.transparent];
+    if (curr == null) return [Colors.green[0], Colors.yellow[0]];
 
     List<Color> gradientCombo = [];
     String actionType = curr.action.toString();
@@ -168,6 +160,18 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
     }
 
     return gradientCombo;
+  }
+
+  List<GameAction> getAllMatchActions(BuildContext context) {
+    if (selectedMatch == "ALL") {
+      return Provider.of<List<Match>>(context)
+          .map((e) => e.actions)
+          .reduce((value, element) => [...value, ...element]);
+    }
+    return Provider.of<List<Match>>(context)
+        .where((element) => element.matchNumber == selectedMatch)
+        .map((e) => e.actions)
+        .reduce((value, element) => [...value, ...element]);
   }
 
   Widget _getCell(BuildContext context, int x, int y, bool isSelected,
@@ -212,14 +216,15 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             height: cellHeight,
             decoration: (x != 0 && y != 0)
                 ? BoxDecoration(
-                    color: _getColorCombo(context, x, y).first,
-                    // gradient: RadialGradient(
-                    //   colors: _getColorCombo(context, x, y),
-                    // ),
+                    // color: _getColorCombo(context, x, y).first,
+                    gradient: RadialGradient(
+                      colors: _getColorCombo(context, x, y),
+                    ),
                   )
                 : BoxDecoration(color: Colors.transparent),
           );
         }
+
       default:
         {
           return Container();
@@ -292,6 +297,10 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
                         icon: FontAwesomeIcons.history,
                         isSelected: _toggleModes[2],
                       ),
+                      ModeToggleChild(
+                        icon: FontAwesomeIcons.video,
+                        isSelected: _toggleModes[3],
+                      ),
                     ],
                   ),
                 ),
@@ -363,6 +372,22 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
                         MapAnalysisKey(true),
                         MapAnalysisKey(false),
                         GameReplayKey(),
+                        Container(
+                          constraints: BoxConstraints(
+                              maxWidth: MediaQuery.of(context).size.width,
+                              minHeight: 60.0),
+                          alignment: Alignment.center,
+                          child: Text(
+                            "TBA video is \n\n currently \n\n unavailable.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.grey[800],
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              height: 1,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
