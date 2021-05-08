@@ -12,6 +12,7 @@ import 'package:mustang_app/components/screen.dart';
 import 'package:mustang_app/components/select.dart';
 import 'package:mustang_app/components/zone_grid.dart';
 import 'package:mustang_app/constants/constants.dart';
+import 'package:mustang_app/pages/web_view_container.dart';
 import 'package:provider/provider.dart';
 import '../components/analyzer.dart';
 
@@ -216,7 +217,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             height: cellHeight,
             decoration: (x != 0 && y != 0)
                 ? BoxDecoration(
-                    // color: _getColorCombo(context, x, y).first,
                     gradient: RadialGradient(
                       colors: _getColorCombo(context, x, y),
                     ),
@@ -230,6 +230,11 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
           return Container();
         }
     }
+  }
+
+  // TODO: CHANGE THIS TO BE ACTUALLY EXTRACTED FROM THE MATCH NUMBER
+  String getVideoLink() {
+    return "https://www.youtube.com/watch?v=flUVtcakEDA";
   }
 
   @override
@@ -246,169 +251,180 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
       title: 'Map Analysis for Team: ' + myAnalyzer.teamNum.toString(),
       includeBottomNav: false,
       child: Container(
-        child: GameMap(
-          zoneGrid: ZoneGrid(
-            GlobalKey(),
-            (int x, int y) {},
-            (
-              int x,
-              int y,
-              bool isSelected,
-              double cellWidth,
-              double cellHeight,
-            ) =>
-                _getCell(
-              context,
-              x,
-              y,
-              isSelected,
-              cellWidth,
-              cellHeight,
-            ),
-          ),
-          sideWidget: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 10),
-                  child: ModeToggle(
-                    onPressed: (int ind) {
-                      setState(
-                        () {
-                          List<bool> newToggle = List.generate(
-                              _toggleModes.length, (index) => index == ind);
-                          _toggleModes = newToggle;
-                        },
-                      );
-                    },
-                    isSelected: _toggleModes,
-                    direction: Axis.horizontal,
-                    children: [
-                      ModeToggleChild(
-                        icon: FontAwesomeIcons.trophy,
-                        isSelected: _toggleModes[0],
+        child:
+            // Column(
+            //   children: [
+            _toggleModes[3]
+                ? Container(child: WebViewContainer(getVideoLink()))
+                //TODO: make it fit in section of screen instead of taking over the screen
+                : GameMap(
+                    zoneGrid: ZoneGrid(
+                      GlobalKey(),
+                      (int x, int y) {},
+                      (
+                        int x,
+                        int y,
+                        bool isSelected,
+                        double cellWidth,
+                        double cellHeight,
+                      ) =>
+                          _getCell(
+                        context,
+                        x,
+                        y,
+                        isSelected,
+                        cellWidth,
+                        cellHeight,
                       ),
-                      ModeToggleChild(
-                        icon: FontAwesomeIcons.bullseye,
-                        isSelected: _toggleModes[1],
-                      ),
-                      ModeToggleChild(
-                        icon: FontAwesomeIcons.history,
-                        isSelected: _toggleModes[2],
-                      ),
-                      ModeToggleChild(
-                        icon: FontAwesomeIcons.video,
-                        isSelected: _toggleModes[3],
-                      ),
-                    ],
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Select<ActionType>(
-                      value: selectedActionType,
-                      onChanged: (val) => setState(() {
-                        selectedActionType = val;
-                      }),
-                      items: [
-                        ActionType.ALL,
-                        ActionType.SHOT_LOW,
-                        ActionType.SHOT_OUTER,
-                        ActionType.SHOT_INNER
-                      ].map<DropdownMenuItem<ActionType>>(
-                        (ActionType actionType) {
-                          return DropdownMenuItem<ActionType>(
-                            value: actionType,
-                            child: Center(
-                              child: Text(
-                                actionType.toString().substring(
-                                      actionType.toString().indexOf('.') + 1,
-                                    ),
-                              ),
-                            ),
-                          );
-                        },
-                      ).toList(),
                     ),
-                    Select<String>(
-                      value: selectedMatch,
-                      onChanged: (val) => setState(() {
-                        selectedMatch = val;
-                      }),
-                      items: [
-                        ...Provider.of<List<Match>>(context)
-                            .map<DropdownMenuItem<String>>(
-                          (Match match) {
-                            return DropdownMenuItem<String>(
-                              value: match.matchNumber,
-                              child: Center(
-                                child: Text(
-                                  match.matchNumber,
+                    sideWidget: Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: 10),
+                            child: ModeToggle(
+                              onPressed: (int ind) {
+                                setState(
+                                  () {
+                                    List<bool> newToggle = List.generate(
+                                        _toggleModes.length,
+                                        (index) => index == ind);
+                                    _toggleModes = newToggle;
+                                  },
+                                );
+                              },
+                              isSelected: _toggleModes,
+                              direction: Axis.horizontal,
+                              children: [
+                                ModeToggleChild(
+                                  icon: FontAwesomeIcons.trophy,
+                                  isSelected: _toggleModes[0],
                                 ),
+                                ModeToggleChild(
+                                  icon: FontAwesomeIcons.bullseye,
+                                  isSelected: _toggleModes[1],
+                                ),
+                                ModeToggleChild(
+                                  icon: FontAwesomeIcons.history,
+                                  isSelected: _toggleModes[2],
+                                ),
+                                ModeToggleChild(
+                                  icon: FontAwesomeIcons.video,
+                                  isSelected: _toggleModes[3],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Select<ActionType>(
+                                value: selectedActionType,
+                                onChanged: (val) => setState(() {
+                                  selectedActionType = val;
+                                }),
+                                items: [
+                                  ActionType.ALL,
+                                  ActionType.SHOT_LOW,
+                                  ActionType.SHOT_OUTER,
+                                  ActionType.SHOT_INNER
+                                ].map<DropdownMenuItem<ActionType>>(
+                                  (ActionType actionType) {
+                                    return DropdownMenuItem<ActionType>(
+                                      value: actionType,
+                                      child: Center(
+                                        child: Text(
+                                          actionType.toString().substring(
+                                                actionType
+                                                        .toString()
+                                                        .indexOf('.') +
+                                                    1,
+                                              ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ).toList(),
                               ),
-                            );
-                          },
-                        ).toList(),
-                        DropdownMenuItem<String>(
-                          value: "ALL",
-                          child: Center(
-                            child: Text(
-                              "ALL",
+                              Select<String>(
+                                value: selectedMatch,
+                                onChanged: (val) => setState(() {
+                                  selectedMatch = val;
+                                }),
+                                items: [
+                                  ...Provider.of<List<Match>>(context)
+                                      .map<DropdownMenuItem<String>>(
+                                    (Match match) {
+                                      return DropdownMenuItem<String>(
+                                        value: match.matchNumber,
+                                        child: Center(
+                                          child: Text(
+                                            match.matchNumber,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ).toList(),
+                                  DropdownMenuItem<String>(
+                                    value: "ALL",
+                                    child: Center(
+                                      child: Text(
+                                        "ALL",
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Flexible(
+                            flex: 1,
+                            child: Container(
+                              child: IndexedStack(
+                                index: _toggleModes.indexOf(true),
+                                children: [
+                                  MapAnalysisKey(true),
+                                  MapAnalysisKey(false),
+                                  GameReplayKey(),
+                                  Container(
+                                    constraints: BoxConstraints(
+                                        maxWidth:
+                                            MediaQuery.of(context).size.width,
+                                        minHeight: 60.0),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "TBA video is \n\n currently \n\n unavailable.",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.grey[800],
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        height: 1,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Flexible(
-                  flex: 1,
-                  child: Container(
-                    child: IndexedStack(
-                      index: _toggleModes.indexOf(true),
-                      children: [
-                        MapAnalysisKey(true),
-                        MapAnalysisKey(false),
-                        GameReplayKey(),
-                        Container(
-                          constraints: BoxConstraints(
-                              maxWidth: MediaQuery.of(context).size.width,
-                              minHeight: 60.0),
-                          alignment: Alignment.center,
-                          child: Text(
-                            "TBA video is \n\n currently \n\n unavailable.",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.grey[800],
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              height: 1,
-                            ),
-                          ),
-                        ),
-                      ],
+                          _toggleModes[2]
+                              ? Slider(
+                                  label: timeInGame.round().toString(),
+                                  onChanged: (newVal) => setState(() {
+                                    setState(() {
+                                      timeInGame = newVal;
+                                    });
+                                  }),
+                                  min: 0,
+                                  max: 150, // number of seconds in a game
+                                  value: timeInGame,
+                                )
+                              : Container(),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                _toggleModes[2]
-                    ? Slider(
-                        label: timeInGame.round().toString(),
-                        onChanged: (newVal) => setState(() {
-                          setState(() {
-                            timeInGame = newVal;
-                          });
-                        }),
-                        min: 0,
-                        max: 150, // number of seconds in a game
-                        value: timeInGame,
-                      )
-                    : Container(),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }
