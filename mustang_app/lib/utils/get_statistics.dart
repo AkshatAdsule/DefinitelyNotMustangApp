@@ -325,8 +325,7 @@ class GetStatistics {
     for (var i in resJson) {
       String matchKey = i['match_number'] + '-' + i['comp_level'];
       for (var j in i['videos']) {
-        var key = j['key'];
-        matchLinks[matchKey] = 'https://www.youtube.com/watch?v=$key';
+        matchLinks[matchKey] = j['key'];
       }
     }
     return matchLinks;
