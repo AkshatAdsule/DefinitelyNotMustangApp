@@ -54,7 +54,7 @@ class GetStatistics {
     var response;
     List<Event> events = [];
     await http
-        .get("$apiPrefix/team/$teamCode/events", headers: _header)
+        .get(Uri.parse("$apiPrefix/team/$teamCode/events"), headers: _header)
         .then((res) => response = res.body);
     var resJson = jsonDecode(response);
 
@@ -77,7 +77,7 @@ class GetStatistics {
     var response;
     List<String> teams = [];
     await http
-        .get("$apiPrefix/event/$eventCode/teams", headers: _header)
+        .get(Uri.parse("$apiPrefix/event/$eventCode/teams"), headers: _header)
         .then((res) => response = res.body);
     var resJson = jsonDecode(response);
 
@@ -93,7 +93,8 @@ class GetStatistics {
     List<int> matchScores = [];
     await http
         .get(
-            "$apiPrefix/team/$teamCode/event/${event.eventCode}/matches/simple",
+            Uri.parse(
+                "$apiPrefix/team/$teamCode/event/${event.eventCode}/matches/simple"),
             headers: _header)
         .then((res) => response = res.body);
     var resJson = jsonDecode(response);
@@ -133,7 +134,8 @@ class GetStatistics {
     var response;
     int sum = 0;
     await http
-        .get("$apiPrefix/event/$eventCode/matches/simple", headers: _header)
+        .get(Uri.parse("$apiPrefix/event/$eventCode/matches/simple"),
+            headers: _header)
         .then((res) => response = res.body);
     var resJson = jsonDecode(response);
     for (var match in resJson) {
@@ -150,7 +152,9 @@ class GetStatistics {
   Future<double> getWinRate(String teamCode, String eventCode) async {
     var response;
     await http
-        .get("$apiPrefix/team/$teamCode/event/$eventCode/matches/simple",
+        .get(
+            Uri.parse(
+                "$apiPrefix/team/$teamCode/event/$eventCode/matches/simple"),
             headers: _header)
         .then((res) => response = res.body);
     var resJson = jsonDecode(response);
@@ -186,7 +190,8 @@ class GetStatistics {
   Future<EventStatistic> getEventStats(String team, Event event) async {
     var _response;
     await http
-        .get('$apiPrefix/event/${event.eventCode}/oprs', headers: _header)
+        .get(Uri.parse('$apiPrefix/event/${event.eventCode}/oprs'),
+            headers: _header)
         .then((res) => _response = res.body);
     try {
       var resJson = jsonDecode(_response);
@@ -247,7 +252,8 @@ class GetStatistics {
     var response;
     double contributionPercentage;
     await http
-        .get('$apiPrefix/event/${event.eventCode}/oprs', headers: _header)
+        .get(Uri.parse('$apiPrefix/event/${event.eventCode}/oprs'),
+            headers: _header)
         .then((res) => response = res.body);
     var resJson = jsonDecode(response);
     double opr = resJson['oprs'][teamCode];
@@ -268,8 +274,9 @@ class GetStatistics {
   Future<TeamStatistic> getCumulativeStats(String team) async {
     List<EventStatistic> eventStats = [];
     var doc = await _teams.doc(team).get();
-    if (doc.exists && doc.data()["DATA_VERSION"] == _DATA_VERSION) {
-      var docData = doc.data();
+    Map<String, dynamic> docData = doc.data();
+
+    if (doc.exists && docData["DATA_VERSION"] == _DATA_VERSION) {
       Map<String, dynamic> dataMap =
           docData.map((key, value) => MapEntry(key, value));
       TeamStatistic teamStatistic = new TeamStatistic.premade(
@@ -320,7 +327,8 @@ class GetStatistics {
 
     try {
       http.Response res = await http.get(
-          '$apiPrefix/team/$teamNumber/event/${event.eventCode}/matches',
+          Uri.parse(
+              '$apiPrefix/team/$teamNumber/event/${event.eventCode}/matches'),
           headers: {..._header, 'accept': 'application/json'});
 
       var resJson = jsonDecode(res.body);

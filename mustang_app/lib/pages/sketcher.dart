@@ -141,7 +141,7 @@ class _SketchPageState extends State<SketchPage> {
             onColorChanged: (color) {
               pickerColor = color;
             },
-            enableLabel: true,
+            showLabel: true,
             pickerAreaHeightPercent: 0.8,
           ),
         ),
