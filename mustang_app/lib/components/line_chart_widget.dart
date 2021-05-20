@@ -1,6 +1,7 @@
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:mustang_app/utils/team_statistic.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 enum DataType { OPR, DPR, CCWM, WINRATE, CONTRIBUTION }
 
@@ -9,9 +10,12 @@ class LineChartWidget extends StatelessWidget {
   // final bool animate;
   // final String teamCode;
   // final List<double> oprs;
-  final List<charts.Series<LinearStats, DateTime>> data;
+  final List<LineChartBarData> data;
   final double height, width;
-
+  static final List<int> dashArray = [5, 5];
+  static final FlDotData dotData = FlDotData(
+    show: false,
+  );
   LineChartWidget({this.data, this.height: 300, this.width: 50});
 
   // LineChartWidget(this.seriesList, {this.animate});
@@ -25,8 +29,7 @@ class LineChartWidget extends StatelessWidget {
   //   );
   // }
 
-  static List<charts.Series<LinearStats, DateTime>> createTeamData(
-      TeamStatistic stats) {
+  static List<LineChartBarData> createTeamData(TeamStatistic stats) {
     List<LinearStats> oprData = [];
     List<LinearStats> dprData = [];
     List<LinearStats> ccwmData = [];
@@ -58,35 +61,35 @@ class LineChartWidget extends StatelessWidget {
         .add(new LinearStats(currentYear, stats.yearStats.last.avgWinRate));
     predictedPointContributionData.add(new LinearStats(
         currentYear, stats.yearStats.last.avgPointContribution));
-
-    for (var i = 1; i <= 2; i++) {
+    for (int i = 1; i <= 2; i++) {
+      DateTime newYear = currentYear.add(Duration(days: 366 * i));
       predictedOprData.add(
         new LinearStats(
-          currentYear.add(Duration(days: 365*i)) ,
+          newYear.add(Duration(days: 366 * i)),
           (stats.oprSlope + predictedOprData[i - 1].stat),
         ),
       );
       predictedDprData.add(
         new LinearStats(
-          currentYear.add(Duration(days: 365*i)) ,
+          newYear.add(Duration(days: 365 * i)),
           (stats.dprSlope + predictedDprData[i - 1].stat),
         ),
       );
       predictedCcwmData.add(
         new LinearStats(
-          currentYear.add(Duration(days: 365*i)) ,
+          newYear.add(Duration(days: 365 * i)),
           (stats.ccwmSlope + predictedCcwmData[i - 1].stat),
         ),
       );
       predictedWinRateData.add(
         new LinearStats(
-          currentYear.add(Duration(days: 365*i)) ,
+          newYear.add(Duration(days: 365 * i)),
           (stats.winrateSlope + predictedWinRateData[i - 1].stat),
         ),
       );
       predictedPointContributionData.add(
         new LinearStats(
-          currentYear.add(Duration(days: 365*i)) ,
+          newYear.add(Duration(days: 365 * i)),
           (stats.contributionSlope +
               predictedPointContributionData[i - 1].stat),
         ),
@@ -94,85 +97,97 @@ class LineChartWidget extends StatelessWidget {
     }
 
     return [
-      new charts.Series<LinearStats, DateTime>(
-        id: 'OPR',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (LinearStats stat, _) => stat.year,
-        measureFn: (LinearStats stat, _) => stat.stat,
-        data: oprData,
+      LineChartBarData(
+        spots: oprData
+            .map((e) =>
+                FlSpot(e.year.year.toDouble(), e.stat.round().toDouble()))
+            .toList(),
+        colors: [Colors.blue],
+        dotData: dotData,
       ),
-      new charts.Series<LinearStats, DateTime>(
-        id: 'DPR',
-        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
-        domainFn: (LinearStats stat, _) => stat.year,
-        measureFn: (LinearStats stat, _) => stat.stat,
-        data: dprData,
+      LineChartBarData(
+        spots: dprData
+            .map((e) =>
+                FlSpot(e.year.year.toDouble(), e.stat.round().toDouble()))
+            .toList(),
+        colors: [Colors.red],
+        dotData: dotData,
       ),
-      new charts.Series<LinearStats, DateTime>(
-        id: 'CCWM',
-        colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
-        domainFn: (LinearStats stat, _) => stat.year,
-        measureFn: (LinearStats stat, _) => stat.stat,
-        data: ccwmData,
+      LineChartBarData(
+        spots: ccwmData
+            .map((e) =>
+                FlSpot(e.year.year.toDouble(), e.stat.round().toDouble()))
+            .toList(),
+        colors: [Colors.green],
+        dotData: dotData,
       ),
-      new charts.Series<LinearStats, DateTime>(
-        id: 'Win Rate',
-        colorFn: (_, __) => charts.MaterialPalette.black,
-        domainFn: (LinearStats stat, _) => stat.year,
-        measureFn: (LinearStats stat, _) => stat.stat,
-        data: winRateData,
+      LineChartBarData(
+        spots: winRateData
+            .map((e) =>
+                FlSpot(e.year.year.toDouble(), e.stat.round().toDouble()))
+            .toList(),
+        colors: [Colors.black],
+        dotData: dotData,
       ),
-      new charts.Series<LinearStats, DateTime>(
-        id: 'Contribution Percentage',
-        colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
-        domainFn: (LinearStats stat, _) => stat.year,
-        measureFn: (LinearStats stat, _) => stat.stat,
-        data: pointContributionData,
+      LineChartBarData(
+        spots: pointContributionData
+            .map((e) =>
+                FlSpot(e.year.year.toDouble(), e.stat.round().toDouble()))
+            .toList(),
+        colors: [Colors.purple],
+        dotData: dotData,
       ),
-      new charts.Series<LinearStats, DateTime>(
-        id: 'predicted OPR',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        dashPatternFn: (_, __) => [2, 2],
-        domainFn: (LinearStats stat, _) => stat.year,
-        measureFn: (LinearStats stat, _) => stat.stat,
-        data: predictedOprData,
+      LineChartBarData(
+        spots: predictedOprData
+            .map((e) =>
+                FlSpot(e.year.year.toDouble(), e.stat.round().toDouble()))
+            .toList(),
+        colors: [Colors.blue],
+        dotData: dotData,
+        dashArray: dashArray,
       ),
-      new charts.Series<LinearStats, DateTime>(
-        id: 'predicted DPR',
-        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
-        dashPatternFn: (_, __) => [2, 2],
-        domainFn: (LinearStats stat, _) => stat.year,
-        measureFn: (LinearStats stat, _) => stat.stat,
-        data: predictedDprData,
+      LineChartBarData(
+        spots: predictedDprData
+            .map((e) =>
+                FlSpot(e.year.year.toDouble(), e.stat.round().toDouble()))
+            .toList(),
+        colors: [Colors.red],
+        dotData: dotData,
+        dashArray: dashArray,
       ),
-      new charts.Series<LinearStats, DateTime>(
-        id: 'predicted CCWM',
-        colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
-        dashPatternFn: (_, __) => [2, 2],
-        domainFn: (LinearStats stat, _) => stat.year,
-        measureFn: (LinearStats stat, _) => stat.stat,
-        data: predictedCcwmData,
+      LineChartBarData(
+        spots: predictedCcwmData
+            .map((e) =>
+                FlSpot(e.year.year.toDouble(), e.stat.round().toDouble()))
+            .toList(),
+        colors: [Colors.green],
+        dotData: dotData,
+        dashArray: dashArray,
       ),
-      new charts.Series<LinearStats, DateTime>(
-        id: 'predicted Win Rate',
-        colorFn: (_, __) => charts.MaterialPalette.black,
-        dashPatternFn: (_, __) => [2, 2],
-        domainFn: (LinearStats stat, _) => stat.year,
-        measureFn: (LinearStats stat, _) => stat.stat,
-        data: predictedWinRateData,
+      LineChartBarData(
+        spots: predictedWinRateData
+            .map((e) =>
+                FlSpot(e.year.year.toDouble(), e.stat.round().toDouble()))
+            .toList(),
+        colors: [Colors.black],
+        dotData: dotData,
+        dashArray: dashArray,
       ),
-      new charts.Series<LinearStats, DateTime>(
-        id: 'predicted CP',
-        colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
-        dashPatternFn: (_, __) => [8, 3, 2, 3],
-        domainFn: (LinearStats stat, _) => stat.year,
-        measureFn: (LinearStats stat, _) => stat.stat,
-        data: predictedPointContributionData,
+      LineChartBarData(
+        spots: predictedPointContributionData
+            .map((e) => FlSpot(
+                  e.year.year.toDouble(),
+                  e.stat.round().toDouble(),
+                ))
+            .toList(),
+        colors: [Colors.purple],
+        dotData: dotData,
+        dashArray: dashArray,
       ),
     ];
   }
 
-  static Map<DataType, List<charts.Series<LinearStats, DateTime>>> createCompareData(
+  static Map<DataType, List<LineChartBarData>> createCompareData(
       TeamStatistic team1, TeamStatistic team2) {
     List<LinearStats> team1OprData = [], team2OprData = [];
     List<LinearStats> team1DprData = [], team2DprData = [];
@@ -200,110 +215,218 @@ class LineChartWidget extends StatelessWidget {
 
     return {
       DataType.OPR: [
-        new charts.Series(
-          id: 'team1OPR',
-          data: team1OprData,
-          domainFn: (LinearStats data, _) => data.year,
-          measureFn: (LinearStats data, _) => data.stat,
+        LineChartBarData(
+          spots: team1OprData
+              .map((e) => FlSpot(
+                    e.year.year.toDouble(),
+                    e.stat.round().toDouble(),
+                  ))
+              .toList(),
+          colors: [Colors.blue],
+          dotData: dotData,
         ),
-        new charts.Series(
-          id: 'team2OPR',
-          data: team2OprData,
-          domainFn: (LinearStats data, _) => data.year,
-          measureFn: (LinearStats data, _) => data.stat,
+        LineChartBarData(
+          spots: team2OprData
+              .map((e) => FlSpot(
+                    e.year.year.toDouble(),
+                    e.stat.round().toDouble(),
+                  ))
+              .toList(),
+          colors: [Colors.red],
+          dotData: dotData,
         ),
       ],
       DataType.DPR: [
-        new charts.Series(
-          id: 'team1DPR',
-          data: team1DprData,
-          domainFn: (LinearStats data, _) => data.year,
-          measureFn: (LinearStats data, _) => data.stat,
+        LineChartBarData(
+          spots: team1DprData
+              .map((e) => FlSpot(
+                    e.year.year.toDouble(),
+                    e.stat.round().toDouble(),
+                  ))
+              .toList(),
+          colors: [Colors.blue],
+          dotData: dotData,
         ),
-        new charts.Series(
-          id: 'team2DPR',
-          data: team2DprData,
-          domainFn: (LinearStats data, _) => data.year,
-          measureFn: (LinearStats data, _) => data.stat,
+        LineChartBarData(
+          spots: team2DprData
+              .map((e) => FlSpot(
+                    e.year.year.toDouble(),
+                    e.stat.round().toDouble(),
+                  ))
+              .toList(),
+          colors: [Colors.red],
+          dotData: dotData,
         ),
       ],
       DataType.CCWM: [
-        new charts.Series(
-          id: 'team1CCWM',
-          data: team1CcwmData,
-          domainFn: (LinearStats data, _) => data.year,
-          measureFn: (LinearStats data, _) => data.stat,
+        LineChartBarData(
+          spots: team1CcwmData
+              .map((e) => FlSpot(
+                    e.year.year.toDouble(),
+                    e.stat.round().toDouble(),
+                  ))
+              .toList(),
+          colors: [Colors.blue],
+          dotData: dotData,
         ),
-        new charts.Series(
-          id: 'team2CCWM',
-          data: team2CcwmData,
-          domainFn: (LinearStats data, _) => data.year,
-          measureFn: (LinearStats data, _) => data.stat,
+        LineChartBarData(
+          spots: team2CcwmData
+              .map((e) => FlSpot(
+                    e.year.year.toDouble(),
+                    e.stat.round().toDouble(),
+                  ))
+              .toList(),
+          colors: [Colors.red],
+          dotData: dotData,
         ),
       ],
       DataType.WINRATE: [
-        new charts.Series(
-          id: 'team1WinRate',
-          data: team1WinRateData,
-          domainFn: (LinearStats data, _) => data.year,
-          measureFn: (LinearStats data, _) => data.stat,
+        LineChartBarData(
+          spots: team1WinRateData
+              .map((e) => FlSpot(
+                    e.year.year.toDouble(),
+                    e.stat.round().toDouble(),
+                  ))
+              .toList(),
+          colors: [Colors.blue],
+          dotData: dotData,
         ),
-        new charts.Series(
-          id: 'team2WinRate',
-          data: team2WinRateData,
-          domainFn: (LinearStats data, _) => data.year,
-          measureFn: (LinearStats data, _) => data.stat,
+        LineChartBarData(
+          spots: team2WinRateData
+              .map((e) => FlSpot(
+                    e.year.year.toDouble(),
+                    e.stat.round().toDouble(),
+                  ))
+              .toList(),
+          colors: [Colors.red],
+          dotData: dotData,
         ),
       ],
       DataType.CONTRIBUTION: [
-        new charts.Series(
-          id: 'team1Contribution',
-          data: team1PointContributionData,
-          domainFn: (LinearStats data, _) => data.year,
-          measureFn: (LinearStats data, _) => data.stat,
+        LineChartBarData(
+          spots: team1PointContributionData
+              .map((e) => FlSpot(
+                    e.year.year.toDouble(),
+                    e.stat.round().toDouble(),
+                  ))
+              .toList(),
+          colors: [Colors.blue],
+          dotData: dotData,
         ),
-        new charts.Series(
-          id: 'team2Contribution',
-          data: team2PointContributionData,
-          domainFn: (LinearStats data, _) => data.year,
-          measureFn: (LinearStats data, _) => data.stat,
+        LineChartBarData(
+          spots: team2PointContributionData
+              .map((e) => FlSpot(
+                    e.year.year.toDouble(),
+                    e.stat.round().toDouble(),
+                  ))
+              .toList(),
+          colors: [Colors.red],
+          dotData: dotData,
         ),
       ],
     };
   }
 
+  int roundUp(int n) {
+    bool isNegative = n < 0;
+
+    return isNegative ? -(((n.abs() + 4) ~/ 5) * 5) : (((n + 4) ~/ 5) * 5);
+  }
+
+  int roundDown(int n) {
+    bool isNegative = n < 0;
+
+    return isNegative ? roundUp(n) : (((n) ~/ 5) * 5);
+  }
+
   @override
   Widget build(BuildContext context) {
+    double minX = double.maxFinite, minY = double.maxFinite, maxX = 0, maxY = 0;
+    data.forEach((element) {
+      element.spots.forEach((element) {
+        if (element.x < minX) {
+          minX = element.x;
+        }
+        if (element.y < minY) {
+          minY = element.y;
+        }
+        if (element.x > maxX) {
+          maxX = element.x;
+        }
+        if (element.y > maxY) {
+          maxY = element.y;
+        }
+      });
+    });
     return SizedBox(
       width: width,
       height: height,
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: new charts.TimeSeriesChart(
-          this.data,
-          animate: true,
-          // domainAxis: new charts.NumericAxisSpec(
-          //   viewport: new charts.NumericExtents(2001.0, 2020.0),
+      child: Column(
+        children: [
+          // Flexible(
+          //   flex: 1,
+          //   child: LineChartLegend(),
           // ),
-          dateTimeFactory: const charts.LocalDateTimeFactory(),
-          behaviors: [
-            new charts.ChartTitle('Year',
-                behaviorPosition: charts.BehaviorPosition.bottom,
-                titleOutsideJustification:
-                    charts.OutsideJustification.middleDrawArea),
-            new charts.ChartTitle('Stat',
-                behaviorPosition: charts.BehaviorPosition.start,
-                titleOutsideJustification:
-                    charts.OutsideJustification.middleDrawArea),
-            new charts.SeriesLegend(
-              position: charts.BehaviorPosition.top,
-              horizontalFirst: false,
-              desiredMaxRows: 5,
-              cellPadding: new EdgeInsets.only(right: 10.0, bottom: 5.0),
-              entryTextStyle: charts.TextStyleSpec(fontSize: 10),
-            )
-          ],
-        ),
+          Flexible(
+            flex: 7,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: LineChart(
+                LineChartData(
+                  minX: (minX.round()).toDouble(),
+                  maxX: (maxX.round()).toDouble(),
+                  minY: roundDown(minY.round()).toDouble(),
+                  maxY: roundUp(maxY.round()).toDouble(),
+                  lineBarsData: data,
+                  gridData: FlGridData(
+                    horizontalInterval: 25,
+                    verticalInterval: 5,
+                  ),
+                  borderData: FlBorderData(
+                    border: Border(
+                      left: BorderSide.none,
+                      bottom: BorderSide(
+                        color: Colors.black,
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  titlesData: FlTitlesData(
+                    show: true,
+                    leftTitles: SideTitles(
+                      showTitles: true,
+                      interval: 25,
+                    ),
+                    bottomTitles: SideTitles(
+                      showTitles: true,
+                      interval: 5,
+                      getTitles: (double d) {
+                        return d.toString();
+                      },
+                    ),
+                  ),
+                  axisTitleData: FlAxisTitleData(
+                    show: true,
+                    leftTitle: AxisTitle(
+                      showTitle: true,
+                      titleText: 'Stat',
+                      textStyle: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                    bottomTitle: AxisTitle(
+                      showTitle: true,
+                      titleText: 'Year',
+                      textStyle: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -315,4 +438,69 @@ class LinearStats {
   final double stat;
 
   LinearStats(this.year, this.stat);
+}
+
+class LineChartLegend extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    print(MediaQuery.of(context).size.height);
+    return Container(
+      height: MediaQuery.of(context).size.height / 8,
+      color: Colors.orangeAccent,
+      child: GridView.count(
+        shrinkWrap: true,
+        crossAxisCount: 2,
+        mainAxisSpacing: 0,
+        crossAxisSpacing: 0,
+        children: [
+          LineChartLegendItem(text: 'OPR', color: Colors.blue),
+          LineChartLegendItem(text: 'DPR', color: Colors.red),
+          LineChartLegendItem(text: 'CCWM', color: Colors.green),
+          LineChartLegendItem(text: 'Win Rate', color: Colors.black),
+          LineChartLegendItem(text: 'CP', color: Colors.purple),
+          LineChartLegendItem(text: 'Predicted OPR', color: Colors.blue),
+          LineChartLegendItem(text: 'Predicted DPR', color: Colors.red),
+          LineChartLegendItem(text: 'Predicted CCWM', color: Colors.green),
+          LineChartLegendItem(text: 'Predicted Win Rate', color: Colors.black),
+          LineChartLegendItem(text: 'Predicted CP', color: Colors.purple),
+        ],
+      ),
+    );
+  }
+}
+
+class LineChartLegendItem extends StatelessWidget {
+  final String text;
+  final Color color;
+
+  LineChartLegendItem({@required this.text, @required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    print('here');
+    print(MediaQuery.of(context).size.height / 10);
+    return SizedBox(
+      height: MediaQuery.of(context).size.height / 10,
+      child: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            CircleAvatar(
+              foregroundColor: color,
+              backgroundColor: color,
+              child: Container(),
+              radius: 20,
+            ),
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: 12,
+              ),
+              textAlign: TextAlign.center,
+            )
+          ],
+        ),
+      ),
+    );
+  }
 }

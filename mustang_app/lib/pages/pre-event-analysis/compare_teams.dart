@@ -1,4 +1,4 @@
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:mustang_app/components/line_chart_widget.dart';
@@ -17,7 +17,7 @@ class CompareTeams extends StatefulWidget {
 class _CompareTeamsState extends State<CompareTeams> {
   TeamStatistic _teamStatistic1, _teamStatistic2;
   GetStatistics getStatistics = new GetStatistics();
-  Map<DataType, List<charts.Series<LinearStats, DateTime>>> data;
+  Map<DataType, List<LineChartBarData>> data;
   bool _loading = true;
 
   Future<void> _onInit() async {
@@ -31,7 +31,7 @@ class _CompareTeamsState extends State<CompareTeams> {
 
   Widget buildCard(DataType dataType) {
     String type;
-    List<charts.Series<LinearStats, DateTime>> data = this.data[dataType];
+    List<LineChartBarData> data = this.data[dataType];
     double team1avg, team2avg;
     switch (dataType) {
       case DataType.OPR:
