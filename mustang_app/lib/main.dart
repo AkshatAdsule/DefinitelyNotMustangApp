@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mustang_app/backend/setup_service.dart';
-import 'package:mustang_app/backend/auth_service.dart';
-import 'package:mustang_app/components/all_data_display_per_match.dart';
-import 'package:mustang_app/pages/all_data_display.dart';
-import 'exports/pages.dart';
+import 'package:mustang_app/services/setup_service.dart';
+import 'package:mustang_app/services/auth_service.dart';
+import 'pages/pages.dart';
 import 'utils/orientation_helpers.dart';
 import 'package:provider/provider.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,8 +32,8 @@ class MyApp extends StatelessWidget {
         nextPage = Login();
         orientation = ScreenOrientation.portraitOnly;
         break;
-      case HomePage.route:
-        nextPage = HomePage();
+      case Home.route:
+        nextPage = Home();
         orientation = ScreenOrientation.portraitOnly;
         break;
       case Scouter.route:
@@ -93,8 +90,8 @@ class MyApp extends StatelessWidget {
         nextPage = SearchPage();
         orientation = ScreenOrientation.portraitOnly;
         break;
-      case GlossaryPage.route:
-        nextPage = GlossaryPage();
+      case Glossary.route:
+        nextPage = Glossary();
         orientation = ScreenOrientation.portraitOnly;
         break;
       // case TeamInfoDisplay.route:
@@ -121,7 +118,7 @@ class MyApp extends StatelessWidget {
         orientation = ScreenOrientation.portraitOnly;
         break;
       default:
-        nextPage = HomePage();
+        nextPage = Home();
         orientation = ScreenOrientation.portraitOnly;
         break;
     }
@@ -152,7 +149,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.green,
         ),
-        home: HomePage(),
+        home: Home(),
         debugShowCheckedModeBanner: false,
         initialRoute: Splash.route,
         navigatorObservers: [_observer],

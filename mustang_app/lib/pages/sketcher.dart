@@ -1,12 +1,11 @@
 import 'dart:io';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:mustang_app/components/screen.dart';
-import 'package:mustang_app/exports/pages.dart';
+import 'package:mustang_app/components/shared/screen.dart';
+import 'home.dart';
 
 class SketchPage extends StatefulWidget {
   static const String route = './Sketcher';
@@ -122,7 +121,7 @@ class _SketchPageState extends State<SketchPage> {
             backgroundColor: Colors.green,
             child: Icon(Icons.exit_to_app),
             onTap: () {
-              Navigator.pushNamed(context, HomePage.route);
+              Navigator.pushNamed(context, Home.route);
             },
           ),
         ],

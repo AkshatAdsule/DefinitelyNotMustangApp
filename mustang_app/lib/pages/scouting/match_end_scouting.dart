@@ -2,12 +2,12 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mustang_app/backend/auth_service.dart';
-import 'package:mustang_app/backend/game_action.dart';
-import 'package:mustang_app/components/screen.dart';
+import 'package:mustang_app/services/auth_service.dart';
+import 'package:mustang_app/models/game_action.dart';
+import 'package:mustang_app/components/shared/screen.dart';
 import 'package:provider/provider.dart';
-import '../../backend/match.dart';
-import '../../backend/scouting_operations.dart';
+import '../../models/match.dart';
+import '../../services/scouting_operations.dart';
 import 'post_scouter.dart';
 
 // ignore: must_be_immutable

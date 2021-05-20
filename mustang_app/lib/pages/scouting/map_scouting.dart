@@ -1,27 +1,27 @@
 import 'dart:async';
-import 'package:mustang_app/backend/match.dart';
-import 'package:mustang_app/components/animated_push_line.dart';
-import 'package:mustang_app/components/climb_scouting_overlay.dart';
-import 'package:mustang_app/components/climb_scouting_side.dart';
-import 'package:mustang_app/components/defense_scouting_overlay.dart';
-import 'package:mustang_app/components/mode_toggle.dart';
-import 'package:mustang_app/components/offense_scouting_overlay.dart';
-import 'package:mustang_app/components/scouting_zone_grid.dart';
-import 'package:mustang_app/components/stopwatch_display.dart';
+import 'package:mustang_app/constants/game_constants.dart';
+import 'package:mustang_app/constants/preferences.dart';
+import 'package:mustang_app/models/match.dart';
+import 'package:mustang_app/components/map_scouting/animated_push_line.dart';
+import 'package:mustang_app/components/map_scouting/climb_scouting_overlay.dart';
+import 'package:mustang_app/components/map_scouting/climb_scouting_side.dart';
+import 'package:mustang_app/components/map_scouting/defense_scouting_overlay.dart';
+import 'package:mustang_app/components/inputs/mode_toggle.dart';
+import 'package:mustang_app/components/map_scouting/offense_scouting_overlay.dart';
+import 'package:mustang_app/components/shared/map/scouting_zone_grid.dart';
+import 'package:mustang_app/components/utils/stopwatch_display.dart';
 import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
 import 'package:flutter/material.dart';
-import 'package:mustang_app/components/blur_overlay.dart';
-import 'package:mustang_app/backend/game_action.dart';
-import 'package:mustang_app/components/defense_scouting_side.dart';
-import 'package:mustang_app/components/game_map.dart';
-import 'package:mustang_app/components/offense_scouting_side.dart';
-import 'package:mustang_app/components/screen.dart';
-import 'package:mustang_app/components/selectable_zone_grid.dart';
-import 'package:mustang_app/components/zone_grid.dart';
-import 'package:mustang_app/constants/constants.dart';
-import 'package:mustang_app/exports/pages.dart';
-import '../../components/game_buttons.dart' as game_button;
+import 'package:mustang_app/components/map_scouting/blur_overlay.dart';
+import 'package:mustang_app/models/game_action.dart';
+import 'package:mustang_app/components/map_scouting/defense_scouting_side.dart';
+import 'package:mustang_app/components/shared/map/game_map.dart';
+import 'package:mustang_app/components/map_scouting/offense_scouting_side.dart';
+import 'package:mustang_app/components/shared/screen.dart';
+import 'package:mustang_app/components/shared/map/zone_grid.dart';
+import '../../components/inputs/game_buttons.dart' as game_button;
+import 'match_end_scouting.dart';
 
 // ignore: must_be_immutable
 class MapScouting extends StatefulWidget {
@@ -112,23 +112,23 @@ class MapScoutingState extends State<MapScouting> {
   }
 
   void _initTimers() {
-    if (stopwatch.elapsedMilliseconds <= Constants.endgameStartMillis) {
+    if (stopwatch.elapsedMilliseconds <= GameConstants.endgameStartMillis) {
       _endgameTimer = new Timer(
-          Duration(milliseconds: Constants.endgameStartMillis),
+          Duration(milliseconds: GameConstants.endgameStartMillis),
           () => setState(() {
                 _bgColor = Colors.red.shade300;
               }));
     }
-    if (stopwatch.elapsedMilliseconds <= Constants.matchEndMillis) {
+    if (stopwatch.elapsedMilliseconds <= GameConstants.matchEndMillis) {
       _endTimer = new Timer(
-          Duration(milliseconds: Constants.matchEndMillis),
+          Duration(milliseconds: GameConstants.matchEndMillis),
           () => setState(() {
                 _bgColor = Colors.white;
               }));
     }
-    if (stopwatch.elapsedMilliseconds <= Constants.teleopStartMillis) {
+    if (stopwatch.elapsedMilliseconds <= GameConstants.teleopStartMillis) {
       _teleopTimer = new Timer(
-          Duration(milliseconds: Constants.teleopStartMillis),
+          Duration(milliseconds: GameConstants.teleopStartMillis),
           () => setState(() {
                 _bgColor = Colors.orange.shade300;
               }));
@@ -184,7 +184,7 @@ class MapScoutingState extends State<MapScouting> {
   }
 
   Future<void> vibrate() async {
-    if (Constants.enableVibrations && await Vibration.hasVibrator()) {
+    if (Preferences.enableVibrations && await Vibration.hasVibrator()) {
       if (await Vibration.hasCustomVibrationsSupport()) {
         if (await Vibration.hasAmplitudeControl()) {
           Vibration.vibrate(
@@ -240,7 +240,7 @@ class MapScoutingState extends State<MapScouting> {
     actions.add(
       GameAction(
         actionType,
-        sliderLastChanged.toDouble() ?? Constants.endgameStartMillis,
+        sliderLastChanged.toDouble() ?? GameConstants.endgameStartMillis,
         actionType == ActionType.OTHER_CLIMB_MISS
             ? zoneGridKey.currentState.x
             : sliderVal,
@@ -491,7 +491,7 @@ class FinishGameButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return stopwatch.elapsedMilliseconds >= Constants.matchEndMillis
+    return stopwatch.elapsedMilliseconds >= GameConstants.matchEndMillis
         ? Container(
             margin: EdgeInsets.only(
               right: 10,

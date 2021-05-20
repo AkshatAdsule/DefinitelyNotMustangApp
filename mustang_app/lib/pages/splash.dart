@@ -1,14 +1,15 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mustang_app/backend/user.dart';
-import 'package:mustang_app/backend/auth_service.dart';
-import 'package:mustang_app/components/logo.dart';
-import 'package:mustang_app/components/screen.dart';
-import 'package:mustang_app/exports/pages.dart';
+import 'package:mustang_app/models/user.dart';
+import 'package:mustang_app/services/auth_service.dart';
+import 'package:mustang_app/components/shared/logo.dart';
+import 'package:mustang_app/components/shared/screen.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
+
+import 'home.dart';
+import 'onboarding/login.dart';
 
 class Splash extends StatefulWidget {
   static const String route = '/splash';
@@ -52,7 +53,7 @@ class _SplashState extends State<Splash> {
     if (_user == null) {
       Navigator.of(context).pushNamed(Login.route);
     } else {
-      Navigator.of(context).pushNamed(HomePage.route);
+      Navigator.of(context).pushNamed(Home.route);
     }
   }
 
@@ -84,7 +85,7 @@ class _SplashState extends State<Splash> {
               },
               onEnd: () {
                 Navigator.of(context)
-                    .pushNamedAndRemoveUntil(HomePage.route, (route) => false);
+                    .pushNamedAndRemoveUntil(Home.route, (route) => false);
                 // Use below code block for production or dev, above for demo
                 /*
                 if (_user == null) {

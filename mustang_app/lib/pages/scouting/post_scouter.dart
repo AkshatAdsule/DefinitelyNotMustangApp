@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mustang_app/components/screen.dart';
-import '../calendar.dart';
+import 'package:mustang_app/components/shared/screen.dart';
 import 'scouter.dart';
 
 class PostScouter extends StatelessWidget {

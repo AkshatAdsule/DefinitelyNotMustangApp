@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'team_statistic.dart';
+import 'package:mustang_app/models/team_statistic.dart';
 
 class Event {
   String eventCode;
