@@ -1,6 +1,6 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 import 'package:mustang_app/components/line_chart_widget.dart';
 import 'package:mustang_app/components/screen.dart';
 import 'package:mustang_app/utils/team_statistic.dart';
@@ -154,8 +154,8 @@ class _CompareTeamsState extends State<CompareTeams> {
   Widget build(BuildContext context) {
     return Screen(
       title: "Comparing ${widget.team1} and ${widget.team2}",
-      child: ModalProgressHUD(
-        inAsyncCall: _loading,
+      child: LoadingOverlay(
+        isLoading: _loading,
         child: ListView(
           children: _loading
               ? []
