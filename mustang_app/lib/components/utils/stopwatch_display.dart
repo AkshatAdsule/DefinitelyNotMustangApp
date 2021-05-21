@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class StopwatchDisplay extends StatefulWidget {
+  StopwatchDisplay({Key key}) : super(key: key);
   @override
   _StopwatchDisplayState createState() => _StopwatchDisplayState();
 }
@@ -11,17 +12,16 @@ class _StopwatchDisplayState extends State<StopwatchDisplay> {
   Stopwatch _stopwatch;
   Timer _refreshTimer;
 
-  _StopwatchDisplayState() {
+  _StopwatchDisplayState() {}
+
+  @override
+  void initState() {
+    super.initState();
     _stopwatch = new Stopwatch();
     _stopwatch.start();
     _refreshTimer = Timer.periodic(Duration(milliseconds: 30), (timer) {
       setState(() {});
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override

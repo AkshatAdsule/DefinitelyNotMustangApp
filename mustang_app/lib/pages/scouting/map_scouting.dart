@@ -70,7 +70,7 @@ class MapScoutingState extends State<MapScouting> {
   int prevX = -1, prevY = -1, pushStartX = -1, pushStartY = -1;
   List<bool> toggleModes = [true, false, false];
   MatchType _matchType;
-
+  final GlobalKey stopwatchKey = GlobalKey();
   GlobalKey<MapScoutingState> mapScoutingKey;
   final GlobalKey<ZoneGridState> zoneGridKey = GlobalKey<ZoneGridState>();
   final GlobalKey<AnimatedPushLineState> pushLineKey =
@@ -314,6 +314,7 @@ class MapScoutingState extends State<MapScouting> {
   Widget build(BuildContext context) {
     return Screen(
       title: 'Map Scouting',
+      color: _bgColor,
       key: UniqueKey(),
       includeBottomNav: false,
       headerButtons: [
@@ -321,7 +322,11 @@ class MapScoutingState extends State<MapScouting> {
           margin: EdgeInsets.only(
             right: 10,
           ),
-          child: startedScouting ? StopwatchDisplay() : Container(),
+          child: startedScouting
+              ? StopwatchDisplay(
+                  key: stopwatchKey,
+                )
+              : Container(),
         ),
         Container(
           margin: EdgeInsets.only(
@@ -357,7 +362,6 @@ class MapScoutingState extends State<MapScouting> {
           ),
         ],
         child: Container(
-          color: _bgColor,
           child: BlurOverlay(
             unlocked: startedScouting,
             background: GameMap(

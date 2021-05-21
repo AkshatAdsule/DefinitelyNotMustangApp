@@ -12,6 +12,7 @@ class Screen extends StatelessWidget {
   bool left, right, top, bottom;
   static NavDrawer drawer = NavDrawer();
   Key key;
+  Color color;
 
   Screen({
     this.child,
@@ -25,6 +26,7 @@ class Screen extends StatelessWidget {
     this.bottom = true,
     this.floatingActionButton,
     this.key,
+    this.color,
   });
 
   @override
@@ -38,14 +40,17 @@ class Screen extends StatelessWidget {
               buttons: headerButtons ?? [],
             )
           : null,
-      body: SafeArea(
-        bottom: bottom,
-        top: top,
-        left: left,
-        right: right,
-        child: Container(
-          child: child,
-          key: key,
+      body: Container(
+        color: this.color ?? Theme.of(context).canvasColor,
+        child: SafeArea(
+          bottom: bottom,
+          top: top,
+          left: left,
+          right: right,
+          child: Container(
+            child: child,
+            key: key,
+          ),
         ),
       ),
       drawer: drawer,
