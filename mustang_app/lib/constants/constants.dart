@@ -1,3 +1,5 @@
+import 'package:mustang_app/utils/robot.dart';
+
 class Constants {
   //not a constant but needs to be accessible
   static int fieldColor = 0;
@@ -23,24 +25,67 @@ class Constants {
     2020: 2,
   };
 
+  static final Map<int, Robot> robots = {
+    2013: Robot(
+      drivebaseType: DriveBaseType.TANK,
+      outtakeType: OuttakeType.SHOOTER,
+      secondarySubsystems: [],
+    ),
+    2014: Robot(
+      drivebaseType: DriveBaseType.TANK,
+      outtakeType: OuttakeType.SHOOTER,
+      secondarySubsystems: [],
+    ),
+    2015: Robot(
+      drivebaseType: DriveBaseType.TANK,
+      outtakeType: OuttakeType.SHOOTER,
+      secondarySubsystems: [SecondarySubsystem.ELEVATOR],
+    ),
+    2016: Robot(
+      drivebaseType: DriveBaseType.TANK,
+      outtakeType: OuttakeType.SHOOTER,
+      secondarySubsystems: [],
+    ),
+    2017: Robot(
+      drivebaseType: DriveBaseType.TANK,
+      outtakeType: OuttakeType.SHOOTER,
+      secondarySubsystems: [
+        SecondarySubsystem.CLIMBER,
+        SecondarySubsystem.AUTONOMOUS
+      ],
+    ),
+    2018: Robot(
+      drivebaseType: DriveBaseType.TANK,
+      outtakeType: OuttakeType.SHOOTER,
+      secondarySubsystems: [
+        SecondarySubsystem.CLIMBER,
+        SecondarySubsystem.ELEVATOR,
+        SecondarySubsystem.AUTONOMOUS
+      ],
+    ),
+    2019: Robot(
+      drivebaseType: DriveBaseType.TANK,
+      outtakeType: OuttakeType.CLAW,
+      secondarySubsystems: [
+        SecondarySubsystem.CLIMBER,
+        SecondarySubsystem.ELEVATOR,
+        SecondarySubsystem.COLOR_PICKER,
+        SecondarySubsystem.AUTONOMOUS
+      ],
+    ),
+    2020: Robot(
+        drivebaseType: DriveBaseType.TANK,
+        outtakeType: OuttakeType.SHOOTER,
+        secondarySubsystems: [
+          SecondarySubsystem.AUTONOMOUS,
+          SecondarySubsystem.VISION,
+          SecondarySubsystem.CLIMBER,
+          SecondarySubsystem.AUTONOMOUS
+        ])
+  };
+
   // Game length refers to auton + teleop
   static const int GAME_LENGTH = 150; //seconds
-
-  static const Map<int, List<RobotFeatures>> ROBOT_FEATURES = {
-    2013: [RobotFeatures.SHOOTER],
-    2014: [RobotFeatures.SHOOTER],
-    2015: [RobotFeatures.ELEVATOR],
-    2016: [RobotFeatures.SHOOTER],
-    2017: [RobotFeatures.CLIMBER, RobotFeatures.SHOOTER],
-    2018: [RobotFeatures.CLIMBER, RobotFeatures.ELEVATOR],
-    2019: [
-      RobotFeatures.SHOOTER,
-      RobotFeatures.ELEVATOR,
-      RobotFeatures.CLAW,
-      RobotFeatures.CLIMBER
-    ],
-    2020: [RobotFeatures.SHOOTER, RobotFeatures.CLIMBER]
-  };
 
   // Points scored by climbing
   static const Map<int, int> CLIMB_POINTS = {

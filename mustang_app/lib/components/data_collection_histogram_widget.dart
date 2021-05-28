@@ -46,7 +46,8 @@ class DataCollectionHistogramWidget extends StatelessWidget {
   }
 
   /// Create one series with sample hard coded data.
-  static Map<DataType, List<charts.Series<HistogramStats, String>>> createData(DataCollectionYearData yearData) {
+  static Map<DataType, List<charts.Series<HistogramStats, String>>> createData(
+      DataCollectionYearData yearData) {
     List<HistogramStats> gamePiecesAttemptedData = [];
     List<HistogramStats> gamePiecesScoredData = [];
     List<DataCollectionMatchData> matches = yearData.data;
@@ -56,17 +57,17 @@ class DataCollectionHistogramWidget extends StatelessWidget {
     int scoredMin = 1000;
     int scoredMax = 0;
     for (DataCollectionMatchData matchData in matches) {
-      print("Points scored: ${matchData.gamePiecesScored}");
       if (matchData.gamePiecesAttempted < attemptedMin) {
         attemptedMin = matchData.gamePiecesAttempted;
-      } if (matchData.gamePiecesAttempted > attemptedMax) {
+      }
+      if (matchData.gamePiecesAttempted > attemptedMax) {
         attemptedMax = matchData.gamePiecesAttempted;
       }
 
       if (matchData.gamePiecesScored < scoredMin) {
         scoredMin = matchData.gamePiecesScored;
-      } if (matchData.gamePiecesScored > scoredMax) {
-        print("New max: ${matchData.gamePiecesScored}");
+      }
+      if (matchData.gamePiecesScored > scoredMax) {
         scoredMax = matchData.gamePiecesScored;
       }
     }
@@ -77,40 +78,41 @@ class DataCollectionHistogramWidget extends StatelessWidget {
     int scoredBinWidth;
     if (attemptedMax - attemptedMin + 1 <= 12) {
       gamePiecesAttemptedFrequencies =
-        new List.filled(attemptedMax - attemptedMin + 1, 0, growable: false);
-        attemptedBinWidth = 1;
+          new List.filled(attemptedMax - attemptedMin + 1, 0, growable: false);
+      attemptedBinWidth = 1;
     } else {
       gamePiecesAttemptedFrequencies = new List.filled(12, 0, growable: false);
-      attemptedBinWidth = num.parse((((attemptedMax - attemptedMin)/12) + 0.5).toStringAsFixed(0));
+      attemptedBinWidth = num.parse(
+          (((attemptedMax - attemptedMin) / 12) + 0.5).toStringAsFixed(0));
     }
 
     if (scoredMax - scoredMin + 1 <= 12) {
       gamePiecesScoredFrequencies =
-        new List.filled(scoredMax - scoredMin + 1, 0, growable: false);
-        scoredBinWidth = 1;
+          new List.filled(scoredMax - scoredMin + 1, 0, growable: false);
+      scoredBinWidth = 1;
     } else {
       gamePiecesScoredFrequencies = new List.filled(12, 0, growable: false);
-      scoredBinWidth = num.parse((((scoredMax - scoredMin)/12) + 0.5).toStringAsFixed(0));
+      scoredBinWidth =
+          num.parse((((scoredMax - scoredMin) / 12) + 0.5).toStringAsFixed(0));
     }
-    
-    
+
     for (DataCollectionMatchData matchData in matches) {
-      print(matchData.gamePiecesAttempted - attemptedMin);
-      gamePiecesAttemptedFrequencies[
-          num.parse(((matchData.gamePiecesAttempted - attemptedMin)/attemptedBinWidth).toStringAsFixed(0))] += 1;
-      print("Value: ${scoredMin} out of ${gamePiecesScoredFrequencies.length}");
-      gamePiecesScoredFrequencies[
-        num.parse(((matchData.gamePiecesScored - scoredMin)/scoredBinWidth).toStringAsFixed(0))] += 1;
+      gamePiecesAttemptedFrequencies[num.parse(
+          ((matchData.gamePiecesAttempted - attemptedMin) / attemptedBinWidth)
+              .toStringAsFixed(0))] += 1;
+      gamePiecesScoredFrequencies[num.parse(
+          ((matchData.gamePiecesScored - scoredMin) / scoredBinWidth)
+              .toStringAsFixed(0))] += 1;
     }
 
     for (int i = 0; i < gamePiecesAttemptedFrequencies.length; i++) {
-      int numOfGamePieces = i*attemptedBinWidth + attemptedMin;
+      int numOfGamePieces = i * attemptedBinWidth + attemptedMin;
       gamePiecesAttemptedData.add(new HistogramStats(
           numOfGamePieces.toString(), gamePiecesAttemptedFrequencies[i]));
     }
 
     for (int i = 0; i < gamePiecesScoredFrequencies.length; i++) {
-      int numOfGamePieces = i*scoredBinWidth + scoredMin;
+      int numOfGamePieces = i * scoredBinWidth + scoredMin;
       gamePiecesScoredData.add(new HistogramStats(
           numOfGamePieces.toString(), gamePiecesScoredFrequencies[i]));
     }
@@ -123,8 +125,8 @@ class DataCollectionHistogramWidget extends StatelessWidget {
           domainFn: (HistogramStats stats, _) => stats.numOfGamePieces,
           measureFn: (HistogramStats stats, _) => stats.frequency,
           data: gamePiecesAttemptedData,
-        ), 
-      ], 
+        ),
+      ],
       DataType.SCORED: [
         new charts.Series<HistogramStats, String>(
           id: 'Scored Game Pieces',

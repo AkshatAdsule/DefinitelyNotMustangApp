@@ -64,6 +64,7 @@ class GetStatistics {
         print(
             "----------------- FAILED: ${event['event_type_string']} -------------------");
       }
+      print(event['key']);
       events.add(new Event(
           eventCode: event['key'],
           year: event['year'],
@@ -276,7 +277,7 @@ class GetStatistics {
   Future<TeamStatistic> getCumulativeStats(String team) async {
     List<EventStatistic> eventStats = [];
     var doc = await _teams.doc(team).get();
-    if (doc.exists && doc.data()["DATA_VERSION"] == _DATA_VERSION) {
+    if (doc.exists && doc.data()["DATA_VERSION"] == _DATA_VERSION && false) {
       var docData = doc.data();
       Map<String, dynamic> dataMap =
           docData.map((key, value) => MapEntry(key, value));

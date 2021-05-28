@@ -6,8 +6,8 @@ import 'package:mustang_app/utils/data_collection_data.dart';
 class View670GraphScreen extends StatelessWidget {
   final List<DataCollectionYearData> statistic;
 
-  View670GraphScreen({this.statistic
-  }) {print(this.statistic);}
+  View670GraphScreen({this.statistic});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

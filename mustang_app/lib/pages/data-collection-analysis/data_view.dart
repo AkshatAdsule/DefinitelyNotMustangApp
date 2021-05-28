@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mustang_app/components/data_collection_tile.dart';
 import 'package:mustang_app/constants/constants.dart';
+import 'package:mustang_app/pages/data-collection-analysis/robot_data.dart';
 import 'package:mustang_app/pages/data-collection-analysis/view_graph_screen.dart';
 import 'package:mustang_app/utils/data_collection_data.dart';
+import 'package:mustang_app/utils/robot.dart';
 
 class DataViewScreen extends StatefulWidget {
   static const route = '/data_view';
@@ -13,11 +15,17 @@ class DataViewScreen extends StatefulWidget {
 }
 
 class _DataViewScreenState extends State<DataViewScreen> {
-  Map<RobotFeatures, double> avgPointsPerFeature = {
-    RobotFeatures.SHOOTER: 0,
-    RobotFeatures.ELEVATOR: 0,
-    RobotFeatures.CLIMBER: 0,
-    RobotFeatures.CLAW: 0
+  Map<OuttakeType, double> avgPointsPerOuttakeType = {
+    OuttakeType.SHOOTER: 0,
+    OuttakeType.CLAW: 0,
+  };
+
+  Map<SecondarySubsystem, double> avgPointsPerSecondarySubsystem = {
+    SecondarySubsystem.AUTONOMOUS: 0,
+    SecondarySubsystem.ELEVATOR: 0,
+    SecondarySubsystem.CLIMBER: 0,
+    SecondarySubsystem.COLOR_PICKER: 0,
+    SecondarySubsystem.VISION: 0,
   };
 
   List<DataCollectionYearData> data = [];
@@ -25,11 +33,17 @@ class _DataViewScreenState extends State<DataViewScreen> {
   Future<List<DataCollectionYearData>> getData() async {
     List<DataCollectionYearData> yearData = [];
 
-    Map<RobotFeatures, List<double>> totalPointsPerFeature = {
-      RobotFeatures.SHOOTER: [],
-      RobotFeatures.ELEVATOR: [],
-      RobotFeatures.CLIMBER: [],
-      RobotFeatures.CLAW: [],
+    Map<OuttakeType, List<double>> totalPointsPerOuttakeType = {
+      OuttakeType.SHOOTER: [],
+      OuttakeType.CLAW: [],
+    };
+
+    Map<SecondarySubsystem, List<double>> totalPointsPerSecondarySubsystem = {
+      SecondarySubsystem.AUTONOMOUS: [],
+      SecondarySubsystem.ELEVATOR: [],
+      SecondarySubsystem.CLIMBER: [],
+      SecondarySubsystem.COLOR_PICKER: [],
+      SecondarySubsystem.VISION: [],
     };
 
     for (int i = 0; i <= 7; i++) {
@@ -59,30 +73,30 @@ class _DataViewScreenState extends State<DataViewScreen> {
         endRank: 10,
       );
 
-      for (RobotFeatures feature in Constants.ROBOT_FEATURES[year.year]) {
-        totalPointsPerFeature[feature]
+      for (SecondarySubsystem feature
+          in Constants.robots[year.year].secondarySubsystems) {
+        totalPointsPerSecondarySubsystem[feature]
             .add(currentYearData.avgData.pointsScored);
       }
+      totalPointsPerOuttakeType[Constants.robots[year.year].outtakeType]
+          .add(currentYearData.avgData.pointsScored);
 
       yearData.add(
         currentYearData,
       );
     }
 
-    avgPointsPerFeature = {
-      RobotFeatures.CLAW:
-          totalPointsPerFeature[RobotFeatures.CLAW].fold(0, (p, c) => p + c) /
-              totalPointsPerFeature[RobotFeatures.CLAW].length,
-      RobotFeatures.CLIMBER: totalPointsPerFeature[RobotFeatures.CLIMBER]
-              .fold(0, (p, c) => p + c) /
-          totalPointsPerFeature[RobotFeatures.CLIMBER].length,
-      RobotFeatures.ELEVATOR: totalPointsPerFeature[RobotFeatures.ELEVATOR]
-              .fold(0, (p, c) => p + c) /
-          totalPointsPerFeature[RobotFeatures.ELEVATOR].length,
-      RobotFeatures.SHOOTER: totalPointsPerFeature[RobotFeatures.SHOOTER]
-              .fold(0, (p, c) => p + c) /
-          totalPointsPerFeature[RobotFeatures.SHOOTER].length,
-    };
+    for (SecondarySubsystem subsystem in SecondarySubsystem.values) {
+      avgPointsPerSecondarySubsystem[subsystem] =
+          totalPointsPerSecondarySubsystem[subsystem].fold(0, (p, c) => p + c) /
+              totalPointsPerSecondarySubsystem[subsystem].length;
+    }
+
+    for (OuttakeType type in OuttakeType.values) {
+      avgPointsPerOuttakeType[type] =
+          totalPointsPerOuttakeType[type].fold(0, (p, c) => p + c) /
+              totalPointsPerOuttakeType[type].length;
+    }
 
     return yearData;
   }
@@ -109,30 +123,6 @@ class _DataViewScreenState extends State<DataViewScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "On average...",
-                  style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "Robots that had claws earned ${avgPointsPerFeature[RobotFeatures.CLAW].toStringAsFixed(2)} points",
-                ),
-                Text(
-                  "Robots that had elevators earned ${avgPointsPerFeature[RobotFeatures.ELEVATOR].toStringAsFixed(2)} points",
-                ),
-                Text(
-                  "Robots that had climbers earned ${avgPointsPerFeature[RobotFeatures.CLIMBER].toStringAsFixed(2)} points",
-                ),
-                Text(
-                  "Robots that had shooters earned ${avgPointsPerFeature[RobotFeatures.SHOOTER].toStringAsFixed(2)} points",
-                ),
-              ],
-            ),
-          ),
-          Padding(
             padding: const EdgeInsets.only(left: 15.0, top: 10),
             child: Text(
               "Year Data",
@@ -152,21 +142,44 @@ class _DataViewScreenState extends State<DataViewScreen> {
                 ),
           Expanded(
             child: Center(
-              child: ElevatedButton(
-                child: Text(
-                  "View Overall Data",
-                ),
-                onPressed: data.length > 0
-                    ? () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                View670GraphScreen(statistic: data),
-                          ),
-                        );
-                      }
-                    : null,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    child: Text(
+                      "View Overall Data",
+                    ),
+                    onPressed: data.length > 0
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    View670GraphScreen(statistic: data),
+                              ),
+                            );
+                          }
+                        : null,
+                  ),
+                  ElevatedButton(
+                    child: Text("View Robot Data"),
+                    onPressed: data.length > 0
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RobotDataScreen(
+                                  avgPointsPerOuttakeType:
+                                      avgPointsPerOuttakeType,
+                                  avgPointsPerSecondarySubsystem:
+                                      avgPointsPerSecondarySubsystem,
+                                ),
+                              ),
+                            );
+                          }
+                        : null,
+                  ),
+                ],
               ),
             ),
           ),

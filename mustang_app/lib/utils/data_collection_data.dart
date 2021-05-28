@@ -50,8 +50,6 @@ class DataCollectionYearData {
       pointsScored =
           Constants.GAME_PIECE_VALUE[year.year] * avgGamePiecesScored;
     } catch (e) {
-      print(avgGamePiecesScored);
-
       pointsScored = 0;
     }
 
@@ -111,7 +109,6 @@ class DataCollectionMatchData {
     try {
       gamePiecesAttempted = row[1];
     } catch (e) {
-      print("Invalid input, defaulting to 0 game pieces attempted");
       gamePiecesAttempted = 0;
       failCount++;
     }
@@ -119,7 +116,6 @@ class DataCollectionMatchData {
     try {
       gamePiecesScored = row[2];
     } catch (e) {
-      print("Invalid input, defaulting to 0 game pieces scored");
       gamePiecesScored = 0;
       failCount++;
     }
@@ -144,7 +140,6 @@ class DataCollectionMatchData {
         climbed = false;
       }
     } catch (e) {
-      print("Invalid input, defaulting to no climb");
       climbed = false;
       failCount++;
     }
@@ -160,7 +155,6 @@ class DataCollectionMatchData {
     try {
       driverSkill = row[6];
     } catch (e) {
-      print("Invalid input, defaulting to 0 driver skill");
       driverSkill = 0;
       failCount++;
     }
@@ -168,7 +162,6 @@ class DataCollectionMatchData {
     try {
       rankingPoints = row[7];
     } catch (e) {
-      print("Invalid input, defaulting to 0 ranking points");
       rankingPoints = 0;
       failCount++;
     }
@@ -181,7 +174,6 @@ class DataCollectionMatchData {
     } else if (row[9] == "T" || row[10] == 'T') {
       matchResult = MatchResult.Tie;
     } else {
-      print("====== INVALID MATCH RESULT; ${row[9]} and ${row[10]} ======");
       failCount++;
     }
 
