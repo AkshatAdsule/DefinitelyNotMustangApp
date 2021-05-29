@@ -64,6 +64,7 @@ class GetStatistics {
         print(
             "----------------- FAILED: ${event['event_type_string']} -------------------");
       }
+      print(event['key']);
       events.add(new Event(
           eventCode: event['key'],
           year: event['year'],
