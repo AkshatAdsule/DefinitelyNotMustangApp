@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/pages/data-collection-analysis/data_view.dart';
 import 'package:mustang_app/pages/home.dart';
 import 'package:mustang_app/pages/pre_event_analysis/input_screen.dart';
 import '../../pages/sketcher.dart';
@@ -16,6 +17,7 @@ class BottomNavBar extends BottomNavigationBar {
     InputScreen.route,
     SearchPage.route,
     Glossary.route,
+    DataViewScreen.route,
     SketchPage.route,
   ];
 
@@ -51,6 +53,10 @@ class BottomNavBar extends BottomNavigationBar {
             BottomNavigationBarItem(
               icon: Icon(Icons.account_tree),
               label: 'Links',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.dashboard_outlined),
+              label: 'Data Collection Analysis',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.edit),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/shared/logo.dart';
+import 'package:mustang_app/pages/data-collection-analysis/data_view.dart';
 import 'package:mustang_app/pages/home.dart';
 import 'package:mustang_app/pages/pre_event_analysis/input_screen.dart';
 import 'package:mustang_app/pages/scouting/scouter.dart';
@@ -15,6 +16,7 @@ class NavDrawer extends StatelessWidget {
     InputScreen.route,
     SearchPage.route,
     Glossary.route,
+    DataViewScreen.route,
     SketchPage.route,
   ];
   int _selectedIndex;
@@ -94,6 +96,14 @@ class NavDrawer extends StatelessWidget {
           ),
           NavItem(
             _selectedIndex == 5,
+            'Data Collection Analysis',
+            Icons.dashboard_outlined,
+            () {
+              navigate(context, DataViewScreen.route);
+            },
+          ),
+          NavItem(
+            _selectedIndex == 6,
             'Draw',
             Icons.edit,
             () {

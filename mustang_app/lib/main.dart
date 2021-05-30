@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/pages/data-collection-analysis/data_view.dart';
 import 'package:mustang_app/services/setup_service.dart';
 import 'package:mustang_app/services/auth_service.dart';
 import 'pages/pages.dart';
@@ -115,6 +116,10 @@ class MyApp extends StatelessWidget {
         break;
       case InputScreen.route:
         nextPage = InputScreen();
+        orientation = ScreenOrientation.portraitOnly;
+        break;
+      case DataViewScreen.route:
+        nextPage = DataViewScreen();
         orientation = ScreenOrientation.portraitOnly;
         break;
       default:
