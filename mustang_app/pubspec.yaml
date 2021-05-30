@@ -35,7 +35,8 @@ dependencies:
   youtube_player_flutter: ^8.0.0
   loading_overlay: ^0.3.0
   csv: ^5.0.0
-
+  # TODO: Change graph widgets to use fl_chart instead of charts_flutter
+  charts_flutter: ^0.10.0
   flutter:
     sdk: flutter
 
