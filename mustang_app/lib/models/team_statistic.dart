@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mustang_app/constants/preferences.dart';
+import 'package:mustang_app/constants/constants.dart';
 
 class TeamStatistic {
   String teamCode;

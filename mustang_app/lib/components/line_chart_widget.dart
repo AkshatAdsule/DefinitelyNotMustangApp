@@ -1,11 +1,10 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
-import 'package:mustang_app/utils/team_statistic.dart';
+import 'package:mustang_app/models/team_statistic.dart';
 
 enum DataType { OPR, DPR, CCWM, WINRATE, CONTRIBUTION }
 
 class LineChartWidget extends StatelessWidget {
-  
   final List<charts.Series<LinearStats, DateTime>> data;
   final double height, width;
 
@@ -48,31 +47,31 @@ class LineChartWidget extends StatelessWidget {
     for (var i = 1; i <= 2; i++) {
       predictedOprData.add(
         new LinearStats(
-          currentYear.add(Duration(days: 365*i)) ,
+          currentYear.add(Duration(days: 365 * i)),
           (stats.oprSlope + predictedOprData[i - 1].stat),
         ),
       );
       predictedDprData.add(
         new LinearStats(
-          currentYear.add(Duration(days: 365*i)) ,
+          currentYear.add(Duration(days: 365 * i)),
           (stats.dprSlope + predictedDprData[i - 1].stat),
         ),
       );
       predictedCcwmData.add(
         new LinearStats(
-          currentYear.add(Duration(days: 365*i)) ,
+          currentYear.add(Duration(days: 365 * i)),
           (stats.ccwmSlope + predictedCcwmData[i - 1].stat),
         ),
       );
       predictedWinRateData.add(
         new LinearStats(
-          currentYear.add(Duration(days: 365*i)) ,
+          currentYear.add(Duration(days: 365 * i)),
           (stats.winrateSlope + predictedWinRateData[i - 1].stat),
         ),
       );
       predictedPointContributionData.add(
         new LinearStats(
-          currentYear.add(Duration(days: 365*i)) ,
+          currentYear.add(Duration(days: 365 * i)),
           (stats.contributionSlope +
               predictedPointContributionData[i - 1].stat),
         ),
@@ -158,8 +157,8 @@ class LineChartWidget extends StatelessWidget {
     ];
   }
 
-  static Map<DataType, List<charts.Series<LinearStats, DateTime>>> createCompareData(
-      TeamStatistic team1, TeamStatistic team2) {
+  static Map<DataType, List<charts.Series<LinearStats, DateTime>>>
+      createCompareData(TeamStatistic team1, TeamStatistic team2) {
     List<LinearStats> team1OprData = [], team2OprData = [];
     List<LinearStats> team1DprData = [], team2DprData = [];
     List<LinearStats> team1CcwmData = [], team2CcwmData = [];

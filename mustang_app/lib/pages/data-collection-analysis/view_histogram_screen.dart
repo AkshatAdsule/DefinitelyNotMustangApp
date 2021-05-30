@@ -1,7 +1,7 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/data_collection_histogram_widget.dart';
-import 'package:mustang_app/components/header.dart';
+import 'package:mustang_app/components/shared/header.dart';
 import 'package:mustang_app/utils/data_collection_data.dart';
 
 class View670HistogramScreen extends StatelessWidget {

@@ -107,9 +107,10 @@ class NavDrawer extends StatelessWidget {
 }
 
 class NavItem extends StatelessWidget {
-  bool _selected;
-  String _text;
-  IconData _leading;
+  final bool _selected;
+  final String _text;
+  final IconData _leading;
+
   void Function() _onTap;
   NavItem(
     this._selected,
