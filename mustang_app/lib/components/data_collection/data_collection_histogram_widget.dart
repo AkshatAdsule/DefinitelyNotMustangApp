@@ -1,5 +1,5 @@
 /// Bar chart example
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/utils/data_collection_data.dart';
 
@@ -8,49 +8,15 @@ import '../../utils/data_collection_data.dart';
 enum GamePieceResult { ATTEMPTED, SCORED }
 
 class DataCollectionHistogramWidget extends StatelessWidget {
-  final List<charts.Series<HistogramStats, String>> data;
-  final double height, width;
+  final List<BarChartGroupData> _data;
 
-  DataCollectionHistogramWidget({this.data, this.height: 300, this.width: 500});
+  const DataCollectionHistogramWidget(this._data);
 
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: width,
-      height: height,
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: new charts.BarChart(
-          this.data,
-          animate: true,
-          behaviors: [
-            new charts.ChartTitle('Number of Game Pieces',
-                behaviorPosition: charts.BehaviorPosition.bottom,
-                titleOutsideJustification:
-                    charts.OutsideJustification.middleDrawArea),
-            new charts.ChartTitle('Frequency',
-                behaviorPosition: charts.BehaviorPosition.start,
-                titleOutsideJustification:
-                    charts.OutsideJustification.middleDrawArea),
-            new charts.SeriesLegend(
-              position: charts.BehaviorPosition.top,
-              horizontalFirst: false,
-              desiredMaxRows: 5,
-              cellPadding: new EdgeInsets.only(right: 10.0, bottom: 5.0),
-              entryTextStyle: charts.TextStyleSpec(fontSize: 10),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Create one series with sample hard coded data.
-  static Map<GamePieceResult, List<charts.Series<HistogramStats, String>>>
-      createData(DataCollectionYearData yearData) {
-    List<HistogramStats> gamePiecesAttemptedData = [];
-    List<HistogramStats> gamePiecesScoredData = [];
+  static Map<GamePieceResult, List<BarChartGroupData>> createData(
+      DataCollectionYearData yearData) {
     List<DataCollectionMatchData> matches = yearData.data;
+    List<BarChartGroupData> attemptedData = [];
+    List<BarChartGroupData> scoredData = [];
 
     int attemptedMin = 1000;
     int attemptedMax = 0;
@@ -72,8 +38,8 @@ class DataCollectionHistogramWidget extends StatelessWidget {
       }
     }
 
-    var gamePiecesAttemptedFrequencies;
-    var gamePiecesScoredFrequencies;
+    List<int> gamePiecesAttemptedFrequencies;
+    List<int> gamePiecesScoredFrequencies;
     int attemptedBinWidth;
     int scoredBinWidth;
     if (attemptedMax - attemptedMin + 1 <= 12) {
@@ -107,36 +73,80 @@ class DataCollectionHistogramWidget extends StatelessWidget {
 
     for (int i = 0; i < gamePiecesAttemptedFrequencies.length; i++) {
       int numOfGamePieces = i * attemptedBinWidth + attemptedMin;
-      gamePiecesAttemptedData.add(new HistogramStats(
-          numOfGamePieces.toString(), gamePiecesAttemptedFrequencies[i]));
+      attemptedData.add(
+        BarChartGroupData(
+          x: numOfGamePieces,
+          barRods: [
+            BarChartRodData(
+              y: gamePiecesScoredFrequencies[i].toDouble(),
+              colors: [Colors.lightBlueAccent, Colors.greenAccent],
+            ),
+          ],
+        ),
+      );
+      print("ga $numOfGamePieces, ${gamePiecesAttemptedFrequencies[i]}");
     }
 
     for (int i = 0; i < gamePiecesScoredFrequencies.length; i++) {
       int numOfGamePieces = i * scoredBinWidth + scoredMin;
-      gamePiecesScoredData.add(new HistogramStats(
-          numOfGamePieces.toString(), gamePiecesScoredFrequencies[i]));
+      scoredData.add(
+        BarChartGroupData(
+          x: numOfGamePieces,
+          barRods: [
+            BarChartRodData(
+                y: gamePiecesScoredFrequencies[i].toDouble(),
+                colors: [Colors.redAccent, Colors.orangeAccent]),
+          ],
+        ),
+      );
+      print("gs $numOfGamePieces, ${gamePiecesScoredFrequencies[i]}");
     }
 
     return {
-      GamePieceResult.ATTEMPTED: [
-        new charts.Series<HistogramStats, String>(
-          id: 'Attempted Game Pieces',
-          colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-          domainFn: (HistogramStats stats, _) => stats.numOfGamePieces,
-          measureFn: (HistogramStats stats, _) => stats.frequency,
-          data: gamePiecesAttemptedData,
-        ),
-      ],
-      GamePieceResult.SCORED: [
-        new charts.Series<HistogramStats, String>(
-          id: 'Scored Game Pieces',
-          colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
-          domainFn: (HistogramStats stats, _) => stats.numOfGamePieces,
-          measureFn: (HistogramStats stats, _) => stats.frequency,
-          data: gamePiecesScoredData,
-        ),
-      ]
+      GamePieceResult.ATTEMPTED: attemptedData,
+      GamePieceResult.SCORED: scoredData
     };
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BarChart(
+      BarChartData(
+        barTouchData: BarTouchData(
+          enabled: false,
+          touchTooltipData: BarTouchTooltipData(
+            tooltipBgColor: Colors.transparent,
+            tooltipPadding: const EdgeInsets.all(0),
+            tooltipMargin: 8,
+            getTooltipItem: (
+              BarChartGroupData group,
+              int groupIndex,
+              BarChartRodData rod,
+              int rodIndex,
+            ) {
+              return BarTooltipItem(
+                rod.y.round().toString(),
+                TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              );
+            },
+          ),
+        ),
+        titlesData: FlTitlesData(
+          show: true,
+          bottomTitles: SideTitles(
+            showTitles: true,
+            margin: 20,
+          ),
+          leftTitles: SideTitles(
+            showTitles: true,
+          ),
+        ),
+        barGroups: _data,
+      ),
+    );
   }
 }
 

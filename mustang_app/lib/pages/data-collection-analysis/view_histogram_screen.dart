@@ -1,4 +1,4 @@
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/data_collection/data_collection_histogram_widget.dart';
 import 'package:mustang_app/components/shared/header.dart';
@@ -10,11 +10,15 @@ class View670HistogramScreen extends StatelessWidget {
   View670HistogramScreen(this.year);
 
   Widget buildCard(GamePieceResult dataType) {
-    Map<GamePieceResult, List<charts.Series<HistogramStats, String>>> data;
+    Map<GamePieceResult, List<BarChartGroupData>> data;
     data = DataCollectionHistogramWidget.createData(year);
-    List<charts.Series<HistogramStats, String>> graph = data[dataType];
-    return Card(
-      child: DataCollectionHistogramWidget(data: graph),
+    List<BarChartGroupData> graph = data[dataType];
+    return SizedBox(
+      height: 300,
+      width: 500,
+      child: Card(
+        child: DataCollectionHistogramWidget(graph),
+      ),
     );
   }
 
@@ -23,13 +27,16 @@ class View670HistogramScreen extends StatelessWidget {
     return Scaffold(
         appBar: Header(
           context,
-          year.year.toString(),
+          year.year.year.toString(),
         ),
-        body: ListView(
-          children: [
-            buildCard(GamePieceResult.ATTEMPTED),
-            buildCard(GamePieceResult.SCORED)
-          ],
+        body: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              Expanded(child: buildCard(GamePieceResult.ATTEMPTED)),
+              Expanded(child: buildCard(GamePieceResult.SCORED))
+            ],
+          ),
         ));
   }
 }

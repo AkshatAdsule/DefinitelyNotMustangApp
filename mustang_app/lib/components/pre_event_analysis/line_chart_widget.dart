@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/models/team_statistic.dart';
+import 'package:mustang_app/utils/math_utils.dart';
 
 enum DataTypes { OPR, DPR, CCWM, WINRATE, CONTRIBUTION }
 
@@ -328,18 +329,6 @@ class LineChartWidget extends StatelessWidget {
     };
   }
 
-  int roundUp(int n) {
-    bool isNegative = n < 0;
-
-    return isNegative ? -(((n.abs() + 4) ~/ 5) * 5) : (((n + 4) ~/ 5) * 5);
-  }
-
-  int roundDown(int n) {
-    bool isNegative = n < 0;
-
-    return isNegative ? roundUp(n) : (((n) ~/ 5) * 5);
-  }
-
   @override
   Widget build(BuildContext context) {
     double minX = double.maxFinite, minY = double.maxFinite, maxX = 0, maxY = 0;
@@ -376,8 +365,8 @@ class LineChartWidget extends StatelessWidget {
                 LineChartData(
                   minX: (minX.round()).toDouble(),
                   maxX: (maxX.round()).toDouble(),
-                  minY: roundDown(minY.round()).toDouble(),
-                  maxY: roundUp(maxY.round()).toDouble(),
+                  minY: MathUtils.roundDown(minY.round()).toDouble(),
+                  maxY: MathUtils.roundUp(maxY.round()).toDouble(),
                   lineBarsData: data,
                   gridData: FlGridData(
                     horizontalInterval: 25,
