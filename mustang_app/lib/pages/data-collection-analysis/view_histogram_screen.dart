@@ -13,12 +13,8 @@ class View670HistogramScreen extends StatelessWidget {
     Map<GamePieceResult, List<BarChartGroupData>> data;
     data = DataCollectionHistogramWidget.createData(year);
     List<BarChartGroupData> graph = data[dataType];
-    return SizedBox(
-      height: 300,
-      width: 500,
-      child: Card(
-        child: DataCollectionHistogramWidget(graph),
-      ),
+    return Card(
+      child: DataCollectionHistogramWidget(graph),
     );
   }
 
