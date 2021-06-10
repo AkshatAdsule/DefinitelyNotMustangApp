@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mustang_app/components/data_collection_line_chart_widget.dart';
+import 'package:mustang_app/components/data_collection/data_collection_line_chart_widget.dart';
 import 'package:mustang_app/components/shared/header.dart';
 import 'package:mustang_app/utils/data_collection_data.dart';
 

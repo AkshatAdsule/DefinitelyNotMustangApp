@@ -17,7 +17,7 @@ class CompareTeams extends StatefulWidget {
 class _CompareTeamsState extends State<CompareTeams> {
   TeamStatistic _teamStatistic1, _teamStatistic2;
   GetStatistics getStatistics = new GetStatistics();
-  Map<DataType, List<LineChartBarData>> data;
+  Map<DataTypes, List<LineChartBarData>> data;
   bool _loading = true;
 
   Future<void> _onInit() async {
@@ -29,32 +29,32 @@ class _CompareTeamsState extends State<CompareTeams> {
     });
   }
 
-  Widget buildCard(DataType dataType) {
+  Widget buildCard(DataTypes dataType) {
     String type;
     List<LineChartBarData> data = this.data[dataType];
     double team1avg, team2avg;
     switch (dataType) {
-      case DataType.OPR:
+      case DataTypes.OPR:
         type = 'OPR';
         team1avg = _teamStatistic1.oprAverage;
         team2avg = _teamStatistic2.oprAverage;
         break;
-      case DataType.DPR:
+      case DataTypes.DPR:
         type = 'DPR';
         team1avg = _teamStatistic1.dprAverage;
         team2avg = _teamStatistic2.dprAverage;
         break;
-      case DataType.CCWM:
+      case DataTypes.CCWM:
         type = 'CCWM';
         team1avg = _teamStatistic1.ccwmAverage;
         team2avg = _teamStatistic2.ccwmAverage;
         break;
-      case DataType.WINRATE:
+      case DataTypes.WINRATE:
         type = 'Win Rate';
         team1avg = _teamStatistic1.winRateAverage;
         team2avg = _teamStatistic2.winRateAverage;
         break;
-      case DataType.CONTRIBUTION:
+      case DataTypes.CONTRIBUTION:
         team1avg = _teamStatistic1.pointContributionAvg;
         team2avg = _teamStatistic2.pointContributionAvg;
         type = 'Contribution';
@@ -161,11 +161,11 @@ class _CompareTeamsState extends State<CompareTeams> {
               ? []
               : [
                   buildOverallCard(),
-                  buildCard(DataType.OPR),
-                  buildCard(DataType.DPR),
-                  buildCard(DataType.CCWM),
-                  buildCard(DataType.WINRATE),
-                  buildCard(DataType.CONTRIBUTION),
+                  buildCard(DataTypes.OPR),
+                  buildCard(DataTypes.DPR),
+                  buildCard(DataTypes.CCWM),
+                  buildCard(DataTypes.WINRATE),
+                  buildCard(DataTypes.CONTRIBUTION),
                 ],
         ),
       ),

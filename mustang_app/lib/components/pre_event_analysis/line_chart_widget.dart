@@ -1,8 +1,8 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/models/team_statistic.dart';
-import 'package:fl_chart/fl_chart.dart';
 
-enum DataType { OPR, DPR, CCWM, WINRATE, CONTRIBUTION }
+enum DataTypes { OPR, DPR, CCWM, WINRATE, CONTRIBUTION }
 
 class LineChartWidget extends StatelessWidget {
   // final List<charts.Series> seriesList;
@@ -29,65 +29,65 @@ class LineChartWidget extends StatelessWidget {
   // }
 
   static List<LineChartBarData> createTeamData(TeamStatistic stats) {
-    List<LinearStats> oprData = [];
-    List<LinearStats> dprData = [];
-    List<LinearStats> ccwmData = [];
-    List<LinearStats> winRateData = [];
-    List<LinearStats> pointContributionData = [];
+    List<_LinearStats> oprData = [];
+    List<_LinearStats> dprData = [];
+    List<_LinearStats> ccwmData = [];
+    List<_LinearStats> winRateData = [];
+    List<_LinearStats> pointContributionData = [];
 
-    List<LinearStats> predictedOprData = [];
-    List<LinearStats> predictedDprData = [];
-    List<LinearStats> predictedCcwmData = [];
-    List<LinearStats> predictedWinRateData = [];
-    List<LinearStats> predictedPointContributionData = [];
+    List<_LinearStats> predictedOprData = [];
+    List<_LinearStats> predictedDprData = [];
+    List<_LinearStats> predictedCcwmData = [];
+    List<_LinearStats> predictedWinRateData = [];
+    List<_LinearStats> predictedPointContributionData = [];
 
     for (YearStats yearStat in stats.yearStats) {
-      oprData.add(new LinearStats(yearStat.year, yearStat.avgOpr));
-      dprData.add(new LinearStats(yearStat.year, yearStat.avgDpr));
-      ccwmData.add(new LinearStats(yearStat.year, yearStat.avgCcwm));
-      winRateData.add(new LinearStats(yearStat.year, yearStat.avgWinRate));
+      oprData.add(new _LinearStats(yearStat.year, yearStat.avgOpr));
+      dprData.add(new _LinearStats(yearStat.year, yearStat.avgDpr));
+      ccwmData.add(new _LinearStats(yearStat.year, yearStat.avgCcwm));
+      winRateData.add(new _LinearStats(yearStat.year, yearStat.avgWinRate));
       pointContributionData
-          .add(new LinearStats(yearStat.year, yearStat.avgPointContribution));
+          .add(new _LinearStats(yearStat.year, yearStat.avgPointContribution));
     }
     DateTime currentYear = stats.yearStats.last.year;
     predictedOprData
-        .add(new LinearStats(currentYear, stats.yearStats.last.avgOpr));
+        .add(new _LinearStats(currentYear, stats.yearStats.last.avgOpr));
     predictedDprData
-        .add(new LinearStats(currentYear, stats.yearStats.last.avgDpr));
+        .add(new _LinearStats(currentYear, stats.yearStats.last.avgDpr));
     predictedCcwmData
-        .add(new LinearStats(currentYear, stats.yearStats.last.avgCcwm));
+        .add(new _LinearStats(currentYear, stats.yearStats.last.avgCcwm));
     predictedWinRateData
-        .add(new LinearStats(currentYear, stats.yearStats.last.avgWinRate));
-    predictedPointContributionData.add(new LinearStats(
+        .add(new _LinearStats(currentYear, stats.yearStats.last.avgWinRate));
+    predictedPointContributionData.add(new _LinearStats(
         currentYear, stats.yearStats.last.avgPointContribution));
     for (int i = 1; i <= 2; i++) {
       DateTime newYear = currentYear.add(Duration(days: 366 * i));
       predictedOprData.add(
-        new LinearStats(
+        new _LinearStats(
           newYear.add(Duration(days: 366 * i)),
           (stats.oprSlope + predictedOprData[i - 1].stat),
         ),
       );
       predictedDprData.add(
-        new LinearStats(
+        new _LinearStats(
           newYear.add(Duration(days: 365 * i)),
           (stats.dprSlope + predictedDprData[i - 1].stat),
         ),
       );
       predictedCcwmData.add(
-        new LinearStats(
+        new _LinearStats(
           newYear.add(Duration(days: 365 * i)),
           (stats.ccwmSlope + predictedCcwmData[i - 1].stat),
         ),
       );
       predictedWinRateData.add(
-        new LinearStats(
+        new _LinearStats(
           newYear.add(Duration(days: 365 * i)),
           (stats.winrateSlope + predictedWinRateData[i - 1].stat),
         ),
       );
       predictedPointContributionData.add(
-        new LinearStats(
+        new _LinearStats(
           newYear.add(Duration(days: 365 * i)),
           (stats.contributionSlope +
               predictedPointContributionData[i - 1].stat),
@@ -186,34 +186,36 @@ class LineChartWidget extends StatelessWidget {
     ];
   }
 
-  static Map<DataType, List<LineChartBarData>> createCompareData(
+  static Map<DataTypes, List<LineChartBarData>> createCompareData(
       TeamStatistic team1, TeamStatistic team2) {
-    List<LinearStats> team1OprData = [], team2OprData = [];
-    List<LinearStats> team1DprData = [], team2DprData = [];
-    List<LinearStats> team1CcwmData = [], team2CcwmData = [];
-    List<LinearStats> team1WinRateData = [], team2WinRateData = [];
-    List<LinearStats> team1PointContributionData = [],
+    List<_LinearStats> team1OprData = [], team2OprData = [];
+    List<_LinearStats> team1DprData = [], team2DprData = [];
+    List<_LinearStats> team1CcwmData = [], team2CcwmData = [];
+    List<_LinearStats> team1WinRateData = [], team2WinRateData = [];
+    List<_LinearStats> team1PointContributionData = [],
         team2PointContributionData = [];
     for (YearStats yearStat in team1.yearStats) {
-      team1OprData.add(new LinearStats(yearStat.year, yearStat.avgOpr));
-      team1DprData.add(new LinearStats(yearStat.year, yearStat.avgDpr));
-      team1CcwmData.add(new LinearStats(yearStat.year, yearStat.avgCcwm));
-      team1WinRateData.add(new LinearStats(yearStat.year, yearStat.avgWinRate));
+      team1OprData.add(new _LinearStats(yearStat.year, yearStat.avgOpr));
+      team1DprData.add(new _LinearStats(yearStat.year, yearStat.avgDpr));
+      team1CcwmData.add(new _LinearStats(yearStat.year, yearStat.avgCcwm));
+      team1WinRateData
+          .add(new _LinearStats(yearStat.year, yearStat.avgWinRate));
       team1PointContributionData
-          .add(new LinearStats(yearStat.year, yearStat.avgPointContribution));
+          .add(new _LinearStats(yearStat.year, yearStat.avgPointContribution));
     }
 
     for (YearStats yearStat in team2.yearStats) {
-      team2OprData.add(new LinearStats(yearStat.year, yearStat.avgOpr));
-      team2DprData.add(new LinearStats(yearStat.year, yearStat.avgDpr));
-      team2CcwmData.add(new LinearStats(yearStat.year, yearStat.avgCcwm));
-      team2WinRateData.add(new LinearStats(yearStat.year, yearStat.avgWinRate));
+      team2OprData.add(new _LinearStats(yearStat.year, yearStat.avgOpr));
+      team2DprData.add(new _LinearStats(yearStat.year, yearStat.avgDpr));
+      team2CcwmData.add(new _LinearStats(yearStat.year, yearStat.avgCcwm));
+      team2WinRateData
+          .add(new _LinearStats(yearStat.year, yearStat.avgWinRate));
       team2PointContributionData
-          .add(new LinearStats(yearStat.year, yearStat.avgPointContribution));
+          .add(new _LinearStats(yearStat.year, yearStat.avgPointContribution));
     }
 
     return {
-      DataType.OPR: [
+      DataTypes.OPR: [
         LineChartBarData(
           spots: team1OprData
               .map((e) => FlSpot(
@@ -235,7 +237,7 @@ class LineChartWidget extends StatelessWidget {
           dotData: dotData,
         ),
       ],
-      DataType.DPR: [
+      DataTypes.DPR: [
         LineChartBarData(
           spots: team1DprData
               .map((e) => FlSpot(
@@ -257,7 +259,7 @@ class LineChartWidget extends StatelessWidget {
           dotData: dotData,
         ),
       ],
-      DataType.CCWM: [
+      DataTypes.CCWM: [
         LineChartBarData(
           spots: team1CcwmData
               .map((e) => FlSpot(
@@ -279,7 +281,7 @@ class LineChartWidget extends StatelessWidget {
           dotData: dotData,
         ),
       ],
-      DataType.WINRATE: [
+      DataTypes.WINRATE: [
         LineChartBarData(
           spots: team1WinRateData
               .map((e) => FlSpot(
@@ -301,7 +303,7 @@ class LineChartWidget extends StatelessWidget {
           dotData: dotData,
         ),
       ],
-      DataType.CONTRIBUTION: [
+      DataTypes.CONTRIBUTION: [
         LineChartBarData(
           spots: team1PointContributionData
               .map((e) => FlSpot(
@@ -432,11 +434,11 @@ class LineChartWidget extends StatelessWidget {
 }
 
 /// Sample linear data type.
-class LinearStats {
+class _LinearStats {
   final DateTime year;
   final double stat;
 
-  LinearStats(this.year, this.stat);
+  _LinearStats(this.year, this.stat);
 }
 
 class LineChartLegend extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mustang_app/components/data_collection_tile.dart';
+import 'package:mustang_app/components/data_collection/data_collection_tile.dart';
 import 'package:mustang_app/constants/constants.dart';
 import 'package:mustang_app/pages/data-collection-analysis/robot_data.dart';
 import 'package:mustang_app/pages/data-collection-analysis/view_graph_screen.dart';
