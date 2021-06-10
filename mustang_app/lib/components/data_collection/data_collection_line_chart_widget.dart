@@ -3,46 +3,47 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/utils/data_collection_data.dart';
 
 class DataCollectionLineChartWidget extends StatelessWidget {
-  
-  final List<charts.Series<LinearStats, DateTime>> data;
+  final List<charts.Series<_LinearStats, DateTime>> data;
   final double height, width;
 
   DataCollectionLineChartWidget({this.data, this.height: 300, this.width: 50});
 
-  static List<charts.Series<LinearStats, DateTime>> createData(
+  static List<charts.Series<_LinearStats, DateTime>> createData(
       List<DataCollectionYearData> stats) {
-    List<LinearStats> accuracyData = [];
-    List<LinearStats> rankingPointsData = [];
-    List<LinearStats> winRateData = [];
+    List<_LinearStats> accuracyData = [];
+    List<_LinearStats> rankingPointsData = [];
+    List<_LinearStats> winRateData = [];
 
     for (DataCollectionYearData yearStats in stats) {
-      accuracyData.add(new LinearStats(yearStats.year, yearStats.avgData.percentageScored));
-      rankingPointsData.add(new LinearStats(yearStats.year, yearStats.avgData.rankingPoints));
-      winRateData.add(new LinearStats(yearStats.year, yearStats.winRate));
+      accuracyData.add(
+          new _LinearStats(yearStats.year, yearStats.avgData.percentageScored));
+      rankingPointsData.add(
+          new _LinearStats(yearStats.year, yearStats.avgData.rankingPoints));
+      winRateData.add(new _LinearStats(yearStats.year, yearStats.winRate));
     }
-    
+
     return [
-      new charts.Series<LinearStats, DateTime> (
-        id: 'Accuracy', 
+      new charts.Series<_LinearStats, DateTime>(
+        id: 'Accuracy',
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (LinearStats stat, _) => stat.year,
-        measureFn: (LinearStats stat, _) => stat.stat,
+        domainFn: (_LinearStats stat, _) => stat.year,
+        measureFn: (_LinearStats stat, _) => stat.stat,
         data: accuracyData,
-      ), 
-      new charts.Series<LinearStats, DateTime> (
-        id: 'Ranking Points', 
+      ),
+      new charts.Series<_LinearStats, DateTime>(
+        id: 'Ranking Points',
         colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
-        domainFn: (LinearStats stat, _) => stat.year,
-        measureFn: (LinearStats stat, _) => stat.stat,
+        domainFn: (_LinearStats stat, _) => stat.year,
+        measureFn: (_LinearStats stat, _) => stat.stat,
         data: rankingPointsData,
-      ), 
-      new charts.Series<LinearStats, DateTime> (
-        id: 'Win Rate', 
+      ),
+      new charts.Series<_LinearStats, DateTime>(
+        id: 'Win Rate',
         colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
-        domainFn: (LinearStats stat, _) => stat.year,
-        measureFn: (LinearStats stat, _) => stat.stat,
+        domainFn: (_LinearStats stat, _) => stat.year,
+        measureFn: (_LinearStats stat, _) => stat.stat,
         data: winRateData,
-      ), 
+      ),
     ];
   }
 
@@ -81,9 +82,9 @@ class DataCollectionLineChartWidget extends StatelessWidget {
 }
 
 /// Sample linear data type.
-class LinearStats {
+class _LinearStats {
   final DateTime year;
   final double stat;
 
-  LinearStats(this.year, this.stat);
+  _LinearStats(this.year, this.stat);
 }

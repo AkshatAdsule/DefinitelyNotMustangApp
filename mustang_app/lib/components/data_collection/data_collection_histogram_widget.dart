@@ -3,9 +3,9 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:mustang_app/utils/data_collection_data.dart';
 
-import '../utils/data_collection_data.dart';
+import '../../utils/data_collection_data.dart';
 
-enum DataType { ATTEMPTED, SCORED }
+enum GamePieceResult { ATTEMPTED, SCORED }
 
 class DataCollectionHistogramWidget extends StatelessWidget {
   final List<charts.Series<HistogramStats, String>> data;
@@ -46,8 +46,8 @@ class DataCollectionHistogramWidget extends StatelessWidget {
   }
 
   /// Create one series with sample hard coded data.
-  static Map<DataType, List<charts.Series<HistogramStats, String>>> createData(
-      DataCollectionYearData yearData) {
+  static Map<GamePieceResult, List<charts.Series<HistogramStats, String>>>
+      createData(DataCollectionYearData yearData) {
     List<HistogramStats> gamePiecesAttemptedData = [];
     List<HistogramStats> gamePiecesScoredData = [];
     List<DataCollectionMatchData> matches = yearData.data;
@@ -118,7 +118,7 @@ class DataCollectionHistogramWidget extends StatelessWidget {
     }
 
     return {
-      DataType.ATTEMPTED: [
+      GamePieceResult.ATTEMPTED: [
         new charts.Series<HistogramStats, String>(
           id: 'Attempted Game Pieces',
           colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
@@ -127,7 +127,7 @@ class DataCollectionHistogramWidget extends StatelessWidget {
           data: gamePiecesAttemptedData,
         ),
       ],
-      DataType.SCORED: [
+      GamePieceResult.SCORED: [
         new charts.Series<HistogramStats, String>(
           id: 'Scored Game Pieces',
           colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
