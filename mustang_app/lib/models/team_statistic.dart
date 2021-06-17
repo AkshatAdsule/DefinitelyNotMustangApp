@@ -30,7 +30,7 @@ class TeamStatistic {
         currentYearWinRates = [],
         currentYearPointContributions = [];
 
-    DateTime currentYear = new DateTime(eventStats[1].year);
+    DateTime currentYear = new DateTime(eventStats[0].year);
     for (EventStatistic eventStat in eventStats) {
       if (eventStat.opr > 150 ||
           eventStat.dpr > 150 ||
@@ -199,7 +199,7 @@ class YearStats {
       avgPointContribution = contributionPercentages.reduce((a, b) => a + b) /
           contributionPercentages.length;
     } catch (error) {
-      debugPrint(error);
+      // debugPrint(error);
     }
   }
 
