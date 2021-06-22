@@ -144,6 +144,18 @@ class DataCollectionHistogramWidget extends StatelessWidget {
             showTitles: true,
           ),
         ),
+        axisTitleData: FlAxisTitleData(
+              leftTitle: AxisTitle(
+                showTitle: true, 
+                titleText: 'Frequency', 
+                margin: 4
+              ),
+              bottomTitle: AxisTitle(
+                  showTitle: true,
+                  margin: 0,
+                  titleText: 'Number of Game Pieces', 
+                )
+              ),
         barGroups: _data,
       ),
     );

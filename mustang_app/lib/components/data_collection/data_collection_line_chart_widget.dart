@@ -167,6 +167,15 @@ class DataCollectionLineChartWidget extends StatelessWidget {
                       "Win Rate"
                     ),
                   ],
+                ),
+                new SizedBox(
+                  height: 10
+                ), 
+                new Text(
+                  "Note: ranking points were not available for 2015",
+                  style: new TextStyle(
+                    color: Colors.grey
+                  ),
                 )
               ],
             )
