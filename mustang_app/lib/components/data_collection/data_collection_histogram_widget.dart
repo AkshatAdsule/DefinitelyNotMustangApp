@@ -78,7 +78,7 @@ class DataCollectionHistogramWidget extends StatelessWidget {
           x: numOfGamePieces,
           barRods: [
             BarChartRodData(
-              y: gamePiecesScoredFrequencies[i].toDouble(),
+              y: gamePiecesAttemptedFrequencies[i].toDouble(),
               colors: [Colors.lightBlueAccent, Colors.greenAccent],
             ),
           ],

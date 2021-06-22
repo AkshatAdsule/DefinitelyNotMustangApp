@@ -35,7 +35,7 @@ class DataCollectionYearTile extends StatelessWidget {
                       "Win rate: ${(_yearData.winRate * 100).toStringAsFixed(3)}%"),
                   ElevatedButton(
                     child: Text(
-                      "View Overall Data",
+                      "View Game Piece Data",
                     ),
                     onPressed: () {
                       Navigator.push(
