@@ -360,7 +360,7 @@ class LineChartWidget extends StatelessWidget {
           Flexible(
             flex: 7,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(8, 15, 20, 8),
+              padding: const EdgeInsets.all(20),
               child: LineChart(
                 LineChartData(
                   minX: (minX.round()).toDouble(),
@@ -396,19 +396,23 @@ class LineChartWidget extends StatelessWidget {
                     ),
                   ),
                   axisTitleData: FlAxisTitleData(
-                    show: true,
+                    //show: true,
                     leftTitle: AxisTitle(
                       showTitle: true,
                       titleText: 'Stat',
+                      margin: 4,
                       textStyle: TextStyle(
                         fontSize: 20,
+                        color: Colors.black
                       ),
                     ),
                     bottomTitle: AxisTitle(
                       showTitle: true,
                       titleText: 'Year',
+                      margin: 4,
                       textStyle: TextStyle(
                         fontSize: 20,
+                        color: Colors.black
                       ),
                     ),
                   ),
