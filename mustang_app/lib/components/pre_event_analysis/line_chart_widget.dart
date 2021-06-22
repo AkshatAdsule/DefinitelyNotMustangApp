@@ -473,7 +473,7 @@ class LineChartWidget extends StatelessWidget {
                 ],
                 ),
                 new SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 new Row(
                   mainAxisAlignment: MainAxisAlignment.start,

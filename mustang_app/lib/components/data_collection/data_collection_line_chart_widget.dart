@@ -48,62 +48,131 @@ class DataCollectionLineChartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20.0),
-        child: LineChart(
-          LineChartData(
-            lineBarsData: data,
-            gridData: FlGridData(
-              horizontalInterval: 25,
-              verticalInterval: 5,
-            ),
-            borderData: FlBorderData(
-              border: Border(
-                left: BorderSide.none,
-                bottom: BorderSide(
-                  color: Colors.black,
-                  width: 1,
-                ),
-              ),
-            ),
-            titlesData: FlTitlesData(
-              show: true,
-              leftTitles: SideTitles(
-                showTitles: true,
-                interval: 0.5,
-              ),
-              bottomTitles: SideTitles(
-                showTitles: true,
-                interval: 5,
-                getTitles: (double d) {
-                  return d.toString();
-                },
-              ),
-            ),
-            axisTitleData: FlAxisTitleData(
-              show: true,
-              leftTitle: AxisTitle(
-                showTitle: true,
-                titleText: 'Stat',
-                textStyle: TextStyle(
-                  fontSize: 20,
-                  color: Colors.black,
-                ),
-              ),
-              bottomTitle: AxisTitle(
-                showTitle: true,
-                titleText: 'Year',
-                textStyle: TextStyle(
-                  fontSize: 20,
-                  color: Colors.black,
+    return SizedBox(
+      //padding: const EdgeInsets.all(12.0),
+      width: width,
+      height: height,
+      child: Column(
+        children: [
+          Flexible(
+            flex: 7,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: LineChart(
+                LineChartData(
+                  lineBarsData: data,
+                  gridData: FlGridData(
+                    horizontalInterval: 25,
+                    verticalInterval: 5,
+                  ),
+                  borderData: FlBorderData(
+                    border: Border(
+                      left: BorderSide.none,
+                      bottom: BorderSide(
+                        color: Colors.black,
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  titlesData: FlTitlesData(
+                    show: true,
+                    leftTitles: SideTitles(
+                      showTitles: true,
+                      interval: 0.5,
+                    ),
+                    bottomTitles: SideTitles(
+                      showTitles: true,
+                      interval: 5,
+                      getTitles: (double d) {
+                        return d.toString();
+                      },
+                    ),
+                  ),
+                  axisTitleData: FlAxisTitleData(
+                    show: true,
+                    leftTitle: AxisTitle(
+                      showTitle: true,
+                      titleText: 'Stat',
+                      textStyle: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                      ),
+                    ),
+                    bottomTitle: AxisTitle(
+                      showTitle: true,
+                      titleText: 'Year',
+                      textStyle: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ),
+          Flexible(
+            flex: 1,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                new Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    new Container(
+                      height: 10.0,
+                      width: 10.0,
+                      color: Colors.blue,
+                    ),
+                    new SizedBox(
+                      width: 3
+                    ),
+                    new Text(
+                      "Shooting Accuracy"
+                    ),
+                    new SizedBox(
+                      width: 20
+                    ), 
+                    new Container(
+                      height: 10.0,
+                      width: 10.0,
+                      color: Colors.red,
+                    ),
+                    new SizedBox(
+                      width: 3
+                    ),
+                    new Text(
+                      "Ranking Points"
+                    ),
+                  ]
+                ), 
+                new SizedBox(
+                  height: 10
+                ),
+                new Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    new SizedBox(
+                      width: 20
+                    ), 
+                    new Container(
+                      height: 10.0,
+                      width: 10.0,
+                      color: Colors.green,
+                    ),
+                    new SizedBox(
+                      width: 3
+                    ),
+                    new Text(
+                      "Win Rate"
+                    ),
+                  ],
+                )
+              ],
+            )
+          )
+        ],
+      ) 
     );
   }
 }
