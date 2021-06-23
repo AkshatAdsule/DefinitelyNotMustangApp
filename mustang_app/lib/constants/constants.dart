@@ -9,7 +9,7 @@ class Constants {
   static int fieldColor = 0;
 
   // Pre event analysis data version
-  static const double DATA_ANALYSIS_DATA_VERSION = 1.0;
+  static const double DATA_ANALYSIS_DATA_VERSION = 1.3;
 
   // Data collection analysis data version
   static const double DATA_COLLECTION_DATA_VERSION = 1.0;
