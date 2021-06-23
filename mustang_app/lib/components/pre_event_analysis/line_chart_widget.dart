@@ -360,7 +360,7 @@ class LineChartWidget extends StatelessWidget {
           Flexible(
             flex: 7,
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(20),
               child: LineChart(
                 LineChartData(
                   minX: (minX.round()).toDouble(),
@@ -396,19 +396,23 @@ class LineChartWidget extends StatelessWidget {
                     ),
                   ),
                   axisTitleData: FlAxisTitleData(
-                    show: true,
+                    //show: true,
                     leftTitle: AxisTitle(
                       showTitle: true,
                       titleText: 'Stat',
+                      margin: 4,
                       textStyle: TextStyle(
                         fontSize: 20,
+                        color: Colors.black
                       ),
                     ),
                     bottomTitle: AxisTitle(
                       showTitle: true,
                       titleText: 'Year',
+                      margin: 4,
                       textStyle: TextStyle(
                         fontSize: 20,
+                        color: Colors.black
                       ),
                     ),
                   ),
@@ -416,6 +420,97 @@ class LineChartWidget extends StatelessWidget {
               ),
             ),
           ),
+          Flexible(
+            flex: 1,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                new Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    new SizedBox(
+                      width: 40
+                    ),
+                    new Container(
+                      height: 10.0,
+                      width: 10.0,
+                      color: Colors.blue,
+                    ),
+                    new SizedBox(
+                      width: 3
+                    ),
+                    new Text(
+                      "OPR"
+                    ),
+                    new SizedBox(
+                      width: 19
+                    ),
+                    new Container(
+                      height: 10.0,
+                      width: 10.0, 
+                      color: Colors.green
+                    ),
+                    new SizedBox(
+                      width: 3
+                    ),
+                    new Text(
+                      "CCWM"
+                    ),
+                    new SizedBox(
+                      width: 20
+                    ),
+                    new Container(
+                      height: 10.0,
+                      width: 10.0, 
+                      color: Colors.purple
+                    ),
+                    new SizedBox(
+                      width: 3
+                    ),
+                    new Text(
+                      "Contribution Percentage"
+                    ),
+                ],
+                ),
+                new SizedBox(
+                  height: 10,
+                ),
+                new Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    new SizedBox(
+                      width: 40
+                    ),
+                    new Container(
+                      height: 10.0,
+                      width: 10.0,
+                      color: Colors.red,
+                    ),
+                    new SizedBox(
+                      width: 3
+                    ),
+                    new Text(
+                      "DPR"
+                    ),
+                    new SizedBox(
+                      width: 20
+                    ), 
+                    new Container(
+                      height: 10.0,
+                      width: 10.0,
+                      color: Colors.black,
+                    ),
+                    new SizedBox(
+                      width: 3
+                    ),
+                    new Text(
+                      "Win Rate"
+                    ), 
+                  ],
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );
