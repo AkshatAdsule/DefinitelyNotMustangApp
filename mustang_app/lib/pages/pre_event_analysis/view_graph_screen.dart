@@ -18,6 +18,7 @@ class ViewGraphScreen extends StatelessWidget {
             data: LineChartWidget.createTeamData(_statistic),
             height: constraints.maxHeight,
             width: constraints.maxWidth,
+            showLegend: true,
           ),
         ),
       ),

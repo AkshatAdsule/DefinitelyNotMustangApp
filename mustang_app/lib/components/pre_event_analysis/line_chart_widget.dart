@@ -12,11 +12,12 @@ class LineChartWidget extends StatelessWidget {
   // final List<double> oprs;
   final List<LineChartBarData> data;
   final double height, width;
+  final bool showLegend;
   static final List<int> dashArray = [5, 5];
   static final FlDotData dotData = FlDotData(
     show: false,
   );
-  LineChartWidget({this.data, this.height: 300, this.width: 50});
+  LineChartWidget({this.data, this.height: 300, this.width: 50, this.showLegend: false});
 
   // LineChartWidget(this.seriesList, {this.animate});
 
@@ -420,6 +421,7 @@ class LineChartWidget extends StatelessWidget {
               ),
             ),
           ),
+          if (showLegend)
           Flexible(
             flex: 1,
             child: Column(
