@@ -24,6 +24,7 @@ class TeamStatistic {
 
   TeamStatistic(String teamCode, List<EventStatistic> eventStats) {
     this.teamCode = teamCode;
+    this.events = eventStats;
     List<double> currentYearOprs = [],
         currentYearDprs = [],
         currentYearCcwms = [],
@@ -119,7 +120,7 @@ class TeamStatistic {
       "ccwmSlope": ccwmSlope,
       "winrateSlope": winrateSlope,
       "contributionSlope": contributionSlope,
-      "events": events,
+      "events": events.map((e) => e.toJson()).toList(),
       "yearStatistics": yearStats.map((e) => e.toJson()).toList(),
     };
   }
