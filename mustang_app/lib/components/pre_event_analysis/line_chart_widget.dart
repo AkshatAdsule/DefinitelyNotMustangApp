@@ -424,10 +424,18 @@ class LineChartWidget extends StatelessWidget {
 
 /// Sample linear data type.
 class _LinearStats {
-  final DateTime year;
-  final double stat;
+  DateTime year;
+  double stat;
 
-  _LinearStats(this.year, this.stat);
+  _LinearStats(DateTime year, double stat) {
+    if (stat == null || year == null) {
+      this.stat = 0;
+      this.year = year;
+    } else {
+      this.stat = stat;
+      this.year = year;
+    }
+  }
 }
 
 class LineChartLegend extends StatelessWidget {
