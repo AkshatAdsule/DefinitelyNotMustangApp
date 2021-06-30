@@ -24,7 +24,11 @@ class AuthService {
         .map((snap) => UserModel.fromSnapshot(snap));
   }
 
-  Future<void> login() async {}
+  Future<UserCredential> loginWithEmailAndPassword(
+      String email, String password) async {
+    return await _auth.signInWithEmailAndPassword(
+        email: email, password: password);
+  }
 
   Future<UserCredential> loginWithGoogle() async {
     try {

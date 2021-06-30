@@ -51,9 +51,11 @@ class _SplashState extends State<Splash> {
 
   void _goToNextPage(BuildContext context) {
     if (_user == null) {
-      Navigator.of(context).pushNamed(Login.route);
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(Login.route, (route) => false);
     } else {
-      Navigator.of(context).pushNamed(Home.route);
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(Home.route, (route) => false);
     }
   }
 
@@ -84,10 +86,6 @@ class _SplashState extends State<Splash> {
                 );
               },
               onEnd: () {
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil(Home.route, (route) => false);
-                // Use below code block for production or dev, above for demo
-                /*
                 if (_user == null) {
                   _init(context).then((value) {
                     _goToNextPage(context);
@@ -95,7 +93,6 @@ class _SplashState extends State<Splash> {
                 } else {
                   _goToNextPage(context);
                 }
-                */
               },
             ),
             Hero(
