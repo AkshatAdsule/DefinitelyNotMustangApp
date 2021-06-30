@@ -32,6 +32,13 @@ class _LoginState extends State<Login> {
     _password = new TextEditingController();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _email.dispose();
+    _password.dispose();
+  }
+
   void _togglePasswordVisibility() {
     setState(() {
       _hidePassword = !_hidePassword;
@@ -44,57 +51,121 @@ class _LoginState extends State<Login> {
       UserCredential cred = await service.loginWithGoogle();
       UserModel model = await service.getUser(cred.user.uid);
       if (model == null) {
-        Navigator.pushNamed(context, Register.route);
+        Navigator.pushNamed(
+          context,
+          Register.route,
+          arguments: {
+            'method': SignInMethod.GOOGLE,
+          },
+        );
       } else {
         Navigator.pushNamed(context, '/');
       }
+    } on FirebaseException catch (error) {
+      String message = "An error occurred. Try again later";
+      switch (error.code) {
+        case "account-exists-with-different-credential":
+          {
+            break;
+          }
+        case "user-not-found":
+          {
+            showRegisterDialog(context);
+            return;
+          }
+        case "user-disabled":
+          {
+            message = "Your account has been disabled";
+            break;
+          }
+        case "wrong-password":
+          {
+            message = "Incorrect password";
+            break;
+          }
+        default:
+          {
+            break;
+          }
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.red,
+              content: Text(message),
+            ),
+          );
+      }
     } catch (error) {
       print(error);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("An error ocurred, try again later."),
+        ),
+      );
     }
   }
 
-  Future<void> signInWithEmailAndPassword(
-      BuildContext context, String email, String password) async {
+  Future<void> signInWithEmailAndPassword(BuildContext context) async {
     AuthService service = Provider.of<AuthService>(context, listen: false);
     try {
       UserCredential cred =
-          await service.loginWithEmailAndPassword(email, password);
+          await service.loginWithEmailAndPassword(_email.text, _password.text);
       UserModel model = await service.getUser(cred.user.uid);
       if (model == null) {
-        Navigator.pushNamed(context, Register.route);
+        Navigator.pushNamed(
+          context,
+          Register.route,
+          arguments: {
+            'method': SignInMethod.EMAIL_PASSWORD,
+          },
+        );
       } else {
         Navigator.pushNamed(context, '/');
       }
-    } catch (error) {
-      if (error is FirebaseException) {
-        print(error.code);
-        switch (error.code) {
-          case "invalid-email":
-            {
-              break;
-            }
-          case "user-not-found":
-            {
-              showRegisterDialog(context);
-              break;
-            }
-          case "unknown":
-            {
-              break;
-            }
-          default:
-            {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: Colors.red,
-                  content: Text("An error occured, try again later."),
-                ),
-              );
-              break;
-            }
-        }
+    } on FirebaseException catch (error) {
+      String message = "An error occurred. Try again later";
+      switch (error.code) {
+        case "invalid-email":
+          {
+            message = "Please enter a valid email address";
+            break;
+          }
+        case "user-not-found":
+          {
+            showRegisterDialog(context);
+            return;
+          }
+        case "user-disabled":
+          {
+            message = "Your account has been disabled";
+            break;
+          }
+        case "wrong-password":
+          {
+            message = "Incorrect password";
+            break;
+          }
+        default:
+          {
+            break;
+          }
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.red,
+              content: Text(message),
+            ),
+          );
       }
+    } catch (error) {
       print(error);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("An error ocurred, try again later."),
+        ),
+      );
     }
   }
 
@@ -169,7 +240,13 @@ class _LoginState extends State<Login> {
                         child: ElevatedButton(
                           onPressed: () {
                             Navigator.pop(context);
-                            Navigator.pushNamed(context, Register.route);
+                            Navigator.pushNamed(
+                              context,
+                              Register.route,
+                              arguments: {
+                                'method': SignInMethod.EMAIL_PASSWORD,
+                              },
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             primary: Colors.green.shade700,
@@ -302,8 +379,7 @@ class _LoginState extends State<Login> {
                 onPressed: () {
                   // TODO: input validation and error handling
                   if (_formKey.currentState.validate()) {
-                    signInWithEmailAndPassword(
-                        context, _email.text, _password.text);
+                    signInWithEmailAndPassword(context);
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -379,14 +455,23 @@ class _LoginState extends State<Login> {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 3),
                   ),
-                  GestureDetector(
-                    onTap: () => Navigator.pushNamed(context, Register.route),
-                    child: Text(
-                      "Sign Up!",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
+                  MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        Register.route,
+                        arguments: {
+                          'method': SignInMethod.EMAIL_PASSWORD,
+                        },
+                      ),
+                      child: Text(
+                        "Sign Up!",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),

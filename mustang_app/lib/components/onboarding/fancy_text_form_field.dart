@@ -31,6 +31,7 @@ class FancyTextFormField extends FormField<String> {
                     ],
                   ),
                   child: TextField(
+                    focusNode: FocusNode(),
                     obscureText: obscureText,
                     style: TextStyle(
                       color: Colors.white,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/pages/data-collection-analysis/data_view.dart';
+import 'package:mustang_app/pages/onboarding/register.dart';
 import 'package:mustang_app/services/setup_service.dart';
 import 'package:mustang_app/services/auth_service.dart';
 import 'pages/pages.dart';
@@ -31,6 +32,12 @@ class MyApp extends StatelessWidget {
         break;
       case Login.route:
         nextPage = Login();
+        orientation = ScreenOrientation.portraitOnly;
+        break;
+      case Register.route:
+        nextPage = Register(
+          method: args['method'],
+        );
         orientation = ScreenOrientation.portraitOnly;
         break;
       case Home.route:
