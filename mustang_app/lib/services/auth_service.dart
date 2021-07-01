@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mustang_app/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -60,6 +61,7 @@ class AuthService {
     if (method == SignInMethod.EMAIL_PASSWORD) {
       UserCredential cred = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
       uid = cred.user.uid;
     } else if (currentUser != null) {
       uid = currentUser.uid;
@@ -76,7 +78,33 @@ class AuthService {
         ).toJson());
   }
 
+  Future<void> sendVerificationEmail() async {
+    if (currentUser != null) {
+      await currentUser.sendEmailVerification(ActionCodeSettings(
+          url: '/handleverification', handleCodeInApp: true));
+    }
+  }
+
   Future<void> logout() async {
     await _auth.signOut();
+  }
+
+  Future<Uri> createDynamicLink() async {
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: 'https://your.page.link',
+      link: Uri.parse('https://your.url.com'),
+      androidParameters: AndroidParameters(
+        packageName: 'your_android_package_name',
+        minimumVersion: 1,
+      ),
+      iosParameters: IosParameters(
+        bundleId: 'your_ios_bundle_identifier',
+        minimumVersion: '1',
+        appStoreId: 'your_app_store_id',
+      ),
+    );
+    ShortDynamicLink dynamicUrl = await parameters.buildShortLink();
+    final Uri shortUrl = dynamicUrl.shortUrl;
+    return shortUrl;
   }
 }

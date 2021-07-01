@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mustang_app/components/onboarding/fancy_text_form_field.dart';
 import 'package:mustang_app/components/onboarding/social_button.dart';
 import 'package:mustang_app/models/user.dart';
+import 'package:mustang_app/pages/onboarding/handle_verification.dart';
 import 'package:mustang_app/pages/onboarding/register.dart';
 import 'package:mustang_app/services/auth_service.dart';
 import 'package:mustang_app/components/shared/logo.dart';
@@ -58,6 +59,8 @@ class _LoginState extends State<Login> {
             'method': SignInMethod.GOOGLE,
           },
         );
+      } else if (!service.currentUser.emailVerified) {
+        Navigator.pushNamed(context, HandleVerification.route);
       } else {
         Navigator.pushNamed(context, '/');
       }

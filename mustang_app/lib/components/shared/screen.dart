@@ -59,6 +59,7 @@ class Screen extends StatelessWidget {
               context,
             )
           : null,
+      resizeToAvoidBottomInset: false,
     );
   }
 }

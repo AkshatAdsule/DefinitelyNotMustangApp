@@ -9,15 +9,31 @@ class FancyTextFormField extends FormField<String> {
     bool obscureText = false,
     TextEditingController controller,
     String hintText = "",
+    String title = "",
     Widget prefixIcon,
     Widget suffixIcon,
   }) : super(
           onSaved: onSaved,
           validator: validator,
           initialValue: initialValue,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           builder: (FormFieldState<String> state) {
             return Column(
               children: [
+                Visibility(
+                  visible: !title.isEmpty,
+                  child: Container(
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(bottom: 5, left: 5),
+                  ),
+                ),
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
@@ -48,7 +64,33 @@ class FancyTextFormField extends FormField<String> {
                       ),
                     ),
                   ),
-                )
+                ),
+                Visibility(
+                  visible: state.hasError,
+                  child: Container(
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.only(right: 10),
+                          child: Icon(
+                            Icons.flag_outlined,
+                            color: Colors.redAccent.shade400,
+                            size: 20,
+                          ),
+                        ),
+                        Text(
+                          state.errorText ?? "",
+                          style: TextStyle(
+                            color: Colors.redAccent.shade400,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                    alignment: Alignment.centerLeft,
+                    margin: EdgeInsets.only(top: 5, left: 13),
+                  ),
+                ),
               ],
             );
           },
