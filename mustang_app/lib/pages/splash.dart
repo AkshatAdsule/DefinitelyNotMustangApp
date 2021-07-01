@@ -5,6 +5,7 @@ import 'package:mustang_app/models/user.dart';
 import 'package:mustang_app/services/auth_service.dart';
 import 'package:mustang_app/components/shared/logo.dart';
 import 'package:mustang_app/components/shared/screen.dart';
+import 'package:mustang_app/services/dynamic_links_service.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
@@ -24,11 +25,13 @@ class _SplashState extends State<Splash> {
   UserModel _user;
   _SplashState();
   Timer _startAnimation;
+  final DynamicLinkService _dynamicLinkService = DynamicLinkService();
 
   @override
   void dispose() {
     super.dispose();
     _startAnimation.cancel();
+    _dynamicLinkService.retrieveDynamicLink(context);
   }
 
   Future<void> _init(BuildContext context) async {
