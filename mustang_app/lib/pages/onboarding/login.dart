@@ -12,7 +12,9 @@ import 'package:mustang_app/pages/onboarding/register.dart';
 import 'package:mustang_app/services/auth_service.dart';
 import 'package:mustang_app/components/shared/logo.dart';
 import 'package:mustang_app/components/shared/screen.dart';
+import 'package:mustang_app/services/dynamic_links_service.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class Login extends StatefulWidget {
   static const String route = '/login';
@@ -44,6 +46,12 @@ class _LoginState extends State<Login> {
     setState(() {
       _hidePassword = !_hidePassword;
     });
+  }
+
+  Future<void> signInWithFacebook(BuildContext context) async {
+    DynamicLinkService service = new DynamicLinkService();
+    Uri uri = await service.getLinkFromFirebase('/register');
+    Share.share(uri.toString());
   }
 
   Future<void> signInWithGoogle(BuildContext context) async {
@@ -431,7 +439,7 @@ class _LoginState extends State<Login> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SocialButton(
-                      onPressed: () => signInWithGoogle(context),
+                      onPressed: () => signInWithFacebook(context),
                       icon: Image.asset('assets/facebook.jpg')),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 10),

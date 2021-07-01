@@ -60,8 +60,17 @@ class DynamicLinkService {
           print(error);
         },
       );
+
+      FirebaseDynamicLinks.instance
+          .getDynamicLink(Uri.parse('https://mustangapp.page.link/test'));
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future<Uri> getLinkFromFirebase(String path) async {
+    PendingDynamicLinkData data = await FirebaseDynamicLinks.instance
+        .getDynamicLink(Uri.parse('https://mustangapp.page.link/test'));
+    return data.link;
   }
 }
