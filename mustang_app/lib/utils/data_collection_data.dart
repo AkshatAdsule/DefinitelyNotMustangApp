@@ -138,9 +138,11 @@ class DataCollectionMatchData {
         matchPoints += climbPoints;
       } else {
         climbed = false;
+        climbPoints = 0;
       }
     } catch (e) {
       climbed = false;
+      climbPoints = 0;
       failCount++;
     }
 
@@ -174,6 +176,7 @@ class DataCollectionMatchData {
     } else if (row[9] == "T" || row[10] == 'T') {
       matchResult = MatchResult.Tie;
     } else {
+      matchResult = MatchResult.Unknown;
       failCount++;
     }
 
@@ -193,4 +196,4 @@ class DataCollectionMatchData {
 
 enum Strategy { Offensive, Defensive, Combo }
 
-enum MatchResult { Win, Tie, Lose }
+enum MatchResult { Win, Tie, Lose, Unknown }
