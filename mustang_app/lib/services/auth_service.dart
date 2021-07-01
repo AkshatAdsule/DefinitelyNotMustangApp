@@ -88,23 +88,4 @@ class AuthService {
   Future<void> logout() async {
     await _auth.signOut();
   }
-
-  Future<Uri> createDynamicLink() async {
-    final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: 'https://your.page.link',
-      link: Uri.parse('https://your.url.com'),
-      androidParameters: AndroidParameters(
-        packageName: 'your_android_package_name',
-        minimumVersion: 1,
-      ),
-      iosParameters: IosParameters(
-        bundleId: 'your_ios_bundle_identifier',
-        minimumVersion: '1',
-        appStoreId: 'your_app_store_id',
-      ),
-    );
-    ShortDynamicLink dynamicUrl = await parameters.buildShortLink();
-    final Uri shortUrl = dynamicUrl.shortUrl;
-    return shortUrl;
-  }
 }

@@ -379,3 +379,6 @@ DerivedData/
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 # End of https://www.toptal.com/developers/gitignore/api/flutter,dart,macos,windows,android,xcode,intellij,vscode
+
+# Environment Variables
+.env
