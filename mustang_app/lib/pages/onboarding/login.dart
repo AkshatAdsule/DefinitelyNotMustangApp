@@ -50,7 +50,7 @@ class _LoginState extends State<Login> {
 
   Future<void> signInWithFacebook(BuildContext context) async {
     DynamicLinkService service = new DynamicLinkService();
-    Uri uri = await service.getLinkFromFirebase('/register');
+    Uri uri = await service.createDynamicLink(path: '/');
     Share.share(uri.toString());
   }
 

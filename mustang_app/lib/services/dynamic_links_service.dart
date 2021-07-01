@@ -1,32 +1,39 @@
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:mustang_app/pages/onboarding/register.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class DynamicLinkService {
   Future<Uri> createDynamicLink({
-    String title = "",
-    String description = "",
+    String title = "Homestead Robotics",
+    String description = "Homestead Robotics Scouting App",
     Uri imageUrl,
-    String path,
+    String path = Register.route,
   }) async {
-    String prefix = dotenv.env['DYNAMIC_LINK_PREFIX'];
+    String prefix = dotenv.env['DYNAMIC_LINK_URI_PREFIX'];
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: 'https://$prefix',
-      link: Uri.parse('https://$prefix.com$path'),
+      link: Uri.parse('https://$prefix$path'),
       androidParameters: AndroidParameters(
-        packageName: dotenv.env['PACKAGE_NAME'],
+        packageName: packageInfo.packageName,
         minimumVersion: 1,
       ),
       iosParameters: IosParameters(
-        bundleId: dotenv.env['BUNDLE_ID'],
+        bundleId: packageInfo.packageName,
         minimumVersion: '1',
         appStoreId: dotenv.env['APP_STORE_ID'],
       ),
       socialMetaTagParameters: SocialMetaTagParameters(
         title: title,
         description: description,
-        imageUrl: imageUrl,
+        imageUrl: imageUrl ??
+            Uri.parse(
+                'https://firebasestorage.googleapis.com/v0/b/mustangapp-b1398.appspot.com/o/logo.png?alt=media&token=f45e368d-3cba-4d67-b8d5-2e554f87e046'),
+      ),
+      navigationInfoParameters: NavigationInfoParameters(
+        forcedRedirectEnabled: false,
       ),
     );
     ShortDynamicLink dynamicUrl = await parameters.buildShortLink();
@@ -34,35 +41,39 @@ class DynamicLinkService {
     return shortUrl;
   }
 
-  Future<void> retrieveDynamicLink(BuildContext context) async {
+  Future<void> retrieveDynamicLink({
+    Function(PendingDynamicLinkData data) onLinkReceived,
+    Function(OnLinkErrorException error) onError,
+  }) async {
     try {
+      FirebaseDynamicLinks.instance.onLink(
+        onSuccess: (PendingDynamicLinkData dynamicLink) async {
+          if (onLinkReceived != null) {
+            onLinkReceived(dynamicLink);
+          } else {
+            print(dynamicLink.link.toString());
+          }
+        },
+        onError: (OnLinkErrorException error) async {
+          if (onError != null) {
+            onError(error);
+          } else {
+            print(error);
+          }
+        },
+      );
+
       final PendingDynamicLinkData data =
           await FirebaseDynamicLinks.instance.getInitialLink();
       final Uri deepLink = data?.link;
 
       if (deepLink != null) {
-        Navigator.pushNamed(
-          context,
-          deepLink.path,
-          arguments: deepLink.queryParameters,
-        );
+        if (onLinkReceived != null) {
+          onLinkReceived(data);
+        } else {
+          print(deepLink.toString());
+        }
       }
-
-      FirebaseDynamicLinks.instance.onLink(
-        onSuccess: (PendingDynamicLinkData dynamicLink) async {
-          Navigator.pushNamed(
-            context,
-            dynamicLink.link.path,
-            arguments: dynamicLink.link.queryParameters,
-          );
-        },
-        onError: (OnLinkErrorException error) async {
-          print(error);
-        },
-      );
-
-      FirebaseDynamicLinks.instance
-          .getDynamicLink(Uri.parse('https://mustangapp.page.link/test'));
     } catch (e) {
       print(e.toString());
     }
@@ -70,7 +81,7 @@ class DynamicLinkService {
 
   Future<Uri> getLinkFromFirebase(String path) async {
     PendingDynamicLinkData data = await FirebaseDynamicLinks.instance
-        .getDynamicLink(Uri.parse('https://mustangapp.page.link/test'));
+        .getDynamicLink(Uri.parse('https://mustangapp.page.link$path'));
     return data.link;
   }
 }
