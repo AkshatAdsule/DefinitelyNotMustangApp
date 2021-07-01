@@ -84,7 +84,6 @@ class DataCollectionHistogramWidget extends StatelessWidget {
           ],
         ),
       );
-      print("ga $numOfGamePieces, ${gamePiecesAttemptedFrequencies[i]}");
     }
 
     for (int i = 0; i < gamePiecesScoredFrequencies.length; i++) {
@@ -99,7 +98,6 @@ class DataCollectionHistogramWidget extends StatelessWidget {
           ],
         ),
       );
-      print("gs $numOfGamePieces, ${gamePiecesScoredFrequencies[i]}");
     }
 
     return {
@@ -145,17 +143,13 @@ class DataCollectionHistogramWidget extends StatelessWidget {
           ),
         ),
         axisTitleData: FlAxisTitleData(
-              leftTitle: AxisTitle(
-                showTitle: true, 
-                titleText: 'Frequency', 
-                margin: 4
-              ),
-              bottomTitle: AxisTitle(
-                  showTitle: true,
-                  margin: 0,
-                  titleText: 'Number of Game Pieces', 
-                )
-              ),
+            leftTitle:
+                AxisTitle(showTitle: true, titleText: 'Frequency', margin: 4),
+            bottomTitle: AxisTitle(
+              showTitle: true,
+              margin: 0,
+              titleText: 'Number of Game Pieces',
+            )),
         barGroups: _data,
       ),
     );
