@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/onboarding/fancy_text_form_field.dart';
 import 'package:mustang_app/components/shared/screen.dart';
+import 'package:mustang_app/pages/onboarding/verify_email.dart';
 import 'package:mustang_app/pages/pages.dart';
 import 'package:mustang_app/services/auth_service.dart';
 import 'package:provider/provider.dart';
@@ -78,8 +79,10 @@ class _RegisterState extends State<Register> {
           : _email.text;
       await service.createAccount(
           _firstName.text, _lastName.text, email, _password.text, _method);
-      Navigator.pushNamed(context, '/');
-    } on FirebaseException catch (error) {
+      print('here');
+      Navigator.pushNamed(context, VerifyEmail.route);
+    } on FirebaseAuthException catch (error) {
+      print('firebase error: ${error.message}');
       String message = "An error occurred. Try again later";
       switch (error.code) {
         case "invalid-email":
@@ -110,7 +113,7 @@ class _RegisterState extends State<Register> {
           );
       }
     } catch (error) {
-      print(error);
+      print('error: $error');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
@@ -180,9 +183,7 @@ class _RegisterState extends State<Register> {
                             if (val == null || val.isEmpty) {
                               return "Please enter your first name";
                             }
-                            if (val.length < 10) {
-                              return "Length must be 10";
-                            }
+
                             return null;
                           },
                           prefixIcon: Icon(

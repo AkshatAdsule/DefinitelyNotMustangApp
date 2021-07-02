@@ -3,6 +3,7 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mustang_app/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 enum SignInMethod {
   EMAIL_PASSWORD,
@@ -61,14 +62,12 @@ class AuthService {
     if (method == SignInMethod.EMAIL_PASSWORD) {
       UserCredential cred = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
       uid = cred.user.uid;
     } else if (currentUser != null) {
       uid = currentUser.uid;
     } else {
       throw new Exception("Uid not found");
     }
-
     await usersCollection.doc(uid).set(UserModel(
           uid,
           email,
@@ -76,13 +75,54 @@ class AuthService {
           lastName,
           UserType.MEMBER,
         ).toJson());
+    // await this.sendVerificationEmail();
   }
 
   Future<void> sendVerificationEmail() async {
     if (currentUser != null) {
-      await currentUser.sendEmailVerification(ActionCodeSettings(
-          url: '/handleverification', handleCodeInApp: true));
+      PackageInfo info = await PackageInfo.fromPlatform();
+
+      await currentUser.sendEmailVerification(
+        ActionCodeSettings(
+          url:
+              'https://mustangapp.page.link/handleverification?email=${currentUser.email}',
+          dynamicLinkDomain: "mustangapp.page.link",
+          handleCodeInApp: true,
+          androidPackageName: info.packageName,
+          iOSBundleId: info.packageName,
+          androidInstallApp: true,
+        ),
+      );
     }
+  }
+
+  Future<void> sendPasswordResetEmail(String email) async {
+    PackageInfo info = await PackageInfo.fromPlatform();
+
+    await _auth.sendPasswordResetEmail(
+      email: email,
+      actionCodeSettings: ActionCodeSettings(
+        url:
+            'https://mustangapp.page.link/handleverification?email=${currentUser.email}',
+        dynamicLinkDomain: "mustangapp.page.link",
+        handleCodeInApp: true,
+        androidPackageName: info.packageName,
+        iOSBundleId: info.packageName,
+        androidInstallApp: true,
+      ),
+    );
+  }
+
+  Future<void> resetPassword(String oobCode, String newPassword) async {
+    await _auth.confirmPasswordReset(code: oobCode, newPassword: newPassword);
+  }
+
+  Future<ActionCodeInfo> getActionCodeOperation(String oobCode) async {
+    return await _auth.checkActionCode(oobCode);
+  }
+
+  Future<void> handleOobCode(String oobCode) async {
+    await _auth.applyActionCode(oobCode);
   }
 
   Future<void> logout() async {

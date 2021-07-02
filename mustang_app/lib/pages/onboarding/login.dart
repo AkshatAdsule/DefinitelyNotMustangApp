@@ -9,6 +9,7 @@ import 'package:mustang_app/components/onboarding/social_button.dart';
 import 'package:mustang_app/models/user.dart';
 import 'package:mustang_app/pages/onboarding/handle_verification.dart';
 import 'package:mustang_app/pages/onboarding/register.dart';
+import 'package:mustang_app/pages/onboarding/verify_email.dart';
 import 'package:mustang_app/services/auth_service.dart';
 import 'package:mustang_app/components/shared/logo.dart';
 import 'package:mustang_app/components/shared/screen.dart';
@@ -49,9 +50,7 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> signInWithFacebook(BuildContext context) async {
-    DynamicLinkService service = new DynamicLinkService();
-    Uri uri = await service.createDynamicLink(path: '/');
-    Share.share(uri.toString());
+    Navigator.pushNamed(context, '/');
   }
 
   Future<void> signInWithGoogle(BuildContext context) async {
@@ -72,7 +71,7 @@ class _LoginState extends State<Login> {
       } else {
         Navigator.pushNamed(context, '/');
       }
-    } on FirebaseException catch (error) {
+    } on FirebaseAuthException catch (error) {
       String message = "An error occurred. Try again later";
       switch (error.code) {
         case "account-exists-with-different-credential":
@@ -119,6 +118,7 @@ class _LoginState extends State<Login> {
 
   Future<void> signInWithEmailAndPassword(BuildContext context) async {
     AuthService service = Provider.of<AuthService>(context, listen: false);
+    FocusScope.of(context).unfocus();
     try {
       UserCredential cred =
           await service.loginWithEmailAndPassword(_email.text, _password.text);
@@ -131,11 +131,14 @@ class _LoginState extends State<Login> {
             'method': SignInMethod.EMAIL_PASSWORD,
           },
         );
+      } else if (!service.currentUser.emailVerified) {
+        Navigator.pushNamed(context, VerifyEmail.route);
       } else {
         Navigator.pushNamed(context, '/');
       }
-    } on FirebaseException catch (error) {
+    } on FirebaseAuthException catch (error) {
       String message = "An error occurred. Try again later";
+
       switch (error.code) {
         case "invalid-email":
           {
@@ -161,14 +164,13 @@ class _LoginState extends State<Login> {
           {
             break;
           }
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.red,
-              content: Text(message),
-            ),
-          );
       }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(message),
+        ),
+      );
     } catch (error) {
       print(error);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -288,10 +290,6 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    User user = Provider.of<AuthService>(context).currentUser;
-    if (user != null) {
-      Navigator.pushNamed(context, '/');
-    }
     return Screen(
       left: false,
       right: false,
@@ -341,6 +339,7 @@ class _LoginState extends State<Login> {
                         hintText: "Email",
                         controller: _email,
                         validator: (String val) {
+                          val = _email.text;
                           if (val == null || val.isEmpty) {
                             return "Please enter your email";
                           }
@@ -359,6 +358,7 @@ class _LoginState extends State<Login> {
                         hintText: "Password",
                         controller: _password,
                         validator: (String val) {
+                          val = _password.text;
                           if (val == null || val.isEmpty) {
                             return "Please enter your password";
                           }

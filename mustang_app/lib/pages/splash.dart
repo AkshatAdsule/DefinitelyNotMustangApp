@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/models/user.dart';
+import 'package:mustang_app/pages/onboarding/verify_email.dart';
 import 'package:mustang_app/services/auth_service.dart';
 import 'package:mustang_app/components/shared/logo.dart';
 import 'package:mustang_app/components/shared/screen.dart';
@@ -46,8 +47,10 @@ class _SplashState extends State<Splash> {
     AuthService auth = Provider.of<AuthService>(context, listen: false);
     User currentUser = auth.currentUser;
     UserModel user = await auth.getUser(currentUser?.uid);
+
     await _dynamicLinkService.retrieveDynamicLink(
         onLinkReceived: (PendingDynamicLinkData data) {
+      print('link received: ' + data.link.path.toString());
       _dynamicLinkData = data;
     });
 
@@ -58,9 +61,22 @@ class _SplashState extends State<Splash> {
   }
 
   void _goToNextPage(BuildContext context) {
-    if (_user == null) {
+    AuthService auth = Provider.of<AuthService>(context, listen: false);
+    User currentUser = auth.currentUser;
+    if (_user == null && currentUser != null) {
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        Register.route,
+        (route) => false,
+        arguments: {
+          'method': SignInMethod.GOOGLE,
+        },
+      );
+    } else if (_user == null) {
       Navigator.of(context)
           .pushNamedAndRemoveUntil(Login.route, (route) => false);
+    } else if (!currentUser.emailVerified) {
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(VerifyEmail.route, (route) => false);
     } else {
       Navigator.of(context)
           .pushNamedAndRemoveUntil(Home.route, (route) => false);
