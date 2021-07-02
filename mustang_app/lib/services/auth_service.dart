@@ -98,6 +98,8 @@ class AuthService {
           firstName,
           lastName,
           UserType.MEMBER,
+          "",
+          TeamStatus.LONELY,
         ).toJson());
     // await this.sendVerificationEmail();
   }

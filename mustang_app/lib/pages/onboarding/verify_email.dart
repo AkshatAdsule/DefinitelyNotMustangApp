@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/shared/screen.dart';
+import 'package:mustang_app/pages/onboarding/join_team.dart';
 import 'package:mustang_app/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
@@ -36,6 +37,10 @@ class _VerifyEmailState extends State<VerifyEmail> {
       _buttonText = "Email Sent";
       _isLoading = false;
     });
+  }
+
+  void next() {
+    Navigator.pushNamed(context, JoinTeam.route);
   }
 
   @override
@@ -90,7 +95,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: ElevatedButton(
-                  onPressed: () => sendVerificationEmail(),
+                  onPressed: () => next(),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

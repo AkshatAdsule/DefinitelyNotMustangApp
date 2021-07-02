@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/models/user.dart';
+import 'package:mustang_app/pages/onboarding/join_team.dart';
 import 'package:mustang_app/pages/onboarding/verify_email.dart';
 import 'package:mustang_app/services/auth_service.dart';
 import 'package:mustang_app/components/shared/logo.dart';
@@ -77,6 +78,8 @@ class _SplashState extends State<Splash> {
     } else if (!currentUser.emailVerified) {
       Navigator.of(context)
           .pushNamedAndRemoveUntil(VerifyEmail.route, (route) => false);
+    } else if (_user.teamStatus == TeamStatus.LONELY) {
+      Navigator.pushNamed(context, JoinTeam.route);
     } else {
       Navigator.of(context)
           .pushNamedAndRemoveUntil(Home.route, (route) => false);
