@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mustang_app/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -43,6 +44,29 @@ class AuthService {
   }
 
   Future<UserCredential> loginWithGoogle() async {
+    if (kIsWeb) {
+      GoogleAuthProvider authProvider = GoogleAuthProvider();
+
+      return await _auth.signInWithPopup(authProvider);
+    } else {
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+
+      final GoogleSignInAccount googleSignInAccount =
+          await googleSignIn.signIn();
+
+      if (googleSignInAccount != null) {
+        final GoogleSignInAuthentication googleSignInAuthentication =
+            await googleSignInAccount.authentication;
+
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleSignInAuthentication.accessToken,
+          idToken: googleSignInAuthentication.idToken,
+        );
+
+        return await _auth.signInWithCredential(credential);
+      }
+    }
+
     final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
 
     final GoogleSignInAuthentication googleAuth =

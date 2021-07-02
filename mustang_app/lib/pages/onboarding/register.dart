@@ -104,14 +104,13 @@ class _RegisterState extends State<Register> {
           {
             break;
           }
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.red,
-              content: Text(message),
-            ),
-          );
       }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(message),
+        ),
+      );
     } catch (error) {
       print('error: $error');
       ScaffoldMessenger.of(context).showSnackBar(
