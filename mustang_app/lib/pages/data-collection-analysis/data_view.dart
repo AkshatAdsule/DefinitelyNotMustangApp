@@ -6,7 +6,7 @@ import 'package:mustang_app/constants/constants.dart';
 import 'package:mustang_app/pages/data-collection-analysis/robot_data.dart';
 import 'package:mustang_app/pages/data-collection-analysis/view_graph_screen.dart';
 import 'package:mustang_app/utils/data_collection_data.dart';
-import 'package:mustang_app/utils/robot.dart';
+import 'package:mustang_app/models/robot.dart';
 
 class DataViewScreen extends StatefulWidget {
   static const route = '/data_view';

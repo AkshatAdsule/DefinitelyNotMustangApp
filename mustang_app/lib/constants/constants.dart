@@ -2,7 +2,7 @@ export 'game_constants.dart';
 export 'preferences.dart';
 export 'legacy.dart';
 export 'robot_constants.dart';
-import 'package:mustang_app/utils/robot.dart';
+import 'package:mustang_app/models/robot.dart';
 
 class Constants {
   //not a constant but needs to be accessible

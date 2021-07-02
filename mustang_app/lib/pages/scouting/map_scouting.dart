@@ -167,7 +167,11 @@ class MapScoutingState extends State<MapScouting> {
     bool hasSelected = zoneGridKey.currentState.hasSelected;
     GameAction action;
     if (hasSelected && GameAction.requiresLocation(type)) {
-      action = new GameAction(type, now.toDouble(), x.toDouble(), y.toDouble());
+      action = new GameAction(
+          actionType: type,
+          timeStamp: now.toDouble(),
+          x: x.toDouble(),
+          y: y.toDouble());
     } else if (!GameAction.requiresLocation(type)) {
       action = GameAction.other(type, now.toDouble());
     } else {
@@ -207,7 +211,7 @@ class MapScoutingState extends State<MapScouting> {
   }
 
   void updateCounter(GameAction action) {
-    String type = action.action.toString();
+    String type = action.actionType.toString();
     if (type.contains("SHOT") ||
         type.contains("MISSED") ||
         type.contains("INTAKE") ||
@@ -231,7 +235,7 @@ class MapScoutingState extends State<MapScouting> {
 
   void addClimb(ActionType actionType) {
     actions.removeWhere((element) {
-      String type = element.action.toString();
+      String type = element.actionType.toString();
       return type.contains("PARKED") ||
           type.contains("CLIMB") ||
           type.contains("LEVELLED");
@@ -239,12 +243,13 @@ class MapScoutingState extends State<MapScouting> {
 
     actions.add(
       GameAction(
-        actionType,
-        sliderLastChanged.toDouble() ?? GameConstants.endgameStartMillis,
-        actionType == ActionType.OTHER_CLIMB_MISS
+        actionType: actionType,
+        timeStamp:
+            sliderLastChanged.toDouble() ?? GameConstants.endgameStartMillis,
+        x: actionType == ActionType.OTHER_CLIMB_MISS
             ? zoneGridKey.currentState.x
             : sliderVal,
-        actionType == ActionType.OTHER_CLIMB_MISS
+        y: actionType == ActionType.OTHER_CLIMB_MISS
             ? zoneGridKey.currentState.y
             : sliderVal,
       ),
@@ -273,7 +278,7 @@ class MapScoutingState extends State<MapScouting> {
   GameAction _undo() {
     if (actions.length > 0) {
       GameAction action = actions.removeLast();
-      switch (action.action) {
+      switch (action.actionType) {
         case ActionType.OTHER_WHEEL_ROTATION:
           setState(() {
             completedRotationControl = false;

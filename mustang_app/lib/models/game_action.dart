@@ -1,67 +1,65 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
 class GameAction {
   //end row, end column, push time are only for push, will be null most of time
-  double _timeStamp, _x, _y, _pushTime;
-  ActionType _action;
+  double timeStamp, x, y, pushTime;
+  ActionType actionType;
   GameAction(
-    this._action,
-    this._timeStamp,
-    this._x,
-    this._y,
-  );
+      {@required this.actionType,
+      @required this.timeStamp,
+      @required this.x,
+      @required this.y,
+      this.pushTime = 0});
 
-  GameAction.other(this._action, this._timeStamp) {
-    _x = -1;
-    _y = -1;
+  factory GameAction.other(ActionType actionType, double timeStamp) {
+    return GameAction(
+        actionType: actionType, timeStamp: timeStamp, x: -1, y: -1);
   }
 
   String toString() {
     return "Type: " +
-        _action.toString() +
+        actionType.toString() +
         "; Duration: " +
-        _timeStamp.toString() +
+        timeStamp.toString() +
         "; Location: (" +
-        _x.toString() +
+        x.toString() +
         ", " +
-        _y.toString() +
+        y.toString() +
         ")";
   }
 
-  double get timeStamp => _timeStamp;
-  double get x => _x;
-  double get y => _y;
-  
-  //for push, timeStamp is at the beginning of the push
-  double get pushTime => _pushTime;
-  ActionType get action => _action;
-
-  set x(double x) => _x = x;
-  set y(double y) => _y = y;
-  set pushTime(double pushTime) => _pushTime = pushTime;
-  set action(ActionType action) => _action = action;
-
   Map<String, dynamic> toJson() {
     return {
-      'timeStamp': _timeStamp,
-      'x': _x,
-      'y': _y,
-      'pushTime': _pushTime,
-      'actionType': _action.toString(),
+      'timeStamp': timeStamp,
+      'x': x,
+      'y': y,
+      'pushTime': pushTime,
+      'actionType': describeEnum(actionType),
     };
   }
 
-  GameAction.fromJson(Map<String, dynamic> data) {
-    _x = data['x'];
-    _y = data['y'];
-    _timeStamp = data['timeStamp'];
-    _pushTime = data['pushTime'];
-    _action = ActionType.values
-        .firstWhere((element) => element.toString() == data['actionType']);
+  factory GameAction.fromJson(Map<String, dynamic> data) {
+    return GameAction(
+      x: data['x'],
+      y: data['y'],
+      timeStamp: data['timeStamp'],
+      pushTime: data['pushTime'],
+      actionType: actionTypeFromString(data['actionType']),
+    );
   }
 
-  static ActionType stringToActionType(String str) {
-    ActionType action = ActionType.values
-        .firstWhere((e) => e.toString() == 'ActionType.' + str);
-    return action;
+  static String actionTypeToString(ActionType actionType) {
+    return describeEnum(actionType);
+  }
+
+  static ActionType actionTypeFromString(String actionType) {
+    ActionType.values.forEach((element) {
+      if (describeEnum(element) == actionType) {
+        return element;
+      }
+    });
+    return ActionType.ALL;
   }
 
   static bool requiresLocation(ActionType type) {

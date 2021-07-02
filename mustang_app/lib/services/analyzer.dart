@@ -3,6 +3,7 @@ import 'package:mustang_app/constants/game_constants.dart';
 import 'package:mustang_app/constants/robot_constants.dart';
 import 'package:mustang_app/models/game_action.dart';
 import 'package:mustang_app/models/match.dart';
+import 'package:mustang_app/models/robot.dart';
 import 'package:mustang_app/models/team.dart';
 import '../models/match.dart';
 
@@ -11,7 +12,8 @@ class Analyzer {
   Team team;
   List<Match> matches;
   bool _initialized = false;
-  String _teamNum = '', _driveBase = 'tank';
+  String _teamNum = '';
+  DriveBaseType _driveBase = DriveBaseType.TANK;
   List<Match> _allMatches = []; //array that holds everything
   int _oldAllMatchLength = 0;
   //for testing if data needs to be collected again or not - if same then don't
@@ -115,7 +117,7 @@ class Analyzer {
     for (int i = 0; i < actions.length; i++){
       for (int j = 0; j < actionsToDisplay.length; j++){
         GameAction currAction = actions[i];
-        if (currAction.action == actionsToDisplay[j]){
+        if (currAction.actionType == actionsToDisplay[j]){
           debugPrint("j: " + j.toString());
           if (currAction.timeStamp <= GameConstants.autonMillisecondLength){ //happened during auton
             //debugPrint("autonActionOccurences[j]: " + autonActionOccurences[j].toString());
@@ -164,84 +166,84 @@ class Analyzer {
     for (GameAction a in actions) {
       //happened during auton
       if (a.timeStamp <= GameConstants.autonMillisecondLength) {
-        if (a.action == ActionType.SHOT_INNER) {
+        if (a.actionType == ActionType.SHOT_INNER) {
           autonInnerScored++;
-        } else if (a.action == ActionType.SHOT_INNER) {
+        } else if (a.actionType == ActionType.SHOT_INNER) {
           autonInnerScored++;
-        } else if (a.action == ActionType.SHOT_OUTER) {
+        } else if (a.actionType == ActionType.SHOT_OUTER) {
           autonOuterScored++;
-        } else if (a.action == ActionType.SHOT_LOW) {
+        } else if (a.actionType == ActionType.SHOT_LOW) {
           autonLowScored++;
-        } else if (a.action == ActionType.MISSED_OUTER) {
+        } else if (a.actionType == ActionType.MISSED_OUTER) {
           autonOuterMissed++;
-        } else if (a.action == ActionType.MISSED_LOW) {
+        } else if (a.actionType == ActionType.MISSED_LOW) {
           autonLowMissed++;
-        } else if (a.action == ActionType.INTAKE) {
+        } else if (a.actionType == ActionType.INTAKE) {
           autonIntake++;
-        } else if (a.action == ActionType.MISSED_INTAKE) {
+        } else if (a.actionType == ActionType.MISSED_INTAKE) {
           autonIntakeMissed++;
         }
       }
 
       //happened during teleop
       else {
-        if (a.action == ActionType.SHOT_INNER) {
+        if (a.actionType == ActionType.SHOT_INNER) {
           teleopInnerScored++;
-        } else if (a.action == ActionType.SHOT_INNER) {
+        } else if (a.actionType == ActionType.SHOT_INNER) {
           teleopInnerScored++;
-        } else if (a.action == ActionType.SHOT_OUTER) {
+        } else if (a.actionType == ActionType.SHOT_OUTER) {
           teleopOuterScored++;
-        } else if (a.action == ActionType.SHOT_LOW) {
+        } else if (a.actionType == ActionType.SHOT_LOW) {
           teleopLowScored++;
-        } else if (a.action == ActionType.MISSED_OUTER) {
+        } else if (a.actionType == ActionType.MISSED_OUTER) {
           teleopOuterMissed++;
-        } else if (a.action == ActionType.MISSED_LOW) {
+        } else if (a.actionType == ActionType.MISSED_LOW) {
           teleopLowMissed++;
-        } else if (a.action == ActionType.INTAKE) {
+        } else if (a.actionType == ActionType.INTAKE) {
           teleopIntake++;
-        } else if (a.action == ActionType.MISSED_INTAKE) {
+        } else if (a.actionType == ActionType.MISSED_INTAKE) {
           teleopIntakeMissed++;
         }
       }
 
       //defense
-      if (a.action == ActionType.PREV_SHOT) {
+      if (a.actionType == ActionType.PREV_SHOT) {
         shotsPrev++;
-      } else if (a.action == ActionType.PREV_INTAKE) {
+      } else if (a.actionType == ActionType.PREV_INTAKE) {
         intakesPrev++;
-      } else if (a.action == ActionType.PUSH_START) {
+      } else if (a.actionType == ActionType.PUSH_START) {
         pushes++;
       }
 
       //fouls
-      if (a.action == ActionType.FOUL_REG) {
+      if (a.actionType == ActionType.FOUL_REG) {
         foulReds++;
-      } else if (a.action == ActionType.FOUL_TECH) {
+      } else if (a.actionType == ActionType.FOUL_TECH) {
         foulTechs++;
-      } else if (a.action == ActionType.FOUL_YELLOW) {
+      } else if (a.actionType == ActionType.FOUL_YELLOW) {
         foulYellows++;
-      } else if (a.action == ActionType.FOUL_RED) {
+      } else if (a.actionType == ActionType.FOUL_RED) {
         foulReds++;
-      } else if (a.action == ActionType.FOUL_DISABLED) {
+      } else if (a.actionType == ActionType.FOUL_DISABLED) {
         foulDisableds++;
-      } else if (a.action == ActionType.FOUL_DISQUAL) {
+      } else if (a.actionType == ActionType.FOUL_DISQUAL) {
         foulDisqualifieds++;
       }
 
       //other actions, mainly booleans
-      if (a.action == ActionType.OTHER_CROSSED_INITIATION_LINE) {
+      if (a.actionType == ActionType.OTHER_CROSSED_INITIATION_LINE) {
         crossedInitiationLine = true;
-      } else if (a.action == ActionType.OTHER_WHEEL_POSITION) {
+      } else if (a.actionType == ActionType.OTHER_WHEEL_POSITION) {
         wheelPosition = true;
-      } else if (a.action == ActionType.OTHER_WHEEL_ROTATION) {
+      } else if (a.actionType == ActionType.OTHER_WHEEL_ROTATION) {
         wheelRotation = true;
-      } else if (a.action == ActionType.OTHER_CLIMB) {
+      } else if (a.actionType == ActionType.OTHER_CLIMB) {
         climbed = true;
-      } else if (a.action == ActionType.OTHER_CLIMB_MISS) {
+      } else if (a.actionType == ActionType.OTHER_CLIMB_MISS) {
         climbMissed = true;
-      } else if (a.action == ActionType.OTHER_PARKED) {
+      } else if (a.actionType == ActionType.OTHER_PARKED) {
         climbParked = true;
-      } else if (a.action == ActionType.OTHER_LEVELLED) {
+      } else if (a.actionType == ActionType.OTHER_LEVELLED) {
         climbLevelled = true;
       }
     }
@@ -386,50 +388,50 @@ class Analyzer {
 
       List<GameAction> actions = _currentMatch.actions;
 
-      _foulReg.addAll(
-          actions.where((element) => element.action == ActionType.FOUL_REG));
-      _foulTech.addAll(
-          actions.where((element) => element.action == ActionType.FOUL_TECH));
-      _foulYellow.addAll(
-          actions.where((element) => element.action == ActionType.FOUL_YELLOW));
-      _foulRed.addAll(
-          actions.where((element) => element.action == ActionType.FOUL_RED));
+      _foulReg.addAll(actions
+          .where((element) => element.actionType == ActionType.FOUL_REG));
+      _foulTech.addAll(actions
+          .where((element) => element.actionType == ActionType.FOUL_TECH));
+      _foulYellow.addAll(actions
+          .where((element) => element.actionType == ActionType.FOUL_YELLOW));
+      _foulRed.addAll(actions
+          .where((element) => element.actionType == ActionType.FOUL_RED));
       _foulDisabled.addAll(actions
-          .where((element) => element.action == ActionType.FOUL_DISABLED));
+          .where((element) => element.actionType == ActionType.FOUL_DISABLED));
       _foulDisqual.addAll(actions
-          .where((element) => element.action == ActionType.FOUL_DISQUAL));
-      _shotInner.addAll(
-          actions.where((element) => element.action == ActionType.SHOT_INNER));
-      _shotOuter.addAll(
-          actions.where((element) => element.action == ActionType.SHOT_OUTER));
-      _shotLow.addAll(
-          actions.where((element) => element.action == ActionType.SHOT_LOW));
-      _missedLow.addAll(
-          actions.where((element) => element.action == ActionType.MISSED_LOW));
+          .where((element) => element.actionType == ActionType.FOUL_DISQUAL));
+      _shotInner.addAll(actions
+          .where((element) => element.actionType == ActionType.SHOT_INNER));
+      _shotOuter.addAll(actions
+          .where((element) => element.actionType == ActionType.SHOT_OUTER));
+      _shotLow.addAll(actions
+          .where((element) => element.actionType == ActionType.SHOT_LOW));
+      _missedLow.addAll(actions
+          .where((element) => element.actionType == ActionType.MISSED_LOW));
       _missedOuter.addAll(actions
-          .where((element) => element.action == ActionType.MISSED_OUTER));
-      _otherClimb.addAll(
-          actions.where((element) => element.action == ActionType.OTHER_CLIMB));
-      _otherClimbMiss.addAll(actions
-          .where((element) => element.action == ActionType.OTHER_CLIMB_MISS));
+          .where((element) => element.actionType == ActionType.MISSED_OUTER));
+      _otherClimb.addAll(actions
+          .where((element) => element.actionType == ActionType.OTHER_CLIMB));
+      _otherClimbMiss.addAll(actions.where(
+          (element) => element.actionType == ActionType.OTHER_CLIMB_MISS));
       _otherWheelRotation.addAll(actions.where(
-          (element) => element.action == ActionType.OTHER_WHEEL_ROTATION));
+          (element) => element.actionType == ActionType.OTHER_WHEEL_ROTATION));
       _otherWheelPosition.addAll(actions.where(
-          (element) => element.action == ActionType.OTHER_WHEEL_POSITION));
-      _prevIntake.addAll(
-          actions.where((element) => element.action == ActionType.PREV_INTAKE));
-      _prevShot.addAll(
-          actions.where((element) => element.action == ActionType.PREV_SHOT));
-      _pushStart.addAll(
-          actions.where((element) => element.action == ActionType.PUSH_START));
-      _pushEnd.addAll(
-          actions.where((element) => element.action == ActionType.PUSH_END));
+          (element) => element.actionType == ActionType.OTHER_WHEEL_POSITION));
+      _prevIntake.addAll(actions
+          .where((element) => element.actionType == ActionType.PREV_INTAKE));
+      _prevShot.addAll(actions
+          .where((element) => element.actionType == ActionType.PREV_SHOT));
+      _pushStart.addAll(actions
+          .where((element) => element.actionType == ActionType.PUSH_START));
+      _pushEnd.addAll(actions
+          .where((element) => element.actionType == ActionType.PUSH_END));
       _otherCrossedInitiationLine.addAll(actions.where((element) =>
-          element.action == ActionType.OTHER_CROSSED_INITIATION_LINE));
+          element.actionType == ActionType.OTHER_CROSSED_INITIATION_LINE));
       _otherParked.addAll(actions
-          .where((element) => element.action == ActionType.OTHER_PARKED));
+          .where((element) => element.actionType == ActionType.OTHER_PARKED));
       _otherLevelled.addAll(actions
-          .where((element) => element.action == ActionType.OTHER_LEVELLED));
+          .where((element) => element.actionType == ActionType.OTHER_LEVELLED));
     }
   }
 
@@ -547,15 +549,15 @@ class Analyzer {
 
     for (int b = 0; b < matchActions.length; b++) {
       //add intaked balls
-      if (matchActions[b].action == ActionType.INTAKE &&
+      if (matchActions[b].actionType == ActionType.INTAKE &&
           matchActions[b].timeStamp <= timeStamp) {
         ballsInBot++;
       }
 
       //remove balls that were shot
-      if (matchActions[b].action == ActionType.SHOT_LOW ||
-          matchActions[b].action == ActionType.SHOT_OUTER ||
-          matchActions[b].action == ActionType.SHOT_INNER) {
+      if (matchActions[b].actionType == ActionType.SHOT_LOW ||
+          matchActions[b].actionType == ActionType.SHOT_OUTER ||
+          matchActions[b].actionType == ActionType.SHOT_INNER) {
         if (matchActions[b].timeStamp <= timeStamp) {
           ballsInBot--;
         }
@@ -574,7 +576,7 @@ class Analyzer {
       List<GameAction> actions = _currentMatch.actions;
       String matchNum = _currentMatch.matchNumber;
       for (int a = 0; a < actions.length; a++) {
-        if (actions[a].action == ActionType.PUSH_START) {
+        if (actions[a].actionType == ActionType.PUSH_START) {
           double ballsInBot = getBallsInBot(matchNum, actions[a].timeStamp);
           //assume immediate action is end push
           result +=
@@ -597,19 +599,19 @@ class Analyzer {
     //set speed
     double _normalVelocity = 0.0;
 
-    if (_driveBase.contains("tank")) {
+    if (_driveBase == DriveBaseType.TANK) {
       _normalVelocity = RobotConstants.tankSpeed;
     }
-    if (_driveBase.contains("omni")) {
+    if (_driveBase == DriveBaseType.OMNI) {
       _normalVelocity = RobotConstants.omniSpeed;
     }
-    if (_driveBase.contains("westCoast")) {
+    if (_driveBase == DriveBaseType.WESTCOAST) {
       _normalVelocity = RobotConstants.westCoastSpeed;
     }
-    if (_driveBase.contains("mecanum")) {
+    if (_driveBase == DriveBaseType.MECANUM) {
       _normalVelocity = RobotConstants.mecanumSpeed;
     }
-    if (_driveBase.contains("swerve")) {
+    if (_driveBase == DriveBaseType.SWERVE) {
       _normalVelocity = RobotConstants.swerveSpeed;
     }
 
@@ -658,16 +660,16 @@ class Analyzer {
         //inside each array of actions
         for (int j = 0; j < _allMatches[i].actions.length; j++) {
           GameAction currentAction = _allMatches[i].actions[j];
-          if (currentAction.action == ActionType.SHOT_LOW ||
-              currentAction.action == ActionType.SHOT_OUTER ||
-              currentAction.action == ActionType.SHOT_INNER) {
+          if (currentAction.actionType == ActionType.SHOT_LOW ||
+              currentAction.actionType == ActionType.SHOT_OUTER ||
+              currentAction.actionType == ActionType.SHOT_INNER) {
             if (currentAction.x == x && currentAction.y == y) {
               shotsMade++;
             }
           }
 
-          if (currentAction.action == ActionType.MISSED_LOW ||
-              currentAction.action == ActionType.MISSED_OUTER) {
+          if (currentAction.actionType == ActionType.MISSED_LOW ||
+              currentAction.actionType == ActionType.MISSED_OUTER) {
             if (currentAction.x == x && currentAction.y == y) {
               shotsMissed++;
             }
@@ -682,7 +684,7 @@ class Analyzer {
           //inside each array of actions
           for (int j = 0; j < _allMatches[i].actions.length; j++) {
             GameAction currentAction = _allMatches[i].actions[j];
-            if (currentAction.action == actionType) {
+            if (currentAction.actionType == actionType) {
               if (currentAction.x == x && currentAction.y == y) {
                 shotsMade++;
               }
@@ -706,13 +708,13 @@ class Analyzer {
         //inside each array of actions
         for (int j = 0; j < _allMatches[i].actions.length; j++) {
           GameAction currentAction = _allMatches[i].actions[j];
-          if (currentAction.action == actionType) {
+          if (currentAction.actionType == actionType) {
             if (currentAction.x == x && currentAction.y == y) {
               shotsMade++;
             }
           }
 
-          if (currentAction.action == missedVersionOfAction) {
+          if (currentAction.actionType == missedVersionOfAction) {
             if (currentAction.x == x && currentAction.y == y) {
               shotsMissed++;
             }
@@ -741,7 +743,7 @@ class Analyzer {
         for (int j = 0; j < _allMatches[i].actions.length; j++) {
           //low shot
           GameAction currentAction = _allMatches[i].actions[j];
-          if (currentAction.action == ActionType.SHOT_LOW) {
+          if (currentAction.actionType == ActionType.SHOT_LOW) {
             if (currentAction.x == x && currentAction.y == y) {
               if (currentAction.timeStamp <= GameConstants.teleopStartMillis) {
                 totalPoints += GameConstants.lowShotAutonValue;
@@ -752,7 +754,7 @@ class Analyzer {
           }
 
           //outer shot
-          if (currentAction.action == ActionType.SHOT_OUTER) {
+          if (currentAction.actionType == ActionType.SHOT_OUTER) {
             if (currentAction.x == x && currentAction.y == y) {
               if (currentAction.timeStamp <= GameConstants.teleopStartMillis) {
                 totalPoints += GameConstants.outerShotAutonValue;
@@ -763,7 +765,7 @@ class Analyzer {
           }
 
           //inner shot
-          if (currentAction.action == ActionType.SHOT_INNER) {
+          if (currentAction.actionType == ActionType.SHOT_INNER) {
             if (currentAction.x == x && currentAction.y == y) {
               if (currentAction.timeStamp <= GameConstants.teleopStartMillis) {
                 totalPoints += GameConstants.innerShotAutonValue;
@@ -792,7 +794,7 @@ class Analyzer {
         //inside each array of actions
         for (int j = 0; j < _allMatches[i].actions.length; j++) {
           GameAction currentAction = _allMatches[i].actions[j];
-          if (currentAction.action == actionType) {
+          if (currentAction.actionType == actionType) {
             if (currentAction.x == x && currentAction.y == y) {
               if (currentAction.timeStamp <= GameConstants.teleopStartMillis) {
                 totalPoints += pointValueAuton;

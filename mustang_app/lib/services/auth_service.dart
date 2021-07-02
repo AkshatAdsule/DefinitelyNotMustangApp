@@ -93,15 +93,14 @@ class AuthService {
       throw new Exception("Uid not found");
     }
     await usersCollection.doc(uid).set(UserModel(
-          uid,
-          email,
-          firstName,
-          lastName,
-          UserType.MEMBER,
-          "",
-          TeamStatus.LONELY,
+          uid: uid,
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          userType: UserType.MEMBER,
+          teamNumber: "",
+          teamStatus: TeamStatus.LONELY,
         ).toJson());
-    // await this.sendVerificationEmail();
   }
 
   Future<void> sendVerificationEmail() async {

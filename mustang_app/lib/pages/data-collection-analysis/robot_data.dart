@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mustang_app/utils/robot.dart';
+import 'package:mustang_app/models/robot.dart';
 
 class RobotDataScreen extends StatefulWidget {
   final Map<OuttakeType, double> avgPointsPerOuttakeType;

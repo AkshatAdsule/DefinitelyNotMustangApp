@@ -1,6 +1,7 @@
 // import 'dart:html';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/services/auth_service.dart';
 import 'package:mustang_app/models/game_action.dart';
@@ -56,7 +57,8 @@ class MatchEndScouter extends StatefulWidget {
 class _MatchEndScouterState extends State<MatchEndScouter> {
   String _teamNumber, _matchNumber, _allianceColor;
   List<GameAction> _actions;
-  String _matchResult, _endState;
+  String _endState;
+  MatchResult _matchResult;
   TextEditingController _finalCommentsController = TextEditingController();
   bool _brokeDown;
   double _climbLocation;
@@ -86,16 +88,16 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
     //TODO implement event codes
     ScoutingOperations.setMatchData(
       new Match(
-        _matchNumber,
-        _teamNumber,
-        _allianceColor,
-        _offenseOnRightSide,
-        _matchResult,
-        _finalCommentsController.text,
-        _driverSkill,
-        _actions,
-        _matchType,
-        'testing',
+        matchNumber: _matchNumber,
+        teamNumber: _teamNumber,
+        allianceColor: _allianceColor,
+        offenseOnRightSide: _offenseOnRightSide,
+        matchResult: _matchResult,
+        notes: _finalCommentsController.text,
+        driverSkill: _driverSkill,
+        actions: _actions,
+        matchType: _matchType,
+        eventCode: 'testing',
       ),
       user != null ? user.uid : 'Anonymous',
       user != null ? user.displayName : 'Anonymous',
@@ -128,15 +130,15 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
               Container(
                 padding:
                     EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
-                child: DropdownButton<String>(
+                child: DropdownButton<MatchResult>(
                   value: _matchResult,
                   hint: Text('Choose Match Result',
                       style: TextStyle(color: Colors.black, fontSize: 20)),
-                  items: <String>['Win', 'Lose', 'Tie']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
+                  items: MatchResult.values
+                      .map<DropdownMenuItem<MatchResult>>((MatchResult value) {
+                    return DropdownMenuItem<MatchResult>(
                       value: value,
-                      child: Text(value),
+                      child: Text(describeEnum(value)),
                     );
                   }).toList(),
                   onChanged: (value) {

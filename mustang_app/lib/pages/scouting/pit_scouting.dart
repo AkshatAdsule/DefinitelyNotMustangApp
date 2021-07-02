@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/models/robot.dart';
 import 'package:mustang_app/models/team.dart';
 import 'package:mustang_app/components/shared/screen.dart';
 import 'package:mustang_app/pages/scouting/post_scouter.dart';
@@ -16,11 +17,9 @@ class PitScouter extends StatefulWidget {
   _PitScouterState createState() => _PitScouterState(_teamNumber);
 }
 
-enum DriveBase { TANK, OMNI, WESTCOAST, MECANUM, SWERVE }
-
 class _PitScouterState extends State<PitScouter> {
   String _teamNumber;
-  DriveBase _driveBase = DriveBase.TANK;
+  DriveBaseType _driveBase = DriveBaseType.TANK;
   TextEditingController _notes = new TextEditingController();
   List<List<Object>> boxStates = [
     ['Inner', null],
@@ -87,7 +86,7 @@ class _PitScouterState extends State<PitScouter> {
                     'Drivebase Type',
                     style: new TextStyle(fontSize: 20.0),
                   ),
-                  trailing: DropdownButton<DriveBase>(
+                  trailing: DropdownButton<DriveBaseType>(
                     value: _driveBase,
                     icon: Icon(Icons.arrow_downward),
                     iconSize: 24,
@@ -97,19 +96,20 @@ class _PitScouterState extends State<PitScouter> {
                       height: 2,
                       color: Colors.green,
                     ),
-                    onChanged: (DriveBase driveBase) {
+                    onChanged: (DriveBaseType driveBase) {
                       setState(() {
                         _driveBase = driveBase;
                       });
                     },
-                    items: <DriveBase>[
-                      DriveBase.TANK,
-                      DriveBase.OMNI,
-                      DriveBase.WESTCOAST,
-                      DriveBase.MECANUM,
-                      DriveBase.SWERVE
-                    ].map<DropdownMenuItem<DriveBase>>((DriveBase driveBase) {
-                      return DropdownMenuItem<DriveBase>(
+                    items: <DriveBaseType>[
+                      DriveBaseType.TANK,
+                      DriveBaseType.OMNI,
+                      DriveBaseType.WESTCOAST,
+                      DriveBaseType.MECANUM,
+                      DriveBaseType.SWERVE
+                    ].map<DropdownMenuItem<DriveBaseType>>(
+                        (DriveBaseType driveBase) {
+                      return DropdownMenuItem<DriveBaseType>(
                         value: driveBase,
                         child: Center(
                             child: Text(driveBase.toString().substring(
@@ -152,16 +152,16 @@ class _PitScouterState extends State<PitScouter> {
                       onPressed: () {
                         ScoutingOperations.setTeamData(
                           Team(
-                            _teamNumber,
-                            _driveBase.toString(),
-                            _notes.text,
-                            boxStates[0][1],
-                            boxStates[1][1],
-                            boxStates[2][1],
-                            boxStates[3][1],
-                            boxStates[4][1],
-                            boxStates[5][1],
-                            boxStates[6][1],
+                            teamNumber: _teamNumber,
+                            drivebaseType: _driveBase,
+                            notes: _notes.text,
+                            innerPort: boxStates[0][1],
+                            outerPort: boxStates[1][1],
+                            bottomPort: boxStates[2][1],
+                            rotationControl: boxStates[3][1],
+                            positionControl: boxStates[4][1],
+                            hasClimber: boxStates[5][1],
+                            hasLeveller: boxStates[6][1],
                           ),
                         );
                         Navigator.pushNamed(context, PostScouter.route);

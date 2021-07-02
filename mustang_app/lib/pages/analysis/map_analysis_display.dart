@@ -162,7 +162,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
     if (curr == null) return [Colors.green[0], Colors.yellow[0]];
 
     List<Color> gradientCombo = [];
-    String actionType = curr.action.toString();
+    String actionType = curr.actionType.toString();
 
     for (List<Object> shade in actionRelatedColors)
       if (actionType.contains(shade[0])) gradientCombo.add(shade[1]);

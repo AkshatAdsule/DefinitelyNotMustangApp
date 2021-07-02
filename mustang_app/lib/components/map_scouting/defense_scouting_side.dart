@@ -22,7 +22,7 @@ class DefenseScoutingSide extends StatelessWidget {
         child: Text(type),
         onPressed: () {
           mapScoutingKey.currentState.addAction(
-              GameAction.stringToActionType(
+              GameAction.actionTypeFromString(
                   action.toUpperCase() + "_" + type.toUpperCase()),
               context);
           Navigator.pop(context);
