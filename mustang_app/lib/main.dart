@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/pages/data-collection-analysis/data_view.dart';
+import 'package:mustang_app/pages/onboarding/forgot_password.dart';
 import 'package:mustang_app/pages/onboarding/handle_verification.dart';
+import 'package:mustang_app/pages/onboarding/join_team.dart';
 import 'package:mustang_app/pages/onboarding/register.dart';
 import 'package:mustang_app/pages/onboarding/verify_email.dart';
 import 'package:mustang_app/services/setup_service.dart';
@@ -50,6 +52,14 @@ class MyApp extends StatelessWidget {
         break;
       case VerifyEmail.route:
         nextPage = VerifyEmail();
+        orientation = ScreenOrientation.portraitOnly;
+        break;
+      case JoinTeam.route:
+        nextPage = JoinTeam();
+        orientation = ScreenOrientation.portraitOnly;
+        break;
+      case ForgotPassword.route:
+        nextPage = ForgotPassword();
         orientation = ScreenOrientation.portraitOnly;
         break;
       case Home.route:

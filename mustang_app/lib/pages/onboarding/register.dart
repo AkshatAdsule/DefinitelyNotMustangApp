@@ -72,6 +72,7 @@ class _RegisterState extends State<Register> {
   }
 
   Future<void> createAccount(BuildContext context) async {
+    FocusScope.of(context).unfocus();
     AuthService service = Provider.of<AuthService>(context, listen: false);
     try {
       String email = _method != SignInMethod.EMAIL_PASSWORD
@@ -211,89 +212,101 @@ class _RegisterState extends State<Register> {
                           ),
                         ),
                       ),
-                      _method == SignInMethod.EMAIL_PASSWORD
-                          ? Container(
-                              margin: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 5),
-                              child: FancyTextFormField(
-                                hintText: "Email",
-                                controller: _email,
-                                validator: (String val) {
-                                  val = _email.text;
+                      ...(_method == SignInMethod.EMAIL_PASSWORD
+                          ? [
+                              Container(
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 5),
+                                child: FancyTextFormField(
+                                  hintText: "Email",
+                                  controller: _email,
+                                  validator: (String val) {
+                                    val = _email.text;
 
-                                  if (val == null || val.isEmpty) {
-                                    return "Please enter your email";
-                                  }
-                                  return null;
-                                },
-                                prefixIcon: Icon(
-                                  Icons.email,
-                                  color: Colors.white,
+                                    if (val == null || val.isEmpty) {
+                                      return "Please enter your email";
+                                    } else if (!RegExp(
+                                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                        .hasMatch(val)) {
+                                      return "Please enter a valid email address";
+                                    }
+                                    return null;
+                                  },
+                                  prefixIcon: Icon(
+                                    Icons.email,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
-                            )
-                          : SizedBox.shrink(),
-                      Container(
-                        margin:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-                        child: FancyTextFormField(
-                          obscureText: _hidePassword,
-                          hintText: "Password",
-                          controller: _password,
-                          validator: (String val) {
-                            val = _password.text;
-                            if (val == null || val.isEmpty) {
-                              return "Please enter a password";
-                            }
-                            return null;
-                          },
-                          prefixIcon: Icon(
-                            Icons.lock,
-                            color: Colors.white,
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _hidePassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              color: Colors.white,
-                            ),
-                            onPressed: () => _togglePasswordVisibility(),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-                        child: FancyTextFormField(
-                          obscureText: _hideConfirmPassword,
-                          hintText: "Confirm Password",
-                          controller: _confirmPassword,
-                          validator: (String val) {
-                            val = _confirmPassword.text;
-                            if (val == null || val.length <= 0) {
-                              return "Please confirm your password";
-                            } else if (val != _password.text) {
-                              return "Passwords do not match";
-                            }
-                            return null;
-                          },
-                          onSaved: (val) => print('onSave'),
-                          prefixIcon: Icon(
-                            Icons.lock,
-                            color: Colors.white,
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _hideConfirmPassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              color: Colors.white,
-                            ),
-                            onPressed: () => _toggleConfirmPasswordVisibility(),
-                          ),
-                        ),
-                      ),
+                              Container(
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 5),
+                                child: FancyTextFormField(
+                                  obscureText: _hidePassword,
+                                  hintText: "Password",
+                                  controller: _password,
+                                  validator: (String val) {
+                                    val = _password.text;
+                                    if (val == null || val.isEmpty) {
+                                      return "Please enter a password";
+                                    } else if (val.length < 6) {
+                                      return "Password must be at least 6 characters";
+                                    }
+                                    return null;
+                                  },
+                                  prefixIcon: Icon(
+                                    Icons.lock,
+                                    color: Colors.white,
+                                  ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _hidePassword
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () =>
+                                        _togglePasswordVisibility(),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 5),
+                                child: FancyTextFormField(
+                                  obscureText: _hideConfirmPassword,
+                                  hintText: "Confirm Password",
+                                  controller: _confirmPassword,
+                                  validator: (String val) {
+                                    val = _confirmPassword.text;
+                                    if (val == null || val.length <= 0) {
+                                      return "Please confirm your password";
+                                    } else if (val != _password.text) {
+                                      return "Passwords do not match";
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (val) => print('onSave'),
+                                  prefixIcon: Icon(
+                                    Icons.lock,
+                                    color: Colors.white,
+                                  ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _hideConfirmPassword
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () =>
+                                        _toggleConfirmPasswordVisibility(),
+                                  ),
+                                ),
+                              ),
+                            ]
+                          : [
+                              SizedBox.shrink(),
+                            ]),
                     ],
                   ),
                 ),

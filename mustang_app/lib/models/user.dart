@@ -40,13 +40,14 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> data) {
     return UserModel(
-        uid: data['uid'],
-        email: data['email'],
-        firstName: data['firstName'],
-        lastName: data['lastName'],
-        userType: parseUserTypeFromString(data['userType']),
-        teamNumber: data['teamNumber'],
-        teamStatus: parseTeamStatusFromString(data['teamStatus']));
+      uid: data['uid'],
+      email: data['email'],
+      firstName: data['firstName'],
+      lastName: data['lastName'],
+      userType: parseUserTypeFromString(data['userType']),
+      teamNumber: data['teamNumber'],
+      teamStatus: parseTeamStatusFromString(data['teamStatus']),
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -57,6 +58,7 @@ class UserModel {
       'lastName': lastName,
       'userType': describeEnum(userType),
       'teamNumber': teamNumber,
+      'teamStatus': describeEnum(teamStatus),
     };
   }
 

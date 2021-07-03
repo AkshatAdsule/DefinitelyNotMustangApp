@@ -127,8 +127,7 @@ class AuthService {
     await _auth.sendPasswordResetEmail(
       email: email,
       actionCodeSettings: ActionCodeSettings(
-        url:
-            'https://mustangapp.page.link/handleverification?email=${currentUser.email}',
+        url: 'https://mustangapp.page.link/handleverification?email=${email}',
         dynamicLinkDomain: "mustangapp.page.link",
         handleCodeInApp: true,
         androidPackageName: info.packageName,

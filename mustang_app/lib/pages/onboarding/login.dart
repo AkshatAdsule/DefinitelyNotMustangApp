@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mustang_app/components/onboarding/fancy_text_form_field.dart';
 import 'package:mustang_app/components/onboarding/social_button.dart';
 import 'package:mustang_app/models/user.dart';
+import 'package:mustang_app/pages/onboarding/forgot_password.dart';
 import 'package:mustang_app/pages/onboarding/handle_verification.dart';
 import 'package:mustang_app/pages/onboarding/register.dart';
 import 'package:mustang_app/pages/onboarding/verify_email.dart';
@@ -341,6 +342,10 @@ class _LoginState extends State<Login> {
                           val = _email.text;
                           if (val == null || val.isEmpty) {
                             return "Please enter your email";
+                          } else if (!RegExp(
+                                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                              .hasMatch(val)) {
+                            return "Please enter a valid email address";
                           }
                           return null;
                         },
@@ -477,6 +482,42 @@ class _LoginState extends State<Login> {
                       ),
                       child: Text(
                         "Sign Up!",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Forgot your password?",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 3),
+                  ),
+                  MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        ForgotPassword.route,
+                      ),
+                      child: Text(
+                        "Reset it here!",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 15,

@@ -39,10 +39,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
     });
   }
 
-  void next() {
-    Navigator.pushNamed(context, JoinTeam.route);
-  }
-
   @override
   Widget build(BuildContext context) {
     AuthService service = Provider.of<AuthService>(context);
@@ -95,7 +91,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: ElevatedButton(
-                  onPressed: () => next(),
+                  onPressed: () => sendVerificationEmail(),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
