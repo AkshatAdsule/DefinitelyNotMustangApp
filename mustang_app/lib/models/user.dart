@@ -63,20 +63,22 @@ class UserModel {
   }
 
   static UserType parseUserTypeFromString(String userType) {
+    UserType ret;
     UserType.values.forEach((element) {
       if (describeEnum(element) == userType) {
-        return element;
+        ret = element;
       }
     });
-    return UserType.MEMBER;
+    return ret ?? UserType.MEMBER;
   }
 
   static TeamStatus parseTeamStatusFromString(String teamStatus) {
+    TeamStatus ret;
     TeamStatus.values.forEach((element) {
-      if (describeEnum(element) == teamStatus) {
-        return element;
+      if (describeEnum(element).toUpperCase() == teamStatus) {
+        ret = element;
       }
     });
-    return TeamStatus.GUEST;
+    return ret ?? TeamStatus.GUEST;
   }
 }

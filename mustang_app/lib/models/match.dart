@@ -54,21 +54,23 @@ class Match {
     return Match.fromJson(data);
   }
   static MatchType matchTypeFromString(String matchType) {
+    MatchType ret;
     MatchType.values.forEach((element) {
       if (describeEnum(element) == matchType) {
-        return element;
+        ret = element;
       }
     });
-    return MatchType.QM;
+    return ret ?? MatchType.QM;
   }
 
   static MatchResult matchResultFromString(String matchResult) {
+    MatchResult ret;
     MatchResult.values.forEach((element) {
       if (describeEnum(element) == matchResult) {
-        return element;
+        ret = element;
       }
     });
-    return MatchResult.LOSE;
+    return ret ?? MatchResult.LOSE;
   }
 
   Map<String, dynamic> toJson() {

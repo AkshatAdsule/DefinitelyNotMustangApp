@@ -9,6 +9,7 @@ import 'package:mustang_app/components/onboarding/social_button.dart';
 import 'package:mustang_app/models/user.dart';
 import 'package:mustang_app/pages/onboarding/forgot_password.dart';
 import 'package:mustang_app/pages/onboarding/handle_verification.dart';
+import 'package:mustang_app/pages/onboarding/join_team.dart';
 import 'package:mustang_app/pages/onboarding/register.dart';
 import 'package:mustang_app/pages/onboarding/verify_email.dart';
 import 'package:mustang_app/services/auth_service.dart';
@@ -69,6 +70,8 @@ class _LoginState extends State<Login> {
         );
       } else if (!service.currentUser.emailVerified) {
         Navigator.pushNamed(context, HandleVerification.route);
+      } else if (model.teamStatus == TeamStatus.LONELY) {
+        Navigator.pushNamed(context, JoinTeam.route);
       } else {
         Navigator.pushNamed(context, '/');
       }
@@ -133,6 +136,8 @@ class _LoginState extends State<Login> {
         );
       } else if (!service.currentUser.emailVerified) {
         Navigator.pushNamed(context, VerifyEmail.route);
+      } else if (model.teamStatus == TeamStatus.LONELY) {
+        Navigator.pushNamed(context, JoinTeam.route);
       } else {
         Navigator.pushNamed(context, '/');
       }

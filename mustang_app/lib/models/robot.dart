@@ -52,30 +52,33 @@ class Robot {
   }
 
   static DriveBaseType driveBaseTypeFromString(String driveBase) {
+    DriveBaseType ret;
     DriveBaseType.values.forEach((element) {
       if (describeEnum(element) == driveBase) {
-        return element;
+        ret = element;
       }
     });
-    return DriveBaseType.TANK;
+    return ret ?? DriveBaseType.TANK;
   }
 
   static SecondarySubsystem secondarySubsystemFromString(
       String secondarySubsystem) {
+    SecondarySubsystem ret;
     SecondarySubsystem.values.forEach((element) {
       if (describeEnum(element) == secondarySubsystem) {
-        return element;
+        ret = element;
       }
     });
-    return SecondarySubsystem.AUTONOMOUS;
+    return ret ?? SecondarySubsystem.AUTONOMOUS;
   }
 
   static OuttakeType outtakeTypeFromString(String outtakeType) {
+    OuttakeType ret;
     OuttakeType.values.forEach((element) {
       if (describeEnum(element) == outtakeType) {
-        return element;
+        ret = element;
       }
     });
-    return OuttakeType.SHOOTER;
+    return ret ?? OuttakeType.SHOOTER;
   }
 }

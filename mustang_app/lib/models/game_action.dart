@@ -54,12 +54,13 @@ class GameAction {
   }
 
   static ActionType actionTypeFromString(String actionType) {
+    ActionType ret;
     ActionType.values.forEach((element) {
       if (describeEnum(element) == actionType) {
-        return element;
+        ret = element;
       }
     });
-    return ActionType.ALL;
+    return ret ?? ActionType.ALL;
   }
 
   static bool requiresLocation(ActionType type) {
