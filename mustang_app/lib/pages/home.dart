@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/shared/screen.dart';
+import 'package:mustang_app/constants/constants.dart';
 import 'package:mustang_app/constants/legacy.dart';
 
 class Home extends StatefulWidget {
@@ -58,6 +59,21 @@ class HomeState extends State<Home> {
                           ),
                         )
                         .toList(),
+                    SizedBox(
+                      height: 100,
+                    ),
+                    Container(
+                      child: Column(
+                        children: [
+                          Text(
+                            "Pre-Event data version: ${Constants.DATA_ANALYSIS_DATA_VERSION}",
+                          ),
+                          Text(
+                            "Data-Collection data version: ${Constants.DATA_COLLECTION_DATA_VERSION}",
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
