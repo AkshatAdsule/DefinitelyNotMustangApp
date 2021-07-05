@@ -10,7 +10,8 @@ class TeamService {
   static final String _year = DateTime.now().year.toString();
   String _teamNumber;
   DocumentReference _teamRef;
-  static final CollectionReference _teamsRef = _db.collection('teams');
+  static final CollectionReference _teamsRef =
+      _db.collection(_year).doc('info').collection('teams');
 
   TeamService(this._teamNumber) {
     _teamRef = _teamsRef.doc(_teamNumber);

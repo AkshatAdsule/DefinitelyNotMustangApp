@@ -7,6 +7,7 @@ import 'package:mustang_app/pages/onboarding/handle_verification.dart';
 import 'package:mustang_app/pages/onboarding/join_team.dart';
 import 'package:mustang_app/pages/onboarding/register.dart';
 import 'package:mustang_app/pages/onboarding/verify_email.dart';
+import 'package:mustang_app/pages/profile.dart';
 import 'package:mustang_app/services/setup_service.dart';
 import 'package:mustang_app/services/auth_service.dart';
 import 'pages/pages.dart';
@@ -127,6 +128,10 @@ class MyApp extends StatelessWidget {
         break;
       case Glossary.route:
         nextPage = Glossary();
+        orientation = ScreenOrientation.portraitOnly;
+        break;
+      case Profile.route:
+        nextPage = Profile();
         orientation = ScreenOrientation.portraitOnly;
         break;
       // case TeamInfoDisplay.route:
