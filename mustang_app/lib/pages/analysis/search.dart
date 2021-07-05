@@ -10,14 +10,13 @@ import 'written_analysis_display.dart';
 
 // ignore: must_be_immutable
 class SearchPage extends StatelessWidget {
-  TeamService _teamService = TeamService();
   static const String route = './Search';
 
   @override
   Widget build(BuildContext context) {
     return StreamProvider<List<Team>>.value(
       initialData: [],
-      value: _teamService.streamTeams(),
+      value: TeamService.streamTeams(),
       child: Search(),
     );
   }

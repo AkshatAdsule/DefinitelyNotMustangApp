@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import '../../services/analyzer.dart';
 
 class AllDataDisplayPerMatch extends StatelessWidget {
-  TeamService _teamService = TeamService();
   static const String route = '/AllDataDisplayPerMatch';
   String _teamNumber = '';
   String _matchNum = '';
@@ -20,9 +19,9 @@ class AllDataDisplayPerMatch extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamProvider<Team>.value(
       initialData: null,
-      value: _teamService.streamTeam(_teamNumber),
+      value: TeamService.streamTeam(_teamNumber),
       child: StreamProvider<List<Match>>.value(
-        value: _teamService.streamMatches(_teamNumber),
+        value: TeamService.streamMatches(_teamNumber),
         initialData: [],
         child: AllDataDisplayPerMatchPage(
           teamNumber: _teamNumber,

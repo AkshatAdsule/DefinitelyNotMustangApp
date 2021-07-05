@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/pages/data-collection-analysis/data_view.dart';
+import 'package:mustang_app/pages/onboarding/create_team.dart';
 import 'package:mustang_app/pages/onboarding/forgot_password.dart';
 import 'package:mustang_app/pages/onboarding/handle_verification.dart';
 import 'package:mustang_app/pages/onboarding/join_team.dart';
@@ -22,7 +24,6 @@ class MyApp extends StatelessWidget {
   final _observer = NavigatorObserverWithOrientation();
   final GlobalKey<MapScoutingState> mapScoutingKey =
       GlobalKey<MapScoutingState>();
-  // AuthService _AuthService = AuthService();
 
   Route<dynamic> _onGenerateRoute(RouteSettings settings) {
     Map<String, dynamic> args = settings.arguments;
@@ -56,6 +57,10 @@ class MyApp extends StatelessWidget {
         break;
       case JoinTeam.route:
         nextPage = JoinTeam();
+        orientation = ScreenOrientation.portraitOnly;
+        break;
+      case CreateTeam.route:
+        nextPage = CreateTeam();
         orientation = ScreenOrientation.portraitOnly;
         break;
       case ForgotPassword.route:
@@ -171,12 +176,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // StreamProvider<User>.value(
-        //   value: FirebaseAuth.instance.authStateChanges(),
-        // ),
-        Provider<AuthService>(
-          create: (_) => AuthService(),
-        ),
+        StreamProvider<User>.value(
+          value: AuthService.onAuthStateChanged(),
+          initialData: null,
+        )
       ],
       child: MaterialApp(
         title: 'Mustang App',

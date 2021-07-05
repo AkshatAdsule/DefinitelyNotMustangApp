@@ -13,37 +13,37 @@ enum SignInMethod {
 }
 
 class AuthService {
-  FirebaseFirestore _db = FirebaseFirestore.instance;
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  CollectionReference usersCollection;
+  static final FirebaseFirestore _db = FirebaseFirestore.instance;
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
+  static final CollectionReference _usersCollection = _db.collection("users");
 
-  AuthService() {
-    usersCollection = _db.collection("users");
-  }
+  static Stream<User> onAuthStateChanged() => _auth.authStateChanges();
+  static Stream<User> onUserChanged() => _auth.userChanges();
+  static Stream<User> onIdTokenChanged() => _auth.idTokenChanges();
 
-  User get currentUser => _auth.currentUser;
+  static User get currentUser => _auth.currentUser;
 
-  Future<UserModel> getUser(String uid) async {
+  static Future<UserModel> getUser(String uid) async {
     if (uid == null || uid == "") {
       return null;
     }
-    return UserModel.fromSnapshot(await usersCollection.doc(uid).get());
+    return UserModel.fromSnapshot(await _usersCollection.doc(uid).get());
   }
 
-  Stream<UserModel> streamUser(User user) {
-    return usersCollection
+  static Stream<UserModel> streamUser(User user) {
+    return _usersCollection
         .doc(user.uid)
         .snapshots()
         .map((snap) => UserModel.fromSnapshot(snap));
   }
 
-  Future<UserCredential> loginWithEmailAndPassword(
+  static Future<UserCredential> loginWithEmailAndPassword(
       String email, String password) async {
     return await _auth.signInWithEmailAndPassword(
         email: email, password: password);
   }
 
-  Future<UserCredential> loginWithGoogle() async {
+  static Future<UserCredential> loginWithGoogle() async {
     if (kIsWeb) {
       GoogleAuthProvider authProvider = GoogleAuthProvider();
 
@@ -80,8 +80,8 @@ class AuthService {
     return await _auth.signInWithCredential(credential);
   }
 
-  Future<void> createAccount(String firstName, String lastName, String email,
-      String password, SignInMethod method) async {
+  static Future<void> createAccount(String firstName, String lastName,
+      String email, String password, SignInMethod method) async {
     String uid = "";
     if (method == SignInMethod.EMAIL_PASSWORD) {
       UserCredential cred = await _auth.createUserWithEmailAndPassword(
@@ -92,7 +92,7 @@ class AuthService {
     } else {
       throw new Exception("Uid not found");
     }
-    await usersCollection.doc(uid).set(UserModel(
+    await _usersCollection.doc(uid).set(UserModel(
           uid: uid,
           email: email,
           firstName: firstName,
@@ -103,7 +103,7 @@ class AuthService {
         ).toJson());
   }
 
-  Future<void> sendVerificationEmail() async {
+  static Future<void> sendVerificationEmail() async {
     if (currentUser != null) {
       PackageInfo info = await PackageInfo.fromPlatform();
 
@@ -121,7 +121,7 @@ class AuthService {
     }
   }
 
-  Future<void> sendPasswordResetEmail(String email) async {
+  static Future<void> sendPasswordResetEmail(String email) async {
     PackageInfo info = await PackageInfo.fromPlatform();
 
     await _auth.sendPasswordResetEmail(
@@ -137,19 +137,19 @@ class AuthService {
     );
   }
 
-  Future<void> resetPassword(String oobCode, String newPassword) async {
+  static Future<void> resetPassword(String oobCode, String newPassword) async {
     await _auth.confirmPasswordReset(code: oobCode, newPassword: newPassword);
   }
 
-  Future<ActionCodeInfo> getActionCodeOperation(String oobCode) async {
+  static Future<ActionCodeInfo> getActionCodeOperation(String oobCode) async {
     return await _auth.checkActionCode(oobCode);
   }
 
-  Future<void> handleOobCode(String oobCode) async {
+  static Future<void> handleOobCode(String oobCode) async {
     await _auth.applyActionCode(oobCode);
   }
 
-  Future<void> logout() async {
+  static Future<void> logout() async {
     await _auth.signOut();
   }
 }

@@ -56,10 +56,9 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> signInWithGoogle(BuildContext context) async {
-    AuthService service = Provider.of<AuthService>(context, listen: false);
     try {
-      UserCredential cred = await service.loginWithGoogle();
-      UserModel model = await service.getUser(cred.user.uid);
+      UserCredential cred = await AuthService.loginWithGoogle();
+      UserModel model = await AuthService.getUser(cred.user.uid);
       if (model == null) {
         Navigator.pushNamed(
           context,
@@ -68,7 +67,7 @@ class _LoginState extends State<Login> {
             'method': SignInMethod.GOOGLE,
           },
         );
-      } else if (!service.currentUser.emailVerified) {
+      } else if (!AuthService.currentUser.emailVerified) {
         Navigator.pushNamed(context, HandleVerification.route);
       } else if (model.teamStatus == TeamStatus.LONELY) {
         Navigator.pushNamed(context, JoinTeam.route);
@@ -120,12 +119,11 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> signInWithEmailAndPassword(BuildContext context) async {
-    AuthService service = Provider.of<AuthService>(context, listen: false);
     FocusScope.of(context).unfocus();
     try {
-      UserCredential cred =
-          await service.loginWithEmailAndPassword(_email.text, _password.text);
-      UserModel model = await service.getUser(cred.user.uid);
+      UserCredential cred = await AuthService.loginWithEmailAndPassword(
+          _email.text, _password.text);
+      UserModel model = await AuthService.getUser(cred.user.uid);
       if (model == null) {
         Navigator.pushNamed(
           context,
@@ -134,7 +132,7 @@ class _LoginState extends State<Login> {
             'method': SignInMethod.EMAIL_PASSWORD,
           },
         );
-      } else if (!service.currentUser.emailVerified) {
+      } else if (!AuthService.currentUser.emailVerified) {
         Navigator.pushNamed(context, VerifyEmail.route);
       } else if (model.teamStatus == TeamStatus.LONELY) {
         Navigator.pushNamed(context, JoinTeam.route);

@@ -9,6 +9,7 @@ import 'package:mustang_app/services/auth_service.dart';
 import 'package:mustang_app/components/shared/logo.dart';
 import 'package:mustang_app/components/shared/screen.dart';
 import 'package:mustang_app/services/dynamic_links_service.dart';
+import 'package:mustang_app/services/services.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
@@ -27,10 +28,11 @@ class _SplashState extends State<Splash> {
   bool _initialized = false;
   double _targetRadius = 0;
   UserModel _user;
-  _SplashState();
   Timer _startAnimation;
-  final DynamicLinkService _dynamicLinkService = DynamicLinkService();
   PendingDynamicLinkData _dynamicLinkData;
+
+  _SplashState();
+
   @override
   void dispose() {
     super.dispose();
@@ -45,11 +47,10 @@ class _SplashState extends State<Splash> {
         });
       });
     }
-    AuthService auth = Provider.of<AuthService>(context, listen: false);
-    User currentUser = auth.currentUser;
-    UserModel user = await auth.getUser(currentUser?.uid);
+    User currentUser = AuthService.currentUser;
+    UserModel user = await AuthService.getUser(currentUser?.uid);
 
-    await _dynamicLinkService.retrieveDynamicLink(
+    await DynamicLinkService.retrieveDynamicLink(
         onLinkReceived: (PendingDynamicLinkData data) {
       print('link received: ' + data.link.path.toString());
       _dynamicLinkData = data;
@@ -62,8 +63,7 @@ class _SplashState extends State<Splash> {
   }
 
   void _goToNextPage(BuildContext context) {
-    AuthService auth = Provider.of<AuthService>(context, listen: false);
-    User currentUser = auth.currentUser;
+    User currentUser = AuthService.currentUser;
     if (_user == null && currentUser != null) {
       Navigator.of(context).pushNamedAndRemoveUntil(
         Register.route,

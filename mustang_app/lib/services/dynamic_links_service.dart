@@ -4,13 +4,14 @@ import 'package:mustang_app/pages/onboarding/register.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class DynamicLinkService {
-  Future<Uri> createDynamicLink({
+  static final String prefix = dotenv.env['DYNAMIC_LINK_URI_PREFIX'];
+
+  static Future<Uri> createDynamicLink({
     String title = "Homestead Robotics",
     String description = "Homestead Robotics Scouting App",
     Uri imageUrl,
     String path = Register.route,
   }) async {
-    String prefix = dotenv.env['DYNAMIC_LINK_URI_PREFIX'];
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
     final DynamicLinkParameters parameters = DynamicLinkParameters(
@@ -41,7 +42,7 @@ class DynamicLinkService {
     return shortUrl;
   }
 
-  Future<void> retrieveDynamicLink({
+  static Future<void> retrieveDynamicLink({
     Function(PendingDynamicLinkData data) onLinkReceived,
     Function(OnLinkErrorException error) onError,
   }) async {
@@ -79,9 +80,9 @@ class DynamicLinkService {
     }
   }
 
-  Future<Uri> getLinkFromFirebase(String path) async {
+  static Future<Uri> getLinkFromFirebase(String path) async {
     PendingDynamicLinkData data = await FirebaseDynamicLinks.instance
-        .getDynamicLink(Uri.parse('https://mustangapp.page.link$path'));
+        .getDynamicLink(Uri.parse('https://$prefix$path'));
     return data.link;
   }
 }

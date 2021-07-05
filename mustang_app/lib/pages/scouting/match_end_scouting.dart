@@ -119,7 +119,7 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
 
   @override
   Widget build(BuildContext buildContext) {
-    User user = Provider.of<AuthService>(context).currentUser;
+    User user = AuthService.currentUser;
 
     return Screen(
       title: 'Match End',

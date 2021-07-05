@@ -68,15 +68,13 @@ class _HandleVerificationState extends State<HandleVerification> {
   }
 
   Future<void> handleActionCode() async {
-    AuthService _authService = Provider.of<AuthService>(context, listen: false);
-
     var actionCode = _queryParams['oobCode'];
     var mode = _queryParams['mode'];
 
     try {
-      await _authService.handleOobCode(actionCode);
-      await _authService.currentUser.reload();
-      User currentUser = _authService.currentUser;
+      await AuthService.handleOobCode(actionCode);
+      await AuthService.currentUser.reload();
+      User currentUser = AuthService.currentUser;
       switch (mode.toString()) {
         case "verifyEmail":
           {
@@ -118,9 +116,8 @@ class _HandleVerificationState extends State<HandleVerification> {
         _buttonText = 'Confirming';
         _isLoading = true;
       });
-      AuthService service = Provider.of<AuthService>(context, listen: false);
 
-      await service.resetPassword(_queryParams['oobCode'], _password.text);
+      await AuthService.resetPassword(_queryParams['oobCode'], _password.text);
       setState(() {
         _buttonText = 'Confirmed!';
         _isLoading = false;

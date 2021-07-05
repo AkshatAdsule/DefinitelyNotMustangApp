@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mustang_app/components/onboarding/fancy_text_form_field.dart';
 import 'package:mustang_app/components/shared/screen.dart';
 import 'package:mustang_app/models/team.dart';
+import 'package:mustang_app/pages/onboarding/create_team.dart';
 import 'package:mustang_app/services/auth_service.dart';
 import 'package:mustang_app/services/team_service.dart';
 import 'package:mustang_app/services/user_service.dart';
@@ -12,7 +13,6 @@ import 'package:provider/provider.dart';
 class JoinTeam extends StatelessWidget {
   static const String route = '/jointeam';
   final String teamNumber;
-  final TeamService _teamService = new TeamService();
   JoinTeam({
     Key key,
     this.teamNumber = "",
@@ -23,7 +23,7 @@ class JoinTeam extends StatelessWidget {
     return Container(
       child: StreamProvider<List<Team>>.value(
         initialData: [],
-        value: _teamService.streamTeams(),
+        value: TeamService.streamTeams(),
         child: JoinTeamPage(
           teamNumber: teamNumber,
         ),
@@ -188,10 +188,8 @@ class _JoinTeamState extends State<JoinTeamPage> {
                         width: MediaQuery.of(context).size.width / 4,
                         child: ElevatedButton(
                           onPressed: () {
-                            UserService service = new UserService(
-                                Provider.of<AuthService>(context, listen: false)
-                                    .currentUser
-                                    .uid);
+                            UserService service =
+                                new UserService(AuthService.currentUser.uid);
                             service.joinTeam(_team.text);
                             Navigator.pop(context);
                             Navigator.pushNamed(context, '/');
@@ -268,10 +266,8 @@ class _JoinTeamState extends State<JoinTeamPage> {
                         width: MediaQuery.of(context).size.width / 3,
                         child: ElevatedButton(
                           onPressed: () {
-                            UserService service = new UserService(
-                                Provider.of<AuthService>(context, listen: false)
-                                    .currentUser
-                                    .uid);
+                            UserService service =
+                                new UserService(AuthService.currentUser.uid);
                             service.browseAsGuest();
                             Navigator.pop(context);
                             Navigator.pushNamed(context, '/');
@@ -377,7 +373,7 @@ class _JoinTeamState extends State<JoinTeamPage> {
               visible: true,
               child: Container(
                 margin: EdgeInsets.symmetric(vertical: 10),
-                height: MediaQuery.of(context).size.height * 1.8 / 3,
+                height: MediaQuery.of(context).size.height / 2,
                 child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: _tempSearchStore.length,
@@ -466,6 +462,42 @@ class _JoinTeamState extends State<JoinTeamPage> {
                         "Continue",
                         style: TextStyle(
                           color: Colors.green.shade700,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Don't see your team?",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 3),
+                  ),
+                  MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        CreateTeam.route,
+                      ),
+                      child: Text(
+                        "Create one here!",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),

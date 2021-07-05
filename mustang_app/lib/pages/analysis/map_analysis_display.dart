@@ -19,7 +19,6 @@ import '../../services/analyzer.dart';
 
 // ignore: must_be_immutable
 class MapAnalysisDisplay extends StatelessWidget {
-  TeamService _teamService = TeamService();
   static const String route = '/MapAnalysisDisplay';
 
   //remove team num
@@ -32,9 +31,9 @@ class MapAnalysisDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamProvider<Team>.value(
       initialData: null,
-      value: _teamService.streamTeam(_teamNumber),
+      value: TeamService.streamTeam(_teamNumber),
       child: StreamProvider<List<Match>>.value(
-        value: _teamService.streamMatches(_teamNumber),
+        value: TeamService.streamMatches(_teamNumber),
         initialData: [],
         child: MapAnalysisDisplayPage(
           teamNumber: _teamNumber,

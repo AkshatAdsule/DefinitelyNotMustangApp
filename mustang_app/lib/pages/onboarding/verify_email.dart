@@ -22,8 +22,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
     super.initState();
     _buttonText = "Resend Email";
     _isLoading = false;
-    AuthService service = Provider.of<AuthService>(context, listen: false);
-    service.sendVerificationEmail();
+    AuthService.sendVerificationEmail();
   }
 
   Future<void> sendVerificationEmail() async {
@@ -31,8 +30,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
       _buttonText = "Sending Email";
       _isLoading = true;
     });
-    AuthService service = Provider.of<AuthService>(context, listen: false);
-    await service.sendVerificationEmail();
+    await AuthService.sendVerificationEmail();
     setState(() {
       _buttonText = "Email Sent";
       _isLoading = false;
@@ -41,8 +39,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
 
   @override
   Widget build(BuildContext context) {
-    AuthService service = Provider.of<AuthService>(context);
-
     return Screen(
       left: false,
       right: false,
@@ -79,7 +75,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                 margin: EdgeInsets.symmetric(vertical: 20),
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
-                  "An verification email has been sent to ${service.currentUser.email}. Follow the instructions in the email to verify your account",
+                  "An verification email has been sent to ${AuthService.currentUser.email}. Follow the instructions in the email to verify your account",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,

@@ -41,9 +41,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       _isLoading = true;
       _buttonText = 'Sending';
     });
-    AuthService service = Provider.of<AuthService>(context, listen: false);
     try {
-      await service.sendPasswordResetEmail(_email.text);
+      await AuthService.sendPasswordResetEmail(_email.text);
       setState(() {
         _isLoading = false;
         _buttonText = 'Email Sent!';

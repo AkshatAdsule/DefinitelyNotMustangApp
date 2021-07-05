@@ -9,7 +9,6 @@ import '../../services/analyzer.dart';
 
 // ignore: must_be_immutable
 class AllDataDisplay extends StatelessWidget {
-  TeamService _teamService = TeamService();
   static const String route = '/AllDataDisplay';
   String _teamNumber = '';
 
@@ -20,9 +19,9 @@ class AllDataDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamProvider<Team>.value(
       initialData: null,
-      value: _teamService.streamTeam(_teamNumber),
+      value: TeamService.streamTeam(_teamNumber),
       child: StreamProvider<List<Match>>.value(
-        value: _teamService.streamMatches(_teamNumber),
+        value: TeamService.streamMatches(_teamNumber),
         initialData: [],
         child: AllDataDisplayPage(
           teamNumber: _teamNumber,

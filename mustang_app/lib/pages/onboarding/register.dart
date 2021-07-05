@@ -76,9 +76,9 @@ class _RegisterState extends State<Register> {
     AuthService service = Provider.of<AuthService>(context, listen: false);
     try {
       String email = _method != SignInMethod.EMAIL_PASSWORD
-          ? service.currentUser.email
+          ? AuthService.currentUser.email
           : _email.text;
-      await service.createAccount(
+      await AuthService.createAccount(
           _firstName.text, _lastName.text, email, _password.text, _method);
       print('here');
       Navigator.pushNamed(context, VerifyEmail.route);
