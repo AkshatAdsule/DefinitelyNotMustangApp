@@ -12,6 +12,7 @@ class FancyTextFormField extends FormField<String> {
     String title = "",
     Widget prefixIcon,
     Widget suffixIcon,
+    FocusNode focusNode,
   }) : super(
           onSaved: onSaved,
           validator: validator,
@@ -47,7 +48,7 @@ class FancyTextFormField extends FormField<String> {
                     ],
                   ),
                   child: TextField(
-                    focusNode: FocusNode(),
+                    focusNode: focusNode,
                     obscureText: obscureText,
                     style: TextStyle(
                       color: Colors.white,

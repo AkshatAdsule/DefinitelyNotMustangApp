@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/models/team.dart';
-import 'package:mustang_app/services/teams_service.dart';
+import 'package:mustang_app/services/team_service.dart';
 import 'package:mustang_app/components/shared/screen.dart';
 import 'package:mustang_app/pages/analysis/all_data_display.dart';
 import 'package:provider/provider.dart';
@@ -10,14 +10,14 @@ import 'written_analysis_display.dart';
 
 // ignore: must_be_immutable
 class SearchPage extends StatelessWidget {
-  TeamsService _teamsService = TeamsService();
+  TeamService _teamService = TeamService();
   static const String route = './Search';
 
   @override
   Widget build(BuildContext context) {
     return StreamProvider<List<Team>>.value(
       initialData: [],
-      value: _teamsService.streamTeams(),
+      value: _teamService.streamTeams(),
       child: Search(),
     );
   }
