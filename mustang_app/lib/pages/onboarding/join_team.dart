@@ -470,7 +470,7 @@ class _JoinTeamState extends State<JoinTeamPage> {
               ),
             ),
             Container(
-              padding: EdgeInsets.only(top: 10),
+              padding: EdgeInsets.only(top: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

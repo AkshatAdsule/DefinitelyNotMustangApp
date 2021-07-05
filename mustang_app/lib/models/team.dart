@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/models/robot.dart';
 
 class Team {
-  String teamNumber, notes;
+  String teamNumber, teamName, teamEmail, region, notes;
   DriveBaseType drivebaseType;
   bool innerPort,
       outerPort,
@@ -17,7 +17,7 @@ class Team {
   Team({
     @required this.teamNumber,
     @required this.drivebaseType,
-    @required this.notes,
+    this.notes = '',
     @required this.innerPort,
     @required this.outerPort,
     @required this.bottomPort,
@@ -25,6 +25,9 @@ class Team {
     @required this.positionControl,
     @required this.hasClimber,
     @required this.hasLeveller,
+    @required this.teamName,
+    @required this.teamEmail,
+    @required this.region,
   });
 
   factory Team.fromSnapshot(DocumentSnapshot snapshot) {
@@ -38,6 +41,7 @@ class Team {
   factory Team.fromJson(Map<String, dynamic> data) {
     return Team(
       teamNumber: data['teamNumber'] ?? '',
+      teamName: data['teamName'] ?? '',
       drivebaseType: Robot.driveBaseTypeFromString(data['drivebaseType']),
       notes: data['notes'] ?? '',
       innerPort: data['innerPort'],
@@ -47,6 +51,8 @@ class Team {
       positionControl: data['positionControl'],
       hasClimber: data['climber'],
       hasLeveller: data['leveller'],
+      teamEmail: data['teamEmail'] ?? '',
+      region: data['region'] ?? '',
     );
   }
 
@@ -62,6 +68,9 @@ class Team {
       'positionControl': positionControl,
       'leveller': hasLeveller,
       'climber': hasClimber,
+      'teamName': teamName,
+      'teamEmail': teamEmail,
+      'region': region,
     };
   }
 }

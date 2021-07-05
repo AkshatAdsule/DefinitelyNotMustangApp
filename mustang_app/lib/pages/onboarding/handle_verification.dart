@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/onboarding/fancy_text_form_field.dart';
 import 'package:mustang_app/components/shared/screen.dart';
+import 'package:mustang_app/pages/onboarding/join_team.dart';
 import 'package:mustang_app/pages/pages.dart';
 import 'package:mustang_app/services/auth_service.dart';
 import 'package:provider/provider.dart';
@@ -174,7 +175,8 @@ class _HandleVerificationState extends State<HandleVerification> {
                         ),
                         padding: EdgeInsets.all(15),
                       ),
-                      onPressed: () => Navigator.pushNamed(context, '/'),
+                      onPressed: () =>
+                          Navigator.pushNamed(context, JoinTeam.route),
                     ),
                   )
                 ],

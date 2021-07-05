@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:mustang_app/models/team.dart';
 import 'package:mustang_app/models/match.dart';
 import 'package:mustang_app/models/user.dart';
+import 'package:mustang_app/services/scouting_operations.dart';
 
 class TeamService {
   static FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -64,6 +65,22 @@ class TeamService {
 
     return ref.snapshots().map(
         (list) => list.docs.map((doc) => Match.fromSnapshot(doc)).toList());
+  }
+
+  static Future<void> createTeam(Team team) async {
+    bool exists = await ScoutingOperations.doesTeamDataExist(team.teamNumber);
+    if (!exists) {
+      await _teamsRef.doc(team.teamNumber).set(team.toJson());
+    } else {
+      throw new Exception('A team with this number already exists');
+    }
+  }
+
+  Future<void> addMember(UserModel user) async {
+    _db.collection('users').doc(user.uid).update({
+      'teamStatus': describeEnum(TeamStatus.JOINED),
+      'teamNumber': _teamNumber,
+    });
   }
 
   Stream<List<UserModel>> getJoinRequests() {

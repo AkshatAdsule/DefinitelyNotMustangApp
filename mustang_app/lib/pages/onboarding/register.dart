@@ -73,7 +73,6 @@ class _RegisterState extends State<Register> {
 
   Future<void> createAccount(BuildContext context) async {
     FocusScope.of(context).unfocus();
-    AuthService service = Provider.of<AuthService>(context, listen: false);
     try {
       String email = _method != SignInMethod.EMAIL_PASSWORD
           ? AuthService.currentUser.email
