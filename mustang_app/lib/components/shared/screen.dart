@@ -19,7 +19,7 @@ class Screen extends StatelessWidget {
     this.title,
     this.headerButtons,
     this.includeHeader = true,
-    this.includeBottomNav = true,
+    this.includeBottomNav = false,
     this.left = true,
     this.right = true,
     this.top = true,
