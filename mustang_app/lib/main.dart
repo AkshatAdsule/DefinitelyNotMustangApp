@@ -10,6 +10,7 @@ import 'package:mustang_app/pages/onboarding/verify_email.dart';
 import 'package:mustang_app/pages/profile.dart';
 import 'package:mustang_app/services/setup_service.dart';
 import 'package:mustang_app/services/auth_service.dart';
+import 'models/user.dart';
 import 'pages/pages.dart';
 import 'utils/orientation_helpers.dart';
 import 'package:provider/provider.dart';
@@ -183,6 +184,10 @@ class MyApp extends StatelessWidget {
       providers: [
         StreamProvider<User>.value(
           value: AuthService.onAuthStateChanged(),
+          initialData: null,
+        ),
+        StreamProvider<UserModel>.value(
+          value: AuthService.streamUser(AuthService.currentUser),
           initialData: null,
         )
       ],

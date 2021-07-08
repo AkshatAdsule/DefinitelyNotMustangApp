@@ -86,12 +86,15 @@ class AuthService {
     if (method == SignInMethod.EMAIL_PASSWORD) {
       UserCredential cred = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      await currentUser.updateDisplayName("$firstName $lastName");
+      await currentUser.updateEmail(email);
       uid = cred.user.uid;
     } else if (currentUser != null) {
       uid = currentUser.uid;
     } else {
       throw new Exception("Uid not found");
     }
+
     await _usersCollection.doc(uid).set(UserModel(
           uid: uid,
           email: email,
@@ -151,5 +154,12 @@ class AuthService {
 
   static Future<void> logout() async {
     await _auth.signOut();
+  }
+
+  static Future<void> deleteAccount() async {
+    if (currentUser != null) {
+      await _db.collection("users").doc(currentUser.uid).delete();
+      await _auth.currentUser.delete();
+    }
   }
 }
