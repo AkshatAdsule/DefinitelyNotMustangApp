@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class FancyTextFormField extends FormField<String> {
   FancyTextFormField({
@@ -12,6 +13,8 @@ class FancyTextFormField extends FormField<String> {
     String title = "",
     Widget prefixIcon,
     Widget suffixIcon,
+    List<TextInputFormatter> formatters = const [],
+    TextInputType inputType = TextInputType.text,
     FocusNode focusNode,
   }) : super(
           onSaved: onSaved,
@@ -22,7 +25,7 @@ class FancyTextFormField extends FormField<String> {
             return Column(
               children: [
                 Visibility(
-                  visible: !title.isEmpty,
+                  visible: title.isNotEmpty,
                   child: Container(
                     child: Text(
                       title,
@@ -50,10 +53,12 @@ class FancyTextFormField extends FormField<String> {
                   child: TextField(
                     focusNode: focusNode,
                     obscureText: obscureText,
+                    keyboardType: inputType,
                     style: TextStyle(
                       color: Colors.white,
                     ),
                     controller: controller,
+                    inputFormatters: formatters,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(top: 14),
                       hintText: hintText,
