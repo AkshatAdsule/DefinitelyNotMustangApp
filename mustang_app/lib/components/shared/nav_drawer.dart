@@ -58,8 +58,7 @@ class NavDrawer extends StatelessWidget {
   }
 
   void setSelected(String route) {
-    _selectedIndex =
-        routes.where((element) => element['route'] == route).first['route'];
+    _selectedIndex = routes.indexWhere((element) => element['route'] == route);
   }
 
   void navigate(BuildContext context, String route) {
