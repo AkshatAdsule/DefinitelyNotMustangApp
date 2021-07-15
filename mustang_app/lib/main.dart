@@ -198,7 +198,7 @@ class MyApp extends StatelessWidget {
         ),
         home: Home(),
         debugShowCheckedModeBanner: false,
-        initialRoute: Splash.route,
+        initialRoute: InputScreen.route,
         navigatorObservers: [_observer],
         onGenerateRoute: (settings) => _onGenerateRoute(settings),
       ),

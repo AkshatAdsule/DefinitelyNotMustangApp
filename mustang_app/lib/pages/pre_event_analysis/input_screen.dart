@@ -17,7 +17,7 @@ class _InputScreenState extends State<InputScreen> {
   String inputEvent;
   String sortBy = "opr";
   List<String> teams = [];
-  GetStatistics getStatistics = new GetStatistics();
+  GetStatistics getStatistics = GetStatistics.getInstance();
   List<String> sortByValues = ['opr', 'dpr', 'ccwm', 'winRate'];
 
   TextEditingController inputController = TextEditingController();

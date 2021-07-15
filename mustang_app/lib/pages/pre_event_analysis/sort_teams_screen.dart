@@ -5,6 +5,8 @@ import 'package:mustang_app/components/shared/screen.dart';
 import 'package:mustang_app/components/pre_event_analysis/team_stats_display.dart';
 import 'package:mustang_app/models/team_statistic.dart';
 import 'package:mustang_app/utils/get_statistics.dart';
+import 'package:mustang_app/utils/stream_event.dart';
+import 'package:mustang_app/utils/utils.dart';
 
 class SortTeamsPage extends StatefulWidget {
   final List<String> teams;
@@ -17,13 +19,17 @@ class SortTeamsPage extends StatefulWidget {
 
 class _SortTeamsPageState extends State<SortTeamsPage> {
   List<TeamStatsDisplay> teamWidgets = [];
-  GetStatistics getStatistics = new GetStatistics();
+  GetStatistics getStatistics = GetStatistics.getInstance();
 
   double _maxScore = 0;
   bool gettingStatistics = true;
 
   void _onInit() async {
     List<TeamStatistic> teamStats = [];
+
+    GetStatistics.eventStream.forEach((element) {
+      print(element.message);
+    });
 
     for (String team in widget.teams) {
       TeamStatistic currentTeamStats =
@@ -72,6 +78,41 @@ class _SortTeamsPageState extends State<SortTeamsPage> {
       title: "Pre-Event Data Analyzer",
       child: LoadingOverlay(
         isLoading: gettingStatistics,
+        progressIndicator: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(
+              height: 10,
+            ),
+            StreamBuilder(
+              stream: GetStatistics.eventStream,
+              initialData:
+                  StreamEvent(message: "Waiting...", type: MessageType.INFO),
+              builder: (context, AsyncSnapshot<StreamEvent> snapshot) {
+                StreamEvent data = snapshot.data;
+                Color textColor;
+
+                switch (data.type) {
+                  case MessageType.INFO:
+                    textColor = Colors.black;
+                    break;
+                  case MessageType.WARNING:
+                    textColor = Colors.orange;
+                    break;
+                  case MessageType.ERROR:
+                    textColor = Colors.red;
+                    break;
+                }
+
+                return Text(
+                  data.message,
+                  style: TextStyle(color: textColor),
+                );
+              },
+            ),
+          ],
+        ),
         child: ListView.builder(
           itemCount: teamWidgets.length,
           itemBuilder: (BuildContext buildContext, int index) {

@@ -31,10 +31,10 @@ class AuthService {
   }
 
   static Stream<UserModel> streamUser(User user) {
-    return _usersCollection
-        .doc(user.uid)
-        .snapshots()
-        .map((snap) => UserModel.fromSnapshot(snap));
+    // return _usersCollection
+    //     .doc(user.uid)
+    //     .snapshots()
+    //     .map((snap) => UserModel.fromSnapshot(snap));
   }
 
   static Future<UserCredential> loginWithEmailAndPassword(
