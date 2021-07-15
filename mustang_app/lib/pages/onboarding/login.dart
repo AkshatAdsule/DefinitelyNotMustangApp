@@ -339,6 +339,7 @@ class _LoginState extends State<Login> {
                     Container(
                       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                       child: FancyTextFormField(
+                        inputType: TextInputType.emailAddress,
                         hintText: "Email",
                         controller: _email,
                         validator: (String val) {
