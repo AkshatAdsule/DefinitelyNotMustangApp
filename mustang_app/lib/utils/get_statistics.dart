@@ -315,8 +315,7 @@ class GetStatistics {
     Map<String, dynamic> docData = doc.data();
 
     if (doc.exists &&
-        docData["DATA_VERSION"] == Constants.DATA_ANALYSIS_DATA_VERSION &&
-        false) {
+        docData["DATA_VERSION"] == Constants.DATA_ANALYSIS_DATA_VERSION) {
       _eventStreamController.add(
         StreamEvent(
           message: "Computing stats for $team",
