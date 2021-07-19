@@ -93,7 +93,7 @@ class _ProfileState extends State<Profile> {
                             border: Border.all(color: Colors.white),
                           ),
                           child: Image.network(
-                            AuthService.currentUser.photoURL ??
+                            AuthService.currentUser?.photoURL ??
                                 'https://firebasestorage.googleapis.com/v0/b/mustangapp-b1398.appspot.com/o/logo.png?alt=media&token=f45e368d-3cba-4d67-b8d5-2e554f87e046',
                           ),
                         ),

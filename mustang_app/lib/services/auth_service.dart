@@ -31,6 +31,7 @@ class AuthService {
   }
 
   static Stream<UserModel> streamUser(User user) {
+    if (user == null) return null;
     return _usersCollection
         .doc(user.uid)
         .snapshots()

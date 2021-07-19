@@ -186,21 +186,21 @@ class MyApp extends StatelessWidget {
           value: AuthService.onAuthStateChanged(),
           initialData: null,
         ),
-        StreamProvider<UserModel>.value(
-          value: AuthService.streamUser(AuthService.currentUser),
-          initialData: null,
-        )
       ],
-      child: MaterialApp(
-        title: 'Mustang App',
-        theme: ThemeData(
-          primarySwatch: Colors.green,
+      child: StreamProvider<UserModel>.value(
+        value: AuthService.streamUser(AuthService.currentUser),
+        initialData: null,
+        child: MaterialApp(
+          title: 'Mustang App',
+          theme: ThemeData(
+            primarySwatch: Colors.green,
+          ),
+          home: Home(),
+          debugShowCheckedModeBanner: false,
+          initialRoute: Splash.route,
+          navigatorObservers: [_observer],
+          onGenerateRoute: (settings) => _onGenerateRoute(settings),
         ),
-        home: Home(),
-        debugShowCheckedModeBanner: false,
-        initialRoute: Splash.route,
-        navigatorObservers: [_observer],
-        onGenerateRoute: (settings) => _onGenerateRoute(settings),
       ),
     );
   }

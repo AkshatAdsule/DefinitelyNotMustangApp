@@ -58,8 +58,7 @@ class NavDrawer extends StatelessWidget {
   }
 
   void setSelected(String route) {
-    _selectedIndex =
-        routes.where((element) => element['route'] == route).first['route'];
+    _selectedIndex = routes.indexWhere((element) => element['route'] == route);
   }
 
   void navigate(BuildContext context, String route) {
@@ -116,7 +115,7 @@ class NavDrawer extends StatelessWidget {
                     width: 100,
                     height: 100,
                     child: Image.network(
-                      AuthService.currentUser.photoURL ??
+                      AuthService.currentUser?.photoURL ??
                           'https://firebasestorage.googleapis.com/v0/b/mustangapp-b1398.appspot.com/o/logo.png?alt=media&token=f45e368d-3cba-4d67-b8d5-2e554f87e046',
                     ),
                   ),
