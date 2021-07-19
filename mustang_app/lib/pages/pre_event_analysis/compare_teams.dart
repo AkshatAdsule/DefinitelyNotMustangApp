@@ -16,7 +16,7 @@ class CompareTeams extends StatefulWidget {
 
 class _CompareTeamsState extends State<CompareTeams> {
   TeamStatistic _teamStatistic1, _teamStatistic2;
-  GetStatistics getStatistics = new GetStatistics();
+  GetStatistics getStatistics = GetStatistics.getInstance();
   Map<DataTypes, List<LineChartBarData>> data;
   bool _loading = true;
 

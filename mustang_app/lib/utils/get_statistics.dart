@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:mustang_app/constants/constants.dart';
 
 import 'package:mustang_app/models/team_statistic.dart';
+import 'package:mustang_app/utils/stream_event.dart';
 
 class Event {
   String eventCode;
@@ -24,10 +26,20 @@ class GetStatistics {
     "X-TBA-Auth-Key":
         "JAuW8W8YRGoCk0zREOgnqkGPtfUX5UAfHvd6Ze1ixcPUB3F2tpwXV24l7qoUUnqL"
   };
-  static const String apiPrefix = 'https://www.thebluealliance.com/api/v3';
+  static const String API_PREFIX = 'https://www.thebluealliance.com/api/v3';
+  static GetStatistics _instance;
+
+  static StreamController<StreamEvent> _eventStreamController =
+      new StreamController.broadcast();
+  static Stream<StreamEvent> get eventStream => _eventStreamController.stream;
+
   FirebaseFirestore _firestore;
   CollectionReference _teams;
-  GetStatistics getStatistics;
+
+  static GetStatistics getInstance() {
+    _instance = _instance ?? new GetStatistics._();
+    return _instance;
+  }
 
   static const Map<String, double> eventTypeWeightings = {
     "Regional": 1.0,
@@ -46,7 +58,7 @@ class GetStatistics {
     _teams = _firestore.collection('team-statistics');
   }
 
-  GetStatistics() {
+  GetStatistics._() {
     _firebaseInit();
   }
 
@@ -55,7 +67,7 @@ class GetStatistics {
     var response;
     List<Event> events = [];
     await http
-        .get(Uri.parse("$apiPrefix/team/$teamCode/events"), headers: _header)
+        .get(Uri.parse("$API_PREFIX/team/$teamCode/events"), headers: _header)
         .then((res) => response = res.body);
     var resJson = jsonDecode(response);
 
@@ -69,6 +81,10 @@ class GetStatistics {
           year: event['year'],
           eventType: event['event_type_string']));
     }
+    _eventStreamController.add(
+      StreamEvent(
+          message: "Got statistics for $teamCode", type: MessageType.INFO),
+    );
     return events;
   }
 
@@ -77,24 +93,33 @@ class GetStatistics {
     var response;
     List<String> teams = [];
     await http
-        .get(Uri.parse("$apiPrefix/event/$eventCode/teams"), headers: _header)
+        .get(Uri.parse("$API_PREFIX/event/$eventCode/teams"), headers: _header)
         .then((res) => response = res.body);
     var resJson = jsonDecode(response);
 
     for (var team in resJson) {
       teams.add(team['key']);
     }
+    _eventStreamController.add(
+      StreamEvent(message: "Got teams for $eventCode", type: MessageType.INFO),
+    );
     return teams;
   }
 
 // Returns array of match scores from the alliance that a team participated in at an event
   Future<List> getMatchScores(String teamCode, Event event) async {
+    _eventStreamController.add(
+      StreamEvent(
+        message: "Getting match scores for $teamCode at ${event.eventCode}",
+        type: MessageType.INFO,
+      ),
+    );
     var response;
     List<int> matchScores = [];
     await http
         .get(
             Uri.parse(
-                "$apiPrefix/team/$teamCode/event/${event.eventCode}/matches/simple"),
+                "$API_PREFIX/team/$teamCode/event/${event.eventCode}/matches/simple"),
             headers: _header)
         .then((res) => response = res.body);
     var resJson = jsonDecode(response);
@@ -125,6 +150,12 @@ class GetStatistics {
         }
       }
     }
+    _eventStreamController.add(
+      StreamEvent(
+        message: "Got match scores for $teamCode at ${event.eventCode}",
+        type: MessageType.INFO,
+      ),
+    );
     //debugPrint(matchScores);
     return matchScores;
   }
@@ -134,7 +165,7 @@ class GetStatistics {
     var response;
     int sum = 0;
     await http
-        .get(Uri.parse("$apiPrefix/event/$eventCode/matches/simple"),
+        .get(Uri.parse("$API_PREFIX/event/$eventCode/matches/simple"),
             headers: _header)
         .then((res) => response = res.body);
     var resJson = jsonDecode(response);
@@ -154,7 +185,7 @@ class GetStatistics {
     await http
         .get(
             Uri.parse(
-                "$apiPrefix/team/$teamCode/event/$eventCode/matches/simple"),
+                "$API_PREFIX/team/$teamCode/event/$eventCode/matches/simple"),
             headers: _header)
         .then((res) => response = res.body);
     var resJson = jsonDecode(response);
@@ -188,9 +219,15 @@ class GetStatistics {
 
   /// Returns a EventStatistic of the OPR, DPR and CCWM for a team at an event
   Future<EventStatistic> getEventStats(String team, Event event) async {
+    // _eventStreamController.add(
+    //   StreamEvent(
+    //     message: "Getting event statistics for $team at ${event.eventCode}",
+    //     type: MessageType.INFO,
+    //   ),
+    // );
     var _response;
     await http
-        .get(Uri.parse('$apiPrefix/event/${event.eventCode}/oprs'),
+        .get(Uri.parse('$API_PREFIX/event/${event.eventCode}/oprs'),
             headers: _header)
         .then((res) => _response = res.body);
     try {
@@ -214,6 +251,12 @@ class GetStatistics {
         //   "pointContribution": contributionPercentage
         // }}');
         // return {"opr": opr, "dpr": dpr, "ccwm": ccwm, "winRate": winRate};
+        _eventStreamController.add(
+          StreamEvent(
+            message: "Got event statistics for $team at ${event.eventCode}",
+            type: MessageType.INFO,
+          ),
+        );
         return new EventStatistic(
             team: team,
             event: event.eventCode,
@@ -224,9 +267,21 @@ class GetStatistics {
             winRate: winRate,
             pointContribution: contributionPercentage);
       } else {
+        _eventStreamController.add(
+          StreamEvent(
+            message: "Could not find stats for $team at ${event.eventCode}",
+            type: MessageType.WARNING,
+          ),
+        );
         throw 'Could not find stats for $team at ${event.eventCode}';
       }
     } catch (e) {
+      _eventStreamController.add(
+        StreamEvent(
+          message: "Could not find stats for $team at ${event.eventCode}",
+          type: MessageType.WARNING,
+        ),
+      );
       throw 'Could not find stats for $team at ${event.eventCode}';
     }
   }
@@ -235,7 +290,7 @@ class GetStatistics {
     var response;
     double contributionPercentage;
     await http
-        .get(Uri.parse('$apiPrefix/event/${event.eventCode}/oprs'),
+        .get(Uri.parse('$API_PREFIX/event/${event.eventCode}/oprs'),
             headers: _header)
         .then((res) => response = res.body);
     var resJson = jsonDecode(response);
@@ -261,6 +316,12 @@ class GetStatistics {
 
     if (doc.exists &&
         docData["DATA_VERSION"] == Constants.DATA_ANALYSIS_DATA_VERSION) {
+      _eventStreamController.add(
+        StreamEvent(
+          message: "Computing stats for $team",
+          type: MessageType.INFO,
+        ),
+      );
       Map<String, dynamic> dataMap =
           docData.map((key, value) => MapEntry(key, value));
       TeamStatistic teamStatistic = new TeamStatistic.premade(
@@ -288,6 +349,12 @@ class GetStatistics {
             )
             .toList(),
       );
+      _eventStreamController.add(
+        StreamEvent(
+          message: "Got cached stats for $team",
+          type: MessageType.INFO,
+        ),
+      );
       return teamStatistic;
     } else {
       List<Event> events = await getEvents(team);
@@ -301,6 +368,12 @@ class GetStatistics {
       }
       TeamStatistic teamStatistic = new TeamStatistic(team, eventStats);
       _teams.doc(team).set(teamStatistic.toJson());
+      _eventStreamController.add(
+        StreamEvent(
+          message: "Got computed stats for $team",
+          type: MessageType.INFO,
+        ),
+      );
       return teamStatistic;
     }
   }
@@ -312,7 +385,7 @@ class GetStatistics {
     try {
       http.Response res = await http.get(
           Uri.parse(
-              '$apiPrefix/team/$teamNumber/event/${event.eventCode}/matches'),
+              '$API_PREFIX/team/$teamNumber/event/${event.eventCode}/matches'),
           headers: {..._header, 'accept': 'application/json'});
 
       var resJson = jsonDecode(res.body);
