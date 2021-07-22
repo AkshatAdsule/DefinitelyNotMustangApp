@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:loading_overlay/loading_overlay.dart';
 import 'package:mustang_app/components/pre_event_analysis/line_chart_widget.dart';
+import 'package:mustang_app/components/shared/fancy_loading_overlay.dart';
 import 'package:mustang_app/components/shared/screen.dart';
 import 'package:mustang_app/models/team_statistic.dart';
 import 'package:mustang_app/utils/get_statistics.dart';
@@ -154,9 +154,10 @@ class _CompareTeamsState extends State<CompareTeams> {
   Widget build(BuildContext context) {
     return Screen(
       title: "Comparing ${widget.team1} and ${widget.team2}",
-      child: LoadingOverlay(
-        isLoading: _loading,
-        child: ListView(
+      child: FancyLoadingOverlay(
+        eventStream: GetStatistics.eventStream,
+        showOverlay: _loading,
+        content: ListView(
           children: _loading
               ? []
               : [
