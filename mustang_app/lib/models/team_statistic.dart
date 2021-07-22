@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:mustang_app/constants/constants.dart';
 
 class TeamStatistic {
   String teamCode;
-  double oprAverage,
+  num oprAverage,
       dprAverage,
       ccwmAverage,
       winRateAverage,
@@ -13,7 +12,7 @@ class TeamStatistic {
       ccwmSlope,
       winrateSlope,
       contributionSlope;
-  List<double> oprs = [],
+  List<num> oprs = [],
       dprs = [],
       ccwms = [],
       winRates = [],
@@ -25,7 +24,7 @@ class TeamStatistic {
   TeamStatistic(String teamCode, List<EventStatistic> eventStats) {
     this.teamCode = teamCode;
     this.events = eventStats;
-    List<double> currentYearOprs = [],
+    List<num> currentYearOprs = [],
         currentYearDprs = [],
         currentYearCcwms = [],
         currentYearWinRates = [],
@@ -98,7 +97,7 @@ class TeamStatistic {
 
   TeamStatistic.fromJson(Map<String, dynamic> data);
   void _calculateAverages() {
-    oprAverage = oprs.reduce((double a, double b) => a + b) / oprs.length;
+    oprAverage = oprs.reduce((num a, num b) => a + b) / oprs.length;
     dprAverage = dprs.reduce((a, b) => a + b) / dprs.length;
     ccwmAverage = ccwms.reduce((a, b) => a + b) / ccwms.length;
     winRateAverage = winRates.reduce((a, b) => a + b) / winRates.length;
@@ -136,7 +135,7 @@ class TeamStatistic {
       return;
     }
     int max = length <= 5 ? length : 5;
-    double oprSum = 0,
+    num oprSum = 0,
         dprSum = 0,
         ccwmSum = 0,
         winRateSum = 0,
@@ -159,7 +158,7 @@ class TeamStatistic {
 
 class EventStatistic {
   String event, team;
-  double opr, dpr, ccwm, winRate, pointContribution;
+  num opr, dpr, ccwm, winRate, pointContribution;
   int year;
 
   EventStatistic(
@@ -188,10 +187,10 @@ class EventStatistic {
 
 class YearStats {
   DateTime year;
-  double avgOpr, avgDpr, avgCcwm, avgWinRate, avgPointContribution;
+  num avgOpr, avgDpr, avgCcwm, avgWinRate, avgPointContribution;
 
-  YearStats(this.year, List<double> oprs, List<double> dprs, List<double> ccwms,
-      List<double> winRates, List<double> contributionPercentages) {
+  YearStats(this.year, List<num> oprs, List<num> dprs, List<num> ccwms,
+      List<num> winRates, List<num> contributionPercentages) {
     try {
       avgOpr = oprs.reduce((a, b) => a + b) / oprs.length;
       avgDpr = dprs.reduce((a, b) => a + b) / dprs.length;

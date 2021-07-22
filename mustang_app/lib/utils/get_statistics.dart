@@ -161,7 +161,7 @@ class GetStatistics {
   }
 
 // Returns the average team score at an event
-  Future<double> getAvgTeamScore(String eventCode) async {
+  Future<num> getAvgTeamScore(String eventCode) async {
     var response;
     int sum = 0;
     await http
@@ -180,7 +180,7 @@ class GetStatistics {
     return sum / (numOfMatches * 6);
   }
 
-  Future<double> getWinRate(String teamCode, String eventCode) async {
+  Future<num> getWinRate(String teamCode, String eventCode) async {
     var response;
     await http
         .get(
@@ -232,14 +232,14 @@ class GetStatistics {
         .then((res) => _response = res.body);
     try {
       var resJson = jsonDecode(_response);
-      double opr = resJson['oprs'][team];
-      double dpr = resJson['dprs'][team];
-      double ccwm = resJson['ccwms'][team];
-      double scale = GetStatistics.eventTypeWeightings[event.eventType] == null
+      num opr = resJson['oprs'][team];
+      num dpr = resJson['dprs'][team];
+      num ccwm = resJson['ccwms'][team];
+      num scale = GetStatistics.eventTypeWeightings[event.eventType] == null
           ? 1
           : GetStatistics.eventTypeWeightings[event.eventType];
-      double winRate = await getWinRate(team, event.eventCode);
-      double contributionPercentage = await getPointContribution(team, event);
+      num winRate = await getWinRate(team, event.eventCode);
+      num contributionPercentage = await getPointContribution(team, event);
 
       // Make sure result is not empty object
       if (opr != null) {
@@ -286,19 +286,19 @@ class GetStatistics {
     }
   }
 
-  Future<double> getPointContribution(String teamCode, Event event) async {
+  Future<num> getPointContribution(String teamCode, Event event) async {
     var response;
-    double contributionPercentage;
+    num contributionPercentage;
     await http
         .get(Uri.parse('$API_PREFIX/event/${event.eventCode}/oprs'),
             headers: _header)
         .then((res) => response = res.body);
     var resJson = jsonDecode(response);
-    double opr = resJson['oprs'][teamCode];
+    num opr = resJson['oprs'][teamCode];
     //debugPrint(opr);
     List<dynamic> matchScores = await getMatchScores(teamCode, event);
     //debugPrint(matchScores);
-    double sum = 0;
+    num sum = 0;
     for (dynamic allianceScore in matchScores) {
       //debugPrint(sum);
       if (allianceScore != 0) sum += opr / allianceScore;
@@ -324,30 +324,29 @@ class GetStatistics {
       );
       Map<String, dynamic> dataMap =
           docData.map((key, value) => MapEntry(key, value));
+      print(team);
       TeamStatistic teamStatistic = new TeamStatistic.premade(
         teamCode: team,
-        oprAverage: dataMap['oprAverage'] as double,
-        oprSlope: dataMap['oprSlope'] as double,
-        dprAverage: dataMap['dprAverage'] as double,
-        dprSlope: dataMap['dprSlope'] as double,
-        ccwmAverage: dataMap['ccwmAverage'] as double,
-        ccwmSlope: dataMap['ccwmSlope'] as double,
-        winRateAverage: dataMap['winRateAverage'] as double,
-        winrateSlope: dataMap['winrateSlope'] as double,
-        pointContributionAvg: dataMap['pointContributionAverage'] as double,
-        contributionSlope: dataMap['contributionSlope'] as double,
-        yearStats: dataMap['yearStatistics']
-            .map<YearStats>(
-              (s) => new YearStats.premade(
-                year: DateTime.parse(s["year"]),
-                avgOpr: s["oprAverage"] as double,
-                avgDpr: s["dprAverage"] as double,
-                avgCcwm: s["ccwmAverage"] as double,
-                avgWinRate: s["winRateAverage"] as double,
-                avgPointContribution: s["pointContributionAverage"] as double,
-              ),
-            )
-            .toList(),
+        oprAverage: dataMap['oprAverage'],
+        oprSlope: dataMap['oprSlope'],
+        dprAverage: dataMap['dprAverage'],
+        dprSlope: dataMap['dprSlope'],
+        ccwmAverage: dataMap['ccwmAverage'],
+        ccwmSlope: dataMap['ccwmSlope'],
+        winRateAverage: dataMap['winRateAverage'],
+        winrateSlope: dataMap['winrateSlope'],
+        pointContributionAvg: dataMap['pointContributionAverage'],
+        contributionSlope: dataMap['contributionSlope'],
+        yearStats: dataMap['yearStatistics'].map<YearStats>((s) {
+          return new YearStats.premade(
+            year: DateTime.parse(s["year"]),
+            avgOpr: s["oprAverage"],
+            avgDpr: s["dprAverage"],
+            avgCcwm: s["ccwmAverage"],
+            avgWinRate: s["winRateAverage"],
+            avgPointContribution: s["pointContributionAverage"],
+          );
+        }).toList(),
       );
       _eventStreamController.add(
         StreamEvent(
