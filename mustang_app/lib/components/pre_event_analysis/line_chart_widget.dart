@@ -17,7 +17,8 @@ class LineChartWidget extends StatelessWidget {
   static final FlDotData dotData = FlDotData(
     show: false,
   );
-  LineChartWidget({this.data, this.height: 300, this.width: 50, this.showLegend: false});
+  LineChartWidget(
+      {this.data, this.height: 300, this.width: 50, this.showLegend: false});
 
   // LineChartWidget(this.seriesList, {this.animate});
 
@@ -402,19 +403,13 @@ class LineChartWidget extends StatelessWidget {
                       showTitle: true,
                       titleText: 'Stat',
                       margin: 4,
-                      textStyle: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black
-                      ),
+                      textStyle: TextStyle(fontSize: 20, color: Colors.black),
                     ),
                     bottomTitle: AxisTitle(
                       showTitle: true,
                       titleText: 'Year',
                       margin: 4,
-                      textStyle: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black
-                      ),
+                      textStyle: TextStyle(fontSize: 20, color: Colors.black),
                     ),
                   ),
                 ),
@@ -422,97 +417,61 @@ class LineChartWidget extends StatelessWidget {
             ),
           ),
           if (showLegend)
-          Flexible(
-            flex: 1,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                new Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    new SizedBox(
-                      width: 40
-                    ),
-                    new Container(
-                      height: 10.0,
-                      width: 10.0,
-                      color: Colors.blue,
-                    ),
-                    new SizedBox(
-                      width: 3
-                    ),
-                    new Text(
-                      "OPR"
-                    ),
-                    new SizedBox(
-                      width: 19
-                    ),
-                    new Container(
-                      height: 10.0,
-                      width: 10.0, 
-                      color: Colors.green
-                    ),
-                    new SizedBox(
-                      width: 3
-                    ),
-                    new Text(
-                      "CCWM"
-                    ),
-                    new SizedBox(
-                      width: 20
-                    ),
-                    new Container(
-                      height: 10.0,
-                      width: 10.0, 
-                      color: Colors.purple
-                    ),
-                    new SizedBox(
-                      width: 3
-                    ),
-                    new Text(
-                      "Contribution Percentage"
-                    ),
+            Flexible(
+              flex: 1,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  new Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      new SizedBox(width: 40),
+                      new Container(
+                        height: 10.0,
+                        width: 10.0,
+                        color: Colors.blue,
+                      ),
+                      new SizedBox(width: 3),
+                      new Text("OPR"),
+                      new SizedBox(width: 19),
+                      new Container(
+                          height: 10.0, width: 10.0, color: Colors.green),
+                      new SizedBox(width: 3),
+                      new Text("CCWM"),
+                      new SizedBox(width: 20),
+                      new Container(
+                          height: 10.0, width: 10.0, color: Colors.purple),
+                      new SizedBox(width: 3),
+                      new Text("Contribution Percentage"),
+                    ],
+                  ),
+                  new SizedBox(
+                    height: 10,
+                  ),
+                  new Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      new SizedBox(width: 40),
+                      new Container(
+                        height: 10.0,
+                        width: 10.0,
+                        color: Colors.red,
+                      ),
+                      new SizedBox(width: 3),
+                      new Text("DPR"),
+                      new SizedBox(width: 20),
+                      new Container(
+                        height: 10.0,
+                        width: 10.0,
+                        color: Colors.black,
+                      ),
+                      new SizedBox(width: 3),
+                      new Text("Win Rate"),
+                    ],
+                  ),
                 ],
-                ),
-                new SizedBox(
-                  height: 10,
-                ),
-                new Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    new SizedBox(
-                      width: 40
-                    ),
-                    new Container(
-                      height: 10.0,
-                      width: 10.0,
-                      color: Colors.red,
-                    ),
-                    new SizedBox(
-                      width: 3
-                    ),
-                    new Text(
-                      "DPR"
-                    ),
-                    new SizedBox(
-                      width: 20
-                    ), 
-                    new Container(
-                      height: 10.0,
-                      width: 10.0,
-                      color: Colors.black,
-                    ),
-                    new SizedBox(
-                      width: 3
-                    ),
-                    new Text(
-                      "Win Rate"
-                    ), 
-                  ],
-                ),
-              ],
-            ),
-          )
+              ),
+            )
         ],
       ),
     );
@@ -522,9 +481,9 @@ class LineChartWidget extends StatelessWidget {
 /// Sample linear data type.
 class _LinearStats {
   DateTime year;
-  double stat;
+  num stat;
 
-  _LinearStats(DateTime year, double stat) {
+  _LinearStats(DateTime year, num stat) {
     if (stat == null || year == null) {
       this.stat = 0;
       this.year = year;
