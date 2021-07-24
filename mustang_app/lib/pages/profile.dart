@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mustang_app/components/profile/badge.dart';
+import 'package:mustang_app/components/profile/stat_row.dart';
 import 'package:mustang_app/components/shared/screen.dart';
 import 'package:mustang_app/models/user.dart';
 import 'package:mustang_app/pages/onboarding/join_team.dart';
@@ -50,7 +51,6 @@ class _ProfileState extends State<Profile> {
           teamNumber: "670",
           teamStatus: TeamStatus.JOINED,
         );
-
     return Screen(
       title: "Profile",
       top: false,
@@ -223,25 +223,8 @@ class _ProfileState extends State<Profile> {
                       margin: EdgeInsets.only(top: 10),
                       padding:
                           EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          StatDisplay(
-                            num: 33,
-                            name: "Active Hours",
-                            width: MediaQuery.of(context).size.width / 4,
-                          ),
-                          StatDisplay(
-                            num: 55,
-                            name: "Matches Scouted",
-                            width: MediaQuery.of(context).size.width / 4,
-                          ),
-                          StatDisplay(
-                            num: 8,
-                            name: "Hello World",
-                            width: MediaQuery.of(context).size.width / 4,
-                          ),
-                        ],
+                      child: StatRow(
+                        user.stats,
                       ),
                     ),
                     Container(
@@ -282,71 +265,6 @@ class _ProfileState extends State<Profile> {
             )
           ],
         ),
-      ),
-    );
-  }
-}
-
-class Badge extends StatelessWidget {
-  const Badge({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(2),
-      child: Icon(
-        FontAwesomeIcons.medal,
-        color: Colors.white,
-        size: 18,
-      ),
-    );
-  }
-}
-
-class StatDisplay extends StatelessWidget {
-  final String name;
-  final int num;
-  final double width;
-  const StatDisplay({Key key, this.name = "", this.num = 0, this.width = 100})
-      : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: width,
-            padding: EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: Colors.green,
-              shape: BoxShape.circle,
-            ),
-            child: Text(
-              num.toString(),
-              style: TextStyle(
-                fontSize: 35,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Container(
-            width: width * 0.7,
-            margin: EdgeInsets.only(top: 10),
-            child: Text(
-              name,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

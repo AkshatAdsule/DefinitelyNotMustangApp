@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:mustang_app/models/user_statistic.dart';
 
 enum UserType {
   MEMBER,
@@ -18,6 +19,7 @@ class UserModel {
   String uid, email, firstName, lastName, teamNumber;
   UserType userType;
   TeamStatus teamStatus;
+  List<UserStatistic> stats;
 
   UserModel({
     this.uid,
@@ -27,6 +29,7 @@ class UserModel {
     this.userType,
     this.teamNumber,
     this.teamStatus,
+    this.stats,
   });
 
   factory UserModel.fromSnapshot(DocumentSnapshot snapshot) {
@@ -47,6 +50,11 @@ class UserModel {
       userType: parseUserTypeFromString(data['userType']),
       teamNumber: data['teamNumber'],
       teamStatus: parseTeamStatusFromString(data['teamStatus']),
+      stats: (data['stats'] != null)
+          ? data['stats']
+              .map<UserStatistic>((e) => UserStatistic.fromJson(e))
+              .toList()
+          : [],
     );
   }
 
@@ -59,6 +67,7 @@ class UserModel {
       'userType': describeEnum(userType),
       'teamNumber': teamNumber,
       'teamStatus': describeEnum(teamStatus),
+      'stats': stats,
     };
   }
 
