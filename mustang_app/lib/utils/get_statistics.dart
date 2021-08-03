@@ -9,6 +9,7 @@ import 'package:mustang_app/constants/constants.dart';
 import 'package:mustang_app/models/team_statistic.dart';
 import 'package:mustang_app/utils/stream_event.dart';
 
+/// Represents a event with an [eventCode], [eventType], and [eventType]
 class Event {
   String eventCode;
   String eventType;
@@ -21,6 +22,7 @@ class Event {
   }
 }
 
+/// This *singleton* class interfaces with the Blue Alliance API to provide data about teams
 class GetStatistics {
   static const Map<String, String> _header = {
     "X-TBA-Auth-Key":
@@ -53,6 +55,7 @@ class GetStatistics {
     "Remote": 0.0
   };
 
+  /// Sets up firebase
   Future<void> _firebaseInit() async {
     _firestore = FirebaseFirestore.instance;
     _teams = _firestore.collection('team-statistics');
@@ -88,7 +91,7 @@ class GetStatistics {
     return events;
   }
 
-  // Returns array of team codes from an event
+  /// Returns array of team codes from an event
   Future<List> getTeams(String eventCode) async {
     var response;
     List<String> teams = [];
@@ -106,7 +109,7 @@ class GetStatistics {
     return teams;
   }
 
-// Returns array of match scores from the alliance that a team participated in at an event
+  /// Returns array of match scores from the alliance that a team participated in at an event
   Future<List> getMatchScores(String teamCode, Event event) async {
     _eventStreamController.add(
       StreamEvent(
@@ -156,11 +159,10 @@ class GetStatistics {
         type: MessageType.INFO,
       ),
     );
-    //debugPrint(matchScores);
     return matchScores;
   }
 
-// Returns the average team score at an event
+  /// Returns the average team score at an event
   Future<num> getAvgTeamScore(String eventCode) async {
     var response;
     int sum = 0;
@@ -180,6 +182,7 @@ class GetStatistics {
     return sum / (numOfMatches * 6);
   }
 
+  /// Gets the winrate of a team at an event
   Future<num> getWinRate(String teamCode, String eventCode) async {
     var response;
     await http
@@ -337,16 +340,16 @@ class GetStatistics {
         winrateSlope: dataMap['winrateSlope'],
         pointContributionAvg: dataMap['pointContributionAverage'],
         contributionSlope: dataMap['contributionSlope'],
-        yearStats: dataMap['yearStatistics'].map<YearStats>((s) {
-          return new YearStats.premade(
-            year: DateTime.parse(s["year"]),
-            avgOpr: s["oprAverage"],
-            avgDpr: s["dprAverage"],
-            avgCcwm: s["ccwmAverage"],
-            avgWinRate: s["winRateAverage"],
-            avgPointContribution: s["pointContributionAverage"],
-          );
-        }).toList(),
+        yearStats: dataMap['yearStatistics']
+            .map<YearStats>((s) => YearStats.premade(
+                  year: DateTime.parse(s["year"]),
+                  avgOpr: s["oprAverage"],
+                  avgDpr: s["dprAverage"],
+                  avgCcwm: s["ccwmAverage"],
+                  avgWinRate: s["winRateAverage"],
+                  avgPointContribution: s["pointContributionAverage"],
+                ))
+            .toList(),
       );
       _eventStreamController.add(
         StreamEvent(
@@ -377,7 +380,8 @@ class GetStatistics {
     }
   }
 
-  static Future<Map<String, String>> getMatchVideos(
+  /// Gets all the match videos for a team at an event
+  Future<Map<String, String>> getMatchVideos(
       String teamNumber, Event event) async {
     Map<String, String> matchLinks = {};
 
