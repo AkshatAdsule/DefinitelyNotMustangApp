@@ -97,7 +97,8 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
 
   void initVideoLinks() async {
     //TODO use event key properly
-    Map<String, String> links = (await GetStatistics.getMatchVideos(
+    Map<String, String> links =
+        (await GetStatistics.getInstance().getMatchVideos(
       'frc' + teamNumber,
       Event(eventCode: '2018utwv'),
     ));
