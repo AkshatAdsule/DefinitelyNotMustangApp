@@ -22,12 +22,14 @@ class _SortTeamsPageState extends State<SortTeamsPage> {
 
   double _maxScore = 0;
   bool gettingStatistics = true;
+  int doneCount, remainingCount, totalCount;
 
   void _onInit() async {
     List<TeamStatistic> teamStats = [];
-
-    GetStatistics.eventStream.forEach((element) {
-      print(element.message);
+    setState(() {
+      totalCount = widget.teams.length;
+      remainingCount = totalCount;
+      doneCount = 0;
     });
 
     for (String team in widget.teams) {
@@ -37,6 +39,10 @@ class _SortTeamsPageState extends State<SortTeamsPage> {
       if (score > _maxScore) {
         _maxScore = score;
       }
+      setState(() {
+        doneCount++;
+        remainingCount--;
+      });
       teamStats.add(currentTeamStats);
     }
 
@@ -78,6 +84,20 @@ class _SortTeamsPageState extends State<SortTeamsPage> {
       child: FancyLoadingOverlay(
         eventStream: GetStatistics.eventStream,
         showOverlay: gettingStatistics,
+        loadingIndicator: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            children: [
+              LinearProgressIndicator(
+                value: doneCount / totalCount,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text("$remainingCount left out of $totalCount teams")
+            ],
+          ),
+        ),
         content: ListView.builder(
           itemCount: teamWidgets.length,
           itemBuilder: (BuildContext buildContext, int index) {

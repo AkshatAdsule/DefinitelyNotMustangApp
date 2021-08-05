@@ -5,9 +5,16 @@ import 'package:mustang_app/utils/stream_event.dart';
 class FancyLoadingOverlay extends StatelessWidget {
   final Stream<StreamEvent> eventStream;
   final Widget content;
+  final Widget loadingIndicator;
   final bool showOverlay;
 
-  const FancyLoadingOverlay({this.eventStream, this.content, this.showOverlay});
+  static const Widget defaultLoadingIndicator = CircularProgressIndicator();
+
+  const FancyLoadingOverlay(
+      {this.eventStream,
+      this.content,
+      this.showOverlay,
+      this.loadingIndicator: defaultLoadingIndicator});
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +23,9 @@ class FancyLoadingOverlay extends StatelessWidget {
       progressIndicator: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(),
+          loadingIndicator,
           SizedBox(
-            height: 10,
+            height: 20,
           ),
           StreamBuilder(
             stream: eventStream,
