@@ -12,15 +12,18 @@ class ViewGraphScreen extends StatelessWidget {
     return Screen(
       title: _statistic.teamCode.substring(3),
       child: Center(
-        child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) =>
-              LineChartWidget(
-            data: LineChartWidget.createTeamData(_statistic),
-            height: constraints.maxHeight,
-            width: constraints.maxWidth,
-            showLegend: true,
-          ),
-        ),
+        child: _statistic.yearStats != null && _statistic.yearStats.length > 0
+            ? LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) =>
+                    LineChartWidget(
+                  data: LineChartWidget.createTeamData(_statistic),
+                  height: constraints.maxHeight,
+                  width: constraints.maxWidth,
+                  showLegend: true,
+                ),
+              )
+            : Text(
+                "Unexpected error! Could not process graph for ${_statistic.teamCode}."),
       ),
     );
   }
