@@ -33,17 +33,25 @@ class _SortTeamsPageState extends State<SortTeamsPage> {
     });
 
     for (String team in widget.teams) {
-      TeamStatistic currentTeamStats =
-          await getStatistics.getCumulativeStats(team);
-      double score = OverAllScoreDisplay.calculateScore(currentTeamStats);
-      if (score > _maxScore) {
-        _maxScore = score;
+      try {
+        TeamStatistic currentTeamStats =
+            await getStatistics.getCumulativeStats(team);
+        double score = OverAllScoreDisplay.calculateScore(currentTeamStats);
+        if (score > _maxScore) {
+          _maxScore = score;
+        }
+        setState(() {
+          doneCount++;
+          remainingCount--;
+        });
+        teamStats.add(currentTeamStats);
+      } catch (e) {
+        setState(() {
+          totalCount--;
+          remainingCount--;
+        });
+        continue;
       }
-      setState(() {
-        doneCount++;
-        remainingCount--;
-      });
-      teamStats.add(currentTeamStats);
     }
 
     if (widget.sortBy == "opr") {
