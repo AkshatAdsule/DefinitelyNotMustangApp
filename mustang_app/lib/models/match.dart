@@ -37,7 +37,8 @@ class Match {
           ? data['actions']
               .map((action) => GameAction.fromJson(action))
               .toList()
-          : [],
+              .cast<GameAction>()
+          : <GameAction>[],
       matchType: data['matchType'] != null
           ? matchTypeFromString(data['matchType'].toString())
           : MatchType.QM,

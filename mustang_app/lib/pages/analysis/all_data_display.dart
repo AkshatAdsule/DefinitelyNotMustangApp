@@ -14,9 +14,9 @@ class AllDataDisplay extends StatelessWidget {
   String _teamNumber = '';
 
   AllDataDisplay({String teamNumber}) {
+    print('teamnumber: $teamNumber');
     _teamNumber = teamNumber;
-        // _teamNumber = "519";
-
+    // _teamNumber = "519";
   }
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,6 @@ class AllDataDisplay extends StatelessWidget {
         initialData: [],
         child: AllDataDisplayPage(
           teamNumber: _teamNumber,
-          
         ),
       ),
     );
@@ -41,7 +40,7 @@ class AllDataDisplayPage extends StatefulWidget {
   // List<Match> _matches;
 
   AllDataDisplayPage({String teamNumber}) {
-  // AllDataDisplayPage({String teamNumber, List<Match> matches}) {
+    // AllDataDisplayPage({String teamNumber, List<Match> matches}) {
     _teamNumber = teamNumber;
     // _matches = matches;
   }
@@ -49,17 +48,15 @@ class AllDataDisplayPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // return new _AllDataDisplayState(_teamNumber, _matches);
-        return new _AllDataDisplayState(_teamNumber);
-
+    return new _AllDataDisplayState(_teamNumber);
   }
 }
 
 class _AllDataDisplayState extends State<AllDataDisplayPage> {
-    // String _teamNumber = '';
+  // String _teamNumber = '';
   // List<Match> _THEmatches;
-    _AllDataDisplayState(String teamNumber){
-
-  // _AllDataDisplayState(String teamNumber, THEmatches){
+  _AllDataDisplayState(String teamNumber) {
+    // _AllDataDisplayState(String teamNumber, THEmatches){
     // _teamNumber = teamNumber;
     // _THEmatches = THEmatches;
   }
@@ -80,8 +77,7 @@ class _AllDataDisplayState extends State<AllDataDisplayPage> {
               children: [
                 Text("total number of matches: " +
                     KeivnaAnalyzer.getTotalNumMatches(matches).toString())
-                                        // KeivnaAnalyzer.getTotalNumMatches(_THEmatches).toString())
-
+                // KeivnaAnalyzer.getTotalNumMatches(_THEmatches).toString())
               ]),
         ),
       ),
