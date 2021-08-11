@@ -15,6 +15,8 @@ class AllDataDisplay extends StatelessWidget {
 
   AllDataDisplay({String teamNumber}) {
     _teamNumber = teamNumber;
+        // _teamNumber = "519";
+
   }
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,7 @@ class AllDataDisplay extends StatelessWidget {
         initialData: [],
         child: AllDataDisplayPage(
           teamNumber: _teamNumber,
+          
         ),
       ),
     );
@@ -35,23 +38,37 @@ class AllDataDisplay extends StatelessWidget {
 // ignore: must_be_immutable
 class AllDataDisplayPage extends StatefulWidget {
   String _teamNumber = '';
+  // List<Match> _matches;
 
   AllDataDisplayPage({String teamNumber}) {
+  // AllDataDisplayPage({String teamNumber, List<Match> matches}) {
     _teamNumber = teamNumber;
+    // _matches = matches;
   }
 
   @override
   State<StatefulWidget> createState() {
-    return new _AllDataDisplayState(_teamNumber);
+    // return new _AllDataDisplayState(_teamNumber, _matches);
+        return new _AllDataDisplayState(_teamNumber);
+
   }
 }
 
 class _AllDataDisplayState extends State<AllDataDisplayPage> {
-  _AllDataDisplayState(String teamNumber);
+    // String _teamNumber = '';
+  // List<Match> _THEmatches;
+    _AllDataDisplayState(String teamNumber){
+
+  // _AllDataDisplayState(String teamNumber, THEmatches){
+    // _teamNumber = teamNumber;
+    // _THEmatches = THEmatches;
+  }
 
   @override
   Widget build(BuildContext context) {
     Team team = Provider.of<Team>(context);
+    // List<Match> matches = Provider.of<List<Match>>(context);
+    List<Match> matches = Provider.of<List<Match>>(context);
 
     return Screen(
       title: 'All Data for team: ' + (team != null ? team.teamNumber : ""),
@@ -62,7 +79,9 @@ class _AllDataDisplayState extends State<AllDataDisplayPage> {
               // children: <Widget>[DataDisplayText()],
               children: [
                 Text("total number of matches: " +
-                    KeivnaAnalyzer.getTotalNumMatches(team).toString())
+                    KeivnaAnalyzer.getTotalNumMatches(matches).toString())
+                                        // KeivnaAnalyzer.getTotalNumMatches(_THEmatches).toString())
+
               ]),
         ),
       ),

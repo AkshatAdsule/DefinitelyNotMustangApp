@@ -19,13 +19,18 @@ is made up static methods that call keivna_data.dart's static methods
 class KeivnaAnalyzer {
 //normally the analysis would be more intense, such as "getMatchWithHighestScore"
 //SHOULDN'T RETURE FUTURE<INT> J INT!!!!!!!
-  static Future<int> getTotalNumMatches(Team team) async {
-    Future<List<Match>> matches = TeamService.getMatches(team.teamNumber);
-    List<Match> matchesList = await TeamService.getMatches(team.teamNumber);
 
-    return matchesList.length;
-    // return KeivnaData.getAllMatchesForTeam(team).length;
+static int getTotalNumMatches(List<Match> matches)  {
+
+    return matches.length;
   }
+  // static Future<int> getTotalNumMatches(Team team) async {
+  //   Future<List<Match>> matches = TeamService.getMatches(team.teamNumber);
+  //   List<Match> matchesList = await TeamService.getMatches(team.teamNumber);
+
+  //   return matchesList.length;
+  //   // return KeivnaData.getAllMatchesForTeam(team).length;
+  // }
 
   // Future<List<Match>> toList() {
   //   List<Match> result = <Match>[];
