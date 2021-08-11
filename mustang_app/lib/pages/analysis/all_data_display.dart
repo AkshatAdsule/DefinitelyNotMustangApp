@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/models/team.dart';
 import 'package:mustang_app/models/match.dart';
+import 'package:mustang_app/services/keivna_analyzer.dart';
 import 'package:mustang_app/services/team_service.dart';
 import 'package:mustang_app/components/shared/screen.dart';
 import 'package:mustang_app/components/analysis/data_display_text.dart';
@@ -57,10 +58,12 @@ class _AllDataDisplayState extends State<AllDataDisplayPage> {
       includeBottomNav: false,
       child: Container(
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[DataDisplayText()],
-          ),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center,
+              // children: <Widget>[DataDisplayText()],
+              children: [
+                Text("total number of matches: " +
+                    KeivnaAnalyzer.getTotalNumMatches(team).toString())
+              ]),
         ),
       ),
     );
