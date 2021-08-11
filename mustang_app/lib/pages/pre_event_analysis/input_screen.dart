@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:mustang_app/components/shared/screen.dart';
 import 'package:mustang_app/pages/pre_event_analysis/compare_teams.dart';
 import 'package:mustang_app/utils/get_statistics.dart';
+import 'package:vibration/vibration.dart';
 
 import 'sort_teams_screen.dart';
 
@@ -47,6 +48,7 @@ class _InputScreenState extends State<InputScreen> {
                 child: GestureDetector(
                   onLongPress: () {
                     setState(() {
+                      Vibration.vibrate(duration: 50);
                       teams = [];
                     });
                   },
@@ -75,6 +77,7 @@ class _InputScreenState extends State<InputScreen> {
                   onChanged: (value) => {
                     setState(() {
                       input = value;
+                      // inputTeamFocusNode.requestFocus();
                     })
                   },
                 ),
@@ -86,7 +89,7 @@ class _InputScreenState extends State<InputScreen> {
                   onPressed: () {
                     setState(() {
                       teams.add("frc" + input);
-                      inputController.text = "";
+                      inputController.clear();
                     });
                   },
                 ),
@@ -99,9 +102,7 @@ class _InputScreenState extends State<InputScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                width: 45,
-              ),
+              Expanded(flex: 1, child: Container()),
               Expanded(
                 flex: 6,
                 child: TextField(
