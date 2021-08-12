@@ -45,7 +45,7 @@ class _ProfileState extends State<Profile> {
         UserModel(
           firstName: "Horse",
           lastName: "Head",
-          email: "horseybusiness@gmail.com",
+          email: "horsehead@gmail.com",
           uid: "",
           userType: UserType.MEMBER,
           teamNumber: "670",
