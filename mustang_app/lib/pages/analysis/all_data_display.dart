@@ -75,8 +75,7 @@ class _AllDataDisplayState extends State<AllDataDisplayPage> {
           child: Column(mainAxisAlignment: MainAxisAlignment.center,
               // children: <Widget>[DataDisplayText()],
               children: [
-                Text("total number of matches: " +
-                    KeivnaAnalyzer.getTotalNumMatches(matches).toString())
+                Text(KeivnaAnalyzer.getDataForAllMatches(matches))
                 // KeivnaAnalyzer.getTotalNumMatches(_THEmatches).toString())
               ]),
         ),
