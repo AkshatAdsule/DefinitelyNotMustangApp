@@ -7,6 +7,8 @@ class ViewGraphScreen extends StatelessWidget {
   final TeamStatistic _statistic;
 
   ViewGraphScreen(this._statistic);
+
+  // displays line chart widget on a screen
   @override
   Widget build(BuildContext context) {
     return Screen(

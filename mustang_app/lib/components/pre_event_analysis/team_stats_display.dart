@@ -7,7 +7,12 @@ class TeamStatsDisplay extends StatelessWidget {
   final TeamStatistic teamStatistic;
   final double score, max;
 
+  /// creates a new TeamStatsDisplay with the given team statistics, score, and max score
   TeamStatsDisplay({this.teamStatistic, this.score, this.max});
+
+  /// build the display of a team's statistics including average opr, dpr, ccwm
+  /// also builds a button below the text that links to a graph of the team's statistics over time 
+  /// builds a bar on the bottom indicating the teams overall rating out of a max score 
   @override
   Widget build(BuildContext context) {
     return Card(

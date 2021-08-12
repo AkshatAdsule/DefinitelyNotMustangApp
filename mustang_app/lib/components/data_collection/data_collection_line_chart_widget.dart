@@ -8,6 +8,7 @@ class DataCollectionLineChartWidget extends StatelessWidget {
 
   DataCollectionLineChartWidget({this.data, this.height: 300, this.width: 50});
 
+  /// returns line chart data for team 670's average shooting accuracy, ranking points, and win rate over the years
   static List<LineChartBarData> createData(List<DataCollectionYearData> stats) {
     List<_LinearStats> accuracyData = [];
     List<_LinearStats> rankingPointsData = [];
@@ -46,6 +47,7 @@ class DataCollectionLineChartWidget extends StatelessWidget {
     ];
   }
 
+  /// builds the line chart along with a chart legend
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -186,7 +188,7 @@ class DataCollectionLineChartWidget extends StatelessWidget {
   }
 }
 
-/// Sample linear data type.
+/// linear data type that includes a date along with a numerical stat
 class _LinearStats {
   final DateTime date;
   final double stat;

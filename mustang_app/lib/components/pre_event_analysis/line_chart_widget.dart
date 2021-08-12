@@ -6,10 +6,6 @@ import 'package:mustang_app/utils/math_utils.dart';
 enum DataTypes { OPR, DPR, CCWM, WINRATE, CONTRIBUTION }
 
 class LineChartWidget extends StatelessWidget {
-  // final List<charts.Series> seriesList;
-  // final bool animate;
-  // final String teamCode;
-  // final List<double> oprs;
   final List<LineChartBarData> data;
   final double height, width;
   final bool showLegend;
@@ -17,20 +13,12 @@ class LineChartWidget extends StatelessWidget {
   static final FlDotData dotData = FlDotData(
     show: false,
   );
+
+  /// creates a new LineChartWidget with the given data and a default height of 300 and width of 50
   LineChartWidget(
       {this.data, this.height: 300, this.width: 50, this.showLegend: false});
 
-  // LineChartWidget(this.seriesList, {this.animate});
-
-  // /// Creates a [LineChart] with sample data and no transition.
-  // LineChartWidget.withSampleData(String teamCode, List<double> oprs) {
-  //   new LineChartWidget(
-  //     _createData(teamCode, oprs),
-  //     // Disable animations for image tests.
-  //     animate: false,
-  //   );
-  // }
-
+  /// returns line chart data for the team's average opr, dpr, ccwm, win rate, and point contribution over the years as well as lines for predictions of each of those statistics
   static List<LineChartBarData> createTeamData(TeamStatistic stats) {
     List<_LinearStats> oprData = [];
     List<_LinearStats> dprData = [];
@@ -189,6 +177,8 @@ class LineChartWidget extends StatelessWidget {
     ];
   }
 
+  /// returns multiple line charts for each statistic (opr, dpr, ccwm, win rate, point contribution)
+  /// each line chart has 2 lines for each of the two teams that are being compared
   static Map<DataTypes, List<LineChartBarData>> createCompareData(
       TeamStatistic team1, TeamStatistic team2) {
     List<_LinearStats> team1OprData = [], team2OprData = [];
@@ -331,6 +321,7 @@ class LineChartWidget extends StatelessWidget {
     };
   }
 
+  /// builds the line charts along with a chart legend
   @override
   Widget build(BuildContext context) {
     double minX = double.maxFinite, minY = double.maxFinite, maxX = 0, maxY = 0;
@@ -478,7 +469,7 @@ class LineChartWidget extends StatelessWidget {
   }
 }
 
-/// Sample linear data type.
+/// data type for linear charts that includes the year along with a numerical stat 
 class _LinearStats {
   DateTime year;
   num stat;
