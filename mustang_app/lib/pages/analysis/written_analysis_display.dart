@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/models/team.dart';
 import 'package:mustang_app/models/match.dart';
+import 'package:mustang_app/services/keivna_analyzer.dart';
 import 'package:mustang_app/services/team_service.dart';
 import 'package:mustang_app/components/analysis/map_analysis_text.dart';
 import 'package:mustang_app/components/shared/screen.dart';
@@ -49,6 +50,8 @@ class _WrittenAnalysisDisplayState extends State<WrittenAnalysisDisplayPage> {
   @override
   Widget build(BuildContext context) {
     Team team = Provider.of<Team>(context);
+    List<Match> matches = Provider.of<List<Match>>(context);
+
     return Screen(
       title:
           'Written Analysis for Team ' + (team != null ? team.teamNumber : ""),
@@ -57,7 +60,8 @@ class _WrittenAnalysisDisplayState extends State<WrittenAnalysisDisplayPage> {
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[MapAnalysisText()],
+            // children: <Widget>[MapAnalysisText()],
+            children: [Text(KeivnaAnalyzer.getWrittenAnalysis(matches))],
           ),
         ),
       ),

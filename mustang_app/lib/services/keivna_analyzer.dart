@@ -102,28 +102,7 @@ class KeivnaAnalyzer {
           "\n";
       }
     }
-
-    /*teleop:
-  num shots prev:
-  num intakes prev:
-  num pushes:
-  wheel rotation:
-  wheel position:
-  */
-    /*endgame:
-  num low shots made and missed:
-  num outer shots made and missed:
-  num inner shots made and missed:
-  num intakes:
-  num shots prev:
-  num intakes prev:
-  num pushes:
-  wheel rotation:
-  wheel position:
-  parked:
-  climbed:
-  levelled:
-  */
+ 
     /* all fouls
   */
     return result + "\n";
@@ -131,6 +110,9 @@ class KeivnaAnalyzer {
 
   //WRITTEN ANALYSIS
   static String getWrittenAnalysis(List<Match> matches) {
+    String result = "";
+    result += "Shooting points/game: " + getAvgShootingPtsForAllMatches(matches).toString();
+    return result;
 //% time crossed initiation line
 //avg auton shooting pts per game
 //avg teleop shooting pts per game
@@ -164,6 +146,7 @@ class KeivnaAnalyzer {
       ActionType.OTHER_CLIMB,
       ActionType.OTHER_CLIMB_MISS,
       ActionType.OTHER_LEVELLED,
+      //KTODO: FOULS AREN'T REGISTERING IN MATCH SCOUTING (AND ONLY 1 KIND OF FOUL)
       ActionType.FOUL_REG,
       ActionType.FOUL_TECH,
       ActionType.FOUL_YELLOW,
@@ -172,6 +155,58 @@ class KeivnaAnalyzer {
       ActionType.FOUL_DISQUAL,
     ];
     return actionTypeArray;
+  }
+
+  static int getAvgShootingPtsForAllMatches(List<Match> matches){
+    double result = 0;
+    for (Match match in matches){
+      result += getShootingAutonPtsForMatch(match);
+      result += getShootingTeleopPtsForMatch(match);
+    }
+    return (result/matches.length.toDouble()).toInt();
+  }
+
+  static int getShootingTeleopPtsForMatch(Match match){
+    List<int> numTeleopShots = _getTeleopNumShots(match);
+    double result = 0;
+    for (int i = 0; i < numTeleopShots.length; i++){
+      ActionType action = getActionTypeList()[i];
+      int occurence = numTeleopShots[i]; //how many types that action happened during the game
+      switch (action){
+        case (ActionType.SHOT_LOW):
+          result += (GameConstants.lowShotValue*occurence);
+          break;
+        case (ActionType.SHOT_OUTER):
+          result += (GameConstants.outerShotValue*occurence);
+          break;
+        case (ActionType.SHOT_INNER):
+          result += (GameConstants.innerShotValue*occurence);
+          break;
+      }
+    }
+    return result.toInt();
+  }
+
+
+  static int getShootingAutonPtsForMatch(Match match){
+    List<int> numAutonShots = _getAutonNumShots(match);
+    double result = 0;
+    for (int i = 0; i < numAutonShots.length; i++){
+      ActionType gameAction = getActionTypeList()[i];
+      int occurence = numAutonShots[i];
+      switch (gameAction){
+        case (ActionType.SHOT_LOW):
+          result += (GameConstants.lowShotAutonValue*occurence);
+          break;
+        case (ActionType.SHOT_OUTER):
+          result += (GameConstants.outerShotAutonValue*occurence);
+          break;
+        case (ActionType.SHOT_INNER):
+          result += (GameConstants.innerShotAutonValue*occurence);
+          break;
+      }
+    }
+    return result.toInt();
   }
 
 //PRIVATE BACKHAND METHODS

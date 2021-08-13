@@ -14,9 +14,7 @@ class AllDataDisplay extends StatelessWidget {
   String _teamNumber = '';
 
   AllDataDisplay({String teamNumber}) {
-    print('teamnumber: $teamNumber');
     _teamNumber = teamNumber;
-    // _teamNumber = "519";
   }
   @override
   Widget build(BuildContext context) {
@@ -37,34 +35,23 @@ class AllDataDisplay extends StatelessWidget {
 // ignore: must_be_immutable
 class AllDataDisplayPage extends StatefulWidget {
   String _teamNumber = '';
-  // List<Match> _matches;
 
   AllDataDisplayPage({String teamNumber}) {
-    // AllDataDisplayPage({String teamNumber, List<Match> matches}) {
     _teamNumber = teamNumber;
-    // _matches = matches;
   }
 
   @override
   State<StatefulWidget> createState() {
-    // return new _AllDataDisplayState(_teamNumber, _matches);
     return new _AllDataDisplayState(_teamNumber);
   }
 }
 
 class _AllDataDisplayState extends State<AllDataDisplayPage> {
-  // String _teamNumber = '';
-  // List<Match> _THEmatches;
-  _AllDataDisplayState(String teamNumber) {
-    // _AllDataDisplayState(String teamNumber, THEmatches){
-    // _teamNumber = teamNumber;
-    // _THEmatches = THEmatches;
-  }
+  _AllDataDisplayState(String teamNumber) {}
 
   @override
   Widget build(BuildContext context) {
     Team team = Provider.of<Team>(context);
-    // List<Match> matches = Provider.of<List<Match>>(context);
     List<Match> matches = Provider.of<List<Match>>(context);
 
     return Screen(
@@ -72,12 +59,9 @@ class _AllDataDisplayState extends State<AllDataDisplayPage> {
       includeBottomNav: false,
       child: Container(
         child: SingleChildScrollView(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center,
-              // children: <Widget>[DataDisplayText()],
-              children: [
-                Text(KeivnaAnalyzer.getDataForAllMatches(matches))
-                // KeivnaAnalyzer.getTotalNumMatches(_THEmatches).toString())
-              ]),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [Text(KeivnaAnalyzer.getDataForAllMatches(matches))]),
         ),
       ),
     );
