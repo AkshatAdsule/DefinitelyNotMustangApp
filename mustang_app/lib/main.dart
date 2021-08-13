@@ -105,14 +105,14 @@ class MyApp extends StatelessWidget {
         );
         orientation = ScreenOrientation.portraitOnly;
         break;
-      case AllDataDisplayPerMatch.route:
-        nextPage = AllDataDisplayPerMatch(
-          // analyzer: args['analyzer'],
-          teamNumber: args['teamNumber'],
-          matchNum: args['matchNum'],
-        );
-        orientation = ScreenOrientation.portraitOnly;
-        break;
+      // case AllDataDisplayPerMatch.route:
+      //   nextPage = AllDataDisplayPerMatch(
+      //     // analyzer: args['analyzer'],
+      //     teamNumber: args['teamNumber'],
+      //     matchNum: args['matchNum'],
+      //   );
+      //   orientation = ScreenOrientation.portraitOnly;
+      //   break;
       case AllDataDisplay.route:
         nextPage = AllDataDisplay(
           teamNumber: args['teamNumber'],
