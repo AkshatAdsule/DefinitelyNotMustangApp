@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:mustang_app/constants/game_constants.dart';
 import 'package:mustang_app/constants/robot_constants.dart';
 import 'package:mustang_app/models/game_action.dart';
@@ -15,11 +16,12 @@ take in data and spit out analyzed version
 */
 
 class KeivnaAnalyzer {
-  final List<ActionType> actionTypeArray = [ActionType.SHOT_LOW, ActionType.SHOT_OUTER, ActionType.SHOT_INNER];
+  final List<ActionType> actionTypeArray = [
+    ActionType.SHOT_LOW,
+    ActionType.SHOT_OUTER,
+    ActionType.SHOT_INNER
+  ];
 
-
-  
-  
   //ALL DATA DISPLAY: returns basic, unanalyzed data for given match
   static String getDataForAllMatches(List<Match> matches) {
     String result = "";
@@ -36,65 +38,72 @@ class KeivnaAnalyzer {
     //MATCH BASICS
     result += "Match Number: " + match.matchNumber.toString() + "\n";
     result += "Match Result: ";
-    switch(match.matchResult){
+    switch (match.matchResult) {
       case MatchResult.WIN:
-        result+= "Win\n";
+        result += "Win\n";
         break;
       case MatchResult.TIE:
-        result+= "Tie\n";
+        result += "Tie\n";
         break;
       case MatchResult.LOSE:
-        result+= "Lose\n";
+        result += "Lose\n";
         break;
     }
     result += "Match Type: ";
-    switch(match.matchType){
+    switch (match.matchType) {
       case MatchType.QM:
-        result+= "Qualifier\n";
+        result += "Qualifier\n";
         break;
       case MatchType.QF:
-        result+= "Quarter Final\n";
+        result += "Quarter Final\n";
         break;
       case MatchType.SF:
-        result+= "SemiFinal\n";
+        result += "SemiFinal\n";
         break;
       case MatchType.F:
-        result+= "Final\n";
+        result += "Final\n";
         break;
     }
-    result += "Driver Skill: " + match.driverSkill.toString() + "/5\n";
-    result += (match.notes.length > 0 ? "Match Notes: " + match.notes + "\n" : "No Match Notes\n" );
+    //TODO: get driver skill fixed!
+    // result += "Driver Skill: " + match.driverSkill.toString() + "/5\n";
+    result += (match.notes.length > 0
+        ? "Match Notes: " + match.notes + "\n"
+        : "No Match Notes\n");
 
- 
     //total points scored
     //total points prevented
     //if 0, don't print
 
-    //AUTON: 
+    //AUTON:
     //crossed init line
-    result += "Crossed Init Line: " + _autonCrossedInitiationLine(match).toString() + "\n";
-    //TODO: Make method calleg getACtionTypeArray instead of re-initiatlizing each time
-    // List<ActionType> actionTypeArray = [ActionType.SHOT_LOW, ActionType.SHOT_OUTER, ActionType.SHOT_INNER];
+    result += "Auton: \n";
+    result += "Crossed Init Line: " +
+        _autonCrossedInitiationLine(match).toString() +
+        "\n";
+    //prints all autonomous actions
     List<int> numAutonShots = _getAutonNumShots(match);
-    for (int i = 0; i < numAutonShots.length; i++){
-      String toAdd = getActionTypeList()[i].toString() + ": " + numAutonShots[i].toString() + "\n";
-            result += toAdd;
-
+    for (int i = 0; i < numAutonShots.length; i++) {
+      if (numAutonShots[i] > 0){
+      result += getActionTypeList()[i].toString() +
+          ": " +
+          numAutonShots[i].toString() +
+          "\n";
+      }
     }
-    // for (int index in numAutonShots){
-    //   result += getActionTypeList()[index].toString() + ": " + numAutonShots[index].toString() + "\n";
-    // }
-    /*auton:
-  num low shots made and missed:
-  num outer shots made and missed:
-  num inner shots made and missed:
-  num intakes:
-  */
+
+    //TELEOP:
+    result += "Teleop: \n";
+    List<int> numTeleopShots = _getTeleopNumShots(match);
+    for (int i = 0; i < numTeleopShots.length; i++) {
+      if (numTeleopShots[i] > 0){
+      result += getActionTypeList()[i].toString() +
+          ": " +
+          numTeleopShots[i].toString() +
+          "\n";
+      }
+    }
+
     /*teleop:
-  num low shots made and missed:
-  num outer shots made and missed:
-  num inner shots made and missed:
-  num intakes:
   num shots prev:
   num intakes prev:
   num pushes:
@@ -121,7 +130,7 @@ class KeivnaAnalyzer {
   }
 
   //WRITTEN ANALYSIS
-static String getWrittenAnalysis(List<Match> matches){
+  static String getWrittenAnalysis(List<Match> matches) {
 //% time crossed initiation line
 //avg auton shooting pts per game
 //avg teleop shooting pts per game
@@ -129,42 +138,84 @@ static String getWrittenAnalysis(List<Match> matches){
 //avg climb accuracy
 //% of climbs that were levelled
 //avg shot accuracy
+  }
 
-}
-
-static List<ActionType> getActionTypeList(){
-    List<ActionType> actionTypeArray = [ActionType.SHOT_LOW, ActionType.SHOT_OUTER, ActionType.SHOT_INNER];
-
-  return actionTypeArray;
-}
+  /*
+  used for organizing data when calling other methods that return a list of integers
+  basically a skeleton for what the List<integers> represents
+  ex: for getAutonNumShots(Match match) it returns a a List<int>. Could return <3, 1, 2> 
+  means that during that match during auton, the robot scored 3 low shots (index 0), 1 outer shot (index 1) and 2 inner shots
+  */
+  static List<ActionType> getActionTypeList() {
+    List<ActionType> actionTypeArray = [
+      ActionType.SHOT_LOW,
+      ActionType.SHOT_OUTER,
+      ActionType.SHOT_INNER,
+      ActionType.INTAKE,
+      ActionType.MISSED_LOW,
+      ActionType.MISSED_OUTER,
+      ActionType.MISSED_INTAKE,
+      ActionType.OTHER_WHEEL_ROTATION,
+      ActionType.OTHER_WHEEL_POSITION,
+      ActionType.PREV_SHOT,
+      ActionType.PREV_INTAKE,
+      ActionType.PUSH_START, //no need for push end bc for every push start, there is a push end
+      ActionType.OTHER_PARKED,
+      ActionType.OTHER_CLIMB,
+      ActionType.OTHER_CLIMB_MISS,
+      ActionType.OTHER_LEVELLED,
+      ActionType.FOUL_REG,
+      ActionType.FOUL_TECH,
+      ActionType.FOUL_YELLOW,
+      ActionType.FOUL_RED,
+      ActionType.FOUL_DISABLED,
+      ActionType.FOUL_DISQUAL,
+    ];
+    return actionTypeArray;
+  }
 
 //PRIVATE BACKHAND METHODS
-static List<int> _getAutonNumShots(Match match){
-  // List<int> numShotsPerAction = new List<int>(getActionTypeList().length);
-  List<int> numShotsPerAction = List.filled(getActionTypeList().length, 0);
-
-
-  for (GameAction currentAction in match.actions){
-    //happened during auton
-    if (currentAction.timeStamp <= GameConstants.autonMillisecondLength){
-      //just until i get all actions in actionTYpeList
-      if (getActionTypeList().contains(currentAction.actionType)){
-        int index = getActionTypeList().indexOf(currentAction.actionType);
-        numShotsPerAction[index] = numShotsPerAction[index] + 1;
+//returns number of shots for each time of action, sorted in a list in same order as getActionTypeList()
+  static List<int> _getAutonNumShots(Match match) {
+    List<int> numShotsPerAction = List.filled(getActionTypeList().length, 0);
+    for (GameAction currentAction in match.actions) {
+      //happened during auton
+      if (currentAction.timeStamp <= GameConstants.autonMillisecondLength) {
+        //just a safety precaution
+        if (getActionTypeList().contains(currentAction.actionType)) {
+          //adds 1 shot/miss to numShotsPerAction at corresponding action type
+          int index = getActionTypeList().indexOf(currentAction.actionType);
+          numShotsPerAction[index] = numShotsPerAction[index] + 1;
+        }
       }
-            
-    }   
+    }
+    return numShotsPerAction;
   }
-return numShotsPerAction;
-}
+
+//returns number of shots for each time of action, sorted in a list in same order as getActionTypeList()
+  static List<int> _getTeleopNumShots(Match match) {
+    List<int> numShotsPerAction = List.filled(getActionTypeList().length, 0);
+    for (GameAction currentAction in match.actions) {
+      //happened during teleop
+      if (currentAction.timeStamp > GameConstants.autonMillisecondLength) {
+        //just a safety precaution
+        if (getActionTypeList().contains(currentAction.actionType)) {
+          //adds 1 shot/miss to numShotsPerAction at corresponding action type
+          int index = getActionTypeList().indexOf(currentAction.actionType);
+          numShotsPerAction[index] = numShotsPerAction[index] + 1;
+        }
+      }
+    }
+    return numShotsPerAction;
+  }
 
 //returns true if crossed init line, otherwise false
-static bool _autonCrossedInitiationLine(Match match){
-  for (GameAction action in match.actions){
-    if (action.actionType == ActionType.OTHER_CROSSED_INITIATION_LINE){
-      return true;
+  static bool _autonCrossedInitiationLine(Match match) {
+    for (GameAction action in match.actions) {
+      if (action.actionType == ActionType.OTHER_CROSSED_INITIATION_LINE) {
+        return true;
+      }
     }
-  }
-  return false;
+    return false;
   }
 }
