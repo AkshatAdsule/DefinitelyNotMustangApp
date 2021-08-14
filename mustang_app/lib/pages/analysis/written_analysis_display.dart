@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/models/team.dart';
 import 'package:mustang_app/models/match.dart';
-import 'package:mustang_app/services/keivna_analyzer.dart';
+import 'package:mustang_app/services/keivna_data_analyzer.dart';
 import 'package:mustang_app/services/team_service.dart';
 import 'package:mustang_app/components/analysis/map_analysis_text.dart';
 import 'package:mustang_app/components/shared/screen.dart';
@@ -61,7 +61,7 @@ class _WrittenAnalysisDisplayState extends State<WrittenAnalysisDisplayPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             // children: <Widget>[MapAnalysisText()],
-            children: [Text(KeivnaAnalyzer.getWrittenAnalysis(matches))],
+            children: [Text(KeivnaDataAnalyzer.getWrittenAnalysis(matches))],
           ),
         ),
       ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/models/team.dart';
 import 'package:mustang_app/models/match.dart';
-import 'package:mustang_app/services/keivna_analyzer.dart';
+import 'package:mustang_app/services/keivna_data_analyzer.dart';
 import 'package:mustang_app/services/team_service.dart';
 import 'package:mustang_app/components/shared/screen.dart';
 import 'package:mustang_app/components/analysis/data_display_text.dart';
@@ -61,7 +61,7 @@ class _AllDataDisplayState extends State<AllDataDisplayPage> {
         child: SingleChildScrollView(
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [Text(KeivnaAnalyzer.getDataForAllMatches(matches))]),
+              children: [Text(KeivnaDataAnalyzer.getDataForAllMatches(matches))]),
         ),
       ),
     );
