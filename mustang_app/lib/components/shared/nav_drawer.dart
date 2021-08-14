@@ -35,11 +35,11 @@ class NavDrawer extends StatelessWidget {
       'icon': Icons.search,
       'name': 'Team Data',
     },
-    {
-      'route': DataViewScreen.route,
-      'icon': Icons.dashboard_outlined,
-      'name': '670 Analysis',
-    },
+    // {
+    //   'route': DataViewScreen.route,
+    //   'icon': Icons.dashboard_outlined,
+    //   'name': '670 Analysis',
+    // },
     {
       'route': SketchPage.route,
       'icon': Icons.edit,
