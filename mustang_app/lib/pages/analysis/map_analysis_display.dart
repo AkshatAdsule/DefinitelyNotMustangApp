@@ -3,6 +3,8 @@ import 'package:mustang_app/constants/game_constants.dart';
 import 'package:mustang_app/models/game_action.dart';
 import 'package:mustang_app/models/team.dart';
 import 'package:mustang_app/models/match.dart';
+import 'package:mustang_app/services/keivna_data_analyzer.dart';
+import 'package:mustang_app/services/keivna_map_analyzer.dart';
 import 'package:mustang_app/services/team_service.dart';
 import 'package:mustang_app/components/shared/map/game_map.dart';
 import 'package:mustang_app/components/analysis/game_replay_key.dart';
@@ -18,6 +20,7 @@ import 'package:provider/provider.dart';
 import '../../services/analyzer.dart';
 
 // ignore: must_be_immutable
+//Represents the entire page of map analyses, holds tabs for accuracy map, shooting map, game replay map
 class MapAnalysisDisplay extends StatelessWidget {
   static const String route = '/MapAnalysisDisplay';
 
@@ -59,7 +62,7 @@ class MapAnalysisDisplayPage extends StatefulWidget {
 }
 
 class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
-  Analyzer myAnalyzer;
+  // Analyzer myAnalyzer;
   List<List<Object>> actionRelatedColors = [
     ["OTHER", Colors.orange],
     ["FOUL", Colors.yellow],
@@ -86,7 +89,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
   Map<String, String> _videoLinks;
 
   _MapAnalysisDisplayState(this.teamNumber) {
-    myAnalyzer = new Analyzer();
+    // myAnalyzer = new Analyzer();
     initVideoLinks();
   }
 
@@ -107,45 +110,48 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
     });
   }
 
-  int _getScoringColorValue(ActionType actionType, int x, int y) {
-    double totalNumGames = myAnalyzer.totalNumGames().toDouble();
-    double ptsAtZone =
-        myAnalyzer.calcPtsAtZone(actionType, x.toDouble(), y.toDouble()) /
-            totalNumGames;
+  // int _getScoringColorValue(ActionType actionType, int x, int y) {
+  //   double totalNumGames = myAnalyzer.totalNumGames().toDouble();
+  //   double ptsAtZone =
+  //       myAnalyzer.calcPtsAtZone(actionType, x.toDouble(), y.toDouble()) /
+  //           totalNumGames;
 
-    double ptsAtZonePerGame = ptsAtZone / totalNumGames;
-    double colorValue =
-        ((ptsAtZonePerGame / GameConstants.maxPtValuePerZonePerGame) * 900);
-    int lowerBound = 0, upperBound = 0;
-    if (!colorValue.isNaN && colorValue.isFinite) {
-      lowerBound = (colorValue ~/ 100) * 100; //lower bound of 100
-      upperBound = (colorValue ~/ 100 + 1) * 100; //upper bound
-    }
+  //   double ptsAtZonePerGame = ptsAtZone / totalNumGames;
+  //   double colorValue =
+  //       ((ptsAtZonePerGame / GameConstants.maxPtValuePerZonePerGame) * 900);
+  //   int lowerBound = 0, upperBound = 0;
+  //   if (!colorValue.isNaN && colorValue.isFinite) {
+  //     lowerBound = (colorValue ~/ 100) * 100; //lower bound of 100
+  //     upperBound = (colorValue ~/ 100 + 1) * 100; //upper bound
+  //   }
 
-    int returnVal = (colorValue - lowerBound > upperBound - colorValue)
-        ? upperBound
-        : lowerBound;
-    if (returnVal > 900) {
-      return 900;
-    }
-    return returnVal;
-  }
+  //   int returnVal = (colorValue - lowerBound > upperBound - colorValue)
+  //       ? upperBound
+  //       : lowerBound;
+  //   if (returnVal > 900) {
+  //     return 900;
+  //   }
+  //   debugPrint("scoring color value: " + returnVal.toString());
+  //   return returnVal;
+  // }
 
-  int _getAccuracyColorValue(ActionType actionType, int x, int y) {
-    double zoneAccuracyOutOf1 = myAnalyzer.calcShotAccuracyAtZone(
-        actionType, x.toDouble(), y.toDouble());
+  // int _getAccuracyColorValue(ActionType actionType, int x, int y) {
+  //   double zoneAccuracyOutOf1 = myAnalyzer.calcShotAccuracyAtZone(
+  //       actionType, x.toDouble(), y.toDouble());
 
-    double zoneAccuracyOutOf900 = zoneAccuracyOutOf1 * 900;
-    if (!zoneAccuracyOutOf900.isInfinite && !zoneAccuracyOutOf900.isNaN) {
-      int a = (zoneAccuracyOutOf900 ~/ 100) * 100; //lower bound of 100
-      int b = (zoneAccuracyOutOf900 ~/ 100 + 1) * 100; //upper bound
-      int returnVal =
-          (zoneAccuracyOutOf900 - a > b - zoneAccuracyOutOf900) ? b : a;
-      return returnVal;
-    } else {
-      return 0;
-    }
-  }
+  //   double zoneAccuracyOutOf900 = zoneAccuracyOutOf1 * 900;
+  //   if (!zoneAccuracyOutOf900.isInfinite && !zoneAccuracyOutOf900.isNaN) {
+  //     int a = (zoneAccuracyOutOf900 ~/ 100) * 100; //lower bound of 100
+  //     int b = (zoneAccuracyOutOf900 ~/ 100 + 1) * 100; //upper bound
+  //     int returnVal =
+  //         (zoneAccuracyOutOf900 - a > b - zoneAccuracyOutOf900) ? b : a;
+  //     debugPrint("accuracy color value: " + returnVal.toString());
+  //     return returnVal;
+  //   } else {
+  //     debugPrint("accuracy color value: 0");
+  //     return 0;
+  //   }
+  // }
 
   List<Color> _getColorCombo(BuildContext context, int x, int y) {
     GameAction curr;
@@ -200,14 +206,16 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             width: cellWidth,
             height: cellHeight,
             decoration: BoxDecoration(
-              color: (Colors.green[
-                          _getScoringColorValue(selectedActionType, x, y)] ==
-                      null)
-                  ? null
-                  : Colors
-                      .green[_getScoringColorValue(selectedActionType, x, y)]
-                      .withOpacity(0.7),
-            ),
+                // color: (Colors.green[
+                //             KeivnaMapAnalyzer.getScoringColorValueAtLocation(
+                //                 selectedActionType, x, y)] ==
+                //         null)
+                //     ? null
+                //     : Colors.green[
+                //             KeivnaMapAnalyzer.getScoringColorValueAtLocation(
+                //                 selectedActionType, x, y)]
+                //         .withOpacity(0.7),
+                ),
           );
         }
       case 1:
@@ -216,12 +224,12 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             width: cellWidth,
             height: cellHeight,
             decoration: BoxDecoration(
-                color: (Colors.green[
-                            _getAccuracyColorValue(selectedActionType, x, y)] ==
+                color: (Colors.green[KeivnaMapAnalyzer.getAccuracyColorValue(
+                            selectedActionType, x, y)] ==
                         null)
                     ? null
-                    : Colors
-                        .green[_getAccuracyColorValue(selectedActionType, x, y)]
+                    : Colors.green[KeivnaMapAnalyzer.getAccuracyColorValue(
+                            selectedActionType, x, y)]
                         .withOpacity(0.7)),
           );
         }
@@ -232,10 +240,9 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             height: cellHeight,
             decoration: (x != 0 && y != 0)
                 ? BoxDecoration(
-                    // gradient: RadialGradient(
-                    //   colors: _getColorCombo(context, x, y),
-                    // ),
-                    color: _getColorCombo(context, x, y).first,
+                    gradient: RadialGradient(
+                      colors: _getColorCombo(context, x, y),
+                    ),
                   )
                 : BoxDecoration(color: Colors.transparent),
           );
@@ -273,16 +280,18 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (!myAnalyzer.initialized) {
-      myAnalyzer.init(
-        Provider.of<Team>(context),
-        Provider.of<List<Match>>(context),
-      );
-      setState(() {});
-    }
+    Team team = Provider.of<Team>(context);
+    List<Match> matches = Provider.of<List<Match>>(context);
+    // if (!myAnalyzer.initialized) {
+    //   myAnalyzer.init(
+    //     Provider.of<Team>(context),
+    //     Provider.of<List<Match>>(context),
+    //   );
+    //   setState(() {});
+    // }
 
     return Screen(
-      title: 'Map Analysis for Team: ' + myAnalyzer.teamNum.toString(),
+      title: 'Map Analysis for Team: ' + (team != null ? team.teamNumber : ""),
       includeBottomNav: false,
       child: Container(
         child:
