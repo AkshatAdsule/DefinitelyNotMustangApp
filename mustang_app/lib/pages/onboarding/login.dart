@@ -446,12 +446,12 @@ class _LoginState extends State<Login> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SocialButton(
-                      onPressed: () => signInWithFacebook(context),
-                      icon: Image.asset('assets/facebook.jpg')),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                  ),
+                  // SocialButton(
+                  //     onPressed: () => signInWithFacebook(context),
+                  //     icon: Image.asset('assets/facebook.jpg')),
+                  // Container(
+                  //   padding: EdgeInsets.symmetric(horizontal: 10),
+                  // ),
                   SocialButton(
                       onPressed: () => signInWithGoogle(context),
                       icon: Image.asset('assets/google.jpg')),
