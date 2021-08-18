@@ -1,6 +1,10 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
 import 'package:mustang_app/constants/game_constants.dart';
 import 'package:mustang_app/models/game_action.dart';
 import 'package:mustang_app/models/match.dart';
+import 'package:provider/provider.dart';
 import '../models/match.dart';
 
 /*
@@ -92,6 +96,8 @@ class KeivnaMapAnalyzer {
         case (ActionType.SHOT_INNER):
           result += (GameConstants.innerShotValue * occurence);
           break;
+        default:
+          break;
       }
     }
     return result.toInt();
@@ -114,6 +120,8 @@ class KeivnaMapAnalyzer {
           break;
         case (ActionType.SHOT_INNER):
           result += (GameConstants.innerShotAutonValue * occurence);
+          break;
+        default:
           break;
       }
     }
@@ -165,36 +173,70 @@ class KeivnaMapAnalyzer {
   }
 
   //Game Replay stuff
+  static List<List<Object>> actionRelatedColors = [
+    ["OTHER", Colors.orange],
+    ["FOUL", Colors.yellow],
+    ["PUSH", Colors.deepPurple],
+    ["PREV", Colors.pink[200]],
+    ["MISSED", Colors.red],
+    ["INTAKE", Colors.blue],
+    ["SHOT", Colors.green],
+    ["LOW", Colors.white],
+    ["OUTER", Colors.grey],
+    ["INNER", Colors.black],
+  ];
 
   //KTODO: move getColorCombo and other game replay method here
-  // List<Color> _getColorCombo(BuildContext context, int x, int y) {
-  //   GameAction curr;
-  //   List<GameAction> currActions = getAllMatchActions(context)
-  //       .where((element) => element.timeStamp > timeInGame * 1000 - 5000)
-  //       .where((element) => element.timeStamp < timeInGame * 1000 + 1000)
-  //       .toList();
-  //   for (GameAction currentAction in currActions) {
-  //     if (currentAction.x == x && currentAction.y == y) {
-  //       curr = currentAction;
-  //       break;
-  //     }
-  //   }
-  //   if (curr == null) return [Colors.green[0], Colors.yellow[0]];
+  static List<Color> getColorCombo(BuildContext context, String selectedMatch,
+      double timeInGame, int x, int y) {
+    GameAction curr;
+    List<GameAction> currActions = getAllMatchActions(context, selectedMatch)
+        .where((element) => element.timeStamp > timeInGame * 1000 - 5000)
+        .where((element) => element.timeStamp < timeInGame * 1000 + 1000)
+        .toList();
+    for (GameAction currentAction in currActions) {
+      if (currentAction.x == x && currentAction.y == y) {
+        curr = currentAction;
+        break;
+      }
+    }
+    if (curr == null) return [Colors.green[0], Colors.yellow[0]];
 
-  //   List<Color> gradientCombo = [];
-  //   String actionType = curr.actionType.toString();
+    List<Color> gradientCombo = [];
+    String actionType = curr.actionType.toString();
 
-  //   for (List<Object> shade in actionRelatedColors)
-  //     if (actionType.contains(shade[0])) gradientCombo.add(shade[1]);
+    for (List<Object> shade in actionRelatedColors)
+      if (actionType.contains(shade[0])) gradientCombo.add(shade[1]);
 
-  //   if (gradientCombo.length < 2) {
-  //     if (actionType.contains("FOUL")) {
-  //       gradientCombo.add(Colors.yellow[600]);
-  //     } else if (actionType.contains("OTHER")) {
-  //       gradientCombo.add(Colors.orange[600]);
-  //     }
-  //   }
+    if (gradientCombo.length < 2) {
+      if (actionType.contains("FOUL")) {
+        gradientCombo.add(Colors.yellow[600]);
+      } else if (actionType.contains("OTHER")) {
+        gradientCombo.add(Colors.orange[600]);
+      }
+    }
 
-  //   return gradientCombo;
-  // }
+    return gradientCombo;
+  }
+
+  static List<GameAction> getAllMatchActions(
+      BuildContext context, String selectedMatch) {
+    if (selectedMatch == "ALL") {
+      return Provider.of<List<Match>>(context)
+          .map((e) => e.actions)
+          .reduce((value, element) => [...value, ...element]);
+    }
+    return Provider.of<List<Match>>(context)
+        .where((element) => element.matchNumber == selectedMatch)
+        .map((e) => e.actions)
+        .reduce((value, element) => [...value, ...element]);
+    // return selectedMatch == "ALL"
+    //     ? Provider.of<List<Match>>(context)
+    //         .map((e) => e.actions)
+    //         .reduce((value, element) => [...value, ...element])
+    //     : Provider.of<List<Match>>(context)
+    //         .where((element) => element.matchNumber == selectedMatch)
+    //         .map((e) => e.actions)
+    //         .reduce((value, element) => [...value, ...element]);
+  }
 }

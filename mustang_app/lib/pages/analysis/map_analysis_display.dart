@@ -153,48 +153,49 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
   //   }
   // }
 
-  List<Color> _getColorCombo(BuildContext context, int x, int y) {
-    GameAction curr;
-    List<GameAction> currActions = getAllMatchActions(context)
-        .where((element) => element.timeStamp > timeInGame * 1000 - 5000)
-        .where((element) => element.timeStamp < timeInGame * 1000 + 1000)
-        .toList();
-    for (GameAction currentAction in currActions) {
-      if (currentAction.x == x && currentAction.y == y) {
-        curr = currentAction;
-        break;
-      }
-    }
-    if (curr == null) return [Colors.green[0], Colors.yellow[0]];
+// game replay stuff
+  // List<Color> _getColorCombo(BuildContext context, int x, int y) {
+  //   GameAction curr;
+  //   List<GameAction> currActions = getAllMatchActions(context)
+  //       .where((element) => element.timeStamp > timeInGame * 1000 - 5000)
+  //       .where((element) => element.timeStamp < timeInGame * 1000 + 1000)
+  //       .toList();
+  //   for (GameAction currentAction in currActions) {
+  //     if (currentAction.x == x && currentAction.y == y) {
+  //       curr = currentAction;
+  //       break;
+  //     }
+  //   }
+  //   if (curr == null) return [Colors.green[0], Colors.yellow[0]];
 
-    List<Color> gradientCombo = [];
-    String actionType = curr.actionType.toString();
+  //   List<Color> gradientCombo = [];
+  //   String actionType = curr.actionType.toString();
 
-    for (List<Object> shade in actionRelatedColors)
-      if (actionType.contains(shade[0])) gradientCombo.add(shade[1]);
+  //   for (List<Object> shade in actionRelatedColors)
+  //     if (actionType.contains(shade[0])) gradientCombo.add(shade[1]);
 
-    if (gradientCombo.length < 2) {
-      if (actionType.contains("FOUL")) {
-        gradientCombo.add(Colors.yellow[600]);
-      } else if (actionType.contains("OTHER")) {
-        gradientCombo.add(Colors.orange[600]);
-      }
-    }
+  //   if (gradientCombo.length < 2) {
+  //     if (actionType.contains("FOUL")) {
+  //       gradientCombo.add(Colors.yellow[600]);
+  //     } else if (actionType.contains("OTHER")) {
+  //       gradientCombo.add(Colors.orange[600]);
+  //     }
+  //   }
 
-    return gradientCombo;
-  }
+  //   return gradientCombo;
+  // }
 
-  List<GameAction> getAllMatchActions(BuildContext context) {
-    if (selectedMatch == "ALL") {
-      return Provider.of<List<Match>>(context)
-          .map((e) => e.actions)
-          .reduce((value, element) => [...value, ...element]);
-    }
-    return Provider.of<List<Match>>(context)
-        .where((element) => element.matchNumber == selectedMatch)
-        .map((e) => e.actions)
-        .reduce((value, element) => [...value, ...element]);
-  }
+  // List<GameAction> getAllMatchActions(BuildContext context) {
+  //   if (selectedMatch == "ALL") {
+  //     return Provider.of<List<Match>>(context)
+  //         .map((e) => e.actions)
+  //         .reduce((value, element) => [...value, ...element]);
+  //   }
+  //   return Provider.of<List<Match>>(context)
+  //       .where((element) => element.matchNumber == selectedMatch)
+  //       .map((e) => e.actions)
+  //       .reduce((value, element) => [...value, ...element]);
+  // }
 
   Widget _getCell(BuildContext context, int x, int y, bool isSelected,
       double cellWidth, double cellHeight) {
@@ -224,13 +225,14 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             width: cellWidth,
             height: cellHeight,
             decoration: BoxDecoration(
-                color: (Colors.green[KeivnaMapAnalyzer.getAccuracyColorValue(
-                            selectedActionType, x, y)] ==
-                        null)
-                    ? null
-                    : Colors.green[KeivnaMapAnalyzer.getAccuracyColorValue(
-                            selectedActionType, x, y)]
-                        .withOpacity(0.7)),
+                // color: (Colors.green[KeivnaMapAnalyzer.getAccuracyColorValue(
+                //             selectedActionType, x, y)] ==
+                //         null)
+                //     ? null
+                //     : Colors.green[KeivnaMapAnalyzer.getAccuracyColorValue(
+                //             selectedActionType, x, y)]
+                //         .withOpacity(0.7)
+                ),
           );
         }
       case 2:
@@ -241,7 +243,8 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             decoration: (x != 0 && y != 0)
                 ? BoxDecoration(
                     gradient: RadialGradient(
-                      colors: _getColorCombo(context, x, y),
+                      colors: KeivnaMapAnalyzer.getColorCombo(
+                          context, selectedMatch, timeInGame, x, y),
                     ),
                   )
                 : BoxDecoration(color: Colors.transparent),
