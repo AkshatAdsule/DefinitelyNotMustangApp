@@ -327,7 +327,6 @@ class GetStatistics {
       );
       Map<String, dynamic> dataMap =
           docData.map((key, value) => MapEntry(key, value));
-      print(team);
       TeamStatistic teamStatistic = new TeamStatistic.premade(
         teamCode: team,
         oprAverage: dataMap['oprAverage'],
