@@ -11,6 +11,20 @@ class Constants {
   // Pre event analysis data version
   static const double DATA_ANALYSIS_DATA_VERSION = 1.3;
 
+  // Teams that are invalid for analysis (ie. don't exist)
+  static const List<String> INVALID_TEAMS = [
+    // Off-Season Demo Teams
+    "frc9999",
+    "frc9990",
+    "frc9994",
+    "frc9986",
+    "frc9988",
+    "frc9989",
+    "frc9993",
+    "frc9992",
+    "frc9996",
+  ];
+
   // Data collection analysis data version
   static const double DATA_COLLECTION_DATA_VERSION = 1.0;
 

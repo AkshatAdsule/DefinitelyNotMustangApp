@@ -101,7 +101,10 @@ class GetStatistics {
     var resJson = jsonDecode(response);
 
     for (var team in resJson) {
-      teams.add(team['key']);
+      String teamCode = team['key'];
+      if (Constants.INVALID_TEAMS.indexOf(teamCode) == -1) {
+        teams.add(team['key']);
+      }
     }
     _eventStreamController.add(
       StreamEvent(message: "Got teams for $eventCode", type: MessageType.INFO),
@@ -308,6 +311,10 @@ class GetStatistics {
     }
     contributionPercentage = (sum / matchScores.length) * 100;
     //debugPrint(contributionPercentage);
+    if (contributionPercentage == double.nan ||
+        contributionPercentage == double.infinity) {
+      return 0;
+    }
     return contributionPercentage;
   }
 
