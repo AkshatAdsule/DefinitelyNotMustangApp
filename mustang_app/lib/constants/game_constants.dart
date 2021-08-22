@@ -14,7 +14,7 @@ class GameConstants {
   static const int shadingPointDifference = 2;
   static const double colorIncrement = 600 / shadingPointDifference;
   static const int minPtValuePerZonePerGame = 0;
-  static const int maxPtValuePerZonePerGame = 30;//KTODO: if above 30, will be a diff color
+  static const int maxPtValuePerZonePerGame = 50;//KTODO: if above 50, will be a diff color
 
   //OFFENSE ANALYSIS
   static const double autonMillisecondLength = 15000;

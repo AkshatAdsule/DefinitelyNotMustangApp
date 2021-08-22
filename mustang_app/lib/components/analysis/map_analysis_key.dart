@@ -16,9 +16,10 @@ class MapAnalysisKey extends StatelessWidget {
   // String _accuracyText =
   //     "0%                                                                  100%";
 
-  String _scoringText = GameConstants.minPtValuePerZonePerGame.toString() +
-      "       total pts      " +
-      GameConstants.maxPtValuePerZonePerGame.toString();
+  // String _scoringText = GameConstants.minPtValuePerZonePerGame.toString() +
+  //     "       total pts      " +
+  //     GameConstants.maxPtValuePerZonePerGame.toString();
+    String _scoringText = "max pts per location: " + GameConstants.maxPtValuePerZonePerGame.toString();
   String _accuracyText = "0%                 100%";
 
   @override
