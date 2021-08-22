@@ -199,6 +199,8 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
 
   Widget _getCell(BuildContext context, int x, int y, bool isSelected,
       double cellWidth, double cellHeight) {
+            List<Match> matches = Provider.of<List<Match>>(context);
+
     int ind = _toggleModes.indexOf(true);
     switch (ind) {
       case 0:
@@ -207,15 +209,18 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             width: cellWidth,
             height: cellHeight,
             decoration: BoxDecoration(
-                // color: (Colors.green[
-                //             KeivnaMapAnalyzer.getScoringColorValueAtLocation(
-                //                 selectedActionType, x, y)] ==
-                //         null)
-                //     ? null
-                //     : Colors.green[
-                //             KeivnaMapAnalyzer.getScoringColorValueAtLocation(
-                //                 selectedActionType, x, y)]
-                //         .withOpacity(0.7),
+                color: (Colors.green[
+                        KeivnaMapAnalyzer.getShootingPointsColorValueAtLocation(
+                                matches, x, y)] ==
+                        null)
+                        //     KeivnaMapAnalyzer.getScoringColorValueAtLocation(
+                        //         selectedActionType, x, y)] ==
+                        // null)
+                    ? null
+                    : Colors.green[
+                            KeivnaMapAnalyzer.getShootingPointsColorValueAtLocation(
+                                matches, x, y)]
+                        .withOpacity(0.7),
                 ),
           );
         }

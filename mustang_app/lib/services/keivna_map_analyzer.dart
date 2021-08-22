@@ -20,18 +20,36 @@ class KeivnaMapAnalyzer {
 //NORMALIZE RIGHT SIDE OF DATA!!!
 //shooting from top left (normalize): blue, right & red, right
 //shooting from bottom right (don't normalize): blue, left & red, left
-  static int getScoringColorValueAtLocation(List<Match> matches, int x, int y) {
+//KTODO: selected action type
+//KTODO: teleop only rn, add in auton as well
+  static int getShootingPointsColorValueAtLocation(List<Match> matches, int x, int y) {
     int result = 0;
-    for (Match match in matches) {}
-    return 400;
-    // double totalNumGames = myAnalyzer.totalNumGames().toDouble();
-    // double ptsAtZone =
-    //     myAnalyzer.calcPtsAtZone(actionType, x.toDouble(), y.toDouble()) /
-    //         totalNumGames;
+    double totalShootingPointsAtLoc = 0;
+    for (Match match in matches) {
+      totalShootingPointsAtLoc += _getTeleopShootingPointsAtLocationForSingleMatch(match, x, y);
+    }
 
-    // double ptsAtZonePerGame = ptsAtZone / totalNumGames;
-    // double colorValue =
-    //     ((ptsAtZonePerGame / GameConstants.maxPtValuePerZonePerGame) * 900);
+    double avgShootingPointsAtLoc = totalShootingPointsAtLoc/matches.length;
+        // debugPrint("average shooting points at location: " + avgShootingPointsAtLoc.toString());
+    if (avgShootingPointsAtLoc > 0){
+              debugPrint("average shooting points at: (" + x.toString() + ", " + y.toString() + "): " + avgShootingPointsAtLoc.toString());
+
+    }
+    double colorValue = (avgShootingPointsAtLoc/GameConstants.maxPtValuePerZonePerGame)*900.0;
+
+    //temporary rounding
+        if (colorValue > 0 && colorValue < 100){
+      colorValue = 100;
+    }
+    if (colorValue > 0){
+          debugPrint("scoring color value before round: " + colorValue.toString());
+
+    }
+
+    //STILL NEED TO ROUND TO NEAREST HUNDRED!!!
+    
+    //rounding colorValue to nearest hundred to be accepted as a color value
+    // int roundedColorValue = colorValue.ceilToDouble().toInt();
     // int lowerBound = 0, upperBound = 0;
     // if (!colorValue.isNaN && colorValue.isFinite) {
     //   lowerBound = (colorValue ~/ 100) * 100; //lower bound of 100
@@ -41,12 +59,47 @@ class KeivnaMapAnalyzer {
     // int returnVal = (colorValue - lowerBound > upperBound - colorValue)
     //     ? upperBound
     //     : lowerBound;
-    // if (returnVal > 900) {
+
+    // if (roundedColorValue > 900) {
     //   return 900;
     // }
-    // debugPrint("scoring color value: " + returnVal.toString());
-    // return returnVal;
+    // debugPrint("scoring color value: " + roundedColorValue.toString());
+    // return roundedColorValue;
+     if (colorValue > 900) {
+      return 900;
+    }
+    return colorValue.toInt();
+        // return 400;
+
   }
+
+//returns the total point value of all shots from location (x, y) for the given match
+  static double _getTeleopShootingPointsAtLocationForSingleMatch(Match match, int x, int y) {
+    double result = 0;
+    for (GameAction action in match.actions){
+      if (action.x == x && action.y == y && action.timeStamp > GameConstants.autonMillisecondLength){
+        debugPrint("ActionType: " + action.actionType.toString() + " at location: (" + x.toString() + ", " + y.toString() + "): ");
+        switch (action.actionType){
+          case(ActionType.SHOT_LOW):
+            result+=GameConstants.lowShotValue;
+            break;
+          case(ActionType.SHOT_OUTER):
+            result+=GameConstants.outerShotValue;
+            break;
+          case(ActionType.SHOT_INNER):
+            result+=GameConstants.innerShotValue;
+            break;
+            default:
+            break;
+        }
+      }
+    }
+    if (result > 0){
+      debugPrint("teleop shooting points at (" + x.toString() + ", " + y.toString() + "): " + result.toString());
+    }
+    return result;
+  }
+
 
   static int getAccuracyColorValue(ActionType actionType, int x, int y) {
     return 400;
@@ -145,8 +198,25 @@ class KeivnaMapAnalyzer {
     return numShotsPerAction;
   }
 
-//returns number of shots for each time of action, sorted in a list in same order as ActionType.values.
+//returns number of shots for each type of action, sorted in a list in same order as ActionType.values.
   static List<int> _getTeleopNumShots(Match match) {
+    List<int> numShotsPerAction = List.filled(ActionType.values.length, 0);
+    for (GameAction currentAction in match.actions) {
+      //happened during teleop
+      if (currentAction.timeStamp > GameConstants.autonMillisecondLength) {
+        //just a safety precaution
+        if (ActionType.values.contains(currentAction.actionType)) {
+          //adds 1 shot/miss to numShotsPerAction at corresponding action type
+          int index = ActionType.values.indexOf(currentAction.actionType);
+          numShotsPerAction[index] = numShotsPerAction[index] + 1;
+        }
+      }
+    }
+    return numShotsPerAction;
+  }
+
+  //returns number of shots for each time of action, sorted in a list in same order as ActionType.values.
+  static List<int> _getTeleopNumShotsAtLocation(Match match, int x, int y) {
     List<int> numShotsPerAction = List.filled(ActionType.values.length, 0);
     for (GameAction currentAction in match.actions) {
       //happened during teleop

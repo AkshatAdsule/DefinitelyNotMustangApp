@@ -39,7 +39,7 @@ class MapAnalysisKey extends StatelessWidget {
         alignment: Alignment.center,
         child: Text(
           _mapScoring
-              ? "Scoring Map\n" + "(avg per game)\n\n\n" + _scoringText
+              ? "Shooting Points Map\n" + "(avg per game)\n\n\n" + _scoringText
               : "Accuracy Map\n" + "(avg per game)\n\n\n" + _accuracyText,
           textAlign: TextAlign.center,
           style: TextStyle(
