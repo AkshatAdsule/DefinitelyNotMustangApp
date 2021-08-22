@@ -8,10 +8,10 @@ class Constants {
   //not a constant but needs to be accessible
   static int fieldColor = 0;
 
-  // Pre event analysis data version
+  /// Pre event analysis data version
   static const double DATA_ANALYSIS_DATA_VERSION = 1.3;
 
-  // Teams that are invalid for analysis (ie. don't exist)
+  /// Teams that are invalid for analysis (ie. don't exist)
   static const List<String> INVALID_TEAMS = [
     // Off-Season Demo Teams
     "frc9999",
@@ -25,13 +25,15 @@ class Constants {
     "frc9996",
   ];
 
-  // Data collection analysis data version
+  /// Data collection analysis data version
   static const double DATA_COLLECTION_DATA_VERSION = 1.0;
 
-  // Validity threshold
+  /// Validity threshold
   static const int DATA_VALIDITY_THRESHOLD = 3;
 
   // Data collection constants
+
+  /// Value of indivudual game peices for each FRC game
   static const Map<int, double> GAME_PIECE_VALUE = {
     2013: 4,
     2014: 10,
@@ -43,6 +45,7 @@ class Constants {
     2020: 2,
   };
 
+  /// 670's robot's throughout the years
   static final Map<int, Robot> robots = {
     2013: Robot(
       drivebaseType: DriveBaseType.TANK,
@@ -102,10 +105,10 @@ class Constants {
         ])
   };
 
-  // Game length refers to auton + teleop
+  /// Game length refers to auton + teleop
   static const int GAME_LENGTH = 150; //seconds
 
-  // Points scored by climbing
+  /// Points scored by climbing
   static const Map<int, int> CLIMB_POINTS = {
     2013: 20,
     2014: 0,

@@ -22,7 +22,7 @@ class Event {
   }
 }
 
-/// This *singleton* class interfaces with the Blue Alliance API to provide data about teams
+/// This **singleton** class interfaces with the Blue Alliance API to provide data about teams
 class GetStatistics {
   static const Map<String, String> _header = {
     "X-TBA-Auth-Key":
