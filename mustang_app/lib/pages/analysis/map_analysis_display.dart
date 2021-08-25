@@ -110,48 +110,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
     });
   }
 
-  // int _getScoringColorValue(ActionType actionType, int x, int y) {
-  //   double totalNumGames = myAnalyzer.totalNumGames().toDouble();
-  //   double ptsAtZone =
-  //       myAnalyzer.calcPtsAtZone(actionType, x.toDouble(), y.toDouble()) /
-  //           totalNumGames;
-
-  //   double ptsAtZonePerGame = ptsAtZone / totalNumGames;
-  //   double colorValue =
-  //       ((ptsAtZonePerGame / GameConstants.maxPtValuePerZonePerGame) * 900);
-  //   int lowerBound = 0, upperBound = 0;
-  //   if (!colorValue.isNaN && colorValue.isFinite) {
-  //     lowerBound = (colorValue ~/ 100) * 100; //lower bound of 100
-  //     upperBound = (colorValue ~/ 100 + 1) * 100; //upper bound
-  //   }
-
-  //   int returnVal = (colorValue - lowerBound > upperBound - colorValue)
-  //       ? upperBound
-  //       : lowerBound;
-  //   if (returnVal > 900) {
-  //     return 900;
-  //   }
-  //   debugPrint("scoring color value: " + returnVal.toString());
-  //   return returnVal;
-  // }
-
-  // int _getAccuracyColorValue(ActionType actionType, int x, int y) {
-  //   double zoneAccuracyOutOf1 = myAnalyzer.calcShotAccuracyAtZone(
-  //       actionType, x.toDouble(), y.toDouble());
-
-  //   double zoneAccuracyOutOf900 = zoneAccuracyOutOf1 * 900;
-  //   if (!zoneAccuracyOutOf900.isInfinite && !zoneAccuracyOutOf900.isNaN) {
-  //     int a = (zoneAccuracyOutOf900 ~/ 100) * 100; //lower bound of 100
-  //     int b = (zoneAccuracyOutOf900 ~/ 100 + 1) * 100; //upper bound
-  //     int returnVal =
-  //         (zoneAccuracyOutOf900 - a > b - zoneAccuracyOutOf900) ? b : a;
-  //     debugPrint("accuracy color value: " + returnVal.toString());
-  //     return returnVal;
-  //   } else {
-  //     debugPrint("accuracy color value: 0");
-  //     return 0;
-  //   }
-  // }
+  
 
 // game replay stuff
   // List<Color> _getColorCombo(BuildContext context, int x, int y) {
@@ -199,6 +158,8 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
 
   Widget _getCell(BuildContext context, int x, int y, bool isSelected,
       double cellWidth, double cellHeight) {
+            List<Match> matches = Provider.of<List<Match>>(context);
+
     int ind = _toggleModes.indexOf(true);
     switch (ind) {
       case 0:
@@ -207,15 +168,15 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             width: cellWidth,
             height: cellHeight,
             decoration: BoxDecoration(
-                // color: (Colors.green[
-                //             KeivnaMapAnalyzer.getScoringColorValueAtLocation(
-                //                 selectedActionType, x, y)] ==
-                //         null)
-                //     ? null
-                //     : Colors.green[
-                //             KeivnaMapAnalyzer.getScoringColorValueAtLocation(
-                //                 selectedActionType, x, y)]
-                //         .withOpacity(0.7),
+                color: (Colors.green[
+                        KeivnaMapAnalyzer.getShootingPointsColorValueAtLocation(
+                                matches, x, y)] ==
+                        null)
+                    ? null
+                    : Colors.green[
+                            KeivnaMapAnalyzer.getShootingPointsColorValueAtLocation(
+                                matches, x, y)]
+                        .withOpacity(0.7),
                 ),
           );
         }

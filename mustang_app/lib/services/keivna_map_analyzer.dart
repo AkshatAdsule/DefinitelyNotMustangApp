@@ -13,39 +13,188 @@ take in data and spit out analyzed version
 */
 //FOR ALL MAPS: SCORING MAP, ACCURACY MAP, GAME REPLAY
 class KeivnaMapAnalyzer {
+  //NORMALIZING DATA:
+
+  /*
+  if blue alliance + driver station left side: shooting from bottom right
+  if red alliance + driver station left side: shooting from bottom right
+
+  if blue alliance + driver station right side: shooting from top left
+  if red alliance + driver station right side: shooting from top left
+
+  data needs to be "normalized" so all shots are from the BOTTOM RIGHT
+  location of shots only changed if driver station was on right side
+  
+  WHY: *USED FOR MAP ANALYSIS ONLY*
+  in map analysis, you see where all the shots were taken from
+  if some are on the top left and other are on bottom right, hard to understand the map
+  must "normalize" data so that all shots from the rop left are "transferred" to bottom right equivalent
+
+  UNDERSTANDING OFFENSERIGHTSIDE:
+  driver station right --> offenseOnRightSide is false
+  driver station left --> offenseOnRightSide is true
+  only need to normalize if offenseOnRightSide is false
+
+  */
+  static List<Match> _normalizeDataForMatches(List<Match> matches) {
+    // for (int i = 0; i < matches.length; i++) {
+    //   matches[i] = _normalizeDataForMatch(matches[i]);
+    //   // Match normalizedMatch = _normalizeDataForMatch(match);
+    //   // normalizedMatchList.add(normalizedMatch);
+    // }
+    // return matches;
+
+    List<Match> normalizedMatchList = new List<Match>();
+    for (Match match in matches) {
+      Match normalizedMatch = _normalizeDataForMatch(match);
+      normalizedMatchList.add(normalizedMatch);
+    }
+    return normalizedMatchList;
+  }
+
+  static Match _normalizeDataForMatch(Match match) {
+    List<GameAction> normalizedGameActions = new List<GameAction>();
+    //ie if shots are on top left side
+    if (!match.offenseOnRightSide && match.offenseOnRightSide != null) {
+      //starts at 0, 16 columns numbered from 0-15, same for rows
+      int largestColumnNum = GameConstants.zoneColumns - 1; //15
+      int largestRowNum = GameConstants.zoneRows - 1; //7
+
+      for (GameAction gameAction in match.actions) {
+        double tempX = gameAction.x;
+        double newX = largestColumnNum - tempX;
+        // ()
+        // //revert back to og if not in bounds
+        // if (newX < 0 || newX > largestColumnNum) {
+        //  newX = tempX;
+        // }
+
+        double tempY = gameAction.y;
+        double newY = largestRowNum - tempY;
+        // if (newY >= 0 && newX <= largestRowNum) {
+        //   gameAction.y = newY;
+        // }
+        GameAction normalizedGameAction = new GameAction(
+            actionType: gameAction.actionType,
+            timeStamp: gameAction.timeStamp,
+            x: newX,
+            y: newY);
+        normalizedGameActions.add(normalizedGameAction);
+      }
+      // return normalizedMatch;
+    }
+
+    Match normalizedMatch = new Match(
+        matchNumber: match.matchNumber,
+        teamNumber: match.teamNumber,
+        allianceColor: match.allianceColor,
+        offenseOnRightSide: match.offenseOnRightSide,
+        matchResult: match.matchResult,
+        notes: match.notes,
+        driverSkill: match.driverSkill,
+        actions: normalizedGameActions,
+        matchType: match.matchType);
+
+    //else {
+    //nothing changes, data is already so that locations are on bottom right
+    return normalizedMatch;
+    // }
+  }
+
   //MAP ANALYSIS:
-  //returns a value from 0 - 900, represents shade of green of that location
+
+  //returns a value from 0 - 900 rounded to nearest hunded, represents shade of green of that location
   //https://api.flutter.dev/flutter/material/Colors-class.html
 //KTODO: write on key that 150 is max
 //NORMALIZE RIGHT SIDE OF DATA!!!
 //shooting from top left (normalize): blue, right & red, right
 //shooting from bottom right (don't normalize): blue, left & red, left
-  static int getScoringColorValueAtLocation(List<Match> matches, int x, int y) {
-    int result = 0;
-    for (Match match in matches) {}
-    return 400;
-    // double totalNumGames = myAnalyzer.totalNumGames().toDouble();
-    // double ptsAtZone =
-    //     myAnalyzer.calcPtsAtZone(actionType, x.toDouble(), y.toDouble()) /
-    //         totalNumGames;
+//KTODO: selected action type
+  static int getShootingPointsColorValueAtLocation(
+      List<Match> matches, int x, int y) {
+    List<Match> normalizedMatches = _normalizeDataForMatches(matches);
+    // _normalizeDataForMatches(matches);
+    // List<Match> normalizedMatches = matches;
 
-    // double ptsAtZonePerGame = ptsAtZone / totalNumGames;
-    // double colorValue =
-    //     ((ptsAtZonePerGame / GameConstants.maxPtValuePerZonePerGame) * 900);
-    // int lowerBound = 0, upperBound = 0;
-    // if (!colorValue.isNaN && colorValue.isFinite) {
-    //   lowerBound = (colorValue ~/ 100) * 100; //lower bound of 100
-    //   upperBound = (colorValue ~/ 100 + 1) * 100; //upper bound
+    double totalShootingPointsAtLoc = 0;
+
+    for (Match match in normalizedMatches) {
+      totalShootingPointsAtLoc +=
+          _getShootingPointsAtLocationForSingleMatch(match, x, y);
+    }
+
+    double avgShootingPointsAtLoc =
+        totalShootingPointsAtLoc / normalizedMatches.length;
+    // if (avgShootingPointsAtLoc > 0) {
+    //   debugPrint("average shooting points at: (" +
+    //       x.toString() +
+    //       ", " +
+    //       y.toString() +
+    //       "): " +
+    //       avgShootingPointsAtLoc.toString());
+    // }
+    double colorValue =
+        (avgShootingPointsAtLoc / GameConstants.maxPtValuePerZonePerGame) *
+            900.0;
+
+    // if (colorValue > 0) {
+    //   debugPrint("scoring color value before round: " + colorValue.toString());
     // }
 
-    // int returnVal = (colorValue - lowerBound > upperBound - colorValue)
-    //     ? upperBound
-    //     : lowerBound;
-    // if (returnVal > 900) {
-    //   return 900;
-    // }
-    // debugPrint("scoring color value: " + returnVal.toString());
-    // return returnVal;
+    //round to nearest hundred so that it returns a value that can be used for the color class
+    //color class only takes values rounded to hundred
+    int colorValueRoundedToHundred = ((colorValue + 50) ~/ 100) * 100;
+
+    if (colorValueRoundedToHundred > 900) {
+      return 900;
+    }
+
+    return colorValueRoundedToHundred;
+  }
+
+//returns the total teleop point value of all shots from location (x, y) for the given match
+  static double _getShootingPointsAtLocationForSingleMatch(
+      Match match, int x, int y) {
+    double result = 0;
+    for (GameAction action in match.actions) {
+      if (action.x == x && action.y == y) {
+        //game action happened at given location
+        //happpened during auton
+        if (action.timeStamp <= GameConstants.autonMillisecondLength) {
+          switch (action.actionType) {
+            case (ActionType.SHOT_LOW):
+              result += GameConstants.lowShotAutonValue;
+              break;
+            case (ActionType.SHOT_OUTER):
+              result += GameConstants.outerShotAutonValue;
+              break;
+            case (ActionType.SHOT_INNER):
+              result += GameConstants.innerShotAutonValue;
+              break;
+            default:
+              break;
+          }
+        }
+
+        //happpened during teleop
+        if (action.timeStamp > GameConstants.autonMillisecondLength) {
+          switch (action.actionType) {
+            case (ActionType.SHOT_LOW):
+              result += GameConstants.lowShotValue;
+              break;
+            case (ActionType.SHOT_OUTER):
+              result += GameConstants.outerShotValue;
+              break;
+            case (ActionType.SHOT_INNER):
+              result += GameConstants.innerShotValue;
+              break;
+            default:
+              break;
+          }
+        }
+      }
+    }
+    return result;
   }
 
   static int getAccuracyColorValue(ActionType actionType, int x, int y) {
@@ -145,8 +294,25 @@ class KeivnaMapAnalyzer {
     return numShotsPerAction;
   }
 
-//returns number of shots for each time of action, sorted in a list in same order as ActionType.values.
+//returns number of shots for each type of action, sorted in a list in same order as ActionType.values.
   static List<int> _getTeleopNumShots(Match match) {
+    List<int> numShotsPerAction = List.filled(ActionType.values.length, 0);
+    for (GameAction currentAction in match.actions) {
+      //happened during teleop
+      if (currentAction.timeStamp > GameConstants.autonMillisecondLength) {
+        //just a safety precaution
+        if (ActionType.values.contains(currentAction.actionType)) {
+          //adds 1 shot/miss to numShotsPerAction at corresponding action type
+          int index = ActionType.values.indexOf(currentAction.actionType);
+          numShotsPerAction[index] = numShotsPerAction[index] + 1;
+        }
+      }
+    }
+    return numShotsPerAction;
+  }
+
+  //returns number of shots for each time of action, sorted in a list in same order as ActionType.values.
+  static List<int> _getTeleopNumShotsAtLocation(Match match, int x, int y) {
     List<int> numShotsPerAction = List.filled(ActionType.values.length, 0);
     for (GameAction currentAction in match.actions) {
       //happened during teleop
