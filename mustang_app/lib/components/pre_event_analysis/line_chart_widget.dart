@@ -26,11 +26,11 @@ class LineChartWidget extends StatelessWidget {
     List<_LinearStats> winRateData = [];
     List<_LinearStats> pointContributionData = [];
 
-    List<_LinearStats> predictedOprData = [];
-    List<_LinearStats> predictedDprData = [];
-    List<_LinearStats> predictedCcwmData = [];
-    List<_LinearStats> predictedWinRateData = [];
-    List<_LinearStats> predictedPointContributionData = [];
+    // List<_LinearStats> predictedOprData = [];
+    // List<_LinearStats> predictedDprData = [];
+    // List<_LinearStats> predictedCcwmData = [];
+    // List<_LinearStats> predictedWinRateData = [];
+    // List<_LinearStats> predictedPointContributionData = [];
 
     for (YearStats yearStat in stats.yearStats) {
       oprData.add(new _LinearStats(yearStat.year, yearStat.avgOpr));
@@ -41,50 +41,50 @@ class LineChartWidget extends StatelessWidget {
           .add(new _LinearStats(yearStat.year, yearStat.avgPointContribution));
     }
     DateTime currentYear = stats.yearStats.last.year;
-    predictedOprData
-        .add(new _LinearStats(currentYear, stats.yearStats.last.avgOpr));
-    predictedDprData
-        .add(new _LinearStats(currentYear, stats.yearStats.last.avgDpr));
-    predictedCcwmData
-        .add(new _LinearStats(currentYear, stats.yearStats.last.avgCcwm));
-    predictedWinRateData
-        .add(new _LinearStats(currentYear, stats.yearStats.last.avgWinRate));
-    predictedPointContributionData.add(new _LinearStats(
-        currentYear, stats.yearStats.last.avgPointContribution));
-    for (int i = 1; i <= 2; i++) {
-      DateTime newYear = currentYear.add(Duration(days: 366 * i));
-      predictedOprData.add(
-        new _LinearStats(
-          newYear.add(Duration(days: 366 * i)),
-          (stats.oprSlope + predictedOprData[i - 1].stat),
-        ),
-      );
-      predictedDprData.add(
-        new _LinearStats(
-          newYear.add(Duration(days: 365 * i)),
-          (stats.dprSlope + predictedDprData[i - 1].stat),
-        ),
-      );
-      predictedCcwmData.add(
-        new _LinearStats(
-          newYear.add(Duration(days: 365 * i)),
-          (stats.ccwmSlope + predictedCcwmData[i - 1].stat),
-        ),
-      );
-      predictedWinRateData.add(
-        new _LinearStats(
-          newYear.add(Duration(days: 365 * i)),
-          (stats.winrateSlope + predictedWinRateData[i - 1].stat),
-        ),
-      );
-      predictedPointContributionData.add(
-        new _LinearStats(
-          newYear.add(Duration(days: 365 * i)),
-          (stats.contributionSlope +
-              predictedPointContributionData[i - 1].stat),
-        ),
-      );
-    }
+    // predictedOprData
+    //     .add(new _LinearStats(currentYear, stats.yearStats.last.avgOpr));
+    // predictedDprData
+    //     .add(new _LinearStats(currentYear, stats.yearStats.last.avgDpr));
+    // predictedCcwmData
+    //     .add(new _LinearStats(currentYear, stats.yearStats.last.avgCcwm));
+    // predictedWinRateData
+    //     .add(new _LinearStats(currentYear, stats.yearStats.last.avgWinRate));
+    // predictedPointContributionData.add(new _LinearStats(
+    //     currentYear, stats.yearStats.last.avgPointContribution));
+    // for (int i = 1; i <= 2; i++) {
+    //   DateTime newYear = currentYear.add(Duration(days: 366 * i));
+    //   predictedOprData.add(
+    //     new _LinearStats(
+    //       newYear.add(Duration(days: 366 * i)),
+    //       (stats.oprSlope + predictedOprData[i - 1].stat),
+    //     ),
+    //   );
+    //   predictedDprData.add(
+    //     new _LinearStats(
+    //       newYear.add(Duration(days: 365 * i)),
+    //       (stats.dprSlope + predictedDprData[i - 1].stat),
+    //     ),
+    //   );
+    //   predictedCcwmData.add(
+    //     new _LinearStats(
+    //       newYear.add(Duration(days: 365 * i)),
+    //       (stats.ccwmSlope + predictedCcwmData[i - 1].stat),
+    //     ),
+    //   );
+    //   predictedWinRateData.add(
+    //     new _LinearStats(
+    //       newYear.add(Duration(days: 365 * i)),
+    //       (stats.winrateSlope + predictedWinRateData[i - 1].stat),
+    //     ),
+    //   );
+    //   predictedPointContributionData.add(
+    //     new _LinearStats(
+    //       newYear.add(Duration(days: 365 * i)),
+    //       (stats.contributionSlope +
+    //           predictedPointContributionData[i - 1].stat),
+    //     ),
+    //   );
+    // }
 
     return [
       LineChartBarData(
@@ -127,53 +127,53 @@ class LineChartWidget extends StatelessWidget {
         colors: [Colors.purple],
         dotData: dotData,
       ),
-      LineChartBarData(
-        spots: predictedOprData
-            .map((e) =>
-                FlSpot(e.year.year.toDouble(), e.stat.round().toDouble()))
-            .toList(),
-        colors: [Colors.blue],
-        dotData: dotData,
-        dashArray: dashArray,
-      ),
-      LineChartBarData(
-        spots: predictedDprData
-            .map((e) =>
-                FlSpot(e.year.year.toDouble(), e.stat.round().toDouble()))
-            .toList(),
-        colors: [Colors.red],
-        dotData: dotData,
-        dashArray: dashArray,
-      ),
-      LineChartBarData(
-        spots: predictedCcwmData
-            .map((e) =>
-                FlSpot(e.year.year.toDouble(), e.stat.round().toDouble()))
-            .toList(),
-        colors: [Colors.green],
-        dotData: dotData,
-        dashArray: dashArray,
-      ),
-      LineChartBarData(
-        spots: predictedWinRateData
-            .map((e) =>
-                FlSpot(e.year.year.toDouble(), e.stat.round().toDouble()))
-            .toList(),
-        colors: [Colors.black],
-        dotData: dotData,
-        dashArray: dashArray,
-      ),
-      LineChartBarData(
-        spots: predictedPointContributionData
-            .map((e) => FlSpot(
-                  e.year.year.toDouble(),
-                  e.stat.round().toDouble(),
-                ))
-            .toList(),
-        colors: [Colors.purple],
-        dotData: dotData,
-        dashArray: dashArray,
-      ),
+      // LineChartBarData(
+      //   spots: predictedOprData
+      //       .map((e) =>
+      //           FlSpot(e.year.year.toDouble(), e.stat.round().toDouble()))
+      //       .toList(),
+      //   colors: [Colors.blue],
+      //   dotData: dotData,
+      //   dashArray: dashArray,
+      // ),
+      // LineChartBarData(
+      //   spots: predictedDprData
+      //       .map((e) =>
+      //           FlSpot(e.year.year.toDouble(), e.stat.round().toDouble()))
+      //       .toList(),
+      //   colors: [Colors.red],
+      //   dotData: dotData,
+      //   dashArray: dashArray,
+      // ),
+      // LineChartBarData(
+      //   spots: predictedCcwmData
+      //       .map((e) =>
+      //           FlSpot(e.year.year.toDouble(), e.stat.round().toDouble()))
+      //       .toList(),
+      //   colors: [Colors.green],
+      //   dotData: dotData,
+      //   dashArray: dashArray,
+      // ),
+      // LineChartBarData(
+      //   spots: predictedWinRateData
+      //       .map((e) =>
+      //           FlSpot(e.year.year.toDouble(), e.stat.round().toDouble()))
+      //       .toList(),
+      //   colors: [Colors.black],
+      //   dotData: dotData,
+      //   dashArray: dashArray,
+      // ),
+      // LineChartBarData(
+      //   spots: predictedPointContributionData
+      //       .map((e) => FlSpot(
+      //             e.year.year.toDouble(),
+      //             e.stat.round().toDouble(),
+      //           ))
+      //       .toList(),
+      //   colors: [Colors.purple],
+      //   dotData: dotData,
+      //   dashArray: dashArray,
+      // ),
     ];
   }
 
@@ -469,7 +469,7 @@ class LineChartWidget extends StatelessWidget {
   }
 }
 
-/// data type for linear charts that includes the year along with a numerical stat 
+/// data type for linear charts that includes the year along with a numerical stat
 class _LinearStats {
   DateTime year;
   num stat;
