@@ -34,16 +34,8 @@ class KeivnaMapAnalyzer {
   driver station right --> offenseOnRightSide is false
   driver station left --> offenseOnRightSide is true
   only need to normalize if offenseOnRightSide is false
-
   */
   static List<Match> _normalizeDataForMatches(List<Match> matches) {
-    // for (int i = 0; i < matches.length; i++) {
-    //   matches[i] = _normalizeDataForMatch(matches[i]);
-    //   // Match normalizedMatch = _normalizeDataForMatch(match);
-    //   // normalizedMatchList.add(normalizedMatch);
-    // }
-    // return matches;
-
     List<Match> normalizedMatchList = new List<Match>();
     for (Match match in matches) {
       Match normalizedMatch = _normalizeDataForMatch(match);
@@ -52,6 +44,7 @@ class KeivnaMapAnalyzer {
     return normalizedMatchList;
   }
 
+  //does what's described above (for _normalizeDataForMatches)  but for a single match
   static Match _normalizeDataForMatch(Match match) {
     List<GameAction> normalizedGameActions = new List<GameAction>();
     //ie if shots are on top left side
@@ -63,17 +56,8 @@ class KeivnaMapAnalyzer {
       for (GameAction gameAction in match.actions) {
         double tempX = gameAction.x;
         double newX = largestColumnNum - tempX;
-        // ()
-        // //revert back to og if not in bounds
-        // if (newX < 0 || newX > largestColumnNum) {
-        //  newX = tempX;
-        // }
-
         double tempY = gameAction.y;
         double newY = largestRowNum - tempY;
-        // if (newY >= 0 && newX <= largestRowNum) {
-        //   gameAction.y = newY;
-        // }
         GameAction normalizedGameAction = new GameAction(
             actionType: gameAction.actionType,
             timeStamp: gameAction.timeStamp,
@@ -81,7 +65,6 @@ class KeivnaMapAnalyzer {
             y: newY);
         normalizedGameActions.add(normalizedGameAction);
       }
-      // return normalizedMatch;
     }
 
     Match normalizedMatch = new Match(
@@ -94,27 +77,18 @@ class KeivnaMapAnalyzer {
         driverSkill: match.driverSkill,
         actions: normalizedGameActions,
         matchType: match.matchType);
-
-    //else {
-    //nothing changes, data is already so that locations are on bottom right
     return normalizedMatch;
-    // }
   }
 
   //MAP ANALYSIS:
 
   //returns a value from 0 - 900 rounded to nearest hunded, represents shade of green of that location
   //https://api.flutter.dev/flutter/material/Colors-class.html
-//KTODO: write on key that 150 is max
-//NORMALIZE RIGHT SIDE OF DATA!!!
-//shooting from top left (normalize): blue, right & red, right
-//shooting from bottom right (don't normalize): blue, left & red, left
 //KTODO: selected action type
   static int getShootingPointsColorValueAtLocation(
       List<Match> matches, int x, int y) {
+    //use data that has been normalized
     List<Match> normalizedMatches = _normalizeDataForMatches(matches);
-    // _normalizeDataForMatches(matches);
-    // List<Match> normalizedMatches = matches;
 
     double totalShootingPointsAtLoc = 0;
 
@@ -125,21 +99,9 @@ class KeivnaMapAnalyzer {
 
     double avgShootingPointsAtLoc =
         totalShootingPointsAtLoc / normalizedMatches.length;
-    // if (avgShootingPointsAtLoc > 0) {
-    //   debugPrint("average shooting points at: (" +
-    //       x.toString() +
-    //       ", " +
-    //       y.toString() +
-    //       "): " +
-    //       avgShootingPointsAtLoc.toString());
-    // }
     double colorValue =
         (avgShootingPointsAtLoc / GameConstants.maxPtValuePerZonePerGame) *
             900.0;
-
-    // if (colorValue > 0) {
-    //   debugPrint("scoring color value before round: " + colorValue.toString());
-    // }
 
     //round to nearest hundred so that it returns a value that can be used for the color class
     //color class only takes values rounded to hundred
@@ -152,7 +114,7 @@ class KeivnaMapAnalyzer {
     return colorValueRoundedToHundred;
   }
 
-//returns the total teleop point value of all shots from location (x, y) for the given match
+//returns the total teleop and auton point value of all shots from location (x, y) for the given match
   static double _getShootingPointsAtLocationForSingleMatch(
       Match match, int x, int y) {
     double result = 0;
@@ -197,23 +159,72 @@ class KeivnaMapAnalyzer {
     return result;
   }
 
-  static int getAccuracyColorValue(ActionType actionType, int x, int y) {
-    return 400;
-    // double zoneAccuracyOutOf1 = myAnalyzer.calcShotAccuracyAtZone(
-    //     actionType, x.toDouble(), y.toDouble());
+  static int getAccuracyColorValue(List<Match> matches, int x, int y) {
+    List<Match> normalizedMatches = _normalizeDataForMatches(matches);
 
-    // double zoneAccuracyOutOf900 = zoneAccuracyOutOf1 * 900;
-    // if (!zoneAccuracyOutOf900.isInfinite && !zoneAccuracyOutOf900.isNaN) {
-    //   int a = (zoneAccuracyOutOf900 ~/ 100) * 100; //lower bound of 100
-    //   int b = (zoneAccuracyOutOf900 ~/ 100 + 1) * 100; //upper bound
-    //   int returnVal =
-    //       (zoneAccuracyOutOf900 - a > b - zoneAccuracyOutOf900) ? b : a;
-    //   debugPrint("accuracy color value: " + returnVal.toString());
-    //   return returnVal;
-    // } else {
-    //   debugPrint("accuracy color value: 0");
-    //   return 0;
-    // }
+    //sum of all accuracies, will be way larger than 100 but then averaged later on
+    double totalAccuracyPerctangesAtLoc = 0;
+
+    for (Match match in normalizedMatches) {
+      totalAccuracyPerctangesAtLoc +=
+          _geAccuracyPointsAtLocationForSingleMatch(match, x, y);
+    }
+
+    //somewhere between 0-100
+    double avgAccuracyPointsAtLoc =
+        totalAccuracyPerctangesAtLoc / normalizedMatches.length;
+    double colorValue = avgAccuracyPointsAtLoc * 900;
+
+    //round to nearest hundred so that it returns a value that can be used for the color class
+    //color class only takes values rounded to hundred
+    int colorValueRoundedToHundred = ((colorValue + 50) ~/ 100) * 100;
+    if (colorValueRoundedToHundred > 900) {
+      return 900;
+    }
+    return colorValueRoundedToHundred;
+  }
+
+  //returns the total teleop point value of all shots from location (x, y) for the given match
+  static double _geAccuracyPointsAtLocationForSingleMatch(
+      Match match, int x, int y) {
+    double shotsMade = 0;
+    double shotsMissed = 0;
+    for (GameAction action in match.actions) {
+      if (action.x == x && action.y == y) {
+        switch (action.actionType) {
+          //all shots made
+          case (ActionType.SHOT_LOW):
+            shotsMade++;
+            break;
+          case (ActionType.SHOT_OUTER):
+            shotsMade++;
+            break;
+          case (ActionType.SHOT_INNER):
+            shotsMade++;
+            break;
+
+          //all shots missed
+          case (ActionType.MISSED_LOW):
+            shotsMissed++;
+            break;
+          case (ActionType.MISSED_OUTER):
+            shotsMissed++;
+            break;
+        }
+      }
+    }
+    if (shotsMade > 0) {
+          //double from 1-100 of accuracy percentage
+
+      double accuracyAsPercentage =
+          (shotsMade / (shotsMade + shotsMissed)) * 100.0;
+      debugPrint("accuracyAsPercentage in single match method: " +
+          accuracyAsPercentage.toString());
+      return accuracyAsPercentage;
+    }
+
+    return 0;
+
   }
 
   //returns points scored by shooting on average for all matches, includes auton and teleop

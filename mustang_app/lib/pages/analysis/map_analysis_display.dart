@@ -186,13 +186,13 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             width: cellWidth,
             height: cellHeight,
             decoration: BoxDecoration(
-                // color: (Colors.green[KeivnaMapAnalyzer.getAccuracyColorValue(
-                //             selectedActionType, x, y)] ==
-                //         null)
-                //     ? null
-                //     : Colors.green[KeivnaMapAnalyzer.getAccuracyColorValue(
-                //             selectedActionType, x, y)]
-                //         .withOpacity(0.7)
+                color: (Colors.green[KeivnaMapAnalyzer.getAccuracyColorValue(
+                            matches, x, y)] ==
+                        null)
+                    ? null
+                    : Colors.green[KeivnaMapAnalyzer.getAccuracyColorValue(
+                            matches, x, y)]
+                        .withOpacity(0.7)
                 ),
           );
         }

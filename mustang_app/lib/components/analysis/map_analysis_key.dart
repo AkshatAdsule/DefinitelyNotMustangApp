@@ -19,7 +19,8 @@ class MapAnalysisKey extends StatelessWidget {
   // String _scoringText = GameConstants.minPtValuePerZonePerGame.toString() +
   //     "       total pts      " +
   //     GameConstants.maxPtValuePerZonePerGame.toString();
-    String _scoringText = "max pts per location: " + GameConstants.maxPtValuePerZonePerGame.toString();
+  String _dataHasBeenNormalized = "Data normalized to left side driver station.";
+  String _scoringText = "max pts per location: " + GameConstants.maxPtValuePerZonePerGame.toString();
   String _accuracyText = "0%                 100%";
 
   @override
@@ -40,8 +41,8 @@ class MapAnalysisKey extends StatelessWidget {
         alignment: Alignment.center,
         child: Text(
           _mapScoring
-              ? "Shooting Points Map\n" + "(avg per game)\n\n\n" + _scoringText
-              : "Accuracy Map\n" + "(avg per game)\n\n\n" + _accuracyText,
+              ? "Shooting Points Map\n" + "(avg per game)\n\n\n" + _scoringText + "\n" + _dataHasBeenNormalized
+              : "Accuracy Map\n" + "(avg per game)\n\n\n" + _accuracyText + "\n" + _dataHasBeenNormalized,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.grey[800],
