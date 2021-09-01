@@ -85,20 +85,40 @@ class KeivnaMapAnalyzer {
   //returns a value from 0 - 900 rounded to nearest hunded, represents shade of green of that location
   //https://api.flutter.dev/flutter/material/Colors-class.html
 //KTODO: selected action type
-  static int getShootingPointsColorValueAtLocation(
-      List<Match> matches, int x, int y) {
-    //use data that has been normalized
-    List<Match> normalizedMatches = _normalizeDataForMatches(matches);
+  static int getShootingPointsColorValueAtLocation(List<Match> matches, int x,
+      int y, ActionType selectedActionType, String selectedMatchNumber) {
+    double avgShootingPointsAtLoc = 0;
 
-    double totalShootingPointsAtLoc = 0;
+    //getting shooting color for all matches, fill up avgShootingPointsAtLoc
+    if (selectedMatchNumber.toLowerCase() == "all") {
+      //use data that has been normalized
+      List<Match> normalizedMatches = _normalizeDataForMatches(matches);
+      double totalShootingPointsAtLoc = 0;
 
-    for (Match match in normalizedMatches) {
-      totalShootingPointsAtLoc +=
-          _getShootingPointsAtLocationForSingleMatch(match, x, y);
+      for (Match match in normalizedMatches) {
+        totalShootingPointsAtLoc += _getShootingPointsAtLocationForSingleMatch(
+            match, x, y, selectedActionType);
+      }
+
+      if (normalizedMatches.length > 0) {
+        avgShootingPointsAtLoc =
+            totalShootingPointsAtLoc / normalizedMatches.length;
+      }
     }
 
-    double avgShootingPointsAtLoc =
-        totalShootingPointsAtLoc / normalizedMatches.length;
+    //getting shooting color for j 1 match, fill up avgShootingPointsAtLoc
+    else {
+      Match normalizedMatch;
+      //find the match and normalize it
+      for (Match match in matches) {
+        if (match.matchNumber == selectedMatchNumber) {
+          normalizedMatch = _normalizeDataForMatch(match);
+        }
+      }
+      double avgShootingPointsAtLoc = _getShootingPointsAtLocationForSingleMatch(normalizedMatch, x, y, selectedActionType);
+
+    }
+
     double colorValue =
         (avgShootingPointsAtLoc / GameConstants.maxPtValuePerZonePerGame) *
             900.0;
@@ -110,69 +130,109 @@ class KeivnaMapAnalyzer {
     if (colorValueRoundedToHundred > 900) {
       return 900;
     }
+    if (colorValueRoundedToHundred.isNaN) {
+      debugPrint("color val rounded to 100 is NAN!!");
+    }
 
     return colorValueRoundedToHundred;
   }
 
 //returns the total teleop and auton point value of all shots from location (x, y) for the given match
   static double _getShootingPointsAtLocationForSingleMatch(
-      Match match, int x, int y) {
+      Match match, int x, int y, ActionType selectedActionType) {
     double result = 0;
     for (GameAction action in match.actions) {
       if (action.x == x && action.y == y) {
         //game action happened at given location
         //happpened during auton
         if (action.timeStamp <= GameConstants.autonMillisecondLength) {
-          switch (action.actionType) {
-            case (ActionType.SHOT_LOW):
-              result += GameConstants.lowShotAutonValue;
-              break;
-            case (ActionType.SHOT_OUTER):
-              result += GameConstants.outerShotAutonValue;
-              break;
-            case (ActionType.SHOT_INNER):
-              result += GameConstants.innerShotAutonValue;
-              break;
-            default:
-              break;
+          if (action.actionType == ActionType.SHOT_LOW &&
+              (selectedActionType == ActionType.ALL ||
+                  selectedActionType == ActionType.SHOT_LOW)) {
+            result += GameConstants.lowShotAutonValue;
           }
+
+          if (action.actionType == ActionType.SHOT_OUTER &&
+              (selectedActionType == ActionType.ALL ||
+                  selectedActionType == ActionType.SHOT_OUTER)) {
+            result += GameConstants.outerShotAutonValue;
+          }
+          if (action.actionType == ActionType.SHOT_INNER &&
+              (selectedActionType == ActionType.ALL ||
+                  selectedActionType == ActionType.SHOT_INNER)) {
+            result += GameConstants.innerShotAutonValue;
+          }
+          // switch (action.actionType) {
+          //   case (ActionType.SHOT_LOW):
+          //     result += GameConstants.lowShotAutonValue;
+          //     break;
+          //   case (ActionType.SHOT_OUTER):
+          //     result += GameConstants.outerShotAutonValue;
+          //     break;
+          //   case (ActionType.SHOT_INNER):
+          //     result += GameConstants.innerShotAutonValue;
+          //     break;
+          //   default:
+          //     break;
+          // }
         }
 
         //happpened during teleop
         if (action.timeStamp > GameConstants.autonMillisecondLength) {
-          switch (action.actionType) {
-            case (ActionType.SHOT_LOW):
-              result += GameConstants.lowShotValue;
-              break;
-            case (ActionType.SHOT_OUTER):
-              result += GameConstants.outerShotValue;
-              break;
-            case (ActionType.SHOT_INNER):
-              result += GameConstants.innerShotValue;
-              break;
-            default:
-              break;
+          if (action.actionType == ActionType.SHOT_LOW &&
+              (selectedActionType == ActionType.ALL ||
+                  selectedActionType == ActionType.SHOT_LOW)) {
+            result += GameConstants.lowShotValue;
           }
+
+          if (action.actionType == ActionType.SHOT_OUTER &&
+              (selectedActionType == ActionType.ALL ||
+                  selectedActionType == ActionType.SHOT_OUTER)) {
+            result += GameConstants.outerShotValue;
+          }
+          if (action.actionType == ActionType.SHOT_INNER &&
+              (selectedActionType == ActionType.ALL ||
+                  selectedActionType == ActionType.SHOT_INNER)) {
+            result += GameConstants.innerShotValue;
+          }
+
+          // switch (action.actionType) {
+          //   case (ActionType.SHOT_LOW):
+          //     result += GameConstants.lowShotValue;
+          //     break;
+          //   case (ActionType.SHOT_OUTER):
+          //     result += GameConstants.outerShotValue;
+          //     break;
+          //   case (ActionType.SHOT_INNER):
+          //     result += GameConstants.innerShotValue;
+          //     break;
+          //   default:
+          //     break;
+          // }
         }
       }
     }
     return result;
   }
 
-  static int getAccuracyColorValue(List<Match> matches, int x, int y) {
+  static int getAccuracyColorValue(
+      List<Match> matches, int x, int y, selectedActionType) {
     List<Match> normalizedMatches = _normalizeDataForMatches(matches);
 
     //sum of all accuracies, will be way larger than 100 but then averaged later on
     double totalAccuracyPerctangesAtLoc = 0;
 
     for (Match match in normalizedMatches) {
-      totalAccuracyPerctangesAtLoc +=
-          _geAccuracyPointsAtLocationForSingleMatch(match, x, y);
+      totalAccuracyPerctangesAtLoc += _geAccuracyPointsAtLocationForSingleMatch(
+          match, x, y, selectedActionType);
     }
 
     //somewhere between 0-100
-    double avgAccuracyPointsAtLoc =
-        totalAccuracyPerctangesAtLoc / normalizedMatches.length;
+
+    double avgAccuracyPointsAtLoc = 0;
+    if (normalizedMatches.length > 0){
+        avgAccuracyPointsAtLoc = totalAccuracyPerctangesAtLoc / normalizedMatches.length;
+    }
     double colorValue = avgAccuracyPointsAtLoc * 900;
 
     //round to nearest hundred so that it returns a value that can be used for the color class
@@ -186,45 +246,76 @@ class KeivnaMapAnalyzer {
 
   //returns the total teleop point value of all shots from location (x, y) for the given match
   static double _geAccuracyPointsAtLocationForSingleMatch(
-      Match match, int x, int y) {
+      Match match, int x, int y, selectedActionType) {
     double shotsMade = 0;
     double shotsMissed = 0;
     for (GameAction action in match.actions) {
       if (action.x == x && action.y == y) {
-        switch (action.actionType) {
-          //all shots made
-          case (ActionType.SHOT_LOW):
-            shotsMade++;
-            break;
-          case (ActionType.SHOT_OUTER):
-            shotsMade++;
-            break;
-          case (ActionType.SHOT_INNER):
-            shotsMade++;
-            break;
+        //all shots made
 
-          //all shots missed
-          case (ActionType.MISSED_LOW):
-            shotsMissed++;
-            break;
-          case (ActionType.MISSED_OUTER):
-            shotsMissed++;
-            break;
+        if (action.actionType == ActionType.SHOT_LOW &&
+            (selectedActionType == ActionType.ALL ||
+                selectedActionType == ActionType.SHOT_LOW)) {
+          shotsMade++;
         }
+        if (action.actionType == ActionType.SHOT_OUTER &&
+            (selectedActionType == ActionType.ALL ||
+                selectedActionType == ActionType.SHOT_OUTER)) {
+          shotsMade++;
+        }
+        if (action.actionType == ActionType.SHOT_INNER &&
+            (selectedActionType == ActionType.ALL ||
+                selectedActionType == ActionType.SHOT_INNER)) {
+          shotsMade++;
+        }
+
+        //all shots missed
+        if (action.actionType == ActionType.MISSED_LOW &&
+            (selectedActionType == ActionType.ALL ||
+                selectedActionType == ActionType.SHOT_LOW)) {
+          shotsMissed++;
+        }
+
+        if (action.actionType == ActionType.MISSED_OUTER &&
+            (selectedActionType == ActionType.ALL ||
+                selectedActionType == ActionType.SHOT_OUTER)) {
+          shotsMissed++;
+        }
+
+        // switch (action.actionType) {
+        //   //all shots made
+        //   case (ActionType.SHOT_LOW):
+        //     shotsMade++;
+        //     break;
+        //   case (ActionType.SHOT_OUTER):
+        //     shotsMade++;
+        //     break;
+        //   case (ActionType.SHOT_INNER):
+        //     shotsMade++;
+        //     break;
+
+        //   //all shots missed
+        //   case (ActionType.MISSED_LOW):
+        //     shotsMissed++;
+        //     break;
+        //   case (ActionType.MISSED_OUTER):
+        //     shotsMissed++;
+        //     break;
+        // }
+
       }
     }
     if (shotsMade > 0) {
-          //double from 1-100 of accuracy percentage
+      //double from 1-100 of accuracy percentage
 
       double accuracyAsPercentage =
           (shotsMade / (shotsMade + shotsMissed)) * 100.0;
-      debugPrint("accuracyAsPercentage in single match method: " +
-          accuracyAsPercentage.toString());
+      // debugPrint("accuracyAsPercentage in single match method: " +
+      //     accuracyAsPercentage.toString());
       return accuracyAsPercentage;
     }
 
     return 0;
-
   }
 
   //returns points scored by shooting on average for all matches, includes auton and teleop

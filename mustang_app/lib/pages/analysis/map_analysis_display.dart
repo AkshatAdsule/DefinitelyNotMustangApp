@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mustang_app/constants/game_constants.dart';
 import 'package:mustang_app/models/game_action.dart';
 import 'package:mustang_app/models/team.dart';
 import 'package:mustang_app/models/match.dart';
-import 'package:mustang_app/services/keivna_data_analyzer.dart';
 import 'package:mustang_app/services/keivna_map_analyzer.dart';
 import 'package:mustang_app/services/team_service.dart';
 import 'package:mustang_app/components/shared/map/game_map.dart';
@@ -17,7 +15,6 @@ import 'package:mustang_app/components/utils/youtube_embed.dart';
 import 'package:mustang_app/components/shared/map/zone_grid.dart';
 import 'package:mustang_app/utils/get_statistics.dart';
 import 'package:provider/provider.dart';
-import '../../services/analyzer.dart';
 
 // ignore: must_be_immutable
 //Represents the entire page of map analyses, holds tabs for accuracy map, shooting map, game replay map
@@ -62,7 +59,6 @@ class MapAnalysisDisplayPage extends StatefulWidget {
 }
 
 class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
-  // Analyzer myAnalyzer;
   List<List<Object>> actionRelatedColors = [
     ["OTHER", Colors.orange],
     ["FOUL", Colors.yellow],
@@ -89,7 +85,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
   Map<String, String> _videoLinks;
 
   _MapAnalysisDisplayState(this.teamNumber) {
-    // myAnalyzer = new Analyzer();
     initVideoLinks();
   }
 
@@ -170,12 +165,12 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             decoration: BoxDecoration(
                 color: (Colors.green[
                         KeivnaMapAnalyzer.getShootingPointsColorValueAtLocation(
-                                matches, x, y)] ==
+                                matches, x, y, selectedActionType, selectedMatch)] ==
                         null)
                     ? null
                     : Colors.green[
                             KeivnaMapAnalyzer.getShootingPointsColorValueAtLocation(
-                                matches, x, y)]
+                                matches, x, y, selectedActionType, selectedMatch)]
                         .withOpacity(0.7),
                 ),
           );
@@ -187,11 +182,11 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             height: cellHeight,
             decoration: BoxDecoration(
                 color: (Colors.green[KeivnaMapAnalyzer.getAccuracyColorValue(
-                            matches, x, y)] ==
+                            matches, x, y, selectedActionType)] ==
                         null)
                     ? null
                     : Colors.green[KeivnaMapAnalyzer.getAccuracyColorValue(
-                            matches, x, y)]
+                            matches, x, y, selectedActionType)]
                         .withOpacity(0.7)
                 ),
           );
@@ -346,6 +341,8 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
                       value: selectedActionType,
                       onChanged: (val) => setState(() {
                         selectedActionType = val;
+                        debugPrint("selected action type: " + selectedActionType.toString());
+
                       }),
                       items: [
                         ActionType.ALL,
@@ -371,6 +368,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
                       value: selectedMatch,
                       onChanged: (val) => setState(() {
                         selectedMatch = val;
+                        debugPrint("selected match: " + selectedMatch);
                       }),
                       items: [
                         ...Provider.of<List<Match>>(context)
