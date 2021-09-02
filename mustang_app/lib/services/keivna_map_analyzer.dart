@@ -84,7 +84,6 @@ class KeivnaMapAnalyzer {
 
   //returns a value from 0 - 900 rounded to nearest hunded, represents shade of green of that location
   //https://api.flutter.dev/flutter/material/Colors-class.html
-//KTODO: selected action type
   static int getShootingPointsColorValueAtLocation(List<Match> matches, int x,
       int y, ActionType selectedActionType, String selectedMatchNumber) {
     double avgShootingPointsAtLoc = 0;
@@ -113,9 +112,10 @@ class KeivnaMapAnalyzer {
       for (Match match in matches) {
         if (match.matchNumber == selectedMatchNumber) {
           normalizedMatch = _normalizeDataForMatch(match);
+          debugPrint("there is a normalized match when j 1 match");
         }
       }
-      double avgShootingPointsAtLoc = _getShootingPointsAtLocationForSingleMatch(normalizedMatch, x, y, selectedActionType);
+      avgShootingPointsAtLoc = _getShootingPointsAtLocationForSingleMatch(normalizedMatch, x, y, selectedActionType);
 
     }
 
@@ -162,19 +162,6 @@ class KeivnaMapAnalyzer {
                   selectedActionType == ActionType.SHOT_INNER)) {
             result += GameConstants.innerShotAutonValue;
           }
-          // switch (action.actionType) {
-          //   case (ActionType.SHOT_LOW):
-          //     result += GameConstants.lowShotAutonValue;
-          //     break;
-          //   case (ActionType.SHOT_OUTER):
-          //     result += GameConstants.outerShotAutonValue;
-          //     break;
-          //   case (ActionType.SHOT_INNER):
-          //     result += GameConstants.innerShotAutonValue;
-          //     break;
-          //   default:
-          //     break;
-          // }
         }
 
         //happpened during teleop
@@ -195,20 +182,6 @@ class KeivnaMapAnalyzer {
                   selectedActionType == ActionType.SHOT_INNER)) {
             result += GameConstants.innerShotValue;
           }
-
-          // switch (action.actionType) {
-          //   case (ActionType.SHOT_LOW):
-          //     result += GameConstants.lowShotValue;
-          //     break;
-          //   case (ActionType.SHOT_OUTER):
-          //     result += GameConstants.outerShotValue;
-          //     break;
-          //   case (ActionType.SHOT_INNER):
-          //     result += GameConstants.innerShotValue;
-          //     break;
-          //   default:
-          //     break;
-          // }
         }
       }
     }
@@ -228,7 +201,6 @@ class KeivnaMapAnalyzer {
     }
 
     //somewhere between 0-100
-
     double avgAccuracyPointsAtLoc = 0;
     if (normalizedMatches.length > 0){
         avgAccuracyPointsAtLoc = totalAccuracyPerctangesAtLoc / normalizedMatches.length;
@@ -281,28 +253,6 @@ class KeivnaMapAnalyzer {
                 selectedActionType == ActionType.SHOT_OUTER)) {
           shotsMissed++;
         }
-
-        // switch (action.actionType) {
-        //   //all shots made
-        //   case (ActionType.SHOT_LOW):
-        //     shotsMade++;
-        //     break;
-        //   case (ActionType.SHOT_OUTER):
-        //     shotsMade++;
-        //     break;
-        //   case (ActionType.SHOT_INNER):
-        //     shotsMade++;
-        //     break;
-
-        //   //all shots missed
-        //   case (ActionType.MISSED_LOW):
-        //     shotsMissed++;
-        //     break;
-        //   case (ActionType.MISSED_OUTER):
-        //     shotsMissed++;
-        //     break;
-        // }
-
       }
     }
     if (shotsMade > 0) {
