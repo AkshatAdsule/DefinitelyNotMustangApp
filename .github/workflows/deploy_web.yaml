@@ -1,0 +1,27 @@
+name: Deploy Flutter Web
+
+# Controls when the action will run. 
+on: [push, workflow_dispatch]
+  
+  
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+      - name: setup cname
+        run: echo "tma.aksads.tech" > mustang_app/web/CNAME
+      - name: setup env
+        run: echo -e "BUNDLE_ID='com.homstead.mustangApp'\nPACKAGE_NAME='com.homestead.mustang_app'\nDYNAMIC_LINK_URI_PREFIX='mustangapp.page.link'" > mustang_app/.env
+      - name: allow dot files
+        run: touch mustang_app/web/.nojekyll
+      - uses: erickzanardo/flutter-gh-pages@v3
+        with:
+            workingDir: mustang_app
+
