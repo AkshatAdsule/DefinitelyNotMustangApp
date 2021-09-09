@@ -31,26 +31,28 @@ class HomeState extends State<Home> {
       right: false,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          // mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset('assets/logo.png'),
-            Text(
-              'Check out all the parts of The Mustang Alliance!',
-              style: TextStyle(
-                color: Colors.green,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+        child: Center(
+          child: Column(
+            // mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset('assets/logo.png'),
+              Text(
+                'Check out all the parts of The Mustang Alliance!',
+                style: TextStyle(
+                  color: Colors.green,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            _buildLinkButton(
-                route: InputScreen.route, label: 'Pre Event Analysis'),
-            _buildLinkButton(route: Scouter.route, label: 'Scouter'),
-            _buildLinkButton(route: SearchPage.route, label: 'Team Data'),
-            _buildLinkButton(route: SketchPage.route, label: 'Match Planner'),
-          ],
+              _buildLinkButton(
+                  route: InputScreen.route, label: 'Pre Event Analysis'),
+              _buildLinkButton(route: Scouter.route, label: 'Scouter'),
+              _buildLinkButton(route: SearchPage.route, label: 'Team Data'),
+              _buildLinkButton(route: SketchPage.route, label: 'Match Planner'),
+            ],
+          ),
         ),
       ),
       // child: Container(
