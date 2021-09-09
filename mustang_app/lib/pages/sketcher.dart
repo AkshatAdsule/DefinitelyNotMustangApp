@@ -21,7 +21,7 @@ class _SketchPageState extends State<SketchPage> {
   List<DrawingPoints> points = [];
   bool showBottomList = false;
   double opacity = 1.0;
-  StrokeCap strokeCap = (Platform.isAndroid) ? StrokeCap.butt : StrokeCap.round;
+  StrokeCap strokeCap = StrokeCap.butt;
 
   @override
   void initState() {
