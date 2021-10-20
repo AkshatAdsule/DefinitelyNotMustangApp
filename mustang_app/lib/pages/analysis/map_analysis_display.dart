@@ -182,11 +182,11 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             height: cellHeight,
             decoration: BoxDecoration(
                 color: (Colors.green[KeivnaMapAnalyzer.getAccuracyColorValue(
-                            matches, x, y, selectedActionType)] ==
+                            matches, x, y, selectedActionType, selectedMatch)] ==
                         null)
                     ? null
                     : Colors.green[KeivnaMapAnalyzer.getAccuracyColorValue(
-                            matches, x, y, selectedActionType)]
+                            matches, x, y, selectedActionType, selectedMatch)]
                         .withOpacity(0.7)
                 ),
           );
@@ -368,7 +368,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
                       value: selectedMatch,
                       onChanged: (val) => setState(() {
                         selectedMatch = val;
-                        // debugPrint("selected match: " + selectedMatch);
                       }),
                       items: [
                         ...Provider.of<List<Match>>(context)

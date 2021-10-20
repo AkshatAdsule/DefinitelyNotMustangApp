@@ -65,25 +65,23 @@ class KeivnaMapAnalyzer {
       }
 
       Match normalizedMatch = new Match(
-        matchNumber: match.matchNumber,
-        teamNumber: match.teamNumber,
-        allianceColor: match.allianceColor,
-        offenseOnRightSide: match.offenseOnRightSide,
-        matchResult: match.matchResult,
-        notes: match.notes,
-        driverSkill: match.driverSkill,
-        actions: normalizedGameActions,
-        matchType: match.matchType);
-    return normalizedMatch;
-    } else{ //match does not need to be normalized
+          matchNumber: match.matchNumber,
+          teamNumber: match.teamNumber,
+          allianceColor: match.allianceColor,
+          offenseOnRightSide: match.offenseOnRightSide,
+          matchResult: match.matchResult,
+          notes: match.notes,
+          driverSkill: match.driverSkill,
+          actions: normalizedGameActions,
+          matchType: match.matchType);
+      return normalizedMatch;
+    } else {
+      //match does not need to be normalized
       return match;
     }
-
-    
   }
 
   //MAP ANALYSIS:
-
   //returns a value from 0 - 900 rounded to nearest hunded, represents shade of green of that location
   //https://api.flutter.dev/flutter/material/Colors-class.html
   static int getShootingPointsColorValueAtLocation(List<Match> matches, int x,
@@ -117,13 +115,10 @@ class KeivnaMapAnalyzer {
     //getting shooting color for j 1 match, fill up avgShootingPointsAtLoc
     else {
       Match normalizedMatch;
-      Match regularMatch;
       //find the match and normalize it
       for (Match match in matches) {
         if (match.matchNumber == selectedMatchNumber) {
           normalizedMatch = _normalizeDataForMatch(match);
-          regularMatch = match;
-          // debugPrint("there is a normalized match when j 1 match");
         }
       }
 
@@ -149,7 +144,6 @@ class KeivnaMapAnalyzer {
       debugPrint("color val rounded to 100 is NAN!!");
       return 0;
     }
-
     return colorValueRoundedToHundred;
   }
 
@@ -222,25 +216,40 @@ class KeivnaMapAnalyzer {
     return result;
   }
 
-  static int getAccuracyColorValue(
-      List<Match> matches, int x, int y, selectedActionType) {
+  //returns the shade of green for given location (x, y) for the accuracy map
+  //darker shade of green, higher shooting accuracy at that location
+  static int getAccuracyColorValue(List<Match> matches, int x, int y,
+      selectedActionType, String selectedMatchNumber) {
     List<Match> normalizedMatches = _normalizeDataForMatches(matches);
 
     //sum of all accuracies, will be way larger than 100 but then averaged later on
-    double totalAccuracyPerctangesAtLoc = 0;
+    double accuracyPerctentAtLoc = 0;
 
-    for (Match match in normalizedMatches) {
-      totalAccuracyPerctangesAtLoc += _geAccuracyPointsAtLocationForSingleMatch(
-          match, x, y, selectedActionType);
+    if (selectedMatchNumber.toLowerCase() == "all") {
+      double totalAccuracyPercentages = 0;
+      for (Match match in normalizedMatches) {
+        totalAccuracyPercentages += _geAccuracyPointsAtLocationForSingleMatch(
+            match, x, y, selectedActionType);
+      }
+      if (matches.length > 0) {
+        accuracyPerctentAtLoc =
+            totalAccuracyPercentages / matches.length.toDouble();
+      }
+    } else {
+      //only 1 match
+      Match normalizedMatch;
+      //find the match and normalize it
+      for (Match match in matches) {
+        if (match.matchNumber == selectedMatchNumber) {
+          normalizedMatch = _normalizeDataForMatch(match);
+        }
+      }
+      accuracyPerctentAtLoc = _geAccuracyPointsAtLocationForSingleMatch(
+          normalizedMatch, x, y, selectedActionType);
     }
 
-    //somewhere between 0-100
-    double avgAccuracyPointsAtLoc = 0;
-    if (normalizedMatches.length > 0) {
-      avgAccuracyPointsAtLoc =
-          totalAccuracyPerctangesAtLoc / normalizedMatches.length;
-    }
-    double colorValue = avgAccuracyPointsAtLoc * 900;
+    //somewhere between 0-900, color value is simply the percent accuracy in a factor of 900
+    double colorValue = accuracyPerctentAtLoc * 900;
 
     //round to nearest hundred so that it returns a value that can be used for the color class
     //color class only takes values rounded to hundred
@@ -439,7 +448,6 @@ class KeivnaMapAnalyzer {
     ["INNER", Colors.black],
   ];
 
-  //KTODO: move getColorCombo and other game replay method here
   static List<Color> getColorCombo(BuildContext context, String selectedMatch,
       double timeInGame, int x, int y) {
     GameAction curr;
