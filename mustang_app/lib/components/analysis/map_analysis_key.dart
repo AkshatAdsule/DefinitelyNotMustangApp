@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/constants/game_constants.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class MapAnalysisKey extends StatelessWidget {
@@ -20,11 +21,14 @@ class MapAnalysisKey extends StatelessWidget {
   //     "       total pts      " +
   //     GameConstants.maxPtValuePerZonePerGame.toString();
   String _dataHasBeenNormalized = "Data normalized to left side driver station.";
-  String _scoringText = "max pts per location: " + GameConstants.maxPtValuePerZonePerGame.toString();
+  // String _scoringText = "max pts per location: " + GameConstants.maxPtValuePerZonePerGame.toString();
+  String _scoringText = "";
   String _accuracyText = "0%                 100%";
 
   @override
   Widget build(BuildContext context) {
+    // List<Match> matches = Provider.of<List<Match>>(context);
+
     return Container(
         child: Ink(
       decoration: BoxDecoration(

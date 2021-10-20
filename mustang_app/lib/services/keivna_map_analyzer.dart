@@ -54,10 +54,8 @@ class KeivnaMapAnalyzer {
       int largestRowNum = GameConstants.zoneRows - 1; //7
 
       for (GameAction gameAction in match.actions) {
-        double tempX = gameAction.x;
-        double newX = largestColumnNum - tempX;
-        double tempY = gameAction.y;
-        double newY = largestRowNum - tempY;
+        double newX = largestColumnNum - gameAction.x;
+        double newY = largestRowNum - gameAction.y;
         GameAction normalizedGameAction = new GameAction(
             actionType: gameAction.actionType,
             timeStamp: gameAction.timeStamp,
@@ -65,9 +63,8 @@ class KeivnaMapAnalyzer {
             y: newY);
         normalizedGameActions.add(normalizedGameAction);
       }
-    }
 
-    Match normalizedMatch = new Match(
+      Match normalizedMatch = new Match(
         matchNumber: match.matchNumber,
         teamNumber: match.teamNumber,
         allianceColor: match.allianceColor,
@@ -78,6 +75,11 @@ class KeivnaMapAnalyzer {
         actions: normalizedGameActions,
         matchType: match.matchType);
     return normalizedMatch;
+    } else{ //match does not need to be normalized
+      return match;
+    }
+
+    
   }
 
   //MAP ANALYSIS:
@@ -87,54 +89,86 @@ class KeivnaMapAnalyzer {
   static int getShootingPointsColorValueAtLocation(List<Match> matches, int x,
       int y, ActionType selectedActionType, String selectedMatchNumber) {
     double avgShootingPointsAtLoc = 0;
+    double maxPointsForZoneForMatch =
+        1; //the value of the highest scoring zone in that match, will be the denom when determinign colorValue
 
     //getting shooting color for all matches, fill up avgShootingPointsAtLoc
     if (selectedMatchNumber.toLowerCase() == "all") {
       //use data that has been normalized
       List<Match> normalizedMatches = _normalizeDataForMatches(matches);
       double totalShootingPointsAtLoc = 0;
+      double totalMaxPointsForZoneForAllMatches = 1;
 
       for (Match match in normalizedMatches) {
         totalShootingPointsAtLoc += _getShootingPointsAtLocationForSingleMatch(
             match, x, y, selectedActionType);
+        totalMaxPointsForZoneForAllMatches +=
+            _getMaxPointsForZoneInMatch(match, selectedActionType);
       }
 
       if (normalizedMatches.length > 0) {
         avgShootingPointsAtLoc =
             totalShootingPointsAtLoc / normalizedMatches.length;
+        maxPointsForZoneForMatch =
+            totalMaxPointsForZoneForAllMatches / normalizedMatches.length;
       }
     }
 
     //getting shooting color for j 1 match, fill up avgShootingPointsAtLoc
     else {
       Match normalizedMatch;
+      Match regularMatch;
       //find the match and normalize it
       for (Match match in matches) {
         if (match.matchNumber == selectedMatchNumber) {
           normalizedMatch = _normalizeDataForMatch(match);
-          debugPrint("there is a normalized match when j 1 match");
+          regularMatch = match;
+          // debugPrint("there is a normalized match when j 1 match");
         }
       }
-      avgShootingPointsAtLoc = _getShootingPointsAtLocationForSingleMatch(normalizedMatch, x, y, selectedActionType);
 
+      avgShootingPointsAtLoc = _getShootingPointsAtLocationForSingleMatch(
+          normalizedMatch, x, y, selectedActionType);
+      maxPointsForZoneForMatch =
+          _getMaxPointsForZoneInMatch(normalizedMatch, selectedActionType);
     }
 
+    //color value depends on the max points scored in any zone, different for each match and team
     double colorValue =
-        (avgShootingPointsAtLoc / GameConstants.maxPtValuePerZonePerGame) *
-            900.0;
+        (avgShootingPointsAtLoc / maxPointsForZoneForMatch) * 900.0;
 
     //round to nearest hundred so that it returns a value that can be used for the color class
     //color class only takes values rounded to hundred
     int colorValueRoundedToHundred = ((colorValue + 50) ~/ 100) * 100;
 
+    //should never happen bc maxPointsForZoneForMatch is always <= avgShootingPointsAtLoc but jic
     if (colorValueRoundedToHundred > 900) {
       return 900;
     }
     if (colorValueRoundedToHundred.isNaN) {
       debugPrint("color val rounded to 100 is NAN!!");
+      return 0;
     }
 
     return colorValueRoundedToHundred;
+  }
+
+  static double _getMaxPointsForZoneInMatch(
+      Match match, ActionType selectedActionType) {
+    double maxValue = 1;
+
+    //goes through each zone
+    for (int x = 0; x < GameConstants.zoneColumns; x++) {
+      for (int y = 0; y < GameConstants.zoneRows; y++) {
+        double pointValueAtLoc = _getShootingPointsAtLocationForSingleMatch(
+            match, x, y, selectedActionType);
+        if (pointValueAtLoc > maxValue) {
+          //NO KATIA IM NOT DOING THE "?" ONE I DONT LIKE IT
+          maxValue = pointValueAtLoc;
+        }
+      }
+    }
+    return maxValue;
   }
 
 //returns the total teleop and auton point value of all shots from location (x, y) for the given match
@@ -202,8 +236,9 @@ class KeivnaMapAnalyzer {
 
     //somewhere between 0-100
     double avgAccuracyPointsAtLoc = 0;
-    if (normalizedMatches.length > 0){
-        avgAccuracyPointsAtLoc = totalAccuracyPerctangesAtLoc / normalizedMatches.length;
+    if (normalizedMatches.length > 0) {
+      avgAccuracyPointsAtLoc =
+          totalAccuracyPerctangesAtLoc / normalizedMatches.length;
     }
     double colorValue = avgAccuracyPointsAtLoc * 900;
 

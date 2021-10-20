@@ -154,7 +154,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
   Widget _getCell(BuildContext context, int x, int y, bool isSelected,
       double cellWidth, double cellHeight) {
             List<Match> matches = Provider.of<List<Match>>(context);
-
+//KTODO: GET MAX POINTS FROM LOCATION FROM ANALYZER!!
     int ind = _toggleModes.indexOf(true);
     switch (ind) {
       case 0:
@@ -368,7 +368,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
                       value: selectedMatch,
                       onChanged: (val) => setState(() {
                         selectedMatch = val;
-                        debugPrint("selected match: " + selectedMatch);
+                        // debugPrint("selected match: " + selectedMatch);
                       }),
                       items: [
                         ...Provider.of<List<Match>>(context)
