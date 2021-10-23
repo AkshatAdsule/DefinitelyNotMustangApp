@@ -1,25 +1,27 @@
 import 'dart:async';
-import 'package:mustang_app/constants/game_constants.dart';
-import 'package:mustang_app/constants/preferences.dart';
-import 'package:mustang_app/models/match.dart';
+
+import 'package:flutter/material.dart';
+import 'package:mustang_app/components/inputs/mode_toggle.dart';
 import 'package:mustang_app/components/map_scouting/animated_push_line.dart';
+import 'package:mustang_app/components/map_scouting/blur_overlay.dart';
 import 'package:mustang_app/components/map_scouting/climb_scouting_overlay.dart';
 import 'package:mustang_app/components/map_scouting/climb_scouting_side.dart';
 import 'package:mustang_app/components/map_scouting/defense_scouting_overlay.dart';
-import 'package:mustang_app/components/inputs/mode_toggle.dart';
+import 'package:mustang_app/components/map_scouting/defense_scouting_side.dart';
 import 'package:mustang_app/components/map_scouting/offense_scouting_overlay.dart';
+import 'package:mustang_app/components/map_scouting/offense_scouting_side.dart';
+import 'package:mustang_app/components/shared/map/game_map.dart';
 import 'package:mustang_app/components/shared/map/scouting_zone_grid.dart';
+import 'package:mustang_app/components/shared/map/zone_grid.dart';
+import 'package:mustang_app/components/shared/screen.dart';
 import 'package:mustang_app/components/utils/stopwatch_display.dart';
+import 'package:mustang_app/constants/game_constants.dart';
+import 'package:mustang_app/constants/preferences.dart';
+import 'package:mustang_app/models/game_action.dart';
+import 'package:mustang_app/models/match.dart';
 import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
-import 'package:flutter/material.dart';
-import 'package:mustang_app/components/map_scouting/blur_overlay.dart';
-import 'package:mustang_app/models/game_action.dart';
-import 'package:mustang_app/components/map_scouting/defense_scouting_side.dart';
-import 'package:mustang_app/components/shared/map/game_map.dart';
-import 'package:mustang_app/components/map_scouting/offense_scouting_side.dart';
-import 'package:mustang_app/components/shared/screen.dart';
-import 'package:mustang_app/components/shared/map/zone_grid.dart';
+
 import '../../components/inputs/game_buttons.dart' as game_button;
 import 'match_end_scouting.dart';
 
@@ -108,7 +110,7 @@ class MapScoutingState extends State<MapScouting> {
       _teleopTimer.cancel();
     }
 
-    if (stopwatch != null && stopwatch.isRunning) stopwatch.stop();
+    if (stopwatch != null && stopwatch.isRunning) stopwatch.reset();
   }
 
   void _initTimers() {
