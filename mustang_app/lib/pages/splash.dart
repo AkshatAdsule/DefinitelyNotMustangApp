@@ -63,27 +63,28 @@ class _SplashState extends State<Splash> {
   }
 
   void _goToNextPage(BuildContext context) {
-    User currentUser = AuthService.currentUser;
-    if (_user == null && currentUser != null) {
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        Register.route,
-        (route) => false,
-        arguments: {
-          'method': SignInMethod.GOOGLE,
-        },
-      );
-    } else if (_user == null) {
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil(Login.route, (route) => false);
-    } else if (!currentUser.emailVerified) {
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil(VerifyEmail.route, (route) => false);
-    } else if (_user.teamStatus == TeamStatus.LONELY) {
-      Navigator.pushNamed(context, JoinTeam.route);
-    } else {
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil(Home.route, (route) => false);
-    }
+    // User currentUser = AuthService.currentUser;
+    // if (_user == null && currentUser != null) {
+    //   Navigator.of(context).pushNamedAndRemoveUntil(
+    //     Register.route,
+    //     (route) => false,
+    //     arguments: {
+    //       'method': SignInMethod.GOOGLE,
+    //     },
+    //   );
+    // } else if (_user == null) {
+    //   Navigator.of(context)
+    //       .pushNamedAndRemoveUntil(Login.route, (route) => false);
+    // } else if (!currentUser.emailVerified) {
+    //   Navigator.of(context)
+    //       .pushNamedAndRemoveUntil(VerifyEmail.route, (route) => false);
+    // } else if (_user.teamStatus == TeamStatus.LONELY) {
+    //   Navigator.pushNamed(context, JoinTeam.route);
+    // } else {
+    //   Navigator.of(context)
+    //       .pushNamedAndRemoveUntil(Home.route, (route) => false);
+    // }
+    Navigator.of(context).pushNamedAndRemoveUntil(Home.route, (route) => false);
   }
 
   @override
