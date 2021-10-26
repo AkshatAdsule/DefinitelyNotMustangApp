@@ -121,7 +121,7 @@ class _SketchPageState extends State<SketchPage> {
             backgroundColor: Colors.green,
             child: Icon(Icons.exit_to_app),
             onTap: () {
-              Navigator.pushNamed(context, Home.route);
+              Navigator.pop(context);
             },
           ),
         ],
