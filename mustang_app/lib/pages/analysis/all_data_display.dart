@@ -59,9 +59,9 @@ class _AllDataDisplayState extends State<AllDataDisplayPage> {
       includeBottomNav: false,
       child: Container(
         child: SingleChildScrollView(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [Text(KeivnaDataAnalyzer.getDataForAllMatches(matches))]),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Text(KeivnaDataAnalyzer.getDataForAllMatches(matches))
+          ]),
         ),
       ),
     );
