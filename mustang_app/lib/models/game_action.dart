@@ -10,7 +10,7 @@ class GameAction {
       @required this.timeStamp,
       @required this.x,
       @required this.y,
-      this.pushTime = 0});
+      this.pushTime = 0.0});
 
   factory GameAction.other(ActionType actionType, double timeStamp) {
     return GameAction(
@@ -41,10 +41,10 @@ class GameAction {
 
   factory GameAction.fromJson(Map<String, dynamic> data) {
     return GameAction(
-      x: data['x'],
-      y: data['y'],
-      timeStamp: data['timeStamp'],
-      pushTime: data['pushTime'],
+      x: data['x'].toDouble(),
+      y: data['y'].toDouble(),
+      timeStamp: data['timeStamp'].toDouble(),
+      pushTime: data['pushTime'].toDouble(),
       actionType: actionTypeFromString(data['actionType']),
     );
   }
