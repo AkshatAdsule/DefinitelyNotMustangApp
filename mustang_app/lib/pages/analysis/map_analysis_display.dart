@@ -105,52 +105,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
     });
   }
 
-  
-
-// game replay stuff
-  // List<Color> _getColorCombo(BuildContext context, int x, int y) {
-  //   GameAction curr;
-  //   List<GameAction> currActions = getAllMatchActions(context)
-  //       .where((element) => element.timeStamp > timeInGame * 1000 - 5000)
-  //       .where((element) => element.timeStamp < timeInGame * 1000 + 1000)
-  //       .toList();
-  //   for (GameAction currentAction in currActions) {
-  //     if (currentAction.x == x && currentAction.y == y) {
-  //       curr = currentAction;
-  //       break;
-  //     }
-  //   }
-  //   if (curr == null) return [Colors.green[0], Colors.yellow[0]];
-
-  //   List<Color> gradientCombo = [];
-  //   String actionType = curr.actionType.toString();
-
-  //   for (List<Object> shade in actionRelatedColors)
-  //     if (actionType.contains(shade[0])) gradientCombo.add(shade[1]);
-
-  //   if (gradientCombo.length < 2) {
-  //     if (actionType.contains("FOUL")) {
-  //       gradientCombo.add(Colors.yellow[600]);
-  //     } else if (actionType.contains("OTHER")) {
-  //       gradientCombo.add(Colors.orange[600]);
-  //     }
-  //   }
-
-  //   return gradientCombo;
-  // }
-
-  // List<GameAction> getAllMatchActions(BuildContext context) {
-  //   if (selectedMatch == "ALL") {
-  //     return Provider.of<List<Match>>(context)
-  //         .map((e) => e.actions)
-  //         .reduce((value, element) => [...value, ...element]);
-  //   }
-  //   return Provider.of<List<Match>>(context)
-  //       .where((element) => element.matchNumber == selectedMatch)
-  //       .map((e) => e.actions)
-  //       .reduce((value, element) => [...value, ...element]);
-  // }
-
   Widget _getCell(BuildContext context, int x, int y, bool isSelected,
       double cellWidth, double cellHeight) {
             List<Match> matches = Provider.of<List<Match>>(context);
@@ -241,21 +195,12 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
   Widget build(BuildContext context) {
     Team team = Provider.of<Team>(context);
     List<Match> matches = Provider.of<List<Match>>(context);
-    // if (!myAnalyzer.initialized) {
-    //   myAnalyzer.init(
-    //     Provider.of<Team>(context),
-    //     Provider.of<List<Match>>(context),
-    //   );
-    //   setState(() {});
-    // }
 
     return Screen(
       title: 'Map Analysis for Team: ' + (team != null ? team.teamNumber : ""),
       includeBottomNav: false,
       child: Container(
         child:
-            // Column(
-            //   children: [
             GameMap(
           zoneGrid: ZoneGrid(
               GlobalKey(),
