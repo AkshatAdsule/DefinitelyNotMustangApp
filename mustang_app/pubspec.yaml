@@ -39,6 +39,8 @@ dependencies:
   flutter_dotenv: ^5.0.0
   share_plus: ^3.0.4
   package_info_plus: ^1.0.3
+  connectivity_plus: ^2.0.2
+  shared_preferences: ^2.0.8
 
   flutter:
     sdk: flutter
