@@ -38,6 +38,9 @@ class GetStatistics {
   FirebaseFirestore _firestore;
   CollectionReference _teams;
 
+  /// List of team names from their team code.
+  static Map<String, String> _TEAM_NAMES = {};
+
   static GetStatistics getInstance() {
     _instance = _instance ?? new GetStatistics._();
     return _instance;
@@ -91,6 +94,36 @@ class GetStatistics {
     return events;
   }
 
+  /// Adds a team to the list of team names from codes
+  /// If the team is already in the list, nothing is done
+  static void addTeamToList(String teamCode) async {
+    if (_TEAM_NAMES[teamCode] == null) {
+      var response;
+      await http
+          .get(Uri.parse("$API_PREFIX/team/$teamCode"), headers: _header)
+          .then((res) => response = res.body);
+      var resJson = jsonDecode(response);
+      _TEAM_NAMES[teamCode] = resJson['school_name'];
+
+      //since some teams don't have school_name defined (frc7, for instance),
+      //the nickname is used as a backup, and "---" is used as a default.
+      if (resJson['school_name'] == null) {
+        _TEAM_NAMES[teamCode] = resJson['nickname'];
+      } else if (resJson['nickname'] == null) {
+        _TEAM_NAMES[teamCode] = "---";
+      }
+    }
+  }
+
+  /// Gets the team name from the code. If the team is not currently in the list, null is returned.
+  static String getTeamName(String teamCode) {
+    if (_TEAM_NAMES[teamCode] != null) {
+      return _TEAM_NAMES[teamCode];
+    } else {
+      return "---";
+    }
+  }
+
   /// Returns array of team codes from an event
   Future<List> getTeams(String eventCode) async {
     var response;
@@ -105,6 +138,7 @@ class GetStatistics {
       if (Constants.INVALID_TEAMS.indexOf(teamCode) == -1) {
         teams.add(team['key']);
       }
+      addTeamToList(team['key']);
     }
     _eventStreamController.add(
       StreamEvent(message: "Got teams for $eventCode", type: MessageType.INFO),
@@ -323,6 +357,8 @@ class GetStatistics {
     List<EventStatistic> eventStats = [];
     var doc = await _teams.doc(team).get();
     Map<String, dynamic> docData = doc.data();
+
+    await addTeamToList(team);
 
     if (doc.exists &&
         docData["DATA_VERSION"] == Constants.DATA_ANALYSIS_DATA_VERSION) {
