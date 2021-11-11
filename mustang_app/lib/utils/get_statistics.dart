@@ -115,7 +115,9 @@ class GetStatistics {
     }
   }
 
-  /// Gets the team name from the code. If the team is not currently in the list, null is returned.
+  /// Gets the team name from the code.
+  /// If the team is not currently in the list, "---" is returned.
+  /// To add a team to the list, see addTeamToList()
   static String getTeamName(String teamCode) {
     if (_TEAM_NAMES[teamCode] != null) {
       return _TEAM_NAMES[teamCode];
