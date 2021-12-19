@@ -267,7 +267,7 @@ class _HandleVerificationState extends State<HandleVerification> {
                   margin: EdgeInsets.only(bottom: 20),
                   child: CircularProgressIndicator(
                     value: null,
-                    color: Colors.white,
+                    //color: Colors.white,
                   ),
                 ),
                 Text(
@@ -400,7 +400,7 @@ class _HandleVerificationState extends State<HandleVerification> {
                             padding: EdgeInsets.only(left: 20),
                             child: Visibility(
                               child: CircularProgressIndicator(
-                                color: Colors.green.shade700,
+                                //color: Colors.green.shade700,
                                 value: null,
                               ),
                               visible: _isLoading,

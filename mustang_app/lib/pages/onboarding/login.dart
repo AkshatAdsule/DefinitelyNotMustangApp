@@ -514,7 +514,7 @@ class _LoginState extends State<Login> {
                     padding: EdgeInsets.symmetric(horizontal: 3),
                   ),
                   MouseRegion(
-                    cursor: SystemMouseCursors.click,
+                    //cursor: SystemMouseCursors.click,
                     child: GestureDetector(
                       onTap: () => Navigator.pushNamed(
                         context,
