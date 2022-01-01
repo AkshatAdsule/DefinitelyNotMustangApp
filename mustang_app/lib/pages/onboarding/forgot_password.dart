@@ -183,7 +183,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       padding: EdgeInsets.only(left: 20),
                       child: Visibility(
                         child: CircularProgressIndicator(
-                          //color: Colors.green.shade700,
+                          color: Colors.green.shade700,
                           value: null,
                         ),
                         visible: _isLoading,
