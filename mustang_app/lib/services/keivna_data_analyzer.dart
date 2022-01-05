@@ -114,8 +114,13 @@ class KeivnaDataAnalyzer {
   //KTODO: j a draft, complete!
   static String getWrittenAnalysis(List<Match> matches) {
     String result = "";
-    result += "Shooting points/game: " +
-        _getAvgShootingPtsForAllMatches(matches).toString();
+    if (_getAvgShootingPtsForAllMatches(matches) != -1) {
+      result += "Shooting points/game: " +
+          _getAvgShootingPtsForAllMatches(matches).toString();
+    } else {
+      result += "Shooting points/game: N/A";
+    }
+
     return result;
 //% time crossed initiation line
 //avg auton shooting pts per game
@@ -129,6 +134,7 @@ class KeivnaDataAnalyzer {
   //PRIVATE BACKHAND METHODS
 
   //returns points scored by shooting on average for all matches, includes auton and teleop
+  //returns -1 if there are no games to analyze
   static int _getAvgShootingPtsForAllMatches(List<Match> matches) {
     double result = 0;
     for (Match match in matches) {
@@ -136,7 +142,14 @@ class KeivnaDataAnalyzer {
       result += _getShootingAutonPtsForMatch(match);
       result += _getShootingTeleopPtsForMatch(match);
     }
-    return (result / matches.length.toDouble()).toInt();
+
+    //preventing exceptions if number of matches is 0
+    double value = (result / matches.length.toDouble());
+    if (value.isNaN || value.isInfinite) {
+      return -1;
+    } else {
+      return (result / matches.length.toDouble()).toInt();
+    }
   }
 
   //returns points scored by shooting for the given match, only shots scored during teleop
