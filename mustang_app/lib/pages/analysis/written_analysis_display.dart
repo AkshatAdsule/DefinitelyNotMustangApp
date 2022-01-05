@@ -59,7 +59,12 @@ class _WrittenAnalysisDisplayState extends State<WrittenAnalysisDisplayPage> {
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [Text(KeivnaDataAnalyzer.getWrittenAnalysis(matches))],
+            children: [
+              Padding(
+                  child: Text(KeivnaDataAnalyzer.getWrittenAnalysis(matches),
+                      style: TextStyle(fontSize: 20, height: 1.5)),
+                  padding: EdgeInsets.all(15))
+            ],
           ),
         ),
       ),

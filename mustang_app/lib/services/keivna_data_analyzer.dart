@@ -114,17 +114,26 @@ class KeivnaDataAnalyzer {
   //KTODO: j a draft, complete!
   static String getWrittenAnalysis(List<Match> matches) {
     String result = "";
-    if (_getAvgShootingPtsForAllMatches(matches) != -1) {
-      result += "Shooting points/game: " +
-          _getAvgShootingPtsForAllMatches(matches).toString();
-    } else {
-      result += "Shooting points/game: N/A";
-    }
+
+    //if there are no matches to analyze, do not run the rest of the methods
+    //if (matches.length == 0) {
+    //  return "No matches to analyze!";
+    //}
+
+    result += "Shooting points/game: " +
+        formatInteger(_getAvgShootingPtsForAllMatches(matches));
+    result += "\n% crossed initiation line: " +
+        formatInteger(_getPercentAutonCrossedInitiationLine(matches)) +
+        "%";
+    result += "\nAuton Shooting points/game: " +
+        formatInteger(_getAvgAutonShootingPoints(matches));
+    result += "\nTeleop Shooting points/game: " +
+        formatInteger(_getAvgTeleopShootingPoints(matches));
 
     return result;
-//% time crossed initiation line
-//avg auton shooting pts per game
-//avg teleop shooting pts per game
+//% time crossed initiation line        DONE
+//avg auton shooting pts per game       DONE
+//avg teleop shooting pts per game      DONE
 //avg teleop pts prevented per game
 //avg climb accuracy
 //% of climbs that were levelled
@@ -133,6 +142,15 @@ class KeivnaDataAnalyzer {
 
   //PRIVATE BACKHAND METHODS
 
+  //if an int is -1, it returns "N/A". Otherwise, it returns the int as a string
+  static String formatInteger(int i) {
+    if (i.isNaN || i.isInfinite || i == -1) {
+      return "N/A";
+    } else {
+      return i.toString();
+    }
+  }
+
   //returns points scored by shooting on average for all matches, includes auton and teleop
   //returns -1 if there are no games to analyze
   static int _getAvgShootingPtsForAllMatches(List<Match> matches) {
@@ -140,6 +158,58 @@ class KeivnaDataAnalyzer {
     for (Match match in matches) {
       //goes thru each match
       result += _getShootingAutonPtsForMatch(match);
+      result += _getShootingTeleopPtsForMatch(match);
+    }
+
+    //preventing exceptions if number of matches is 0
+    double value = (result / matches.length.toDouble());
+    if (value.isNaN || value.isInfinite) {
+      return -1;
+    } else {
+      return (result / matches.length.toDouble()).toInt();
+    }
+  }
+
+  //returns the number of times the bot crossed auton init line
+  //returns -1 if there are no matches to analyze
+  static int _getPercentAutonCrossedInitiationLine(List<Match> matches) {
+    int crossedInitLine = 0;
+    for (Match match in matches) {
+      if (_autonCrossedInitiationLine(match)) {
+        crossedInitLine++;
+      }
+    }
+    if (matches.length == 0) {
+      return -1;
+    } else {
+      return (crossedInitLine / matches.length.toDouble()).toInt();
+    }
+  }
+
+  //returns the average auton shooting points/game
+  //returns -1 if there are no matches to analyze
+  static int _getAvgAutonShootingPoints(List<Match> matches) {
+    double result = 0;
+    for (Match match in matches) {
+      //goes thru each match
+      result += _getShootingAutonPtsForMatch(match);
+    }
+
+    //preventing exceptions if number of matches is 0
+    double value = (result / matches.length.toDouble());
+    if (value.isNaN || value.isInfinite) {
+      return -1;
+    } else {
+      return (result / matches.length.toDouble()).toInt();
+    }
+  }
+
+  //returns the average teleop shooting points/game
+  //returns -1 if there are no matches to analyze
+  static int _getAvgTeleopShootingPoints(List<Match> matches) {
+    double result = 0;
+    for (Match match in matches) {
+      //goes thru each match
       result += _getShootingTeleopPtsForMatch(match);
     }
 
