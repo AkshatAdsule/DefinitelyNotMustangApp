@@ -21,6 +21,17 @@ enum SecondarySubsystem {
   ELEVATOR,
 }
 
+enum ShootingCapability {
+  LOWER,
+  INNER,
+  OUTER,
+}
+
+enum ClimbCapability {
+  CLIMBER, 
+  LEVELER
+}
+
 class Robot {
   final DriveBaseType drivebaseType;
   final OuttakeType outtakeType;

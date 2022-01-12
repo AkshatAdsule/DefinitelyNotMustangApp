@@ -5,9 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mustang_app/constants/constants.dart';
+import 'package:mustang_app/models/robot.dart';
 
 import 'package:mustang_app/models/team_statistic.dart';
 import 'package:mustang_app/utils/stream_event.dart';
+
+import '../models/team.dart';
 
 /// Represents a event with an [eventCode], [eventType], and [eventType]
 class Event {
@@ -37,6 +40,7 @@ class GetStatistics {
 
   FirebaseFirestore _firestore;
   CollectionReference _teams;
+  CollectionReference _2021teams;
 
   /// List of team names from their team code.
   static Map<String, String> _TEAM_NAMES = {};
@@ -62,6 +66,7 @@ class GetStatistics {
   Future<void> _firebaseInit() async {
     _firestore = FirebaseFirestore.instance;
     _teams = _firestore.collection('team-statistics');
+    _2021teams = _firestore.collection('2021');
   }
 
   GetStatistics._() {
@@ -352,6 +357,24 @@ class GetStatistics {
       return 0;
     }
     return contributionPercentage;
+  }
+
+  Future<Team> getPitScoutingData(String team) async {
+    String path = "/info/teams/"+team;
+    //print("path: " + path);
+    var doc = await _2021teams.doc(path).get();
+    Map<String, dynamic> docData = doc.data();
+    print("docData: " + docData.toString());
+
+    if (doc.exists) {
+      print("doc retrieved successfully");
+      Map<String, dynamic> dataMap = docData.map((key, value) => MapEntry(key, value));
+      Team pitScoutTeam = new Team.fromJson(dataMap);
+      return pitScoutTeam;
+    } else {
+      print("did not retrieve doc");
+      return null;
+    }    
   }
 
   /// Returns a new TeamStatistic object, which contains the average OPR, DPR, and CCWM along with a list of all OPRs, CCWMs, and DPRs

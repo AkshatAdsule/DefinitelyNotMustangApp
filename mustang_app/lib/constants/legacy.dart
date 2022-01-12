@@ -8,5 +8,6 @@ class Legacy {
     "Laksh Bhambhani",
     "Katia Bravo",
     "Tarini Maram",
+    "Justin Hwang",
   ];
 }

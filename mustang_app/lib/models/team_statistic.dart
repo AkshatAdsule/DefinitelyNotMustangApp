@@ -1,4 +1,5 @@
 import 'package:mustang_app/constants/constants.dart';
+import 'package:mustang_app/models/robot.dart';
 
 class TeamStatistic {
   String teamCode;
@@ -153,6 +154,38 @@ class TeamStatistic {
     this.ccwmSlope = ccwmSum / max;
     this.winrateSlope = winRateSum / max;
     this.contributionSlope = contributionSum / max;
+  }
+}
+
+class PitScoutingStatistic {
+  String teamCode;
+  DriveBaseType driveBaseType;
+  List<String> autonPaths;
+  List<ShootingCapability> shootingCapabilities;
+  int maxGamePieces;
+  ClimbCapability climbCapability;
+  String comments;
+
+  PitScoutingStatistic.premade({
+    this.teamCode,
+    this.driveBaseType,
+    this.autonPaths,
+    this.shootingCapabilities,
+    this.maxGamePieces, 
+    this.climbCapability,
+    this.comments
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      "team": teamCode,
+      "driveBaseType": driveBaseType,
+      "autonPaths": autonPaths,
+      "shootingCapabilities": shootingCapabilities,
+      "maxGamePieces": maxGamePieces,
+      "climbCapability": climbCapability,
+      "additionalComments": comments
+    };
   }
 }
 

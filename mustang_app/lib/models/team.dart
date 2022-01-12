@@ -25,9 +25,9 @@ class Team {
     @required this.positionControl,
     @required this.hasClimber,
     @required this.hasLeveller,
-    @required this.teamName,
-    @required this.teamEmail,
-    @required this.region,
+    this.teamName,
+    this.teamEmail,
+    this.region,
   });
 
   factory Team.fromSnapshot(DocumentSnapshot snapshot) {
