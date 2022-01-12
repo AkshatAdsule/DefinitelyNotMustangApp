@@ -32,16 +32,16 @@ class GameMap extends StatelessWidget {
   Widget build(BuildContext context) {
     String imageName = '';
     if (_allianceColor.toUpperCase() == "BLUE" && _offenseOnRightSide == true) {
-      imageName = 'assets/rightblue_leftred.png';
+      imageName = 'assets/2022_rightblue_leftred.png';
     } else if (_allianceColor.toUpperCase() == "BLUE" &&
         _offenseOnRightSide == false) {
-      imageName = 'assets/rightred_leftblue.png';
+      imageName = 'assets/2022_rightred_leftblue.png';
     } else if (_allianceColor.toUpperCase() == "RED" &&
         _offenseOnRightSide == true) {
-      imageName = 'assets/rightred_leftblue.png';
+      imageName = 'assets/2022_rightred_leftblue.png';
     } else if (_allianceColor.toUpperCase() == "RED" &&
         _offenseOnRightSide == false) {
-      imageName = 'assets/rightblue_leftred.png';
+      imageName = 'assets/2022_rightblue_leftred.png';
     }
     //1159 width 604 height
     Image image = Image.asset(imageName);
