@@ -161,7 +161,7 @@ class _PitScouterState extends State<PitScouter> {
                             rotationControl: boxStates[3][1],
                             positionControl: boxStates[4][1],
                             hasClimber: boxStates[5][1],
-                            hasLeveller: boxStates[6][1],
+                            hasLeveller: boxStates[6][1], 
                           ),
                         );
                         Navigator.pushNamed(context, PostScouter.route);
