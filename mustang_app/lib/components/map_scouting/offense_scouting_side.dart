@@ -3,6 +3,7 @@ import 'package:mustang_app/components/shared/map/zone_grid.dart';
 import 'package:mustang_app/models/game_action.dart';
 import 'package:mustang_app/pages/scouting/map_scouting.dart';
 import 'package:provider/provider.dart';
+import '../../models/game_action.dart';
 import '../inputs/game_buttons.dart' as game_button;
 
 // ignore: must_be_immutable
@@ -24,31 +25,18 @@ class OffenseScoutingSide extends StatelessWidget {
           //   child: _toggleMode,
           // ),
           Flexible(
-            flex: 2,
+            flex: 1,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    game_button.ScoutingButton(
-                        style: game_button.ButtonStyle.RAISED,
-                        type: game_button.ButtonType.MAKE,
-                        onPressed: () {
-                          mapScoutingKey.currentState
-                              .addAction(ActionType.SHOT_OUTER, context);
-                        },
-                        text: 'Out'),
-                    game_button.ScoutingButton(
-                        style: game_button.ButtonStyle.RAISED,
-                        type: game_button.ButtonType.MAKE,
-                        onPressed: () {
-                          mapScoutingKey.currentState
-                              .addAction(ActionType.SHOT_INNER, context);
-                        },
-                        text: 'In'),
-                  ],
-                ),
+                game_button.ScoutingButton(
+                    style: game_button.ButtonStyle.RAISED,
+                    type: game_button.ButtonType.MAKE,
+                    onPressed: () {
+                      mapScoutingKey.currentState
+                          .addAction(ActionType.SHOT_UPPER, context);
+                    },
+                    text: 'Upper'),
                 game_button.ScoutingButton(
                     style: game_button.ButtonStyle.RAISED,
                     type: game_button.ButtonType.MISS,
@@ -56,10 +44,45 @@ class OffenseScoutingSide extends StatelessWidget {
                       mapScoutingKey.currentState
                           .addAction(ActionType.MISSED_OUTER, context);
                     },
-                    text: 'Miss'),
+                    text: 'Miss Outter')
               ],
             ),
           ),
+          /*
+                game_button.ScoutingButton(
+                    style: game_button.ButtonStyle.RAISED,
+                    type: game_button.ButtonType.MISS,
+                    onPressed: () {
+                      mapScoutingKey.currentState
+                          .addAction(ActionType.MISSED_UPPER, context);//.addAction(ActionType.MISSED_OUTER, context);
+                    },
+                    text: 'Miss'),*/
+
+          Flexible(
+            flex: 1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                game_button.ScoutingButton(
+                    style: game_button.ButtonStyle.RAISED,
+                    type: game_button.ButtonType.MAKE,
+                    onPressed: () {
+                      mapScoutingKey.currentState
+                          .addAction(ActionType.SHOT_LOWER, context);
+                    },
+                    text: 'Lower'),
+                game_button.ScoutingButton(
+                    style: game_button.ButtonStyle.RAISED,
+                    type: game_button.ButtonType.MISS,
+                    onPressed: () {
+                      mapScoutingKey.currentState
+                          .addAction(ActionType.MISSED_LOWER, context);
+                    },
+                    text: 'Miss Lower')
+              ],
+            ),
+          ),
+          /*
           Flexible(
             flex: 1,
             child: Row(
@@ -84,6 +107,7 @@ class OffenseScoutingSide extends StatelessWidget {
               ],
             ),
           ),
+          */
           Flexible(
             flex: 1,
             child: Row(
@@ -96,7 +120,7 @@ class OffenseScoutingSide extends StatelessWidget {
                       mapScoutingKey.currentState
                           .addAction(ActionType.INTAKE, context);
                     },
-                    text: 'Intake'),
+                    text: 'Terminal Intake'),
                 game_button.ScoutingButton(
                     style: game_button.ButtonStyle.RAISED,
                     type: game_button.ButtonType.MISS,
@@ -104,7 +128,32 @@ class OffenseScoutingSide extends StatelessWidget {
                       mapScoutingKey.currentState
                           .addAction(ActionType.MISSED_INTAKE, context);
                     },
-                    text: 'Miss')
+                    text: 'Miss Intake')
+              ],
+            ),
+          ),
+
+          Flexible(
+            flex: 1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                game_button.ScoutingButton(
+                    style: game_button.ButtonStyle.RAISED,
+                    type: game_button.ButtonType.MAKE,
+                    onPressed: () {
+                      mapScoutingKey.currentState
+                          .addAction(ActionType.INTAKE, context);
+                    },
+                    text: 'Ground Intake'),
+                game_button.ScoutingButton(
+                    style: game_button.ButtonStyle.RAISED,
+                    type: game_button.ButtonType.MISS,
+                    onPressed: () {
+                      mapScoutingKey.currentState
+                          .addAction(ActionType.MISSED_INTAKE, context);
+                    },
+                    text: 'Miss Intake')
               ],
             ),
           ),
