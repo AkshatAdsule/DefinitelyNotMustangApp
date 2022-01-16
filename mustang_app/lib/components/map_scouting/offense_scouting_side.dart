@@ -118,17 +118,17 @@ class OffenseScoutingSide extends StatelessWidget {
                     type: game_button.ButtonType.MAKE,
                     onPressed: () {
                       mapScoutingKey.currentState
-                          .addAction(ActionType.INTAKE, context);
+                          .addAction(ActionType.TERMINAL_INTAKE, context);
                     },
                     text: 'Terminal Intake'),
                 game_button.ScoutingButton(
                     style: game_button.ButtonStyle.RAISED,
                     type: game_button.ButtonType.MISS,
                     onPressed: () {
-                      mapScoutingKey.currentState
-                          .addAction(ActionType.MISSED_INTAKE, context);
+                      mapScoutingKey.currentState.addAction(
+                          ActionType.MISSED_TERMINAL_INTAKE, context);
                     },
-                    text: 'Miss Intake')
+                    text: 'Miss')
               ],
             ),
           ),
@@ -143,7 +143,7 @@ class OffenseScoutingSide extends StatelessWidget {
                     type: game_button.ButtonType.MAKE,
                     onPressed: () {
                       mapScoutingKey.currentState
-                          .addAction(ActionType.INTAKE, context);
+                          .addAction(ActionType.GROUND_INTAKE, context);
                     },
                     text: 'Ground Intake'),
                 game_button.ScoutingButton(
@@ -151,9 +151,9 @@ class OffenseScoutingSide extends StatelessWidget {
                     type: game_button.ButtonType.MISS,
                     onPressed: () {
                       mapScoutingKey.currentState
-                          .addAction(ActionType.MISSED_INTAKE, context);
+                          .addAction(ActionType.MISSED_GROUND_INTAKE, context);
                     },
-                    text: 'Miss Intake')
+                    text: 'Miss')
               ],
             ),
           ),
