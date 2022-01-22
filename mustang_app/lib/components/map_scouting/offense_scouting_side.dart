@@ -7,6 +7,7 @@ import '../../models/game_action.dart';
 import '../inputs/game_buttons.dart' as game_button;
 
 // ignore: must_be_immutable
+//all of the offense buttons that is on the right side
 class OffenseScoutingSide extends StatelessWidget {
   OffenseScoutingSide();
   @override

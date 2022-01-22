@@ -7,6 +7,8 @@ import 'package:mustang_app/pages/scouting/map_scouting.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
+//this dart file has the buttons for human shooting and if the robot crosses line
+
 class OffenseScoutingOverlay extends StatelessWidget {
   OffenseScoutingOverlay();
 
