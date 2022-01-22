@@ -64,7 +64,8 @@ class MapScoutingState extends State<MapScouting> {
   int sliderLastChanged;
   bool completedRotationControl,
       completedPositionControl,
-      crossedInitiationLine;
+      crossedInitiationLine,
+      humanShoot;
   double sliderVal;
   int counter = 0;
   bool pushTextStart;
@@ -89,6 +90,7 @@ class MapScoutingState extends State<MapScouting> {
     completedRotationControl = false;
     completedPositionControl = false;
     crossedInitiationLine = false;
+    humanShoot = false;
     actions = [];
     counter = 0;
     pushTextStart = false;
@@ -262,6 +264,12 @@ class MapScoutingState extends State<MapScouting> {
   void setCrossedInitiationLine(bool newVal) {
     setState(() {
       crossedInitiationLine = newVal;
+    });
+  }
+
+  void setHumanShoot(bool newVal) {
+    setState(() {
+      humanShoot = newVal;
     });
   }
 
