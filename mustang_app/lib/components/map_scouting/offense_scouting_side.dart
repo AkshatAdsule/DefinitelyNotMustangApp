@@ -129,7 +129,7 @@ class OffenseScoutingSide extends StatelessWidget {
                       mapScoutingKey.currentState.addAction(
                           ActionType.MISSED_TERMINAL_INTAKE, context);
                     },
-                    text: 'Miss')
+                    text: 'Miss Terminal Intake')
               ],
             ),
           ),
@@ -154,7 +154,7 @@ class OffenseScoutingSide extends StatelessWidget {
                       mapScoutingKey.currentState
                           .addAction(ActionType.MISSED_GROUND_INTAKE, context);
                     },
-                    text: 'Miss')
+                    text: 'Miss Ground Intake')
               ],
             ),
           ),
@@ -163,3 +163,5 @@ class OffenseScoutingSide extends StatelessWidget {
     );
   }
 }
+
+mixin GameActions {}
