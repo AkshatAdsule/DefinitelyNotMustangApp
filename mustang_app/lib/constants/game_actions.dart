@@ -27,9 +27,27 @@ class GameActions {
       },
     ),
     RobotAction(
-      "Climbed",
+      "Low Rung Climb",
       (MapScoutingState currentState) {
-        currentState.addClimb(ActionType.OTHER_CLIMB);
+        currentState.addClimb(ActionType.LOW_RUNG_CLIMB);
+      },
+    ),
+    RobotAction(
+      "Mid Rung Climb",
+      (MapScoutingState currentState) {
+        currentState.addClimb(ActionType.MID_RUNG_CLIMB);
+      },
+    ),
+    RobotAction(
+      "High Rung Climb",
+      (MapScoutingState currentState) {
+        currentState.addClimb(ActionType.HIGH_RUNG_CLIMB);
+      },
+    ),
+    RobotAction(
+      "Transversal Rung Climb",
+      (MapScoutingState currentState) {
+        currentState.addClimb(ActionType.TRANSVERSAL_RUNG_CLIMB);
       },
     ),
     RobotAction(

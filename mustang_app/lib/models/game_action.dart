@@ -69,11 +69,7 @@ class GameAction {
 }
 
 enum ActionType {
-  SHOT_LOW,
-  SHOT_OUTER,
-  SHOT_INNER,
-  
-  //Rapid React Actions 
+  //Rapid React Actions
   SHOT_UPPER,
   SHOT_LOWER,
   MISSED_UPPER,
@@ -83,11 +79,12 @@ enum ActionType {
   TERMINAL_INTAKE,
   MISSED_TERMINAL_INTAKE,
   STEPH_CURRY_SHOOTS,
-  
-  INTAKE,
-  MISSED_LOW,
-  MISSED_OUTER,
-  MISSED_INTAKE,
+
+  //climb actions
+  LOW_RUNG_CLIMB,
+  MID_RUNG_CLIMB,
+  HIGH_RUNG_CLIMB,
+  TRANSVERSAL_RUNG_CLIMB,
   OTHER_WHEEL_ROTATION,
   OTHER_WHEEL_POSITION,
   PREV_SHOT,
