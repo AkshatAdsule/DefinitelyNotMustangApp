@@ -42,57 +42,6 @@ class ClimbScoutingSide extends StatelessWidget {
                 ],
               ),
             ),
-          // Flexible(
-          //   flex: 1,
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //     children: [
-          //       game_button.ScoutingButton(
-          //         style: game_button.ButtonStyle.RAISED,
-          //         type: game_button.ButtonType.ELEMENT,
-          //         onPressed: () {
-          //           mapScoutingKey.currentState
-          //               .addClimb(ActionType.OTHER_PARKED);
-          //         },
-          //         text: 'Parked',
-          //       ),
-          //     ],
-          //   ),
-          // ),
-          // Flexible(
-          //   flex: 1,
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //     children: [
-          //       game_button.ScoutingButton(
-          //         style: game_button.ButtonStyle.RAISED,
-          //         type: game_button.ButtonType.ELEMENT,
-          //         onPressed: () {
-          //           mapScoutingKey.currentState
-          //               .addClimb(ActionType.OTHER_CLIMB);
-          //         },
-          //         text: 'Climbed',
-          //       ),
-          //     ],
-          //   ),
-          // ),
-          // Flexible(
-          //   flex: 1,
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //     children: [
-          //       game_button.ScoutingButton(
-          //         style: game_button.ButtonStyle.RAISED,
-          //         type: game_button.ButtonType.ELEMENT,
-          //         onPressed: () {
-          //           mapScoutingKey.currentState
-          //               .addClimb(ActionType.OTHER_LEVELLED);
-          //         },
-          //         text: 'Levelled',
-          //       ),
-          //     ],
-          //   ),
-          // ),
         ],
       ),
     );

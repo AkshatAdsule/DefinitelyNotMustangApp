@@ -69,6 +69,14 @@ class GameAction {
 }
 
 enum ActionType {
+  SHOT_INNER,
+  MISSED_INNER,
+  SHOT_OUTER,
+  MISSED_OUTER,
+  SHOT_LOW,
+  MISSED_LOW,
+  INTAKE,
+  MISSED_INTAKE,
   //Rapid React Actions
   SHOT_UPPER,
   SHOT_LOWER,
@@ -85,6 +93,7 @@ enum ActionType {
   MID_RUNG_CLIMB,
   HIGH_RUNG_CLIMB,
   TRANSVERSAL_RUNG_CLIMB,
+
   OTHER_WHEEL_ROTATION,
   OTHER_WHEEL_POSITION,
   PREV_SHOT,

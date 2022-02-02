@@ -50,11 +50,11 @@ class GameActions {
         currentState.addClimb(ActionType.TRANSVERSAL_RUNG_CLIMB);
       },
     ),
-    RobotAction(
-      "Levelled",
-      (MapScoutingState currentState) {
-        currentState.addClimb(ActionType.OTHER_LEVELLED);
-      },
-    ),
+    // RobotAction(
+    //   "Levelled",
+    //   (MapScoutingState currentState) {
+    //     currentState.addClimb(ActionType.OTHER_LEVELLED);
+    //   },
+    // ),
   ];
 }
