@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/shared/map/zone_grid.dart';
+import 'package:mustang_app/constants/game_actions.dart';
 import 'package:mustang_app/models/game_action.dart';
 import 'package:mustang_app/pages/scouting/map_scouting.dart';
 import 'package:provider/provider.dart';
@@ -37,27 +38,18 @@ class OffenseScoutingSide extends StatelessWidget {
                       mapScoutingKey.currentState
                           .addAction(ActionType.SHOT_UPPER, context);
                     },
-                    text: 'Upper'),
+                    text: 'Shoot Upper'),
                 game_button.ScoutingButton(
                     style: game_button.ButtonStyle.RAISED,
                     type: game_button.ButtonType.MISS,
                     onPressed: () {
                       mapScoutingKey.currentState
-                          .addAction(ActionType.MISSED_OUTER, context);
+                          .addAction(ActionType.MISSED_UPPER, context);
                     },
-                    text: 'Miss Outter')
+                    text: 'Miss Upper')
               ],
             ),
           ),
-          /*
-                game_button.ScoutingButton(
-                    style: game_button.ButtonStyle.RAISED,
-                    type: game_button.ButtonType.MISS,
-                    onPressed: () {
-                      mapScoutingKey.currentState
-                          .addAction(ActionType.MISSED_UPPER, context);//.addAction(ActionType.MISSED_OUTER, context);
-                    },
-                    text: 'Miss'),*/
 
           Flexible(
             flex: 1,
@@ -71,7 +63,7 @@ class OffenseScoutingSide extends StatelessWidget {
                       mapScoutingKey.currentState
                           .addAction(ActionType.SHOT_LOWER, context);
                     },
-                    text: 'Lower'),
+                    text: 'Shoot Lower'),
                 game_button.ScoutingButton(
                     style: game_button.ButtonStyle.RAISED,
                     type: game_button.ButtonType.MISS,
@@ -83,32 +75,7 @@ class OffenseScoutingSide extends StatelessWidget {
               ],
             ),
           ),
-          /*
-          Flexible(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                game_button.ScoutingButton(
-                    style: game_button.ButtonStyle.RAISED,
-                    type: game_button.ButtonType.MAKE,
-                    onPressed: () {
-                      mapScoutingKey.currentState
-                          .addAction(ActionType.SHOT_LOW, context);
-                    },
-                    text: 'Low'),
-                game_button.ScoutingButton(
-                    style: game_button.ButtonStyle.RAISED,
-                    type: game_button.ButtonType.MISS,
-                    onPressed: () {
-                      mapScoutingKey.currentState
-                          .addAction(ActionType.MISSED_LOW, context);
-                    },
-                    text: 'Miss')
-              ],
-            ),
-          ),
-          */
+
           Flexible(
             flex: 1,
             child: Row(
@@ -129,7 +96,7 @@ class OffenseScoutingSide extends StatelessWidget {
                       mapScoutingKey.currentState.addAction(
                           ActionType.MISSED_TERMINAL_INTAKE, context);
                     },
-                    text: 'Miss')
+                    text: 'Miss Terminal Intake')
               ],
             ),
           ),
@@ -154,7 +121,7 @@ class OffenseScoutingSide extends StatelessWidget {
                       mapScoutingKey.currentState
                           .addAction(ActionType.MISSED_GROUND_INTAKE, context);
                     },
-                    text: 'Miss')
+                    text: 'Miss Ground Intake')
               ],
             ),
           ),
@@ -163,3 +130,5 @@ class OffenseScoutingSide extends StatelessWidget {
     );
   }
 }
+
+mixin GameActions {}

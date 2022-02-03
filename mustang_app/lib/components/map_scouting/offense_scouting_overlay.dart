@@ -68,7 +68,7 @@ class OffenseScoutingOverlay extends StatelessWidget {
 
         (mapScoutingKey.currentState.stopwatch.elapsedMilliseconds <=
                     GameConstants.teleopStartMillis &&
-                !mapScoutingKey.currentState.crossedInitiationLine)
+                !mapScoutingKey.currentState.humanShoot)
             ? GameMapChild(
                 align: Alignment(-1, 0.9),
                 child: CircleAvatar(

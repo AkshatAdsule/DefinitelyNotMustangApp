@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:mustang_app/models/game_action.dart';
 import 'package:mustang_app/pages/pages.dart';
 
@@ -26,16 +27,34 @@ class GameActions {
       },
     ),
     RobotAction(
-      "Climbed",
+      "Low Rung Climb",
       (MapScoutingState currentState) {
-        currentState.addClimb(ActionType.OTHER_CLIMB);
+        currentState.addClimb(ActionType.LOW_RUNG_CLIMB);
       },
     ),
     RobotAction(
-      "Levelled",
+      "Mid Rung Climb",
       (MapScoutingState currentState) {
-        currentState.addClimb(ActionType.OTHER_LEVELLED);
+        currentState.addClimb(ActionType.MID_RUNG_CLIMB);
       },
     ),
+    RobotAction(
+      "High Rung Climb",
+      (MapScoutingState currentState) {
+        currentState.addClimb(ActionType.HIGH_RUNG_CLIMB);
+      },
+    ),
+    RobotAction(
+      "Transversal Rung Climb",
+      (MapScoutingState currentState) {
+        currentState.addClimb(ActionType.TRANSVERSAL_RUNG_CLIMB);
+      },
+    ),
+    // RobotAction(
+    //   "Levelled",
+    //   (MapScoutingState currentState) {
+    //     currentState.addClimb(ActionType.OTHER_LEVELLED);
+    //   },
+    // ),
   ];
 }

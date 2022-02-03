@@ -222,6 +222,7 @@ class KeivnaDataAnalyzer {
     }
   }
 
+  //TODO: Shooting actions outdated
   //returns points scored by shooting for the given match, only shots scored during teleop
   static int _getShootingTeleopPtsForMatch(Match match) {
     List<int> numTeleopShots = _getTeleopNumShots(match);
@@ -245,6 +246,7 @@ class KeivnaDataAnalyzer {
     return result.toInt();
   }
 
+  //TODO: Shooting actions outdated
   //returns points scored by shooting for the given match, only shots scored during auton
   //takes in double score value of shots during auton
   static int _getShootingAutonPtsForMatch(Match match) {

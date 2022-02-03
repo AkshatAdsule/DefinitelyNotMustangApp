@@ -165,6 +165,7 @@ class KeivnaMapAnalyzer {
     return maxValue;
   }
 
+//TODO: Outdated shooting method
 //returns the total teleop and auton point value of all shots from location (x, y) for the given match
   static double _getShootingPointsAtLocationForSingleMatch(
       Match match, int x, int y, ActionType selectedActionType) {
@@ -260,6 +261,7 @@ class KeivnaMapAnalyzer {
     return colorValueRoundedToHundred;
   }
 
+  //TODO: Shooting actions outdated
   //returns the total teleop point value of all shots from location (x, y) for the given match
   static double _geAccuracyPointsAtLocationForSingleMatch(
       Match match, int x, int y, selectedActionType) {
@@ -323,6 +325,7 @@ class KeivnaMapAnalyzer {
     return (result / matches.length.toDouble()).toInt();
   }
 
+  //TODO: Shooting actions outdated
   //returns points scored by shooting for the given match, only shots scored during teleop
   static int _getShootingTeleopPtsForMatch(Match match) {
     List<int> numTeleopShots = _getTeleopNumShots(match);
@@ -348,6 +351,7 @@ class KeivnaMapAnalyzer {
     return result.toInt();
   }
 
+  //TODO: Shooting actions outdated
   //returns points scored by shooting for the given match, only shots scored during auton
   //takes in double score value of shots during auton
   static int _getShootingAutonPtsForMatch(Match match) {
@@ -434,6 +438,7 @@ class KeivnaMapAnalyzer {
     return false;
   }
 
+  //TODO: Update this list
   //Game Replay stuff
   static List<List<Object>> actionRelatedColors = [
     ["OTHER", Colors.orange],
