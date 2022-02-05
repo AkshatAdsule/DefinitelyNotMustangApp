@@ -175,42 +175,42 @@ class KeivnaMapAnalyzer {
         //game action happened at given location
         //happpened during auton
         if (action.timeStamp <= GameConstants.autonMillisecondLength) {
-          if (action.actionType == ActionType.SHOT_LOW &&
+          if (action.actionType == ActionType.SHOT_LOWER &&
               (selectedActionType == ActionType.ALL ||
-                  selectedActionType == ActionType.SHOT_LOW)) {
-            result += GameConstants.lowShotAutonValue;
+                  selectedActionType == ActionType.SHOT_LOWER)) {
+            result += GameConstants.lowerHubShotAutonValue;
           }
 
-          if (action.actionType == ActionType.SHOT_OUTER &&
+          if (action.actionType == ActionType.SHOT_UPPER &&
               (selectedActionType == ActionType.ALL ||
-                  selectedActionType == ActionType.SHOT_OUTER)) {
-            result += GameConstants.outerShotAutonValue;
+                  selectedActionType == ActionType.SHOT_UPPER)) {
+            result += GameConstants.upperHubShotAutonValue;
           }
-          if (action.actionType == ActionType.SHOT_INNER &&
-              (selectedActionType == ActionType.ALL ||
-                  selectedActionType == ActionType.SHOT_INNER)) {
-            result += GameConstants.innerShotAutonValue;
-          }
+          // if (action.actionType == ActionType.SHOT_INNER &&
+          //     (selectedActionType == ActionType.ALL ||
+          //         selectedActionType == ActionType.SHOT_INNER)) {
+          //   result += GameConstants.innerShotAutonValue;
+          // }
         }
 
         //happpened during teleop
         if (action.timeStamp > GameConstants.autonMillisecondLength) {
-          if (action.actionType == ActionType.SHOT_LOW &&
+          if (action.actionType == ActionType.SHOT_LOWER &&
               (selectedActionType == ActionType.ALL ||
-                  selectedActionType == ActionType.SHOT_LOW)) {
-            result += GameConstants.lowShotValue;
+                  selectedActionType == ActionType.SHOT_LOWER)) {
+            result += GameConstants.lowerHubValue;
           }
 
-          if (action.actionType == ActionType.SHOT_OUTER &&
+          if (action.actionType == ActionType.SHOT_UPPER &&
               (selectedActionType == ActionType.ALL ||
-                  selectedActionType == ActionType.SHOT_OUTER)) {
-            result += GameConstants.outerShotValue;
+                  selectedActionType == ActionType.SHOT_UPPER)) {
+            result += GameConstants.upperHubValue;
           }
-          if (action.actionType == ActionType.SHOT_INNER &&
-              (selectedActionType == ActionType.ALL ||
-                  selectedActionType == ActionType.SHOT_INNER)) {
-            result += GameConstants.innerShotValue;
-          }
+          // if (action.actionType == ActionType.SHOT_INNER &&
+          //     (selectedActionType == ActionType.ALL ||
+          //         selectedActionType == ActionType.SHOT_INNER)) {
+          //   result += GameConstants.innerShotValue;
+          // }
         }
       }
     }
@@ -271,32 +271,32 @@ class KeivnaMapAnalyzer {
       if (action.x == x && action.y == y) {
         //all shots made
 
-        if (action.actionType == ActionType.SHOT_LOW &&
+        if (action.actionType == ActionType.SHOT_LOWER &&
             (selectedActionType == ActionType.ALL ||
-                selectedActionType == ActionType.SHOT_LOW)) {
+                selectedActionType == ActionType.SHOT_LOWER)) {
           shotsMade++;
         }
-        if (action.actionType == ActionType.SHOT_OUTER &&
+        if (action.actionType == ActionType.SHOT_UPPER &&
             (selectedActionType == ActionType.ALL ||
-                selectedActionType == ActionType.SHOT_OUTER)) {
+                selectedActionType == ActionType.SHOT_UPPER)) {
           shotsMade++;
         }
-        if (action.actionType == ActionType.SHOT_INNER &&
-            (selectedActionType == ActionType.ALL ||
-                selectedActionType == ActionType.SHOT_INNER)) {
-          shotsMade++;
-        }
+        // if (action.actionType == ActionType.SHOT_INNER &&
+        //     (selectedActionType == ActionType.ALL ||
+        //         selectedActionType == ActionType.SHOT_INNER)) {
+        //   shotsMade++;
+        // }
 
         //all shots missed
-        if (action.actionType == ActionType.MISSED_LOW &&
+        if (action.actionType == ActionType.MISSED_LOWER &&
             (selectedActionType == ActionType.ALL ||
-                selectedActionType == ActionType.SHOT_LOW)) {
+                selectedActionType == ActionType.SHOT_LOWER)) {
           shotsMissed++;
         }
 
-        if (action.actionType == ActionType.MISSED_OUTER &&
+        if (action.actionType == ActionType.MISSED_UPPER &&
             (selectedActionType == ActionType.ALL ||
-                selectedActionType == ActionType.SHOT_OUTER)) {
+                selectedActionType == ActionType.SHOT_UPPER)) {
           shotsMissed++;
         }
       }
@@ -335,14 +335,11 @@ class KeivnaMapAnalyzer {
       int occurence = numTeleopShots[
           i]; //how many types that action happened during the game
       switch (action) {
-        case (ActionType.SHOT_LOW):
-          result += (GameConstants.lowShotValue * occurence);
+        case (ActionType.SHOT_LOWER):
+          result += (GameConstants.lowerHubValue * occurence);
           break;
-        case (ActionType.SHOT_OUTER):
-          result += (GameConstants.outerShotValue * occurence);
-          break;
-        case (ActionType.SHOT_INNER):
-          result += (GameConstants.innerShotValue * occurence);
+        case (ActionType.SHOT_UPPER):
+          result += (GameConstants.upperHubValue * occurence);
           break;
         default:
           break;
@@ -361,14 +358,11 @@ class KeivnaMapAnalyzer {
       ActionType gameAction = ActionType.values[i];
       int occurence = numAutonShots[i];
       switch (gameAction) {
-        case (ActionType.SHOT_LOW):
-          result += (GameConstants.lowShotAutonValue * occurence);
+        case (ActionType.SHOT_LOWER):
+          result += (GameConstants.lowerHubShotAutonValue * occurence);
           break;
-        case (ActionType.SHOT_OUTER):
-          result += (GameConstants.outerShotAutonValue * occurence);
-          break;
-        case (ActionType.SHOT_INNER):
-          result += (GameConstants.innerShotAutonValue * occurence);
+        case (ActionType.SHOT_UPPER):
+          result += (GameConstants.upperHubShotAutonValue * occurence);
           break;
         default:
           break;
@@ -448,9 +442,8 @@ class KeivnaMapAnalyzer {
     ["MISSED", Colors.red],
     ["INTAKE", Colors.blue],
     ["SHOT", Colors.green],
-    ["LOW", Colors.white],
-    ["OUTER", Colors.grey],
-    ["INNER", Colors.black],
+    ["UPPER", Colors.grey],
+    ["LOWER", Colors.black],
   ];
 
   static List<Color> getColorCombo(BuildContext context, String selectedMatch,

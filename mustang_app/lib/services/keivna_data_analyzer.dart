@@ -232,14 +232,11 @@ class KeivnaDataAnalyzer {
       int occurence = numTeleopShots[
           i]; //how many types that action happened during the game
       switch (action) {
-        case (ActionType.SHOT_LOW):
-          result += (GameConstants.lowShotValue * occurence);
+        case (ActionType.SHOT_LOWER):
+          result += (GameConstants.lowerHubValue * occurence);
           break;
-        case (ActionType.SHOT_OUTER):
-          result += (GameConstants.outerShotValue * occurence);
-          break;
-        case (ActionType.SHOT_INNER):
-          result += (GameConstants.innerShotValue * occurence);
+        case (ActionType.SHOT_UPPER):
+          result += (GameConstants.upperHubValue * occurence);
           break;
       }
     }
@@ -256,14 +253,11 @@ class KeivnaDataAnalyzer {
       ActionType gameAction = ActionType.values[i];
       int occurence = numAutonShots[i];
       switch (gameAction) {
-        case (ActionType.SHOT_LOW):
-          result += (GameConstants.lowShotAutonValue * occurence);
+        case (ActionType.SHOT_LOWER):
+          result += (GameConstants.lowerHubShotAutonValue * occurence);
           break;
-        case (ActionType.SHOT_OUTER):
-          result += (GameConstants.outerShotAutonValue * occurence);
-          break;
-        case (ActionType.SHOT_INNER):
-          result += (GameConstants.innerShotAutonValue * occurence);
+        case (ActionType.SHOT_UPPER):
+          result += (GameConstants.upperHubShotAutonValue * occurence);
           break;
       }
     }

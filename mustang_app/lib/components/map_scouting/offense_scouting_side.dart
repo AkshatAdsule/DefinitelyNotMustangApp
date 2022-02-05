@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/shared/map/zone_grid.dart';
-import 'package:mustang_app/constants/game_actions.dart';
 import 'package:mustang_app/models/game_action.dart';
 import 'package:mustang_app/pages/scouting/map_scouting.dart';
 import 'package:provider/provider.dart';
@@ -32,13 +31,14 @@ class OffenseScoutingSide extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 game_button.ScoutingButton(
-                    style: game_button.ButtonStyle.RAISED,
-                    type: game_button.ButtonType.MAKE,
-                    onPressed: () {
-                      mapScoutingKey.currentState
-                          .addAction(ActionType.SHOT_UPPER, context);
-                    },
-                    text: 'Shoot Upper'),
+                  style: game_button.ButtonStyle.RAISED,
+                  type: game_button.ButtonType.MAKE,
+                  onPressed: () {
+                    mapScoutingKey.currentState
+                        .addAction(ActionType.SHOT_UPPER, context);
+                  },
+                  text: 'Shoot Upper',
+                ),
                 game_button.ScoutingButton(
                     style: game_button.ButtonStyle.RAISED,
                     type: game_button.ButtonType.MISS,
