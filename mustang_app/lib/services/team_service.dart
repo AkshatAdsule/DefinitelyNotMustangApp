@@ -29,7 +29,7 @@ class TeamService {
   static Stream<List<Team>> streamTeams() {
     // TODO: CHANGE "2021" TO _year !!!
     CollectionReference ref =
-        _db.collection("2021").doc('info').collection('teams');
+        _db.collection("2022").doc('info').collection('teams');
 
     return ref
         .snapshots()

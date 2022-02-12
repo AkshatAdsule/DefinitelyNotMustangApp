@@ -47,7 +47,7 @@ class GameActions {
     RobotAction(
       "Transversal Rung Climb",
       (MapScoutingState currentState) {
-        currentState.addClimb(ActionType.TRANSVERSAL_RUNG_CLIMB);
+        currentState.addClimb(ActionType.TRAVERSAL_RUNG_CLIMB);
       },
     ),
     // RobotAction(

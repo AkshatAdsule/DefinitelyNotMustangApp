@@ -155,7 +155,12 @@ class Analyzer {
         climbed = false,
         climbMissed = false,
         climbLevelled = false,
-        climbParked = false;
+        climbParked = false,
+        //rapid react climbing actions
+        climbedLow = false,
+        climbedMid = false,
+        climbedHigh = false,
+        climbedTraversal = false;
     int autonInnerScored = 0,
         autonOuterScored = 0,
         autonLowScored = 0,
@@ -271,10 +276,18 @@ class Analyzer {
         wheelPosition = true;
       } else if (a.actionType == ActionType.OTHER_WHEEL_ROTATION) {
         wheelRotation = true;
-      } else if (a.actionType == ActionType.OTHER_CLIMB) {
-        climbed = true;
-      } else if (a.actionType == ActionType.OTHER_CLIMB_MISS) {
-        climbMissed = true;
+        // } else if (a.actionType == ActionType.OTHER_CLIMB) {
+        //   climbed = true;
+        // } else if (a.actionType == ActionType.OTHER_CLIMB_MISS) {
+        //   climbMissed = true;
+      } else if (a.actionType == ActionType.LOW_RUNG_CLIMB) {
+        climbedLow = true;
+      } else if (a.actionType == ActionType.MID_RUNG_CLIMB) {
+        climbedMid = true;
+      } else if (a.actionType == ActionType.HIGH_RUNG_CLIMB) {
+        climbedHigh = true;
+      } else if (a.actionType == ActionType.TRAVERSAL_RUNG_CLIMB) {
+        climbedTraversal = true;
       } else if (a.actionType == ActionType.OTHER_PARKED) {
         climbParked = true;
       } else if (a.actionType == ActionType.OTHER_LEVELLED) {
@@ -335,8 +348,14 @@ class Analyzer {
         "\n\n ENDGAME:" +
         "\n Parked: " +
         climbParked.toString() +
-        "\n Climbed: " +
-        climbed.toString() +
+        "\n Low Rung CLimb: " +
+        climbedLow.toString() +
+        "\n Mid Rung CLimb: " +
+        climbedMid.toString() +
+        "\n High Rung CLimb: " +
+        climbedHigh.toString() +
+        "\n Traversal Rung CLimb: " +
+        climbedTraversal.toString() +
         "\n Climb Missed: " +
         climbMissed.toString() +
         "\n Levelled: " +
@@ -445,6 +464,14 @@ class Analyzer {
           (element) => element.actionType == ActionType.TERMINAL_INTAKE));
       _missGroundIntake.addAll(actions.where(
           (element) => element.actionType == ActionType.MISSED_GROUND_INTAKE));
+      _climbLowRung.addAll(actions
+          .where((element) => element.actionType == ActionType.LOW_RUNG_CLIMB));
+      _climbMidRung.addAll(actions
+          .where((element) => element.actionType == ActionType.MID_RUNG_CLIMB));
+      _climbHighRung.addAll(actions.where(
+          (element) => element.actionType == ActionType.HIGH_RUNG_CLIMB));
+      _climbTraversalRung.addAll(actions.where(
+          (element) => element.actionType == ActionType.TRAVERSAL_RUNG_CLIMB));
 
       _foulReg.addAll(actions
           .where((element) => element.actionType == ActionType.FOUL_REG));
@@ -659,9 +686,8 @@ class Analyzer {
       }
 
       //remove balls that were shot
-      if (matchActions[b].actionType == ActionType.SHOT_LOW ||
-          matchActions[b].actionType == ActionType.SHOT_OUTER ||
-          matchActions[b].actionType == ActionType.SHOT_INNER) {
+      if (matchActions[b].actionType == ActionType.SHOT_LOWER ||
+          matchActions[b].actionType == ActionType.SHOT_UPPER) {
         if (matchActions[b].timeStamp <= timeStamp) {
           ballsInBot--;
         }

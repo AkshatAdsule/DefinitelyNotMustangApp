@@ -40,7 +40,7 @@ class GetStatistics {
 
   FirebaseFirestore _firestore;
   CollectionReference _teams;
-  CollectionReference _2021teams;
+  CollectionReference _2022teams;
 
   /// List of team names from their team code.
   static Map<String, String> _TEAM_NAMES = {};
@@ -66,7 +66,7 @@ class GetStatistics {
   Future<void> _firebaseInit() async {
     _firestore = FirebaseFirestore.instance;
     _teams = _firestore.collection('team-statistics');
-    _2021teams = _firestore.collection('2021');
+    _2022teams = _firestore.collection('2022');
   }
 
   GetStatistics._() {
@@ -360,21 +360,22 @@ class GetStatistics {
   }
 
   Future<Team> getPitScoutingData(String team) async {
-    String path = "/info/teams/"+team;
+    String path = "/info/teams/" + team;
     //print("path: " + path);
-    var doc = await _2021teams.doc(path).get();
+    var doc = await _2022teams.doc(path).get();
     Map<String, dynamic> docData = doc.data();
     print("docData: " + docData.toString());
 
     if (doc.exists) {
       print("doc retrieved successfully");
-      Map<String, dynamic> dataMap = docData.map((key, value) => MapEntry(key, value));
+      Map<String, dynamic> dataMap =
+          docData.map((key, value) => MapEntry(key, value));
       Team pitScoutTeam = new Team.fromJson(dataMap);
       return pitScoutTeam;
     } else {
       print("did not retrieve doc");
       return null;
-    }    
+    }
   }
 
   /// Returns a new TeamStatistic object, which contains the average OPR, DPR, and CCWM along with a list of all OPRs, CCWMs, and DPRs
