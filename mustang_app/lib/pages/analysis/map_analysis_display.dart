@@ -67,9 +67,8 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
     ["MISSED", Colors.red],
     ["INTAKE", Colors.blue],
     ["SHOT", Colors.green],
-    ["LOW", Colors.white],
-    ["OUTER", Colors.grey],
-    ["INNER", Colors.black],
+    ["LOWER", Colors.white],
+    ["UPPER", Colors.grey],
   ];
   List<bool> _toggleModes = [
     true,
@@ -107,7 +106,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
 
   Widget _getCell(BuildContext context, int x, int y, bool isSelected,
       double cellWidth, double cellHeight) {
-            List<Match> matches = Provider.of<List<Match>>(context);
+    List<Match> matches = Provider.of<List<Match>>(context);
 //KTODO: GET MAX POINTS FROM LOCATION FROM ANALYZER!!
     int ind = _toggleModes.indexOf(true);
     switch (ind) {
@@ -117,16 +116,16 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             width: cellWidth,
             height: cellHeight,
             decoration: BoxDecoration(
-                color: (Colors.green[
-                        KeivnaMapAnalyzer.getShootingPointsColorValueAtLocation(
-                                matches, x, y, selectedActionType, selectedMatch)] ==
-                        null)
-                    ? null
-                    : Colors.green[
-                            KeivnaMapAnalyzer.getShootingPointsColorValueAtLocation(
-                                matches, x, y, selectedActionType, selectedMatch)]
-                        .withOpacity(0.7),
-                ),
+              color: (Colors.green[KeivnaMapAnalyzer
+                          .getShootingPointsColorValueAtLocation(matches, x, y,
+                              selectedActionType, selectedMatch)] ==
+                      null)
+                  ? null
+                  : Colors.green[KeivnaMapAnalyzer
+                          .getShootingPointsColorValueAtLocation(
+                              matches, x, y, selectedActionType, selectedMatch)]
+                      .withOpacity(0.7),
+            ),
           );
         }
       case 1:
@@ -136,13 +135,16 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             height: cellHeight,
             decoration: BoxDecoration(
                 color: (Colors.green[KeivnaMapAnalyzer.getAccuracyColorValue(
-                            matches, x, y, selectedActionType, selectedMatch)] ==
+                            matches,
+                            x,
+                            y,
+                            selectedActionType,
+                            selectedMatch)] ==
                         null)
                     ? null
                     : Colors.green[KeivnaMapAnalyzer.getAccuracyColorValue(
                             matches, x, y, selectedActionType, selectedMatch)]
-                        .withOpacity(0.7)
-                ),
+                        .withOpacity(0.7)),
           );
         }
       case 2:
@@ -200,8 +202,7 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
       title: 'Map Analysis for Team: ' + (team != null ? team.teamNumber : ""),
       includeBottomNav: false,
       child: Container(
-        child:
-            GameMap(
+        child: GameMap(
           zoneGrid: ZoneGrid(
               GlobalKey(),
               (int x, int y) {},
@@ -286,14 +287,13 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
                       value: selectedActionType,
                       onChanged: (val) => setState(() {
                         selectedActionType = val;
-                        debugPrint("selected action type: " + selectedActionType.toString());
-
+                        debugPrint("selected action type: " +
+                            selectedActionType.toString());
                       }),
                       items: [
                         ActionType.ALL,
-                        ActionType.SHOT_LOW,
-                        ActionType.SHOT_OUTER,
-                        ActionType.SHOT_INNER
+                        ActionType.SHOT_LOWER,
+                        ActionType.SHOT_UPPER
                       ].map<DropdownMenuItem<ActionType>>(
                         (ActionType actionType) {
                           return DropdownMenuItem<ActionType>(
