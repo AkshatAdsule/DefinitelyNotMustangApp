@@ -87,7 +87,7 @@ class KeivnaDataAnalyzer {
     List<int> numAutonShots = _getAutonNumShots(match);
     for (int i = 0; i < numAutonShots.length; i++) {
       if (numAutonShots[i] > 0) {
-        result += ActionType.values[i].toString() +
+        result += ActionType.values[i].toString().substring(11) +
             ": " +
             numAutonShots[i].toString() +
             "\n";
@@ -99,7 +99,7 @@ class KeivnaDataAnalyzer {
     List<int> numTeleopShots = _getTeleopNumShots(match);
     for (int i = 0; i < numTeleopShots.length; i++) {
       if (numTeleopShots[i] > 0) {
-        result += ActionType.values[i].toString() +
+        result += ActionType.values[i].toString().substring(11) +
             ": " +
             numTeleopShots[i].toString() +
             "\n";

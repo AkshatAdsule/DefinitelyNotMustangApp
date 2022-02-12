@@ -68,7 +68,7 @@ class GameAction {
   }
 }
 
-enum ActionType {
+enum  ActionType {
   SHOT_INNER,
   MISSED_INNER,
   SHOT_OUTER,
