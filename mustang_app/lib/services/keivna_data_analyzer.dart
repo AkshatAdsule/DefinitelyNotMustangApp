@@ -80,8 +80,7 @@ class KeivnaDataAnalyzer {
     //AUTON:
     //crossed init line
     result += "Auton: \n";
-    result +=
-        "Crossed Tarmacs: " + _autonCrossedTarmac(match).toString() + "\n";
+    result += "Crossed Tarmac: " + _autonCrossedTarmac(match).toString() + "\n";
     //prints all autonomous actions
     List<int> numAutonShots = _getAutonNumShots(match);
     for (int i = 0; i < numAutonShots.length; i++) {
@@ -121,8 +120,8 @@ class KeivnaDataAnalyzer {
 
     result += "Shooting points/game: " +
         formatInteger(_getAvgShootingPtsForAllMatches(matches));
-    result += "\n% crossed initiation line: " +
-        formatInteger(_getPercentAutonCrossedInitiationLine(matches)) +
+    result += "\n% crossed tarmac: " +
+        formatInteger(_getPercentAutonCrossedTarmac(matches)) +
         "%";
     result += "\nAuton Shooting points/game: " +
         formatInteger(_getAvgAutonShootingPoints(matches));
@@ -171,17 +170,17 @@ class KeivnaDataAnalyzer {
 
   //returns the number of times the bot crossed auton init line
   //returns -1 if there are no matches to analyze
-  static int _getPercentAutonCrossedInitiationLine(List<Match> matches) {
-    int crossedInitLine = 0;
+  static int _getPercentAutonCrossedTarmac(List<Match> matches) {
+    int crossedTarmac = 0;
     for (Match match in matches) {
-      if (_autonCrossedInitiationLine(match)) {
-        crossedInitLine++;
+      if (_autonCrossedTarmac(match)) {
+        crossedTarmac++;
       }
     }
     if (matches.length == 0) {
       return -1;
     } else {
-      return (crossedInitLine / matches.length.toDouble()).toInt();
+      return (crossedTarmac / matches.length.toDouble()).toInt();
     }
   }
 
