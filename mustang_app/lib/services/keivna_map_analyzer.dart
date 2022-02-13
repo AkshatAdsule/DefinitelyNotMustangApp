@@ -423,9 +423,9 @@ class KeivnaMapAnalyzer {
   }
 
 //returns true if crossed init line, otherwise false
-  static bool _autonCrossedInitiationLine(Match match) {
+  static bool _autonCrossedTarmac(Match match) {
     for (GameAction action in match.actions) {
-      if (action.actionType == ActionType.OTHER_CROSSED_INITIATION_LINE) {
+      if (action.actionType == ActionType.CROSSED_TARMAC) {
         return true;
       }
     }

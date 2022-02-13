@@ -149,7 +149,7 @@ class Analyzer {
 
     List<GameAction> actions = getMatch(matchNum);
 
-    bool crossedInitiationLine = false,
+    bool crossedTarmac = false,
         wheelPosition = false,
         wheelRotation = false,
         climbed = false,
@@ -270,8 +270,8 @@ class Analyzer {
       }
 
       //other actions, mainly booleans
-      if (a.actionType == ActionType.OTHER_CROSSED_INITIATION_LINE) {
-        crossedInitiationLine = true;
+      if (a.actionType == ActionType.CROSSED_TARMAC) {
+        crossedTarmac = true;
       } else if (a.actionType == ActionType.OTHER_WHEEL_POSITION) {
         wheelPosition = true;
       } else if (a.actionType == ActionType.OTHER_WHEEL_ROTATION) {
@@ -299,8 +299,8 @@ class Analyzer {
 
     //TODO: Change this
     result = "AUTON:" +
-        "\n Crossed Initiation Line: " +
-        crossedInitiationLine.toString() +
+        "\n Crossed Tarmac: " +
+        crossedTarmac.toString() +
         "\n Lower Hub Shots Scored: " +
         autonLowerScored.toString() +
         "\n Upper Hub Shots Scored: " +
@@ -511,8 +511,8 @@ class Analyzer {
           .where((element) => element.actionType == ActionType.PUSH_START));
       _pushEnd.addAll(actions
           .where((element) => element.actionType == ActionType.PUSH_END));
-      _otherCrossedInitiationLine.addAll(actions.where((element) =>
-          element.actionType == ActionType.OTHER_CROSSED_INITIATION_LINE));
+      _otherCrossedInitiationLine.addAll(actions
+          .where((element) => element.actionType == ActionType.CROSSED_TARMAC));
       _otherParked.addAll(actions
           .where((element) => element.actionType == ActionType.OTHER_PARKED));
       _otherLevelled.addAll(actions

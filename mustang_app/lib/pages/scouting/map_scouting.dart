@@ -299,7 +299,7 @@ class MapScoutingState extends State<MapScouting> {
             completedPositionControl = false;
           });
           break;
-        case ActionType.OTHER_CROSSED_INITIATION_LINE:
+        case ActionType.CROSSED_TARMAC:
           setState(() {
             crossedInitiationLine = false;
           });

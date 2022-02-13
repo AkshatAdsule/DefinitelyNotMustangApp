@@ -80,9 +80,8 @@ class KeivnaDataAnalyzer {
     //AUTON:
     //crossed init line
     result += "Auton: \n";
-    result += "Crossed Init Line: " +
-        _autonCrossedInitiationLine(match).toString() +
-        "\n";
+    result +=
+        "Crossed Tarmacs: " + _autonCrossedTarmac(match).toString() + "\n";
     //prints all autonomous actions
     List<int> numAutonShots = _getAutonNumShots(match);
     for (int i = 0; i < numAutonShots.length; i++) {
@@ -293,9 +292,9 @@ class KeivnaDataAnalyzer {
   }
 
 //returns true if crossed init line, otherwise false
-  static bool _autonCrossedInitiationLine(Match match) {
+  static bool _autonCrossedTarmac(Match match) {
     for (GameAction action in match.actions) {
-      if (action.actionType == ActionType.OTHER_CROSSED_INITIATION_LINE) {
+      if (action.actionType == ActionType.CROSSED_TARMAC) {
         return true;
       }
     }

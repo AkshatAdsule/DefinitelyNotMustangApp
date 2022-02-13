@@ -57,7 +57,7 @@ class OffenseScoutingOverlay extends StatelessWidget {
                     icon: Icon(Icons.check, color: Colors.white),
                     onPressed: () {
                       mapScoutingKey.currentState.addAction(
-                          ActionType.OTHER_CROSSED_INITIATION_LINE, context);
+                          ActionType.CROSSED_TARMAC, context);
                       mapScoutingKey.currentState
                           .setCrossedInitiationLine(true);
                     },
