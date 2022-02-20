@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/components/inputs/mode_toggle.dart';
 import 'package:mustang_app/components/map_scouting/animated_push_line.dart';
 import 'package:mustang_app/components/map_scouting/blur_overlay.dart';
-import 'package:mustang_app/components/map_scouting/climb_scouting_overlay.dart';
+//import 'package:mustang_app/components/map_scouting/climb_scouting_overlay.dart';
 import 'package:mustang_app/components/map_scouting/climb_scouting_side.dart';
 import 'package:mustang_app/components/map_scouting/defense_scouting_overlay.dart';
 import 'package:mustang_app/components/map_scouting/defense_scouting_side.dart';
@@ -395,7 +395,7 @@ class MapScoutingState extends State<MapScouting> {
                     children: [
                       OffenseScoutingOverlay(),
                       DefenseScoutingOverlay(),
-                      ClimbScoutingOverlay(),
+                      // ClimbScoutingOverlay(),
                     ],
                   ),
                 )
