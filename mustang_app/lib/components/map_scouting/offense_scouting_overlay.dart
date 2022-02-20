@@ -77,7 +77,7 @@ class OffenseScoutingOverlay extends StatelessWidget {
                     icon: Icon(Icons.sports_basketball, color: Colors.white),
                     onPressed: () {
                       mapScoutingKey.currentState
-                          .addAction(ActionType.STEPH_CURRY_SHOOTS, context);
+                          .addAction(ActionType.HUMAN_PLAYER_SHOOTS, context);
                       mapScoutingKey.currentState.setHumanShoot(true);
                     },
                   ),

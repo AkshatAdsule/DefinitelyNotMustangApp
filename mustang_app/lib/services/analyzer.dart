@@ -40,6 +40,8 @@ class Analyzer {
       _climbMidRung = [],
       _climbHighRung = [],
       _climbTraversalRung = [],
+      _humanPlayerShoots = [],
+      //
       _shotLow = [],
       _shotOuter = [],
       _shotInner = [],
@@ -53,7 +55,7 @@ class Analyzer {
       _prevIntake = [],
       _pushStart = [],
       _pushEnd = [],
-      _otherCrossedInitiationLine = [],
+      _otherCrossedTarmac = [],
       _otherParked = [],
       _otherLevelled = [];
 
@@ -472,6 +474,8 @@ class Analyzer {
           (element) => element.actionType == ActionType.HIGH_RUNG_CLIMB));
       _climbTraversalRung.addAll(actions.where(
           (element) => element.actionType == ActionType.TRAVERSAL_RUNG_CLIMB));
+      _humanPlayerShoots.addAll(actions.where(
+          (element) => element.actionType == ActionType.HUMAN_PLAYER_SHOOTS));
 
       _foulReg.addAll(actions
           .where((element) => element.actionType == ActionType.FOUL_REG));
@@ -511,7 +515,7 @@ class Analyzer {
           .where((element) => element.actionType == ActionType.PUSH_START));
       _pushEnd.addAll(actions
           .where((element) => element.actionType == ActionType.PUSH_END));
-      _otherCrossedInitiationLine.addAll(actions
+      _otherCrossedTarmac.addAll(actions
           .where((element) => element.actionType == ActionType.CROSSED_TARMAC));
       _otherParked.addAll(actions
           .where((element) => element.actionType == ActionType.OTHER_PARKED));
@@ -536,6 +540,7 @@ class Analyzer {
     _climbMidRung = [];
     _climbHighRung = [];
     _climbTraversalRung = [];
+    _humanPlayerShoots = [];
 
     _foulReg = [];
     _foulTech = [];
@@ -556,7 +561,7 @@ class Analyzer {
     _prevIntake = [];
     _pushStart = [];
     _pushEnd = [];
-    _otherCrossedInitiationLine = [];
+    _otherCrossedTarmac = [];
     _otherParked = [];
     _otherLevelled = [];
   }
@@ -610,18 +615,25 @@ class Analyzer {
     return _lowerPts + _upperPts;
   }
 
+  //TODO:
   double calcOffenseNonShootingPts() {
-    double _crossInitiation = _otherCrossedInitiationLine.length *
-        GameConstants.crossInitiationLineValue;
-    double _rotationControl =
-        _otherWheelRotation.length * GameConstants.positionControl;
-    double _positionControl =
-        _otherWheelPosition.length * GameConstants.positionControl;
-    double _climb = (_otherClimb.length * GameConstants.climbValue) +
-        (_otherParked.length * GameConstants.endgameParkValue) +
-        (_otherLevelled.length * GameConstants.levelledValue);
+    double _crossTarmac =
+        _otherCrossedTarmac.length * GameConstants.crossTarmacValue;
+    // double _rotationControl =
+    //     _otherWheelRotation.length * GameConstants.positionControl;
+    // double _positionControl =
+    //     _otherWheelPosition.length * GameConstants.positionControl;
+    // double _climb = (_otherClimb.length * GameConstants.climbValue) +
+    //     (_otherParked.length * GameConstants.endgameParkValue) +
+    //     (_otherLevelled.length * GameConstants.levelledValue);
+    double _climb = (_climbLowRung.length * GameConstants.lowRungValue) +
+        (_climbMidRung.length * GameConstants.midRungValue) +
+        (_climbHighRung.length * GameConstants.highRungValue) +
+        (_climbTraversalRung.length * GameConstants.traversalRungValue);
+    double _humanPlayerShooting =
+        _humanPlayerShoots.length * GameConstants.humnanPlayerAutonValue;
 
-    return _crossInitiation + _rotationControl + _positionControl + _climb;
+    return _crossTarmac + _climb + _humanPlayerShooting;
   }
 
   double calcShotAccuracy() {
@@ -643,6 +655,7 @@ class Analyzer {
     }
   }
 
+  //TODO:
   double calcTotClimbAccuracy() {
     double _climb = (_otherClimb.length + _otherLevelled.length) * 1.0;
     double _miss = _otherClimbMiss.length * 1.0;
