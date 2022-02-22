@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mustang_app/models/robot.dart';
 import 'package:mustang_app/models/team.dart';
 import 'package:mustang_app/components/shared/screen.dart';
@@ -20,167 +21,185 @@ class PitScouter extends StatefulWidget {
 class _PitScouterState extends State<PitScouter> {
   String _teamNumber;
   DriveBaseType _driveBase = DriveBaseType.TANK;
-  TextEditingController _notes = new TextEditingController();
-  List<List<Object>> boxStates = [
-    ['Inner', null],
-    ['Outer', null],
-    ['Lower', null],
-    ['Rotation', null],
-    ['Position', null],
-    ['Climb', null],
-    ['Level', null],
-  ];
+  Map<String, dynamic> state = {};
 
   _PitScouterState(teamNumber) {
     _teamNumber = teamNumber;
   }
 
-  Widget createTitle(String text) {
+  Widget _scoutingSection(String title, List<Widget> questions) {
+    return Column(
+      children: [
+        _title(title: title),
+        ...questions,
+      ],
+    );
+  }
+
+  Widget _title({String title}) {
     return ListTile(
       tileColor: Colors.green,
-      title: Center(
-        child: Text(text, style: TextStyle(fontSize: 20, color: Colors.white)),
+      title: Text(
+        title,
+        style: TextStyle(fontSize: 20, color: Colors.green),
       ),
     );
   }
 
-  Widget createCheckBox(String text) {
-    int i;
-    for (int j = 0; j < boxStates.length; j++) {
-      if ((boxStates[j].contains(text))) i = j;
-    }
-    String last = text.substring(text.length - 2);
-    String label = text +
-        (last == "er"
-            ? " Port"
-            : last == "on"
-                ? " Control"
-                : "er");
-    return CheckboxListTile(
-        value: boxStates[i][1] != null ? true : false,
-        onChanged: (bool val) {
-          setState(() {
-            boxStates[i][1] == null
-                ? boxStates[i][1] = true
-                : boxStates[i][1] = !boxStates[i][1];
-          });
+  Widget _checkBox({String title}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(fontSize: 16),
+          ),
+          Checkbox(
+            value: state[title] ?? false,
+            onChanged: (bool next) {
+              setState(() {
+                state[title] = !(state[title] ?? false);
+                print(state);
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _textField({String title, bool isNum}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: TextField(
+        onChanged: (String val) {
+          state[title] = val;
+          print(state);
         },
-        title: Text(
-          label,
-          style: new TextStyle(fontSize: 20.0),
+        inputFormatters: isNum ? [FilteringTextInputFormatter.digitsOnly] : [],
+        keyboardType: isNum
+            ? TextInputType.numberWithOptions(signed: false, decimal: false)
+            : TextInputType.text,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: title,
         ),
-        activeColor: boxStates[i][1] == true ? Colors.green : Colors.red);
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Screen(
-        title: 'Pit Scouting',
-        child: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: <Widget>[
-                ListTile(
-                  title: Text(
-                    'Drivebase Type',
-                    style: new TextStyle(fontSize: 20.0),
-                  ),
-                  trailing: DropdownButton<DriveBaseType>(
-                    value: _driveBase,
-                    icon: Icon(Icons.arrow_downward),
-                    iconSize: 24,
-                    elevation: 16,
-                    style: TextStyle(color: Colors.green, fontSize: 20.0),
-                    underline: Container(
-                      height: 2,
-                      color: Colors.green,
-                    ),
-                    onChanged: (DriveBaseType driveBase) {
-                      setState(() {
-                        _driveBase = driveBase;
-                      });
-                    },
-                    items: <DriveBaseType>[
-                      DriveBaseType.TANK,
-                      DriveBaseType.OMNI,
-                      DriveBaseType.WESTCOAST,
-                      DriveBaseType.MECANUM,
-                      DriveBaseType.SWERVE
-                    ].map<DropdownMenuItem<DriveBaseType>>(
-                        (DriveBaseType driveBase) {
-                      return DropdownMenuItem<DriveBaseType>(
-                        value: driveBase,
-                        child: Center(
-                            child: Text(driveBase.toString().substring(
-                                driveBase.toString().indexOf('.') + 1))),
-                      );
-                    }).toList(),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(bottom: 10),
-                  child: Text(
-                    'Fill in the boxes with yes (green), or no (red)',
-                    style: new TextStyle(fontSize: 16.0),
-                  ),
-                ),
-                createTitle("Shooting Capability"),
-                createCheckBox("Inner"),
-                createCheckBox("Outer"),
-                createCheckBox("Lower"),
-                createTitle("Color Wheel"),
-                createCheckBox("Rotation"),
-                createCheckBox("Position"),
-                createTitle("Climb Capability"),
-                createCheckBox("Climb"),
-                createCheckBox("Level"),
-                Container(
-                  padding:
-                      EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-                  child: TextField(
-                    controller: _notes,
-                    decoration: InputDecoration(
-                      labelText: 'Final Comments',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 10, bottom: 10),
-                  child: ElevatedButton(
-                      onPressed: () {
-                        ScoutingOperations.setTeamData(
-                          Team(
-                            teamNumber: _teamNumber,
-                            drivebaseType: _driveBase,
-                            notes: _notes.text,
-                            innerPort: boxStates[0][1],
-                            outerPort: boxStates[1][1],
-                            bottomPort: boxStates[2][1],
-                            rotationControl: boxStates[3][1],
-                            positionControl: boxStates[4][1],
-                            hasClimber: boxStates[5][1],
-                            hasLeveller: boxStates[6][1], 
-                          ),
-                        );
-                        Navigator.pushNamed(context, PostScouter.route);
-                      },
-                      child: Text(
-                        'Submit',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.green,
-                        padding: EdgeInsets.all(15),
-                      )),
-                ),
-              ],
+      title: 'Pit Scouting',
+      child: SingleChildScrollView(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        reverse: true,
+        child: Column(children: <Widget>[
+          _title(title: "General"),
+          ListTile(
+            title: Text(
+              'Drivebase Type',
+              style: new TextStyle(fontSize: 16.0),
+            ),
+            trailing: DropdownButton<DriveBaseType>(
+              value: _driveBase,
+              icon: Icon(Icons.arrow_downward),
+              iconSize: 24,
+              elevation: 16,
+              style: TextStyle(color: Colors.green, fontSize: 16.0),
+              underline: Container(
+                height: 2,
+                color: Colors.green,
+              ),
+              onChanged: (DriveBaseType driveBase) {
+                setState(() {
+                  _driveBase = driveBase;
+                });
+              },
+              items: <DriveBaseType>[
+                DriveBaseType.TANK,
+                DriveBaseType.OMNI,
+                DriveBaseType.WESTCOAST,
+                DriveBaseType.MECANUM,
+                DriveBaseType.SWERVE
+              ].map<DropdownMenuItem<DriveBaseType>>((DriveBaseType driveBase) {
+                return DropdownMenuItem<DriveBaseType>(
+                  value: driveBase,
+                  child: Center(
+                      child: Text(driveBase
+                          .toString()
+                          .substring(driveBase.toString().indexOf('.') + 1))),
+                );
+              }).toList(),
             ),
           ),
-        ));
+          _scoutingSection(
+            "Auton",
+            [
+              _textField(title: "Auton Balls", isNum: true),
+            ],
+          ),
+          _scoutingSection(
+            "Score Locations",
+            [
+              _checkBox(title: "Against Fender"),
+              _checkBox(title: "In Tarmac"),
+              _checkBox(title: "Outside of Tarmac"),
+            ],
+          ),
+          _scoutingSection(
+            "Intake Locations",
+            [
+              _checkBox(title: "Field"),
+              _checkBox(title: "Terminal"),
+            ],
+          ),
+          _scoutingSection(
+            "Hub Score Locations",
+            [
+              _checkBox(title: "Lower"),
+              _checkBox(title: "Upper"),
+            ],
+          ),
+          _scoutingSection(
+            "Climb",
+            [
+              _checkBox(title: "Low"),
+              _checkBox(title: "Middle"),
+              _checkBox(title: "High"),
+              _checkBox(title: "Traverse"),
+            ],
+          ),
+          _textField(title: "Final Comments", isNum: false),
+          Container(
+            padding: EdgeInsets.only(top: 10, bottom: 10),
+            child: ElevatedButton(
+              onPressed: () {
+                ScoutingOperations.setTeamData(
+                  Team.fromPitScoutingState(state,
+                      teamNumber: _teamNumber, drivebaseType: _driveBase),
+                );
+                Navigator.pushNamed(context, PostScouter.route);
+              },
+              child: Text(
+                'Submit',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.green,
+                padding: EdgeInsets.all(15),
+              ),
+            ),
+          ),
+        ]),
+      ),
+    );
   }
 }
