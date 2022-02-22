@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mustang_app/components/shared/screen.dart';
 import 'package:mustang_app/pages/pre_event_analysis/compare_teams.dart';
+import 'package:mustang_app/pages/pre_event_analysis/pit_analysis.dart';
 import 'package:mustang_app/utils/get_statistics.dart';
 import 'package:vibration/vibration.dart';
 
@@ -179,6 +180,23 @@ class _InputScreenState extends State<InputScreen> {
                             builder: (context) => CompareTeams(
                               team1: teams[0],
                               team2: teams[1],
+                            ),
+                          ),
+                        );
+                      }
+                    : null,
+              ),
+              ElevatedButton(
+                child: Text(
+                  "Pit Analysis",
+                ),
+                onPressed: teams.length > 0
+                    ? () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PitAnalysis(
+                              teams: teams,
                             ),
                           ),
                         );

@@ -8,6 +8,26 @@ class PitScoutingData {
   List<String> scoreLocations, intakeLocations, hubTargets, climbLocations;
   int autonBalls;
 
+  static const List<String> ALL_INTAKE_LOCATIONS = ["Terminal", "Field"];
+  static const List<String> ALL_SCORE_LOCATIONS = [
+    "Against Fender",
+    "In Tarmac",
+    "Outside Tarmac"
+  ];
+  static const List<String> ALL_HUB_TARGETS = ["Lower", "Upper"];
+  static const List<String> ALL_CLIMB_LEVELS = [
+    "Low",
+    "Middle",
+    "High",
+    "Traverse"
+  ];
+  static const List<List<String>> ALL_CRITERIA = [
+    ALL_INTAKE_LOCATIONS,
+    ALL_SCORE_LOCATIONS,
+    ALL_HUB_TARGETS,
+    ALL_CLIMB_LEVELS
+  ];
+
   PitScoutingData({
     @required this.teamNumber,
     @required this.drivebaseType,
@@ -16,7 +36,7 @@ class PitScoutingData {
     @required this.intakeLocations,
     @required this.hubTargets,
     @required this.climbLocations,
-    @required autonBalls,
+    @required this.autonBalls,
     this.teamName,
     this.teamEmail,
     this.region,
@@ -38,7 +58,7 @@ class PitScoutingData {
       notes: data['notes'] ?? '',
       teamEmail: data['teamEmail'] ?? '',
       region: data['region'] ?? '',
-      autonBalls: data["autonballs"] as int,
+      autonBalls: data["autonBalls"],
       climbLocations: (data["climbLocations"] as List<dynamic>)
           .map((e) => e.toString())
           .toList(),
