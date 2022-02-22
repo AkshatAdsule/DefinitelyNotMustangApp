@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mustang_app/models/robot.dart';
-import 'package:mustang_app/models/team.dart';
 import 'package:mustang_app/components/shared/screen.dart';
 import 'package:mustang_app/pages/scouting/post_scouter.dart';
 import '../../models/pitscouting_data.dart';
@@ -149,7 +148,7 @@ class _PitScouterState extends State<PitScouter> {
             [
               _checkBox(title: "Against Fender"),
               _checkBox(title: "In Tarmac"),
-              _checkBox(title: "Outside of Tarmac"),
+              _checkBox(title: "Outside Tarmac"),
             ],
           ),
           _scoutingSection(

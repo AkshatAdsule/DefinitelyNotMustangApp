@@ -44,6 +44,7 @@ class _PitAnalysisState extends State<PitAnalysis> {
           label: c,
           test: test,
           instance: this,
+          key: GlobalKey(),
         ));
       }
     }
@@ -167,8 +168,8 @@ class _PitAnalysisState extends State<PitAnalysis> {
                   data.scoreLocations.contains("In Tarmac"),
                 ),
                 _buildCheckBoxIndicator(
-                  "Outside of Tarmac",
-                  data.scoreLocations.contains("Outside of Tarmac"),
+                  "Outside Tarmac",
+                  data.scoreLocations.contains("Outside Tarmac"),
                 ),
               ]),
               _buildDataSection(title: "Hub Targets", children: [
@@ -217,30 +218,35 @@ class _PitAnalysisState extends State<PitAnalysis> {
       ),
       body: LoadingOverlay(
         isLoading: !_doneLoading,
-        child: ListView(
-          children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: _filters,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 5),
+                  child: Row(
+                    children: _filters,
+                  ),
+                ),
               ),
-            ),
-            _filteredData.length > 0
-                ? Column(
-                    children: [
-                      for (var datum in _filteredData) _buildTeamData(datum)
-                    ],
-                  )
-                : Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Center(
-                      child: Text(
-                        "No teams match the filters",
-                        style: TextStyle(fontSize: 24),
+              _filteredData.length > 0
+                  ? Column(
+                      children: [
+                        for (var datum in _filteredData) _buildTeamData(datum)
+                      ],
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: Center(
+                        child: Text(
+                          "No teams match the filters",
+                          style: TextStyle(fontSize: 24),
+                        ),
                       ),
                     ),
-                  ),
-          ],
+            ],
+          ),
         ),
       ),
     );
