@@ -113,7 +113,7 @@ class HomeState extends State<Home> {
                         Expanded(
                           child: NavCard(
                             route: Scouter.route,
-                            title: "Match Scouting",
+                            title: "Scouting",
                             icon: Icons.list,
                           ),
                         ),
