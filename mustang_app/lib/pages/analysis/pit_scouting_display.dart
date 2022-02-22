@@ -44,7 +44,8 @@ class PitScoutingDisplayPage extends StatefulWidget {
   }
 
   @override
-  _PitScoutingDisplayPageState createState() => _PitScoutingDisplayPageState(_teamNumber);
+  _PitScoutingDisplayPageState createState() =>
+      _PitScoutingDisplayPageState(_teamNumber);
 }
 
 class _PitScoutingDisplayPageState extends State<PitScoutingDisplayPage> {
@@ -52,18 +53,14 @@ class _PitScoutingDisplayPageState extends State<PitScoutingDisplayPage> {
   GetStatistics getStatistics = GetStatistics.getInstance();
   Team pitScoutTeam;
   bool gettingData = true;
-  _PitScoutingDisplayPageState(this.teamNumber) {
+  _PitScoutingDisplayPageState(this.teamNumber) {}
 
-  }
-  
   void _onInit() async {
     //print("pit scout team: " + pitScoutTeam.toString());
     //print(teamNumber);
     try {
       pitScoutTeam = await getStatistics.getPitScoutingData(teamNumber);
-    } catch (e) {
-      
-    }
+    } catch (e) {}
     setState(() {
       gettingData = false;
     });
@@ -75,30 +72,30 @@ class _PitScoutingDisplayPageState extends State<PitScoutingDisplayPage> {
     super.initState();
     this._onInit();
   }
-  
+
   List<String> getShootingCapability() {
     List<String> shootingCapability = [];
-    if (pitScoutTeam.bottomPort != null && pitScoutTeam.bottomPort) {
-      shootingCapability.add("bottom");
-    }
-    if (pitScoutTeam.innerPort != null && pitScoutTeam.innerPort) {
-      shootingCapability.add("inner");
-    }
-    if (pitScoutTeam.outerPort != null && pitScoutTeam.outerPort) {
-      shootingCapability.add("outer");
-    }
+    // if (pitScoutTeam.bottomPort != null && pitScoutTeam.bottomPort) {
+    //   shootingCapability.add("bottom");
+    // }
+    // if (pitScoutTeam.innerPort != null && pitScoutTeam.innerPort) {
+    //   shootingCapability.add("inner");
+    // }
+    // if (pitScoutTeam.outerPort != null && pitScoutTeam.outerPort) {
+    //   shootingCapability.add("outer");
+    // }
 
-    return shootingCapability;
+    // return shootingCapability;
   }
 
   List<String> getClimbCapability() {
     List<String> climbCapability = [];
-    if (pitScoutTeam.hasClimber != null && pitScoutTeam.hasClimber) {
-      climbCapability.add("climber");
-    }
-    if (pitScoutTeam.hasLeveller != null && pitScoutTeam.hasLeveller) {
-      climbCapability.add("leveller");
-    }
+    // if (pitScoutTeam.hasClimber != null && pitScoutTeam.hasClimber) {
+    //   climbCapability.add("climber");
+    // }
+    // if (pitScoutTeam.hasLeveller != null && pitScoutTeam.hasLeveller) {
+    //   climbCapability.add("leveller");
+    // }
     return climbCapability;
   }
 
@@ -110,28 +107,28 @@ class _PitScoutingDisplayPageState extends State<PitScoutingDisplayPage> {
           title: "Pit Scouting Data",
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start, 
-              children: [
-                Text("Drivebase: " + pitScoutTeam.drivebaseType.toString(), style: TextStyle(fontSize: 20)),
-                SizedBox(height: 10),
-                Text("Auton can start from: ", style: TextStyle(fontSize: 20)),
-                SizedBox(height: 10),
-                Text("Shooting capability: " + getShootingCapability().toString(), style: TextStyle(fontSize: 20)),
-                SizedBox(height: 10),
-                Text("# of balls that the robot can hold: ",
-                    style: TextStyle(fontSize: 20)),
-                SizedBox(height: 10),
-                Text("Climb capability: " + getClimbCapability().toString(), style: TextStyle(fontSize: 20)),
-                SizedBox(height: 10),
-                Text("Additional comments: " + pitScoutTeam.notes, style: TextStyle(fontSize: 20))
-              ]
-            ),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text("Drivebase: " + pitScoutTeam.drivebaseType.toString(),
+                  style: TextStyle(fontSize: 20)),
+              SizedBox(height: 10),
+              Text("Auton can start from: ", style: TextStyle(fontSize: 20)),
+              SizedBox(height: 10),
+              Text("Shooting capability: " + getShootingCapability().toString(),
+                  style: TextStyle(fontSize: 20)),
+              SizedBox(height: 10),
+              Text("# of balls that the robot can hold: ",
+                  style: TextStyle(fontSize: 20)),
+              SizedBox(height: 10),
+              Text("Climb capability: " + getClimbCapability().toString(),
+                  style: TextStyle(fontSize: 20)),
+              SizedBox(height: 10),
+              Text("Additional comments: " + pitScoutTeam.notes,
+                  style: TextStyle(fontSize: 20))
+            ]),
           ));
     } else {
-      return Screen(
-        title: "Pit Scouting Data"
-      );
+      return Screen(title: "Pit Scouting Data");
     }
   }
 }
