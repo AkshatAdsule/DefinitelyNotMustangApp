@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:mustang_app/models/pitscouting_data.dart';
 import 'package:mustang_app/models/team.dart';
 import 'package:mustang_app/models/match.dart';
 import 'package:mustang_app/models/user.dart';
@@ -69,10 +70,10 @@ class TeamService {
         (list) => list.docs.map((doc) => Match.fromSnapshot(doc)).toList());
   }
 
-  static Future<void> createTeam(Team team) async {
-    bool exists = await ScoutingOperations.doesTeamDataExist(team.teamNumber);
+  static Future<void> createTeam(PitScoutingData data) async {
+    bool exists = await ScoutingOperations.doesTeamDataExist(data.teamNumber);
     if (!exists) {
-      await _teamsRef.doc(team.teamNumber).set(team.toJson());
+      await _teamsRef.doc(data.teamNumber).set(data.toJson());
     } else {
       throw new Exception('A team with this number already exists');
     }

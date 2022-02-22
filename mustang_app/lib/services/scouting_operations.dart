@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mustang_app/constants/preferences.dart';
 import 'package:mustang_app/models/match.dart';
+import 'package:mustang_app/models/pitscouting_data.dart';
 import 'package:mustang_app/models/team.dart';
 
 class ScoutingOperations {
@@ -10,8 +11,8 @@ class ScoutingOperations {
   static final CollectionReference _teamsRef =
       _db.collection(_year).doc('info').collection('teams');
 
-  static Future<void> setTeamData(Team team) async {
-    await _teamsRef.doc(team.teamNumber).set(team.toJson());
+  static Future<void> setTeamData(PitScoutingData data) async {
+    await _teamsRef.doc(data.teamNumber).set(data.toJson());
   }
 
   static Future<void> setMatchData(

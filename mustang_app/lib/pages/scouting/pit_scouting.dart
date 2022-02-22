@@ -4,6 +4,7 @@ import 'package:mustang_app/models/robot.dart';
 import 'package:mustang_app/models/team.dart';
 import 'package:mustang_app/components/shared/screen.dart';
 import 'package:mustang_app/pages/scouting/post_scouter.dart';
+import '../../models/pitscouting_data.dart';
 import '../../services/scouting_operations.dart';
 
 class PitScouter extends StatefulWidget {
@@ -180,7 +181,7 @@ class _PitScouterState extends State<PitScouter> {
             child: ElevatedButton(
               onPressed: () {
                 ScoutingOperations.setTeamData(
-                  Team.fromPitScoutingState(state,
+                  PitScoutingData.fromPitScoutingState(state,
                       teamNumber: _teamNumber, drivebaseType: _driveBase),
                 );
                 Navigator.pushNamed(context, PostScouter.route);
