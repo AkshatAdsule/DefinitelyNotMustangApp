@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/models/team.dart';
+import 'package:mustang_app/pages/pre_event_analysis/pit_analysis.dart';
 import 'package:mustang_app/services/team_service.dart';
 import 'package:mustang_app/components/shared/screen.dart';
 import 'package:mustang_app/pages/analysis/all_data_display.dart';
@@ -94,10 +95,16 @@ class _SearchState extends State<Search> {
         child: Text("Pit Scouting Data", style: TextStyle(fontSize: 15)),
         onPressed: () {
           Navigator.pop(context);
-          Navigator.pushNamed(context, PitScoutingDisplay.route, arguments: {
-            'teamNumber': teamNumber,
-          });
-          print(ModalRoute.of(context).settings.name);
+          // Navigator.pushNamed(context, PitScoutingDisplay.route, arguments: {
+          //   'teamNumber': teamNumber,
+          // });
+          // print(ModalRoute.of(context).settings.name);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: ((context) => PitAnalysis(teams: ["frc" + teamNumber])),
+            ),
+          );
         });
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(

@@ -13,6 +13,7 @@ class PitAnalysis extends StatefulWidget {
 }
 
 class _PitAnalysisState extends State<PitAnalysis> {
+  bool _doneLoading = false;
   List<PitScoutingData> _data = [];
   List<PitScoutingData> _filteredData = [];
   List<FilterChip> _filters = [];
@@ -42,11 +43,7 @@ class _PitAnalysisState extends State<PitAnalysis> {
         _filters.add(FilterChip(
           label: c,
           test: test,
-          // isSelected: selectedFilters.contains(this),
           instance: this,
-          // onPressed: () {
-          //   _onFilterPressed(this);
-          // },
         ));
       }
     }
@@ -88,6 +85,7 @@ class _PitAnalysisState extends State<PitAnalysis> {
     }
     setState(() {
       _filteredData = _data;
+      _doneLoading = true;
     });
   }
 
@@ -218,7 +216,7 @@ class _PitAnalysisState extends State<PitAnalysis> {
         title: Text("Pit Analysis"),
       ),
       body: LoadingOverlay(
-        isLoading: _data == null || _data.length < 1,
+        isLoading: !_doneLoading,
         child: ListView(
           children: [
             SingleChildScrollView(
