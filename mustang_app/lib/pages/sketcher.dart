@@ -21,7 +21,7 @@ class _SketchPageState extends State<SketchPage> {
   List<DrawingPoints> points = [];
   bool showBottomList = false;
   double opacity = 1.0;
-  StrokeCap strokeCap = StrokeCap.butt;
+  StrokeCap strokeCap = (Platform.isAndroid) ? StrokeCap.butt : StrokeCap.round;
 
   @override
   void initState() {
@@ -121,7 +121,7 @@ class _SketchPageState extends State<SketchPage> {
             backgroundColor: Colors.green,
             child: Icon(Icons.exit_to_app),
             onTap: () {
-              Navigator.pushNamed(context, Home.route);
+              Navigator.pop(context);
             },
           ),
         ],

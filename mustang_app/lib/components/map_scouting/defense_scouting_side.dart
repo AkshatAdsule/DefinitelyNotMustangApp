@@ -120,9 +120,11 @@ class DefenseScoutingSide extends StatelessWidget {
                             .addAction(ActionType.PUSH_START, context))
                       mapScoutingKey.currentState.setPush();
                   },
-                  child: Text(mapScoutingKey.currentState.pushTextStart
-                      ? "Push End"
-                      : "Push Start"),
+                  child: Text(
+                      mapScoutingKey.currentState.pushTextStart
+                          ? "Push End"
+                          : "Push Start",
+                      style: TextStyle(fontSize: 10)),
                 ),
                 mapScoutingKey.currentState.pushTextStart
                     ? ElevatedButton(
@@ -135,7 +137,7 @@ class DefenseScoutingSide extends StatelessWidget {
                         onPressed: () {
                           mapScoutingKey.currentState.setPush();
                         },
-                        child: Text("Cancel"),
+                        child: Text("Cancel", style: TextStyle(fontSize: 10)),
                       )
                     : null,
               ].where((w) => w != null).toList(),

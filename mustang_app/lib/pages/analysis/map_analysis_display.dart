@@ -67,9 +67,8 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
     ["MISSED", Colors.red],
     ["INTAKE", Colors.blue],
     ["SHOT", Colors.green],
-    ["LOW", Colors.white],
-    ["OUTER", Colors.grey],
-    ["INNER", Colors.black],
+    ["LOWER", Colors.white],
+    ["UPPER", Colors.grey],
   ];
   List<bool> _toggleModes = [
     true,
@@ -105,56 +104,10 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
     });
   }
 
-  
-
-// game replay stuff
-  // List<Color> _getColorCombo(BuildContext context, int x, int y) {
-  //   GameAction curr;
-  //   List<GameAction> currActions = getAllMatchActions(context)
-  //       .where((element) => element.timeStamp > timeInGame * 1000 - 5000)
-  //       .where((element) => element.timeStamp < timeInGame * 1000 + 1000)
-  //       .toList();
-  //   for (GameAction currentAction in currActions) {
-  //     if (currentAction.x == x && currentAction.y == y) {
-  //       curr = currentAction;
-  //       break;
-  //     }
-  //   }
-  //   if (curr == null) return [Colors.green[0], Colors.yellow[0]];
-
-  //   List<Color> gradientCombo = [];
-  //   String actionType = curr.actionType.toString();
-
-  //   for (List<Object> shade in actionRelatedColors)
-  //     if (actionType.contains(shade[0])) gradientCombo.add(shade[1]);
-
-  //   if (gradientCombo.length < 2) {
-  //     if (actionType.contains("FOUL")) {
-  //       gradientCombo.add(Colors.yellow[600]);
-  //     } else if (actionType.contains("OTHER")) {
-  //       gradientCombo.add(Colors.orange[600]);
-  //     }
-  //   }
-
-  //   return gradientCombo;
-  // }
-
-  // List<GameAction> getAllMatchActions(BuildContext context) {
-  //   if (selectedMatch == "ALL") {
-  //     return Provider.of<List<Match>>(context)
-  //         .map((e) => e.actions)
-  //         .reduce((value, element) => [...value, ...element]);
-  //   }
-  //   return Provider.of<List<Match>>(context)
-  //       .where((element) => element.matchNumber == selectedMatch)
-  //       .map((e) => e.actions)
-  //       .reduce((value, element) => [...value, ...element]);
-  // }
-
   Widget _getCell(BuildContext context, int x, int y, bool isSelected,
       double cellWidth, double cellHeight) {
-            List<Match> matches = Provider.of<List<Match>>(context);
-
+    List<Match> matches = Provider.of<List<Match>>(context);
+//KTODO: GET MAX POINTS FROM LOCATION FROM ANALYZER!!
     int ind = _toggleModes.indexOf(true);
     switch (ind) {
       case 0:
@@ -163,16 +116,16 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             width: cellWidth,
             height: cellHeight,
             decoration: BoxDecoration(
-                color: (Colors.green[
-                        KeivnaMapAnalyzer.getShootingPointsColorValueAtLocation(
-                                matches, x, y, selectedActionType, selectedMatch)] ==
-                        null)
-                    ? null
-                    : Colors.green[
-                            KeivnaMapAnalyzer.getShootingPointsColorValueAtLocation(
-                                matches, x, y, selectedActionType, selectedMatch)]
-                        .withOpacity(0.7),
-                ),
+              color: (Colors.green[KeivnaMapAnalyzer
+                          .getShootingPointsColorValueAtLocation(matches, x, y,
+                              selectedActionType, selectedMatch)] ==
+                      null)
+                  ? null
+                  : Colors.green[KeivnaMapAnalyzer
+                          .getShootingPointsColorValueAtLocation(
+                              matches, x, y, selectedActionType, selectedMatch)]
+                      .withOpacity(0.7),
+            ),
           );
         }
       case 1:
@@ -182,13 +135,16 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
             height: cellHeight,
             decoration: BoxDecoration(
                 color: (Colors.green[KeivnaMapAnalyzer.getAccuracyColorValue(
-                            matches, x, y, selectedActionType)] ==
+                            matches,
+                            x,
+                            y,
+                            selectedActionType,
+                            selectedMatch)] ==
                         null)
                     ? null
                     : Colors.green[KeivnaMapAnalyzer.getAccuracyColorValue(
-                            matches, x, y, selectedActionType)]
-                        .withOpacity(0.7)
-                ),
+                            matches, x, y, selectedActionType, selectedMatch)]
+                        .withOpacity(0.7)),
           );
         }
       case 2:
@@ -241,22 +197,12 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
   Widget build(BuildContext context) {
     Team team = Provider.of<Team>(context);
     List<Match> matches = Provider.of<List<Match>>(context);
-    // if (!myAnalyzer.initialized) {
-    //   myAnalyzer.init(
-    //     Provider.of<Team>(context),
-    //     Provider.of<List<Match>>(context),
-    //   );
-    //   setState(() {});
-    // }
 
     return Screen(
       title: 'Map Analysis for Team: ' + (team != null ? team.teamNumber : ""),
       includeBottomNav: false,
       child: Container(
-        child:
-            // Column(
-            //   children: [
-            GameMap(
+        child: GameMap(
           zoneGrid: ZoneGrid(
               GlobalKey(),
               (int x, int y) {},
@@ -341,14 +287,13 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
                       value: selectedActionType,
                       onChanged: (val) => setState(() {
                         selectedActionType = val;
-                        debugPrint("selected action type: " + selectedActionType.toString());
-
+                        debugPrint("selected action type: " +
+                            selectedActionType.toString());
                       }),
                       items: [
                         ActionType.ALL,
-                        ActionType.SHOT_LOW,
-                        ActionType.SHOT_OUTER,
-                        ActionType.SHOT_INNER
+                        ActionType.SHOT_LOWER,
+                        ActionType.SHOT_UPPER
                       ].map<DropdownMenuItem<ActionType>>(
                         (ActionType actionType) {
                           return DropdownMenuItem<ActionType>(
@@ -368,7 +313,6 @@ class _MapAnalysisDisplayState extends State<MapAnalysisDisplayPage> {
                       value: selectedMatch,
                       onChanged: (val) => setState(() {
                         selectedMatch = val;
-                        debugPrint("selected match: " + selectedMatch);
                       }),
                       items: [
                         ...Provider.of<List<Match>>(context)

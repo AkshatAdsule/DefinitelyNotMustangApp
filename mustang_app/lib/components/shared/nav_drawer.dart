@@ -95,50 +95,51 @@ class NavDrawer extends StatelessWidget {
         },
       ));
     }
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          GestureDetector(
-            onTap: () => Navigator.of(context).pushNamed(Profile.route),
-            child: DrawerHeader(
-              padding: EdgeInsets.only(left: 30, top: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    padding: EdgeInsets.all(10),
-                    width: 100,
-                    height: 100,
-                    child: Image.network(
-                      AuthService.currentUser?.photoURL ??
-                          'https://firebasestorage.googleapis.com/v0/b/mustangapp-b1398.appspot.com/o/logo.png?alt=media&token=f45e368d-3cba-4d67-b8d5-2e554f87e046',
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 10, left: 10),
-                    child: Text(
-                      "${user.firstName} ${user.lastName}",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              decoration: BoxDecoration(
-                color: Colors.green,
-              ),
-            ),
-          ),
-          ...items,
-        ],
+    return SafeArea(
+      child: Drawer(
+        child: ListView(
+          children: <Widget>[
+            // GestureDetector(
+            //   onTap: () => Navigator.of(context).pushNamed(Profile.route),
+            //   child: DrawerHeader(
+            //     padding: EdgeInsets.only(left: 30, top: 10),
+            //     child: Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         Container(
+            //           decoration: BoxDecoration(
+            //             shape: BoxShape.circle,
+            //             color: Colors.white,
+            //           ),
+            //           padding: EdgeInsets.all(10),
+            //           width: 100,
+            //           height: 100,
+            //           child: Image.network(
+            //             AuthService.currentUser?.photoURL ??
+            //                 'https://firebasestorage.googleapis.com/v0/b/mustangapp-b1398.appspot.com/o/logo.png?alt=media&token=f45e368d-3cba-4d67-b8d5-2e554f87e046',
+            //           ),
+            //         ),
+            //         Container(
+            //           padding: EdgeInsets.only(top: 10, left: 10),
+            //           child: Text(
+            //             "${user.firstName} ${user.lastName}",
+            //             style: TextStyle(
+            //               color: Colors.white,
+            //               fontSize: 15,
+            //               fontWeight: FontWeight.bold,
+            //             ),
+            //           ),
+            //         )
+            //       ],
+            //     ),
+            //     decoration: BoxDecoration(
+            //       color: Colors.green,
+            //     ),
+            //   ),
+            // ),
+            ...items,
+          ],
+        ),
       ),
     );
   }

@@ -54,7 +54,10 @@ class ScoutingButton extends StatelessWidget {
                 side: BorderSide(color: borderColor, width: borderWidth)),
           ),
           onPressed: isDisabled ? null : this.onPressed,
-          child: Text(text),
+          child: Text(
+            text,
+            style: TextStyle(fontSize: 10),
+          ),
         );
         break;
       case ButtonStyle.OUTLINED:
@@ -66,7 +69,10 @@ class ScoutingButton extends StatelessWidget {
                 side: BorderSide(color: borderColor, width: borderWidth)),
           ),
           onPressed: isDisabled ? null : this.onPressed,
-          child: Text(text),
+          child: Text(
+            text,
+            style: TextStyle(fontSize: 10),
+          ),
         );
         break;
       case ButtonStyle.FLAT:
@@ -79,7 +85,10 @@ class ScoutingButton extends StatelessWidget {
                 side: BorderSide(color: borderColor, width: borderWidth)),
           ),
           onPressed: isDisabled ? null : this.onPressed,
-          child: Text(text),
+          child: Text(
+            text,
+            style: TextStyle(fontSize: 10),
+          ),
           // minWidth: 20,
         );
         break;

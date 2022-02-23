@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/shared/screen.dart';
-import 'package:mustang_app/constants/constants.dart';
-import 'package:mustang_app/constants/legacy.dart';
 import 'package:mustang_app/pages/pages.dart';
-import 'package:mustang_app/pages/pre_event_analysis/input_screen.dart';
-import 'package:mustang_app/pages/sketcher.dart';
 
 class Home extends StatefulWidget {
   static const String route = '/';
@@ -14,15 +10,55 @@ class Home extends StatefulWidget {
   }
 }
 
-class HomeState extends State<Home> {
-  Widget _buildLinkButton({String route, String label}) {
-    return ElevatedButton(
-        onPressed: () {
+class NavCard extends StatelessWidget {
+  final String route, title;
+  final IconData icon;
+
+  const NavCard(
+      {@required this.route, @required this.title, @required this.icon});
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      child: InkWell(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 50,
+                ),
+              )
+            ],
+          ),
+        ),
+        onTap: () {
           Navigator.pushNamed(context, route);
         },
-        child: Text(label));
+        enableFeedback: true,
+      ),
+      color: Colors.green,
+      borderRadius: BorderRadius.circular(10),
+      elevation: 10,
+    );
   }
+}
 
+class HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Screen(
@@ -31,93 +67,131 @@ class HomeState extends State<Home> {
       right: false,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Column(
-            // mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.asset('assets/logo.png'),
-              Text(
-                'Check out all the parts of The Mustang Alliance!',
-                style: TextStyle(
-                  color: Colors.green,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Container(
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        "The Mustang Alliance",
+                        style: TextStyle(
+                          fontSize: 40,
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Image.asset(
+                        "assets/logo.png",
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              _buildLinkButton(
-                  route: InputScreen.route, label: 'Pre Event Analysis'),
-              _buildLinkButton(route: Scouter.route, label: 'Scouter'),
-              _buildLinkButton(route: SearchPage.route, label: 'Team Data'),
-              _buildLinkButton(route: SketchPage.route, label: 'Match Planner'),
-            ],
-          ),
+            ),
+            // Expanded(
+            //   flex: 2,
+            //   child: Image.asset(
+            //     "assets/logo.png",
+            //   ),
+            // ),
+            Expanded(
+              flex: 2,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: NavCard(
+                            route: Scouter.route,
+                            title: "Scouting",
+                            icon: Icons.list,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: NavCard(
+                            route: SearchPage.route,
+                            title: "Data Analysis",
+                            icon: Icons.search,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: NavCard(
+                            route: InputScreen.route,
+                            title: "Team Analysis",
+                            icon: Icons.stacked_line_chart,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: NavCard(
+                            route: SketchPage.route,
+                            title: "Match Planning",
+                            icon: Icons.edit,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Expanded(
+            //   flex: 3,
+            //   child: GridView.count(
+            //     crossAxisCount: 2,
+            //     crossAxisSpacing: 10,
+            //     mainAxisSpacing: 10,
+            //     children: const [
+            // NavCard(
+            //   route: "",
+            //   title: "Match Scouting",
+            //   icon: Icons.list,
+            // ),
+            // NavCard(
+            //   route: "",
+            //   title: "Data Analysis",
+            //   icon: Icons.search,
+            // ),
+            // NavCard(
+            //   route: "",
+            //   title: "Team Analysis",
+            //   icon: Icons.stacked_line_chart,
+            // ),
+            // NavCard(
+            //   route: "",
+            //   title: "Match Planing",
+            //   icon: Icons.edit,
+            // ),
+            //     ],
+            //   ),
+            // ),
+          ],
         ),
       ),
-      // child: Container(
-      //   padding: EdgeInsets.symmetric(horizontal: 20),
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: [
-      //       Container(
-      //         child: Text(
-      //           "U R Welcome 💚",
-      //           style: TextStyle(
-      //             color: Colors.green,
-      //             fontSize: 30,
-      //             fontWeight: FontWeight.bold,
-      //           ),
-      //         ),
-      //       ),
-      //       Center(
-      //         child: Container(
-      //           margin: EdgeInsets.only(top: 5),
-      //           child: Column(
-      //             children: [
-      //               Text(
-      //                 "Created by:",
-      //                 style: TextStyle(
-      //                   color: Colors.grey,
-      //                   fontSize: 18,
-      //                 ),
-      //               ),
-      //               ...Legacy.creators
-      //                   .map(
-      //                     (e) => Container(
-      //                       margin: EdgeInsets.only(top: 5),
-      //                       child: Text(
-      //                         e.toString(),
-      //                         style: TextStyle(
-      //                           fontWeight: FontWeight.bold,
-      //                           color: Colors.green,
-      //                         ),
-      //                       ),
-      //                     ),
-      //                   )
-      //                   .toList(),
-      //               SizedBox(
-      //                 height: 100,
-      //               ),
-      //               Container(
-      //                 child: Column(
-      //                   children: [
-      //                     Text(
-      //                       "Pre-Event data version: ${Constants.DATA_ANALYSIS_DATA_VERSION}",
-      //                     ),
-      //                     Text(
-      //                       "Data-Collection data version: ${Constants.DATA_COLLECTION_DATA_VERSION}",
-      //                     ),
-      //                   ],
-      //                 ),
-      //               ),
-      //             ],
-      //           ),
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
   }
 }

@@ -119,6 +119,12 @@ class MyApp extends StatelessWidget {
         );
         orientation = ScreenOrientation.portraitOnly;
         break;
+      case PitScoutingDisplay.route:
+        nextPage = PitScoutingDisplay(
+          teamNumber: args['teamNumber'],
+        );
+        orientation = ScreenOrientation.portraitOnly;
+        break;
       case SketchPage.route:
         nextPage = SketchPage();
         orientation = ScreenOrientation.landscapeOnly;

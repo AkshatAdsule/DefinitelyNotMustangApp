@@ -10,7 +10,7 @@ class GameAction {
       @required this.timeStamp,
       @required this.x,
       @required this.y,
-      this.pushTime = 0});
+      this.pushTime = 0.0});
 
   factory GameAction.other(ActionType actionType, double timeStamp) {
     return GameAction(
@@ -41,10 +41,10 @@ class GameAction {
 
   factory GameAction.fromJson(Map<String, dynamic> data) {
     return GameAction(
-      x: data['x'],
-      y: data['y'],
-      timeStamp: data['timeStamp'],
-      pushTime: data['pushTime'],
+      x: data['x'].toDouble(),
+      y: data['y'].toDouble(),
+      timeStamp: data['timeStamp'].toDouble(),
+      pushTime: data['pushTime'].toDouble(),
       actionType: actionTypeFromString(data['actionType']),
     );
   }
@@ -68,14 +68,32 @@ class GameAction {
   }
 }
 
-enum ActionType {
-  SHOT_LOW,
-  SHOT_OUTER,
+enum  ActionType {
   SHOT_INNER,
-  INTAKE,
-  MISSED_LOW,
+  MISSED_INNER,
+  SHOT_OUTER,
   MISSED_OUTER,
+  SHOT_LOW,
+  MISSED_LOW,
+  INTAKE,
   MISSED_INTAKE,
+  //Rapid React Actions
+  SHOT_UPPER,
+  SHOT_LOWER,
+  MISSED_UPPER,
+  MISSED_LOWER,
+  GROUND_INTAKE,
+  MISSED_GROUND_INTAKE,
+  TERMINAL_INTAKE,
+  MISSED_TERMINAL_INTAKE,
+  HUMAN_PLAYER_SHOOTS,
+
+  //climb actions
+  LOW_RUNG_CLIMB,
+  MID_RUNG_CLIMB,
+  HIGH_RUNG_CLIMB,
+  TRAVERSAL_RUNG_CLIMB,
+
   OTHER_WHEEL_ROTATION,
   OTHER_WHEEL_POSITION,
   PREV_SHOT,
@@ -86,7 +104,7 @@ enum ActionType {
   OTHER_CLIMB,
   OTHER_CLIMB_MISS,
   OTHER_LEVELLED,
-  OTHER_CROSSED_INITIATION_LINE,
+  CROSSED_TARMAC,
   FOUL_REG,
   FOUL_TECH,
   FOUL_YELLOW,

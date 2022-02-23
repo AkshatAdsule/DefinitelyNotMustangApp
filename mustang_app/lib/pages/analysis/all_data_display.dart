@@ -4,9 +4,7 @@ import 'package:mustang_app/models/match.dart';
 import 'package:mustang_app/services/keivna_data_analyzer.dart';
 import 'package:mustang_app/services/team_service.dart';
 import 'package:mustang_app/components/shared/screen.dart';
-import 'package:mustang_app/components/analysis/data_display_text.dart';
 import 'package:provider/provider.dart';
-import '../../services/analyzer.dart';
 
 // ignore: must_be_immutable
 class AllDataDisplay extends StatelessWidget {
@@ -59,9 +57,9 @@ class _AllDataDisplayState extends State<AllDataDisplayPage> {
       includeBottomNav: false,
       child: Container(
         child: SingleChildScrollView(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [Text(KeivnaDataAnalyzer.getDataForAllMatches(matches))]),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Text(KeivnaDataAnalyzer.getDataForAllMatches(matches))
+          ]),
         ),
       ),
     );

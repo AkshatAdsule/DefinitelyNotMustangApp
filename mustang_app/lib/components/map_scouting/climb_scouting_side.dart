@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mustang_app/components/shared/map/zone_grid.dart';
+import 'package:mustang_app/constants/game_actions.dart';
 import 'package:mustang_app/models/game_action.dart';
 import 'package:mustang_app/pages/scouting/map_scouting.dart';
 import 'package:provider/provider.dart';
@@ -24,74 +25,23 @@ class ClimbScoutingSide extends StatelessWidget {
           //   flex: 1,
           //   child: _toggleMode,
           // ),
-          Flexible(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                game_button.ScoutingButton(
-                  style: game_button.ButtonStyle.RAISED,
-                  type: game_button.ButtonType.ELEMENT,
-                  onPressed: () {
-                    mapScoutingKey.currentState
-                        .addClimb(ActionType.OTHER_CLIMB_MISS);
-                  },
-                  text: 'No Park',
-                ),
-              ],
+          for (RobotAction action in GameActions.climbActions)
+            Flexible(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  game_button.ScoutingButton(
+                    style: game_button.ButtonStyle.RAISED,
+                    type: game_button.ButtonType.ELEMENT,
+                    onPressed: () {
+                      action.onPress(mapScoutingKey.currentState);
+                    },
+                    text: action.text,
+                  ),
+                ],
+              ),
             ),
-          ),
-          Flexible(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                game_button.ScoutingButton(
-                  style: game_button.ButtonStyle.RAISED,
-                  type: game_button.ButtonType.ELEMENT,
-                  onPressed: () {
-                    mapScoutingKey.currentState
-                        .addClimb(ActionType.OTHER_PARKED);
-                  },
-                  text: 'Parked',
-                ),
-              ],
-            ),
-          ),
-          Flexible(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                game_button.ScoutingButton(
-                  style: game_button.ButtonStyle.RAISED,
-                  type: game_button.ButtonType.ELEMENT,
-                  onPressed: () {
-                    mapScoutingKey.currentState
-                        .addClimb(ActionType.OTHER_CLIMB);
-                  },
-                  text: 'Climbed',
-                ),
-              ],
-            ),
-          ),
-          Flexible(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                game_button.ScoutingButton(
-                  style: game_button.ButtonStyle.RAISED,
-                  type: game_button.ButtonType.ELEMENT,
-                  onPressed: () {
-                    mapScoutingKey.currentState
-                        .addClimb(ActionType.OTHER_LEVELLED);
-                  },
-                  text: 'Levelled',
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );

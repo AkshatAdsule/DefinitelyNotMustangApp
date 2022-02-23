@@ -81,8 +81,10 @@ class _SplashState extends State<Splash> {
     // } else if (_user.teamStatus == TeamStatus.LONELY) {
     //   Navigator.pushNamed(context, JoinTeam.route);
     // } else {
-    Navigator.of(context).pushNamedAndRemoveUntil(Home.route, (route) => false);
+    //   Navigator.of(context)
+    //       .pushNamedAndRemoveUntil(Home.route, (route) => false);
     // }
+    Navigator.of(context).pushNamedAndRemoveUntil(Home.route, (route) => false);
   }
 
   @override

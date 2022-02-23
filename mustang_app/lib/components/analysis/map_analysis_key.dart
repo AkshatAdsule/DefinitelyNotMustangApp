@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mustang_app/constants/game_constants.dart';
 
 // ignore: must_be_immutable
 class MapAnalysisKey extends StatelessWidget {
@@ -9,18 +8,9 @@ class MapAnalysisKey extends StatelessWidget {
     _mapScoring = mapScoring;
   }
 
-  // String _scoringText = Constants.minPtValuePerZonePerGame.toString() +
-  //     " total pts                                                                     " +
-  //     Constants.maxPtValuePerZonePerGame.toString() +
-  //     " total pts";
-  // String _accuracyText =
-  //     "0%                                                                  100%";
-
-  // String _scoringText = GameConstants.minPtValuePerZonePerGame.toString() +
-  //     "       total pts      " +
-  //     GameConstants.maxPtValuePerZonePerGame.toString();
   String _dataHasBeenNormalized = "Data normalized to left side driver station.";
-  String _scoringText = "max pts per location: " + GameConstants.maxPtValuePerZonePerGame.toString();
+  // String _scoringText = "max pts per location: " + GameConstants.maxPtValuePerZonePerGame.toString();
+  String _scoringText = "";
   String _accuracyText = "0%                 100%";
 
   @override

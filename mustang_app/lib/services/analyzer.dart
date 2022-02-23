@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:mustang_app/constants/game_constants.dart';
 import 'package:mustang_app/constants/robot_constants.dart';
 import 'package:mustang_app/models/game_action.dart';
@@ -25,6 +26,22 @@ class Analyzer {
       _foulRed = [],
       _foulDisabled = [],
       _foulDisqual = [],
+
+      //rapid react actions
+      _shotLowerHub = [],
+      _shotUpperHub = [],
+      _missedLowerHub = [],
+      _missedUpperHub = [],
+      _terminalIntake = [],
+      _missedTerminalIntake = [],
+      _groundIntake = [],
+      _missGroundIntake = [],
+      _climbLowRung = [],
+      _climbMidRung = [],
+      _climbHighRung = [],
+      _climbTraversalRung = [],
+      _humanPlayerShoots = [],
+      //
       _shotLow = [],
       _shotOuter = [],
       _shotInner = [],
@@ -38,7 +55,7 @@ class Analyzer {
       _prevIntake = [],
       _pushStart = [],
       _pushEnd = [],
-      _otherCrossedInitiationLine = [],
+      _otherCrossedTarmac = [],
       _otherParked = [],
       _otherLevelled = [];
 
@@ -134,27 +151,50 @@ class Analyzer {
 
     List<GameAction> actions = getMatch(matchNum);
 
-    bool crossedInitiationLine = false,
+    bool crossedTarmac = false,
         wheelPosition = false,
         wheelRotation = false,
         climbed = false,
         climbMissed = false,
         climbLevelled = false,
-        climbParked = false;
+        climbParked = false,
+        //rapid react climbing actions
+        climbedLow = false,
+        climbedMid = false,
+        climbedHigh = false,
+        climbedTraversal = false;
     int autonInnerScored = 0,
         autonOuterScored = 0,
         autonLowScored = 0,
         autonOuterMissed = 0,
         autonLowMissed = 0,
         autonIntake = 0,
-        autonIntakeMissed = 0;
+        autonIntakeMissed = 0,
+        //rapid react actions
+        autonLowerScored = 0,
+        autonUpperScored = 0,
+        autonTerminalIntake = 0,
+        autonGroundIntake = 0,
+        autonLowerMissed = 0,
+        autonUpperMissed = 0,
+        autonTerminalIntakeMissed = 0,
+        autonGroundIntakeMissed = 0;
     int teleopInnerScored = 0,
         teleopOuterScored = 0,
         teleopLowScored = 0,
         teleopOuterMissed = 0,
         teleopLowMissed = 0,
         teleopIntake = 0,
-        teleopIntakeMissed = 0;
+        teleopIntakeMissed = 0,
+        //rapid react actions
+        teleopLowerScored = 0,
+        teleopUpperScored = 0,
+        teleopGroundIntake = 0,
+        teleopTerminalIntake = 0,
+        teleopLowerMissed = 0,
+        teleopUpperMissed = 0,
+        teleopTerminalIntakeMissed = 0,
+        teleopGroundIntakeMissed = 0;
     int shotsPrev = 0, intakesPrev = 0, pushes = 0;
     int foulRegs = 0,
         foulTechs = 0,
@@ -165,44 +205,45 @@ class Analyzer {
 
     for (GameAction a in actions) {
       //happened during auton
+      //TODO: Change this
       if (a.timeStamp <= GameConstants.autonMillisecondLength) {
-        if (a.actionType == ActionType.SHOT_INNER) {
-          autonInnerScored++;
-        } else if (a.actionType == ActionType.SHOT_INNER) {
-          autonInnerScored++;
-        } else if (a.actionType == ActionType.SHOT_OUTER) {
-          autonOuterScored++;
-        } else if (a.actionType == ActionType.SHOT_LOW) {
-          autonLowScored++;
-        } else if (a.actionType == ActionType.MISSED_OUTER) {
-          autonOuterMissed++;
-        } else if (a.actionType == ActionType.MISSED_LOW) {
-          autonLowMissed++;
-        } else if (a.actionType == ActionType.INTAKE) {
-          autonIntake++;
-        } else if (a.actionType == ActionType.MISSED_INTAKE) {
-          autonIntakeMissed++;
+        if (a.actionType == ActionType.SHOT_LOWER) {
+          autonLowerScored++;
+        } else if (a.actionType == ActionType.SHOT_UPPER) {
+          autonUpperScored++;
+        } else if (a.actionType == ActionType.MISSED_LOWER) {
+          autonLowerMissed++;
+        } else if (a.actionType == ActionType.MISSED_UPPER) {
+          autonUpperMissed++;
+        } else if (a.actionType == ActionType.TERMINAL_INTAKE) {
+          autonTerminalIntake++;
+        } else if (a.actionType == ActionType.GROUND_INTAKE) {
+          autonGroundIntake++;
+        } else if (a.actionType == ActionType.MISSED_TERMINAL_INTAKE) {
+          autonTerminalIntake++;
+        } else if (a.actionType == ActionType.MISSED_GROUND_INTAKE) {
+          autonTerminalIntakeMissed++;
         }
       }
 
       //happened during teleop
       else {
-        if (a.actionType == ActionType.SHOT_INNER) {
-          teleopInnerScored++;
-        } else if (a.actionType == ActionType.SHOT_INNER) {
-          teleopInnerScored++;
-        } else if (a.actionType == ActionType.SHOT_OUTER) {
-          teleopOuterScored++;
-        } else if (a.actionType == ActionType.SHOT_LOW) {
-          teleopLowScored++;
-        } else if (a.actionType == ActionType.MISSED_OUTER) {
-          teleopOuterMissed++;
-        } else if (a.actionType == ActionType.MISSED_LOW) {
-          teleopLowMissed++;
-        } else if (a.actionType == ActionType.INTAKE) {
-          teleopIntake++;
-        } else if (a.actionType == ActionType.MISSED_INTAKE) {
-          teleopIntakeMissed++;
+        if (a.actionType == ActionType.SHOT_LOWER) {
+          teleopLowerScored++;
+        } else if (a.actionType == ActionType.SHOT_UPPER) {
+          teleopUpperScored++;
+        } else if (a.actionType == ActionType.MISSED_LOWER) {
+          teleopLowerMissed++;
+        } else if (a.actionType == ActionType.MISSED_UPPER) {
+          teleopUpperMissed++;
+        } else if (a.actionType == ActionType.GROUND_INTAKE) {
+          teleopGroundIntake++;
+        } else if (a.actionType == ActionType.TERMINAL_INTAKE) {
+          teleopTerminalIntake++;
+        } else if (a.actionType == ActionType.MISSED_GROUND_INTAKE) {
+          teleopGroundIntakeMissed++;
+        } else if (a.actionType == ActionType.MISSED_TERMINAL_INTAKE) {
+          teleopTerminalIntakeMissed++;
         }
       }
 
@@ -231,16 +272,24 @@ class Analyzer {
       }
 
       //other actions, mainly booleans
-      if (a.actionType == ActionType.OTHER_CROSSED_INITIATION_LINE) {
-        crossedInitiationLine = true;
+      if (a.actionType == ActionType.CROSSED_TARMAC) {
+        crossedTarmac = true;
       } else if (a.actionType == ActionType.OTHER_WHEEL_POSITION) {
         wheelPosition = true;
       } else if (a.actionType == ActionType.OTHER_WHEEL_ROTATION) {
         wheelRotation = true;
-      } else if (a.actionType == ActionType.OTHER_CLIMB) {
-        climbed = true;
-      } else if (a.actionType == ActionType.OTHER_CLIMB_MISS) {
-        climbMissed = true;
+        // } else if (a.actionType == ActionType.OTHER_CLIMB) {
+        //   climbed = true;
+        // } else if (a.actionType == ActionType.OTHER_CLIMB_MISS) {
+        //   climbMissed = true;
+      } else if (a.actionType == ActionType.LOW_RUNG_CLIMB) {
+        climbedLow = true;
+      } else if (a.actionType == ActionType.MID_RUNG_CLIMB) {
+        climbedMid = true;
+      } else if (a.actionType == ActionType.HIGH_RUNG_CLIMB) {
+        climbedHigh = true;
+      } else if (a.actionType == ActionType.TRAVERSAL_RUNG_CLIMB) {
+        climbedTraversal = true;
       } else if (a.actionType == ActionType.OTHER_PARKED) {
         climbParked = true;
       } else if (a.actionType == ActionType.OTHER_LEVELLED) {
@@ -250,38 +299,43 @@ class Analyzer {
     //add all filled variables to string and return
     //(team != null ? team.teamNumber : "")
 
+    //TODO: Change this
     result = "AUTON:" +
-        "\nCrossed Initiation Line: " +
-        crossedInitiationLine.toString() +
-        "\nInner Shots Scored: " +
-        autonInnerScored.toString() +
-        "\nOuter Shots Scored: " +
-        autonOuterScored.toString() +
-        "\n Low Shots Scored: " +
-        autonLowScored.toString() +
-        "\n Outer Shots Missed: " +
-        autonOuterMissed.toString() +
-        "\n Low Shots Missed: " +
-        autonLowMissed.toString() +
-        "\n Intakes: " +
-        autonIntake.toString() +
-        "\n Missed Intakes: " +
-        autonIntakeMissed.toString() +
+        "\n Crossed Tarmac: " +
+        crossedTarmac.toString() +
+        "\n Lower Hub Shots Scored: " +
+        autonLowerScored.toString() +
+        "\n Upper Hub Shots Scored: " +
+        autonUpperScored.toString() +
+        "\n Lower Hub Shots Missed: " +
+        autonLowerMissed.toString() +
+        "\n Upper Hub Shots Missed: " +
+        autonUpperMissed.toString() +
+        "\n Missed Ground Intakes: " +
+        autonGroundIntakeMissed.toString() +
+        "\n Terminal Intakes: " +
+        autonTerminalIntake.toString() +
+        "\n Missed Ground Intakes: " +
+        autonGroundIntakeMissed.toString() +
+        "\n Missed Terminal Intakes: " +
+        autonTerminalIntakeMissed.toString() +
         "\n\n TELEOP:" +
-        "\nInner Shots Scored: " +
-        teleopInnerScored.toString() +
-        "\nOuter Shots Scored: " +
-        teleopOuterScored.toString() +
-        "\n Low Shots Scored: " +
-        teleopLowScored.toString() +
-        "\n Outer Shots Missed: " +
-        teleopOuterMissed.toString() +
-        "\n Low Shots Missed: " +
-        teleopLowMissed.toString() +
-        "\n Intakes: " +
-        teleopIntake.toString() +
-        "\n Missed Intakes: " +
-        teleopIntakeMissed.toString() +
+        "\n Lower Hub Shots Scored: " +
+        teleopLowerScored.toString() +
+        "\n Upper Hub Shots Scored: " +
+        teleopUpperScored.toString() +
+        "\n Lower Hub Shots Missed: " +
+        teleopLowerMissed.toString() +
+        "\n Upper Shots Missed: " +
+        teleopUpperMissed.toString() +
+        "\n Ground Intakes: " +
+        teleopGroundIntake.toString() +
+        "\n Missed Ground Intakes: " +
+        teleopGroundIntakeMissed.toString() +
+        "\n Terminal Intakes: " +
+        teleopTerminalIntake.toString() +
+        "\n Missed Terminal Intakes: " +
+        teleopTerminalIntakeMissed.toString() +
         "\n Wheel Position: " +
         wheelPosition.toString() +
         "\n Wheel Rotation: " +
@@ -296,8 +350,14 @@ class Analyzer {
         "\n\n ENDGAME:" +
         "\n Parked: " +
         climbParked.toString() +
-        "\n Climbed: " +
-        climbed.toString() +
+        "\n Low Rung CLimb: " +
+        climbedLow.toString() +
+        "\n Mid Rung CLimb: " +
+        climbedMid.toString() +
+        "\n High Rung CLimb: " +
+        climbedHigh.toString() +
+        "\n Traversal Rung CLimb: " +
+        climbedTraversal.toString() +
         "\n Climb Missed: " +
         climbMissed.toString() +
         "\n Levelled: " +
@@ -380,6 +440,7 @@ class Analyzer {
         fouls;
   }
 
+  //TODO: Change this
   void _collectData() {
     _totalNumGames = _allMatches.length;
     //goes thru all matches
@@ -387,6 +448,34 @@ class Analyzer {
       Match _currentMatch = _allMatches[i];
 
       List<GameAction> actions = _currentMatch.actions;
+
+      //rapid react actions
+      _shotLowerHub.addAll(actions
+          .where((element) => element.actionType == ActionType.SHOT_LOWER));
+      _shotUpperHub.addAll(actions
+          .where((element) => element.actionType == ActionType.SHOT_UPPER));
+      _missedLowerHub.addAll(actions
+          .where((element) => element.actionType == ActionType.MISSED_LOWER));
+      _missedUpperHub.addAll(actions
+          .where((element) => element.actionType == ActionType.MISSED_LOWER));
+      _terminalIntake.addAll(actions.where(
+          (element) => element.actionType == ActionType.TERMINAL_INTAKE));
+      _missedTerminalIntake.addAll(actions.where((element) =>
+          element.actionType == ActionType.MISSED_TERMINAL_INTAKE));
+      _groundIntake.addAll(actions.where(
+          (element) => element.actionType == ActionType.TERMINAL_INTAKE));
+      _missGroundIntake.addAll(actions.where(
+          (element) => element.actionType == ActionType.MISSED_GROUND_INTAKE));
+      _climbLowRung.addAll(actions
+          .where((element) => element.actionType == ActionType.LOW_RUNG_CLIMB));
+      _climbMidRung.addAll(actions
+          .where((element) => element.actionType == ActionType.MID_RUNG_CLIMB));
+      _climbHighRung.addAll(actions.where(
+          (element) => element.actionType == ActionType.HIGH_RUNG_CLIMB));
+      _climbTraversalRung.addAll(actions.where(
+          (element) => element.actionType == ActionType.TRAVERSAL_RUNG_CLIMB));
+      _humanPlayerShoots.addAll(actions.where(
+          (element) => element.actionType == ActionType.HUMAN_PLAYER_SHOOTS));
 
       _foulReg.addAll(actions
           .where((element) => element.actionType == ActionType.FOUL_REG));
@@ -426,8 +515,8 @@ class Analyzer {
           .where((element) => element.actionType == ActionType.PUSH_START));
       _pushEnd.addAll(actions
           .where((element) => element.actionType == ActionType.PUSH_END));
-      _otherCrossedInitiationLine.addAll(actions.where((element) =>
-          element.actionType == ActionType.OTHER_CROSSED_INITIATION_LINE));
+      _otherCrossedTarmac.addAll(actions
+          .where((element) => element.actionType == ActionType.CROSSED_TARMAC));
       _otherParked.addAll(actions
           .where((element) => element.actionType == ActionType.OTHER_PARKED));
       _otherLevelled.addAll(actions
@@ -435,8 +524,24 @@ class Analyzer {
     }
   }
 
+  //TODO: Change this
   //used when more data is added, need to clear everything then re-add
   void _clearAllData() {
+    //rapid react actions
+    _shotLowerHub = [];
+    _shotUpperHub = [];
+    _missedLowerHub = [];
+    _missedUpperHub = [];
+    _terminalIntake = [];
+    _missedTerminalIntake = [];
+    _groundIntake = [];
+    _missGroundIntake = [];
+    _climbLowRung = [];
+    _climbMidRung = [];
+    _climbHighRung = [];
+    _climbTraversalRung = [];
+    _humanPlayerShoots = [];
+
     _foulReg = [];
     _foulTech = [];
     _foulYellow = [];
@@ -456,64 +561,101 @@ class Analyzer {
     _prevIntake = [];
     _pushStart = [];
     _pushEnd = [];
-    _otherCrossedInitiationLine = [];
+    _otherCrossedTarmac = [];
     _otherParked = [];
     _otherLevelled = [];
   }
 
+  //TODO: Change this
   double calcOffenseShootingPts() {
-    double _lowPts = 0.0, _outerPts = 0.0, _innerPts = 0.0;
-    for (int i = 0; i < _shotLow.length; i++) {
-      if (_shotLow[i].timeStamp <= GameConstants.autonMillisecondLength) {
-        _lowPts += GameConstants.lowShotAutonValue;
+    // double _lowPts = 0.0, _outerPts = 0.0, _innerPts = 0.0;
+    // for (int i = 0; i < _shotLow.length; i++) {
+    //   if (_shotLow[i].timeStamp <= GameConstants.autonMillisecondLength) {
+    //     _lowPts += GameConstants.lowShotAutonValue;
+    //   } else {
+    //     _lowPts += GameConstants.lowShotValue;
+    //   }
+    // }
+
+    // for (int i = 0; i < _shotOuter.length; i++) {
+    //   if (_shotOuter[i].timeStamp <= GameConstants.autonMillisecondLength) {
+    //     _outerPts += GameConstants.outerShotAutonValue;
+    //   } else {
+    //     _outerPts += GameConstants.outerShotValue;
+    //   }
+    // }
+
+    // for (int i = 0; i < _shotInner.length; i++) {
+    //   if (_shotInner[i].timeStamp <= GameConstants.autonMillisecondLength) {
+    //     _innerPts += GameConstants.innerShotAutonValue;
+    //   } else {
+    //     _innerPts += GameConstants.innerShotValue;
+    //   }
+    // }
+    // return _lowPts + _outerPts + _innerPts;
+    double _lowerPts = 0.0, _upperPts = 0.0;
+
+    //calculates lower hub points
+    for (int i = 0; i < _shotLowerHub.length; i++) {
+      if (_shotLowerHub[i].timeStamp <= GameConstants.autonMillisecondLength) {
+        _lowerPts += GameConstants.lowerHubShotAutonValue;
       } else {
-        _lowPts += GameConstants.lowShotValue;
+        _lowerPts += GameConstants.lowerHubValue;
+      }
+    }
+    //calculates upper hub points
+    for (int i = 0; i < _shotUpperHub.length; i++) {
+      if (_shotUpperHub[i].timeStamp <= GameConstants.autonMillisecondLength) {
+        _upperPts += GameConstants.upperHubShotAutonValue;
+      } else {
+        _upperPts += GameConstants.upperHubValue;
       }
     }
 
-    for (int i = 0; i < _shotOuter.length; i++) {
-      if (_shotOuter[i].timeStamp <= GameConstants.autonMillisecondLength) {
-        _outerPts += GameConstants.outerShotAutonValue;
-      } else {
-        _outerPts += GameConstants.outerShotValue;
-      }
-    }
-
-    for (int i = 0; i < _shotInner.length; i++) {
-      if (_shotInner[i].timeStamp <= GameConstants.autonMillisecondLength) {
-        _innerPts += GameConstants.innerShotAutonValue;
-      } else {
-        _innerPts += GameConstants.innerShotValue;
-      }
-    }
-    return _lowPts + _outerPts + _innerPts;
+    return _lowerPts + _upperPts;
   }
 
+  //TODO:
   double calcOffenseNonShootingPts() {
-    double _crossInitiation = _otherCrossedInitiationLine.length *
-        GameConstants.crossInitiationLineValue;
-    double _rotationControl =
-        _otherWheelRotation.length * GameConstants.positionControl;
-    double _positionControl =
-        _otherWheelPosition.length * GameConstants.positionControl;
-    double _climb = (_otherClimb.length * GameConstants.climbValue) +
-        (_otherParked.length * GameConstants.endgameParkValue) +
-        (_otherLevelled.length * GameConstants.levelledValue);
+    double _crossTarmac =
+        _otherCrossedTarmac.length * GameConstants.crossTarmacValue;
+    // double _rotationControl =
+    //     _otherWheelRotation.length * GameConstants.positionControl;
+    // double _positionControl =
+    //     _otherWheelPosition.length * GameConstants.positionControl;
+    // double _climb = (_otherClimb.length * GameConstants.climbValue) +
+    //     (_otherParked.length * GameConstants.endgameParkValue) +
+    //     (_otherLevelled.length * GameConstants.levelledValue);
+    double _climb = (_climbLowRung.length * GameConstants.lowRungValue) +
+        (_climbMidRung.length * GameConstants.midRungValue) +
+        (_climbHighRung.length * GameConstants.highRungValue) +
+        (_climbTraversalRung.length * GameConstants.traversalRungValue);
+    double _humanPlayerShooting =
+        _humanPlayerShoots.length * GameConstants.humnanPlayerAutonValue;
 
-    return _crossInitiation + _rotationControl + _positionControl + _climb;
+    return _crossTarmac + _climb + _humanPlayerShooting;
   }
 
   double calcShotAccuracy() {
-    int _successfulShots =
-        _shotLow.length + _shotOuter.length + _shotInner.length;
-    int _missedShots = _missedLow.length + _missedOuter.length;
+    // int _successfulShots =
+    //     _shotLowerHub.length + _shotOuter.length + _shotInner.length;
+    // int _missedShots = _missedLow.length + _missedOuter.length;
+    // if (_successfulShots + _missedShots != 0) {
+    //   return (_successfulShots / (_successfulShots + _missedShots)) * 100.0;
+    // } else {
+    //   return 0;
+    // }
+    int _successfulShots = _shotLowerHub.length + _shotUpperHub.length;
+    int _missedShots = _missedLowerHub.length + _missedUpperHub.length;
+
     if (_successfulShots + _missedShots != 0) {
-      return (_successfulShots / (_successfulShots + _missedShots)) * 100.0;
+      return (_successfulShots / (_successfulShots + _missedShots)) * 100;
     } else {
       return 0;
     }
   }
 
+  //TODO:
   double calcTotClimbAccuracy() {
     double _climb = (_otherClimb.length + _otherLevelled.length) * 1.0;
     double _miss = _otherClimbMiss.length * 1.0;
@@ -548,16 +690,17 @@ class Analyzer {
     }
 
     for (int b = 0; b < matchActions.length; b++) {
-      //add intaked balls
-      if (matchActions[b].actionType == ActionType.INTAKE &&
+      //add intaked balls\
+      //TODO: Intake
+      if ((matchActions[b].actionType == ActionType.GROUND_INTAKE ||
+              matchActions[b].actionType == ActionType.TERMINAL_INTAKE) &&
           matchActions[b].timeStamp <= timeStamp) {
         ballsInBot++;
       }
 
       //remove balls that were shot
-      if (matchActions[b].actionType == ActionType.SHOT_LOW ||
-          matchActions[b].actionType == ActionType.SHOT_OUTER ||
-          matchActions[b].actionType == ActionType.SHOT_INNER) {
+      if (matchActions[b].actionType == ActionType.SHOT_LOWER ||
+          matchActions[b].actionType == ActionType.SHOT_UPPER) {
         if (matchActions[b].timeStamp <= timeStamp) {
           ballsInBot--;
         }
@@ -660,16 +803,15 @@ class Analyzer {
         //inside each array of actions
         for (int j = 0; j < _allMatches[i].actions.length; j++) {
           GameAction currentAction = _allMatches[i].actions[j];
-          if (currentAction.actionType == ActionType.SHOT_LOW ||
-              currentAction.actionType == ActionType.SHOT_OUTER ||
-              currentAction.actionType == ActionType.SHOT_INNER) {
+          if (currentAction.actionType == ActionType.SHOT_LOWER ||
+              currentAction.actionType == ActionType.SHOT_UPPER) {
             if (currentAction.x == x && currentAction.y == y) {
               shotsMade++;
             }
           }
 
-          if (currentAction.actionType == ActionType.MISSED_LOW ||
-              currentAction.actionType == ActionType.MISSED_OUTER) {
+          if (currentAction.actionType == ActionType.MISSED_LOWER ||
+              currentAction.actionType == ActionType.MISSED_UPPER) {
             if (currentAction.x == x && currentAction.y == y) {
               shotsMissed++;
             }
@@ -679,6 +821,7 @@ class Analyzer {
     } else {
       ActionType missedVersionOfAction;
       //cannot miss a inner shot, accuracy is 100%
+      //TODO:
       if (actionType == ActionType.SHOT_INNER) {
         for (int i = 0; i < _allMatches.length; i++) {
           //inside each array of actions
@@ -696,12 +839,12 @@ class Analyzer {
         }
         return 1;
       }
-      if (actionType == ActionType.SHOT_OUTER) {
-        missedVersionOfAction = ActionType.MISSED_OUTER;
+      if (actionType == ActionType.SHOT_UPPER) {
+        missedVersionOfAction = ActionType.MISSED_UPPER;
       }
 
-      if (actionType == ActionType.SHOT_LOW) {
-        missedVersionOfAction = ActionType.MISSED_LOW;
+      if (actionType == ActionType.SHOT_LOWER) {
+        missedVersionOfAction = ActionType.MISSED_LOWER;
       }
 
       for (int i = 0; i < _allMatches.length; i++) {
@@ -729,6 +872,7 @@ class Analyzer {
   }
 
   //if doing everything, set actionType = ActionType.ALL
+  //TODO:
   double calcPtsAtZone(ActionType actionType, double x, double y) {
     double totalPoints = 0;
     double pointValueAuton = 0;
@@ -743,51 +887,38 @@ class Analyzer {
         for (int j = 0; j < _allMatches[i].actions.length; j++) {
           //low shot
           GameAction currentAction = _allMatches[i].actions[j];
-          if (currentAction.actionType == ActionType.SHOT_LOW) {
-            if (currentAction.x == x && currentAction.y == y) {
-              if (currentAction.timeStamp <= GameConstants.teleopStartMillis) {
-                totalPoints += GameConstants.lowShotAutonValue;
-              } else {
-                totalPoints += GameConstants.lowShotValue;
-              }
-            }
-          }
 
-          //outer shot
-          if (currentAction.actionType == ActionType.SHOT_OUTER) {
+          //upper shot
+          if (currentAction.actionType == ActionType.SHOT_UPPER) {
             if (currentAction.x == x && currentAction.y == y) {
               if (currentAction.timeStamp <= GameConstants.teleopStartMillis) {
-                totalPoints += GameConstants.outerShotAutonValue;
+                totalPoints += GameConstants.upperHubShotAutonValue;
               } else {
-                totalPoints += GameConstants.outerShotValue;
+                totalPoints += GameConstants.upperHubValue;
               }
             }
           }
 
           //inner shot
-          if (currentAction.actionType == ActionType.SHOT_INNER) {
+          if (currentAction.actionType == ActionType.SHOT_LOWER) {
             if (currentAction.x == x && currentAction.y == y) {
               if (currentAction.timeStamp <= GameConstants.teleopStartMillis) {
-                totalPoints += GameConstants.innerShotAutonValue;
+                totalPoints += GameConstants.lowerHubShotAutonValue;
               } else {
-                totalPoints += GameConstants.innerShotValue;
+                totalPoints += GameConstants.lowerHubValue;
               }
             }
           }
         }
       }
     } else {
-      if (actionType == ActionType.SHOT_INNER) {
-        pointValueAuton = GameConstants.innerShotAutonValue;
-        pointValueTeleop = GameConstants.innerShotValue;
+      if (actionType == ActionType.SHOT_LOWER) {
+        pointValueAuton = GameConstants.lowerHubShotAutonValue;
+        pointValueTeleop = GameConstants.lowerHubValue;
       }
-      if (actionType == ActionType.SHOT_OUTER) {
-        pointValueAuton = GameConstants.outerShotAutonValue;
-        pointValueTeleop = GameConstants.outerShotValue;
-      }
-      if (actionType == ActionType.SHOT_LOW) {
-        pointValueAuton = GameConstants.lowShotAutonValue;
-        pointValueTeleop = GameConstants.lowShotValue;
+      if (actionType == ActionType.SHOT_UPPER) {
+        pointValueAuton = GameConstants.upperHubShotAutonValue;
+        pointValueTeleop = GameConstants.upperHubValue;
       }
 
       for (int i = 0; i < _allMatches.length; i++) {
