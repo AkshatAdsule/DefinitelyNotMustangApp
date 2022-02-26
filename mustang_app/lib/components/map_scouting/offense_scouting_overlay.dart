@@ -48,7 +48,7 @@ class OffenseScoutingOverlay extends StatelessWidget {
         //         )),
         (mapScoutingKey.currentState.stopwatch.elapsedMilliseconds <=
                     GameConstants.teleopStartMillis &&
-                !mapScoutingKey.currentState.crossedInitiationLine)
+                !mapScoutingKey.currentState.crossedTarmac)
             ? GameMapChild(
                 align: Alignment(0, 0),
                 child: CircleAvatar(
@@ -59,7 +59,7 @@ class OffenseScoutingOverlay extends StatelessWidget {
                       mapScoutingKey.currentState.addAction(
                           ActionType.CROSSED_TARMAC, context);
                       mapScoutingKey.currentState
-                          .setCrossedInitiationLine(true);
+                          .setCrossedTarmac(true);
                     },
                   ),
                 ),
