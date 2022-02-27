@@ -22,10 +22,50 @@ class _PitScouterState extends State<PitScouter> {
   String _teamNumber;
   DriveBaseType _driveBase = DriveBaseType.TANK;
   Map<String, dynamic> state = {};
+  List<TextEditingController> myController = List.generate(9, (i) => TextEditingController());
+  List<String> prompts = [
+     "1. What cool features does their robot have? What are they proud of?",
+     "2. Describe their auton routine.",
+     "3. Any final comments about the robot?",
+     //below is for pit scouting
+     "4. What is their battery capacity?",
+     "5. What is their battery charge capacity?", 
+     "6. Any cool new tools they are using?",
+     "7. What are the pros and cons of their storage?", 
+     "8. Is their pit asthetically pleasing? Why or why not?", 
+     "9. Any final comments?",
+  ];
 
   _PitScouterState(teamNumber) {
     _teamNumber = teamNumber;
   }
+
+  Widget createTextQuestion(String question, int num) {
+    return Column(
+      children: <Widget>[
+        Text(
+          question, 
+           textAlign: TextAlign.start,
+             // textScaleFactor: 2.0,
+              style: TextStyle (
+               // fontWeight: FontWeight.w400,
+                fontSize: 20.0,
+                letterSpacing: 1.0,
+                wordSpacing: 1.0,
+              )
+        ),
+         SizedBox(height:10),
+        TextField(
+          controller: myController[num],
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+          ),
+        ),
+        SizedBox(height:20),
+      ],
+    );
+  }
+
 
   Widget _scoutingSection(String title, List<Widget> questions) {
     return Column(
@@ -99,7 +139,7 @@ class _PitScouterState extends State<PitScouter> {
             EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         reverse: true,
         child: Column(children: <Widget>[
-          _title(title: "General"),
+          _title(title: "Robot Questions"),
           ListTile(
             title: Text(
               'Drivebase Type',
@@ -180,6 +220,7 @@ class _PitScouterState extends State<PitScouter> {
             child: ElevatedButton(
               onPressed: () {
                 ScoutingOperations.setTeamData(
+                  //TODO could pass in new Team with Robot (as attribute)
                   PitScoutingData.fromPitScoutingState(state,
                       teamNumber: _teamNumber, drivebaseType: _driveBase),
                 );

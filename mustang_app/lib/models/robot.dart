@@ -23,13 +23,14 @@ enum SecondarySubsystem {
 
 enum ShootingCapability {
   LOWER,
-  INNER,
-  OUTER,
+  UPPER
 }
 
 enum ClimbCapability {
-  CLIMBER, 
-  LEVELER
+  LOW,
+  MIDDLE,
+  HIGH,
+  TRAVERSE,
 }
 
 class Robot {
