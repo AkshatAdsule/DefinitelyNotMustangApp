@@ -42,14 +42,15 @@ class _PitScouterState extends State<PitScouter> {
 
   Widget createTextQuestion(String question, int num) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
           question, 
-           textAlign: TextAlign.start,
+           textAlign: TextAlign.left,
              // textScaleFactor: 2.0,
               style: TextStyle (
                // fontWeight: FontWeight.w400,
-                fontSize: 20.0,
+                fontSize: 15.0,
                 letterSpacing: 1.0,
                 wordSpacing: 1.0,
               )
@@ -177,6 +178,14 @@ class _PitScouterState extends State<PitScouter> {
               }).toList(),
             ),
           ),
+          Container(
+            padding: EdgeInsets.all(10),
+            child: Column(children: <Widget>[
+              createTextQuestion(prompts[0], 0),
+              createTextQuestion(prompts[1], 1),
+              createTextQuestion(prompts[2], 2),
+            ])
+          ),
           _scoutingSection(
             "Auton",
             [
@@ -214,7 +223,19 @@ class _PitScouterState extends State<PitScouter> {
               _checkBox(title: "Traverse"),
             ],
           ),
-          _textField(title: "Final Comments", isNum: false),
+          _title(title: "Pit Scouting Questions"),
+           Container(
+            padding: EdgeInsets.all(10),
+            child: Column(children: <Widget>[
+              createTextQuestion(prompts[3], 3),
+              createTextQuestion(prompts[4], 4),
+              createTextQuestion(prompts[5], 5),
+              createTextQuestion(prompts[6], 6),
+              createTextQuestion(prompts[7], 7),
+              createTextQuestion(prompts[8], 8),
+            ])
+          ),
+         // _textField(title: "Final Comments", isNum: false),
           Container(
             padding: EdgeInsets.only(top: 10, bottom: 10),
             child: ElevatedButton(
