@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:mustang_app/models/robot.dart';
 
 class PitScoutingData {
-  String teamNumber, teamName, teamEmail, region, notes;
+  String teamNumber, teamName, teamEmail, region, notes, features;
   DriveBaseType drivebaseType;
   List<String> scoreLocations, intakeLocations, hubTargets, climbLocations;
   int autonBalls;
@@ -28,19 +28,19 @@ class PitScoutingData {
     ALL_CLIMB_LEVELS
   ];
 
-  PitScoutingData({
-    @required this.teamNumber,
-    @required this.drivebaseType,
-    this.notes = '',
-    @required this.scoreLocations,
-    @required this.intakeLocations,
-    @required this.hubTargets,
-    @required this.climbLocations,
-    @required this.autonBalls,
-    this.teamName,
-    this.teamEmail,
-    this.region,
-  });
+  PitScoutingData(
+      {@required this.teamNumber,
+      @required this.drivebaseType,
+      this.notes = '',
+      @required this.scoreLocations,
+      @required this.intakeLocations,
+      @required this.hubTargets,
+      @required this.climbLocations,
+      @required this.autonBalls,
+      this.teamName,
+      this.teamEmail,
+      this.region,
+      this.features});
 
   factory PitScoutingData.fromSnapshot(DocumentSnapshot snapshot) {
     if (!snapshot.exists) {
@@ -71,6 +71,7 @@ class PitScoutingData {
       scoreLocations: (data["scoreLocations"] as List<dynamic>)
           .map((e) => e.toString())
           .toList(),
+      features: data["features"] ?? "",
     );
   }
 
@@ -115,6 +116,9 @@ class PitScoutingData {
         case "Final Comments":
           this.notes = item.value;
           break;
+        case "Robot Features":
+          this.features = item.value;
+          break;
       }
     }
   }
@@ -132,6 +136,7 @@ class PitScoutingData {
       'intakeLocations': intakeLocations,
       'hubTargets': hubTargets,
       'autonBalls': autonBalls,
+      'features': features
     };
   }
 }

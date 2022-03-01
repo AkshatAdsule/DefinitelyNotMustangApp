@@ -217,13 +217,11 @@ class _PitScouterState extends State<PitScouter> {
             _textField(title: "Robot Features", isNum: false),
             _textField(title: "Final Comments", isNum: false),
           ]),
-          _title(title: "Pit Scouting Questions"),
           Container(
             padding: EdgeInsets.only(top: 10, bottom: 10),
             child: ElevatedButton(
               onPressed: () {
                 ScoutingOperations.setTeamData(
-                  //TODO could pass in new Team with Robot (as attribute)
                   PitScoutingData.fromPitScoutingState(state,
                       teamNumber: _teamNumber, drivebaseType: _driveBase),
                 );
