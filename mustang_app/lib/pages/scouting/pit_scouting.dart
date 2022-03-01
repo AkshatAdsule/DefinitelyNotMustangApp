@@ -22,18 +22,19 @@ class _PitScouterState extends State<PitScouter> {
   String _teamNumber;
   DriveBaseType _driveBase = DriveBaseType.TANK;
   Map<String, dynamic> state = {};
-  List<TextEditingController> myController = List.generate(9, (i) => TextEditingController());
+  List<TextEditingController> myController =
+      List.generate(9, (i) => TextEditingController());
   List<String> prompts = [
-     "1. What cool features does their robot have? What are they proud of?",
-     "2. Describe their auton routine.",
-     "3. Any final comments about the robot?",
-     //below is for pit scouting
-     "4. What is their battery capacity?",
-     "5. What is their battery charge capacity?", 
-     "6. Any cool new tools they are using?",
-     "7. What are the pros and cons of their storage?", 
-     "8. Is their pit asthetically pleasing? Why or why not?", 
-     "9. Any final comments?",
+    "1. What cool features does their robot have? What are they proud of?",
+    "2. Describe their auton routine.",
+    "3. Any final comments about the robot?",
+    //below is for pit scouting
+    "4. What is their battery capacity?",
+    "5. What is their battery charge capacity?",
+    "6. Any cool new tools they are using?",
+    "7. What are the pros and cons of their storage?",
+    "8. Is their pit asthetically pleasing? Why or why not?",
+    "9. Any final comments?",
   ];
 
   _PitScouterState(teamNumber) {
@@ -44,29 +45,26 @@ class _PitScouterState extends State<PitScouter> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          question, 
-           textAlign: TextAlign.left,
-             // textScaleFactor: 2.0,
-              style: TextStyle (
-               // fontWeight: FontWeight.w400,
-                fontSize: 15.0,
-                letterSpacing: 1.0,
-                wordSpacing: 1.0,
-              )
-        ),
-         SizedBox(height:10),
+        Text(question,
+            textAlign: TextAlign.left,
+            // textScaleFactor: 2.0,
+            style: TextStyle(
+              // fontWeight: FontWeight.w400,
+              fontSize: 15.0,
+              letterSpacing: 1.0,
+              wordSpacing: 1.0,
+            )),
+        SizedBox(height: 10),
         TextField(
           controller: myController[num],
           decoration: InputDecoration(
             border: OutlineInputBorder(),
           ),
         ),
-        SizedBox(height:20),
+        SizedBox(height: 20),
       ],
     );
   }
-
 
   Widget _scoutingSection(String title, List<Widget> questions) {
     return Column(
@@ -178,14 +176,6 @@ class _PitScouterState extends State<PitScouter> {
               }).toList(),
             ),
           ),
-          Container(
-            padding: EdgeInsets.all(10),
-            child: Column(children: <Widget>[
-              createTextQuestion(prompts[0], 0),
-              createTextQuestion(prompts[1], 1),
-              createTextQuestion(prompts[2], 2),
-            ])
-          ),
           _scoutingSection(
             "Auton",
             [
@@ -223,19 +213,11 @@ class _PitScouterState extends State<PitScouter> {
               _checkBox(title: "Traverse"),
             ],
           ),
+          _scoutingSection("General", [
+            _textField(title: "Robot Features", isNum: false),
+            _textField(title: "Final Comments", isNum: false),
+          ]),
           _title(title: "Pit Scouting Questions"),
-           Container(
-            padding: EdgeInsets.all(10),
-            child: Column(children: <Widget>[
-              createTextQuestion(prompts[3], 3),
-              createTextQuestion(prompts[4], 4),
-              createTextQuestion(prompts[5], 5),
-              createTextQuestion(prompts[6], 6),
-              createTextQuestion(prompts[7], 7),
-              createTextQuestion(prompts[8], 8),
-            ])
-          ),
-         // _textField(title: "Final Comments", isNum: false),
           Container(
             padding: EdgeInsets.only(top: 10, bottom: 10),
             child: ElevatedButton(
