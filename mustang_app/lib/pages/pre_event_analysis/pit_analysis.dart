@@ -216,21 +216,89 @@ class _PitAnalysisState extends State<PitAnalysis> {
                   ),
                 ],
               ),
+             
               _buildDataSection(
                 title: "Robot Features",
                 children: [
-                  Text(data.features),
-                ],
-              ),
-              _buildDataSection(
-                title: "General Comments",
-                children: [
                   Text(
-                    data.notes,
+                    data.q1,
                     textAlign: TextAlign.left,
                   ),
                 ],
               ),
+               _buildDataSection(
+                title: "Auton Routine",
+                children: [
+                  Text(
+                    data.q2,
+                    textAlign: TextAlign.left,
+                  ),
+                ],
+              ),
+              _buildDataSection(
+                title: "Robot Comments",
+                children: [
+                  Text(
+                    data.q3,
+                    textAlign: TextAlign.left,
+                  ),
+                ],
+              ),
+              _buildDataSection(
+                title: "Battery Capacity",
+                children: [
+                  Text(
+                    data.q4,
+                    textAlign: TextAlign.left,
+                  ),
+                ],
+              ),
+              _buildDataSection(
+                title: "Battery Charge Capacity",
+                children: [
+                  Text(
+                    data.q5,
+                    textAlign: TextAlign.left,
+                  ),
+                ],
+              ),
+              _buildDataSection(
+                title: "Cool new tools",
+                children: [
+                  Text(
+                    data.q6,
+                    textAlign: TextAlign.left,
+                  ),
+                ],
+              ),
+              _buildDataSection(
+                title: "Storage Pros and Cons",
+                children: [
+                  Text(
+                    data.q7,
+                    textAlign: TextAlign.left,
+                  ),
+                ],
+              ),
+              _buildDataSection(
+                title: "Asthetics",
+                children: [
+                  Text(
+                    data.q8,
+                    textAlign: TextAlign.left,
+                  ),
+                ],
+              ),
+              _buildDataSection(
+                title: "Final Comments",
+                children: [
+                  Text(
+                    data.q9,
+                    textAlign: TextAlign.left,
+                  ),
+                ],
+              ),
+
             ],
           ),
         ),

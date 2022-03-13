@@ -4,6 +4,7 @@ import 'package:mustang_app/models/robot.dart';
 
 class PitScoutingData {
   String teamNumber, teamName, teamEmail, region, notes, features;
+  String q1, q2, q3, q4, q5, q6, q7, q8, q9;
   DriveBaseType drivebaseType;
   List<String> scoreLocations, intakeLocations, hubTargets, climbLocations;
   int autonBalls;
@@ -37,6 +38,15 @@ class PitScoutingData {
       @required this.hubTargets,
       @required this.climbLocations,
       @required this.autonBalls,
+      @required this.q1,
+      @required this.q2,
+      @required this.q3,
+      @required this.q4,
+      @required this.q5,
+      @required this.q6,
+      @required this.q7,
+      @required this.q8,
+      @required this.q9,
       this.teamName,
       this.teamEmail,
       this.region,
@@ -72,6 +82,15 @@ class PitScoutingData {
           .map((e) => e.toString())
           .toList(),
       features: data["features"] ?? "",
+      q1: data["q1"] ?? "",
+      q2: data["q2"] ?? "",
+      q3: data["q3"] ?? "",
+      q4: data["q4"] ?? "",
+      q5: data["q5"] ?? "",
+      q6: data["q6"] ?? "",
+      q7: data["q7"] ?? "",
+      q8: data["q8"] ?? "",
+      q9: data["q9"] ?? "",
     );
   }
 
@@ -119,6 +138,33 @@ class PitScoutingData {
         case "Robot Features":
           this.features = item.value;
           break;
+        case "q1":
+          this.q1 = item.value;
+          break;
+        case "q2":
+          this.q2 = item.value;
+          break;
+        case "q3":
+          this.q3 = item.value;
+          break;
+        case "q4":
+          this.q4 = item.value;
+          break;
+        case "q5":
+          this.q5 = item.value;
+          break; 
+        case "q6":
+          this.q6 = item.value;
+          break; 
+        case "q7":
+          this.q7 = item.value;
+          break;  
+        case "q8":
+          this.q8 = item.value;
+          break;
+        case "q9":
+          this.q9 = item.value;
+          break;    
       }
     }
   }
@@ -136,7 +182,17 @@ class PitScoutingData {
       'intakeLocations': intakeLocations,
       'hubTargets': hubTargets,
       'autonBalls': autonBalls,
-      'features': features
+      'features': features,
+      'q1': q1,
+      'q2': q2,
+      'q3': q3,
+      'q4': q4,
+      'q5': q5,
+      'q6': q6,
+      'q7': q7,
+      'q8': q8,
+      'q9': q9,
+
     };
   }
 }
