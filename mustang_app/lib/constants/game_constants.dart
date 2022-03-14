@@ -16,8 +16,9 @@ class GameConstants {
   // static const int minPtValuePerZonePerGame = 0;
   // static const int maxPtValuePerZonePerGame = 8;
   //OFFENSE ANALYSIS
+  //TODO: Update constants
   static const double autonMillisecondLength = 15000;
-  static const double crossInitiationLineValue = 5;
+  static const double crossTarmacValue = 2;
   static const double lowShotAutonValue = 2;
   static const double outerShotAutonValue = 4;
   static const double innerShotAutonValue = 6;
@@ -29,6 +30,17 @@ class GameConstants {
   static const double climbValue = 25;
   static const double endgameParkValue = 5;
   static const double levelledValue = 15;
+
+  //RAPID REACT CONSTANTS
+  static const double lowerHubShotAutonValue = 2;
+  static const double upperHubShotAutonValue = 4;
+  static const double humnanPlayerAutonValue = 4;
+  static const double lowerHubValue = 1;
+  static const double upperHubValue = 2;
+  static const double lowRungValue = 4;
+  static const double midRungValue = 6;
+  static const double highRungValue = 10;
+  static const double traversalRungValue = 15;
 
   //DEFENSE ANAYLSIS
   static const double intakeValue = 1.5;

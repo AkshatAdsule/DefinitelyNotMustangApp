@@ -5,9 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mustang_app/constants/constants.dart';
+import 'package:mustang_app/models/robot.dart';
 
 import 'package:mustang_app/models/team_statistic.dart';
 import 'package:mustang_app/utils/stream_event.dart';
+
+import '../models/team.dart';
 
 /// Represents a event with an [eventCode], [eventType], and [eventType]
 class Event {
@@ -37,6 +40,10 @@ class GetStatistics {
 
   FirebaseFirestore _firestore;
   CollectionReference _teams;
+  CollectionReference _2022teams;
+
+  /// List of team names from their team code.
+  static Map<String, String> _TEAM_NAMES = {};
 
   static GetStatistics getInstance() {
     _instance = _instance ?? new GetStatistics._();
@@ -59,6 +66,7 @@ class GetStatistics {
   Future<void> _firebaseInit() async {
     _firestore = FirebaseFirestore.instance;
     _teams = _firestore.collection('team-statistics');
+    _2022teams = _firestore.collection('2022');
   }
 
   GetStatistics._() {
@@ -91,6 +99,38 @@ class GetStatistics {
     return events;
   }
 
+  /// Adds a team to the list of team names from codes
+  /// If the team is already in the list, nothing is done
+  static void addTeamToList(String teamCode) async {
+    if (_TEAM_NAMES[teamCode] == null) {
+      var response;
+      await http
+          .get(Uri.parse("$API_PREFIX/team/$teamCode"), headers: _header)
+          .then((res) => response = res.body);
+      var resJson = jsonDecode(response);
+      _TEAM_NAMES[teamCode] = resJson['school_name'];
+
+      //since some teams don't have school_name defined (frc7, for instance),
+      //the nickname is used as a backup, and "---" is used as a default.
+      if (resJson['school_name'] == null) {
+        _TEAM_NAMES[teamCode] = resJson['nickname'];
+      } else if (resJson['nickname'] == null) {
+        _TEAM_NAMES[teamCode] = "---";
+      }
+    }
+  }
+
+  /// Gets the team name from the code.
+  /// If the team is not currently in the list, "---" is returned.
+  /// To add a team to the list, see addTeamToList()
+  static String getTeamName(String teamCode) {
+    if (_TEAM_NAMES[teamCode] != null) {
+      return _TEAM_NAMES[teamCode];
+    } else {
+      return "---";
+    }
+  }
+
   /// Returns array of team codes from an event
   Future<List> getTeams(String eventCode) async {
     var response;
@@ -105,6 +145,7 @@ class GetStatistics {
       if (Constants.INVALID_TEAMS.indexOf(teamCode) == -1) {
         teams.add(team['key']);
       }
+      addTeamToList(team['key']);
     }
     _eventStreamController.add(
       StreamEvent(message: "Got teams for $eventCode", type: MessageType.INFO),
@@ -318,11 +359,32 @@ class GetStatistics {
     return contributionPercentage;
   }
 
+  Future<Team> getPitScoutingData(String team) async {
+    String path = "/info/teams/" + team;
+    //print("path: " + path);
+    var doc = await _2022teams.doc(path).get();
+    Map<String, dynamic> docData = doc.data();
+    print("docData: " + docData.toString());
+
+    if (doc.exists) {
+      print("doc retrieved successfully");
+      Map<String, dynamic> dataMap =
+          docData.map((key, value) => MapEntry(key, value));
+      Team pitScoutTeam = new Team.fromJson(dataMap);
+      return pitScoutTeam;
+    } else {
+      print("did not retrieve doc");
+      return null;
+    }
+  }
+
   /// Returns a new TeamStatistic object, which contains the average OPR, DPR, and CCWM along with a list of all OPRs, CCWMs, and DPRs
   Future<TeamStatistic> getCumulativeStats(String team) async {
     List<EventStatistic> eventStats = [];
     var doc = await _teams.doc(team).get();
     Map<String, dynamic> docData = doc.data();
+
+    await addTeamToList(team);
 
     if (doc.exists &&
         docData["DATA_VERSION"] == Constants.DATA_ANALYSIS_DATA_VERSION) {

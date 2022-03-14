@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mustang_app/utils/get_statistics.dart';
 import './overall_score_display.dart';
 import 'package:mustang_app/pages/pre_event_analysis/view_graph_screen.dart';
 import 'package:mustang_app/models/team_statistic.dart';
@@ -10,9 +11,18 @@ class TeamStatsDisplay extends StatelessWidget {
   /// creates a new TeamStatsDisplay with the given team statistics, score, and max score
   TeamStatsDisplay({this.teamStatistic, this.score, this.max});
 
+  /// Formats the team name to be short enough to fit on the screen
+  String formatTeamName(String teamName) {
+    if (teamName.length < 38) {
+      return teamName;
+    } else {
+      return teamName.substring(0, 35) + "...";
+    }
+  }
+
   /// build the display of a team's statistics including average opr, dpr, ccwm
-  /// also builds a button below the text that links to a graph of the team's statistics over time 
-  /// builds a bar on the bottom indicating the teams overall rating out of a max score 
+  /// also builds a button below the text that links to a graph of the team's statistics over time
+  /// builds a bar on the bottom indicating the teams overall rating out of a max score
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -23,9 +33,18 @@ class TeamStatsDisplay extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              'Team ${teamStatistic.teamCode.substring(3)}',
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '${teamStatistic.teamCode.substring(3)}',
+                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "${formatTeamName(GetStatistics.getTeamName(teamStatistic.teamCode))}",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+                )
+              ],
             ),
             SizedBox(
               height: 10,

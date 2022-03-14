@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mustang_app/models/team.dart';
+import 'package:mustang_app/pages/pre_event_analysis/pit_analysis.dart';
 import 'package:mustang_app/services/team_service.dart';
 import 'package:mustang_app/components/shared/screen.dart';
 import 'package:mustang_app/pages/analysis/all_data_display.dart';
+import 'package:mustang_app/pages/analysis/pit_scouting_display.dart';
 import 'package:provider/provider.dart';
 import 'map_analysis_display.dart';
 import 'written_analysis_display.dart';
@@ -77,6 +79,7 @@ class _SearchState extends State<Search> {
         Navigator.pushNamed(context, WrittenAnalysisDisplay.route, arguments: {
           'teamNumber': teamNumber,
         });
+        print(ModalRoute.of(context).settings.name);
       },
     );
     TextButton goToAllData = TextButton(
@@ -88,6 +91,21 @@ class _SearchState extends State<Search> {
         });
       },
     );
+    TextButton goToPitScoutingData = TextButton(
+        child: Text("Pit Scouting Data", style: TextStyle(fontSize: 15)),
+        onPressed: () {
+          Navigator.pop(context);
+          // Navigator.pushNamed(context, PitScoutingDisplay.route, arguments: {
+          //   'teamNumber': teamNumber,
+          // });
+          // print(ModalRoute.of(context).settings.name);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: ((context) => PitAnalysis(teams: ["frc" + teamNumber])),
+            ),
+          );
+        });
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Data View"),
@@ -97,7 +115,8 @@ class _SearchState extends State<Search> {
         cancelButton,
         goToMapAnalysis,
         goToWrittenAnalysis,
-        goToAllData
+        goToAllData,
+        goToPitScoutingData,
       ],
     );
 

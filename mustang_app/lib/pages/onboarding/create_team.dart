@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mustang_app/components/onboarding/fancy_text_form_field.dart';
 import 'package:mustang_app/components/shared/screen.dart';
+import 'package:mustang_app/models/pitscouting_data.dart';
 import 'package:mustang_app/models/robot.dart';
 import 'package:mustang_app/models/team.dart';
 import 'package:mustang_app/models/user.dart';
@@ -51,18 +52,17 @@ class _CreateTeamState extends State<CreateTeam> {
           await AuthService.getUser(AuthService.currentUser.uid);
 
       await TeamService.createTeam(
-        Team(
+        PitScoutingData(
           teamNumber: _teamNumber.text,
           teamName: _teamName.text,
           teamEmail: _teamEmail.text,
           region: _region.text,
-          bottomPort: false,
-          innerPort: false,
-          outerPort: false,
-          rotationControl: false,
-          positionControl: false,
-          hasClimber: false,
-          hasLeveller: false,
+          autonBalls: 0,
+          climbLocations: [],
+          hubTargets: [],
+          intakeLocations: [],
+          scoreLocations: [],
+          notes: "",
           drivebaseType: DriveBaseType.TANK,
         ),
       );

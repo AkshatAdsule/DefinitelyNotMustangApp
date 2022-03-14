@@ -1,3 +1,5 @@
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,13 @@ import 'package:mustang_app/models/robot.dart';
 
 class Team {
   String teamNumber, teamName, teamEmail, region, notes;
+  String batteryCapacity, chargeCapacity, newTools, storageInfo, looks;
+  // ignore: deprecated_member_use
+  var programmingLanguage = ['Java', 'Python', 'C', 'C++', 'Other'];
+  var shootingCapacity = ['Upper Port', 'Lower Port'];
+  Robot robot;
+  
+
   DriveBaseType drivebaseType;
   bool innerPort,
       outerPort,
@@ -25,10 +34,19 @@ class Team {
     @required this.positionControl,
     @required this.hasClimber,
     @required this.hasLeveller,
-    @required this.teamName,
-    @required this.teamEmail,
-    @required this.region,
+    this.teamName,
+    this.teamEmail,
+    this.region,
+    @required this.batteryCapacity,
+    @required this.chargeCapacity,
+    @required this.newTools,
+    @required this.storageInfo,
+    @required this.looks,
+    @required this.robot,
   });
+
+
+
 
   factory Team.fromSnapshot(DocumentSnapshot snapshot) {
     if (!snapshot.exists) {
@@ -43,7 +61,7 @@ class Team {
       teamNumber: data['teamNumber'] ?? '',
       teamName: data['teamName'] ?? '',
       drivebaseType: Robot.driveBaseTypeFromString(data['drivebaseType']),
-      notes: data['notes'] ?? '',
+    //  notes: data['notes'] ?? '',
       innerPort: data['innerPort'],
       outerPort: data['outerPort'],
       bottomPort: data['bottomPort'],
@@ -53,6 +71,12 @@ class Team {
       hasLeveller: data['leveller'],
       teamEmail: data['teamEmail'] ?? '',
       region: data['region'] ?? '',
+      batteryCapacity: data['batteryCapacity'] ?? '',
+      chargeCapacity: data['chargeCapacity'] ?? '',
+      newTools: data['newTools'] ?? '',
+      storageInfo: data['storageInfo'] ?? '',
+      looks: data['looks'] ?? '',
+      notes: data['notes'] ?? '',
     );
   }
 
@@ -60,7 +84,6 @@ class Team {
     return {
       'teamNumber': teamNumber,
       'drivebaseType': describeEnum(drivebaseType),
-      'notes': notes,
       'innerPort': innerPort,
       'outerPort': outerPort,
       'bottomPort': bottomPort,
@@ -71,6 +94,12 @@ class Team {
       'teamName': teamName,
       'teamEmail': teamEmail,
       'region': region,
+      'batteryCapacity': batteryCapacity,
+      'chargeCapacity': chargeCapacity,
+      'newTools': newTools,
+      'storageInfo': storageInfo,
+      'looks': looks, 
+      'notes': notes,
     };
   }
 }

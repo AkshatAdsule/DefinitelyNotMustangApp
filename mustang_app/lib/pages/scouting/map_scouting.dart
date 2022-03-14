@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mustang_app/components/inputs/mode_toggle.dart';
 import 'package:mustang_app/components/map_scouting/animated_push_line.dart';
 import 'package:mustang_app/components/map_scouting/blur_overlay.dart';
-import 'package:mustang_app/components/map_scouting/climb_scouting_overlay.dart';
+//import 'package:mustang_app/components/map_scouting/climb_scouting_overlay.dart';
 import 'package:mustang_app/components/map_scouting/climb_scouting_side.dart';
 import 'package:mustang_app/components/map_scouting/defense_scouting_overlay.dart';
 import 'package:mustang_app/components/map_scouting/defense_scouting_side.dart';
@@ -64,7 +64,8 @@ class MapScoutingState extends State<MapScouting> {
   int sliderLastChanged;
   bool completedRotationControl,
       completedPositionControl,
-      crossedInitiationLine;
+      crossedTarmac,
+      humanShoot;
   double sliderVal;
   int counter = 0;
   bool pushTextStart;
@@ -88,7 +89,8 @@ class MapScoutingState extends State<MapScouting> {
     stopwatch = new Stopwatch();
     completedRotationControl = false;
     completedPositionControl = false;
-    crossedInitiationLine = false;
+    crossedTarmac = false;
+    humanShoot = false;
     actions = [];
     counter = 0;
     pushTextStart = false;
@@ -259,9 +261,15 @@ class MapScoutingState extends State<MapScouting> {
     vibrate();
   }
 
-  void setCrossedInitiationLine(bool newVal) {
+  void setCrossedTarmac(bool newVal) {
     setState(() {
-      crossedInitiationLine = newVal;
+      crossedTarmac = newVal;
+    });
+  }
+
+  void setHumanShoot(bool newVal) {
+    setState(() {
+      humanShoot = newVal;
     });
   }
 
@@ -291,9 +299,9 @@ class MapScoutingState extends State<MapScouting> {
             completedPositionControl = false;
           });
           break;
-        case ActionType.OTHER_CROSSED_INITIATION_LINE:
+        case ActionType.CROSSED_TARMAC:
           setState(() {
-            crossedInitiationLine = false;
+            crossedTarmac = false;
           });
           break;
         default:
@@ -387,7 +395,7 @@ class MapScoutingState extends State<MapScouting> {
                     children: [
                       OffenseScoutingOverlay(),
                       DefenseScoutingOverlay(),
-                      ClimbScoutingOverlay(),
+                      // ClimbScoutingOverlay(),
                     ],
                   ),
                 )

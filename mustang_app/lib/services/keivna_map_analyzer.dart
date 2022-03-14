@@ -165,6 +165,7 @@ class KeivnaMapAnalyzer {
     return maxValue;
   }
 
+//TODO: Outdated shooting method
 //returns the total teleop and auton point value of all shots from location (x, y) for the given match
   static double _getShootingPointsAtLocationForSingleMatch(
       Match match, int x, int y, ActionType selectedActionType) {
@@ -174,42 +175,42 @@ class KeivnaMapAnalyzer {
         //game action happened at given location
         //happpened during auton
         if (action.timeStamp <= GameConstants.autonMillisecondLength) {
-          if (action.actionType == ActionType.SHOT_LOW &&
+          if (action.actionType == ActionType.SHOT_LOWER &&
               (selectedActionType == ActionType.ALL ||
-                  selectedActionType == ActionType.SHOT_LOW)) {
-            result += GameConstants.lowShotAutonValue;
+                  selectedActionType == ActionType.SHOT_LOWER)) {
+            result += GameConstants.lowerHubShotAutonValue;
           }
 
-          if (action.actionType == ActionType.SHOT_OUTER &&
+          if (action.actionType == ActionType.SHOT_UPPER &&
               (selectedActionType == ActionType.ALL ||
-                  selectedActionType == ActionType.SHOT_OUTER)) {
-            result += GameConstants.outerShotAutonValue;
+                  selectedActionType == ActionType.SHOT_UPPER)) {
+            result += GameConstants.upperHubShotAutonValue;
           }
-          if (action.actionType == ActionType.SHOT_INNER &&
-              (selectedActionType == ActionType.ALL ||
-                  selectedActionType == ActionType.SHOT_INNER)) {
-            result += GameConstants.innerShotAutonValue;
-          }
+          // if (action.actionType == ActionType.SHOT_INNER &&
+          //     (selectedActionType == ActionType.ALL ||
+          //         selectedActionType == ActionType.SHOT_INNER)) {
+          //   result += GameConstants.innerShotAutonValue;
+          // }
         }
 
         //happpened during teleop
         if (action.timeStamp > GameConstants.autonMillisecondLength) {
-          if (action.actionType == ActionType.SHOT_LOW &&
+          if (action.actionType == ActionType.SHOT_LOWER &&
               (selectedActionType == ActionType.ALL ||
-                  selectedActionType == ActionType.SHOT_LOW)) {
-            result += GameConstants.lowShotValue;
+                  selectedActionType == ActionType.SHOT_LOWER)) {
+            result += GameConstants.lowerHubValue;
           }
 
-          if (action.actionType == ActionType.SHOT_OUTER &&
+          if (action.actionType == ActionType.SHOT_UPPER &&
               (selectedActionType == ActionType.ALL ||
-                  selectedActionType == ActionType.SHOT_OUTER)) {
-            result += GameConstants.outerShotValue;
+                  selectedActionType == ActionType.SHOT_UPPER)) {
+            result += GameConstants.upperHubValue;
           }
-          if (action.actionType == ActionType.SHOT_INNER &&
-              (selectedActionType == ActionType.ALL ||
-                  selectedActionType == ActionType.SHOT_INNER)) {
-            result += GameConstants.innerShotValue;
-          }
+          // if (action.actionType == ActionType.SHOT_INNER &&
+          //     (selectedActionType == ActionType.ALL ||
+          //         selectedActionType == ActionType.SHOT_INNER)) {
+          //   result += GameConstants.innerShotValue;
+          // }
         }
       }
     }
@@ -260,6 +261,7 @@ class KeivnaMapAnalyzer {
     return colorValueRoundedToHundred;
   }
 
+  //TODO: Shooting actions outdated
   //returns the total teleop point value of all shots from location (x, y) for the given match
   static double _geAccuracyPointsAtLocationForSingleMatch(
       Match match, int x, int y, selectedActionType) {
@@ -269,32 +271,32 @@ class KeivnaMapAnalyzer {
       if (action.x == x && action.y == y) {
         //all shots made
 
-        if (action.actionType == ActionType.SHOT_LOW &&
+        if (action.actionType == ActionType.SHOT_LOWER &&
             (selectedActionType == ActionType.ALL ||
-                selectedActionType == ActionType.SHOT_LOW)) {
+                selectedActionType == ActionType.SHOT_LOWER)) {
           shotsMade++;
         }
-        if (action.actionType == ActionType.SHOT_OUTER &&
+        if (action.actionType == ActionType.SHOT_UPPER &&
             (selectedActionType == ActionType.ALL ||
-                selectedActionType == ActionType.SHOT_OUTER)) {
+                selectedActionType == ActionType.SHOT_UPPER)) {
           shotsMade++;
         }
-        if (action.actionType == ActionType.SHOT_INNER &&
-            (selectedActionType == ActionType.ALL ||
-                selectedActionType == ActionType.SHOT_INNER)) {
-          shotsMade++;
-        }
+        // if (action.actionType == ActionType.SHOT_INNER &&
+        //     (selectedActionType == ActionType.ALL ||
+        //         selectedActionType == ActionType.SHOT_INNER)) {
+        //   shotsMade++;
+        // }
 
         //all shots missed
-        if (action.actionType == ActionType.MISSED_LOW &&
+        if (action.actionType == ActionType.MISSED_LOWER &&
             (selectedActionType == ActionType.ALL ||
-                selectedActionType == ActionType.SHOT_LOW)) {
+                selectedActionType == ActionType.SHOT_LOWER)) {
           shotsMissed++;
         }
 
-        if (action.actionType == ActionType.MISSED_OUTER &&
+        if (action.actionType == ActionType.MISSED_UPPER &&
             (selectedActionType == ActionType.ALL ||
-                selectedActionType == ActionType.SHOT_OUTER)) {
+                selectedActionType == ActionType.SHOT_UPPER)) {
           shotsMissed++;
         }
       }
@@ -323,6 +325,7 @@ class KeivnaMapAnalyzer {
     return (result / matches.length.toDouble()).toInt();
   }
 
+  //TODO: Shooting actions outdated
   //returns points scored by shooting for the given match, only shots scored during teleop
   static int _getShootingTeleopPtsForMatch(Match match) {
     List<int> numTeleopShots = _getTeleopNumShots(match);
@@ -332,14 +335,11 @@ class KeivnaMapAnalyzer {
       int occurence = numTeleopShots[
           i]; //how many types that action happened during the game
       switch (action) {
-        case (ActionType.SHOT_LOW):
-          result += (GameConstants.lowShotValue * occurence);
+        case (ActionType.SHOT_LOWER):
+          result += (GameConstants.lowerHubValue * occurence);
           break;
-        case (ActionType.SHOT_OUTER):
-          result += (GameConstants.outerShotValue * occurence);
-          break;
-        case (ActionType.SHOT_INNER):
-          result += (GameConstants.innerShotValue * occurence);
+        case (ActionType.SHOT_UPPER):
+          result += (GameConstants.upperHubValue * occurence);
           break;
         default:
           break;
@@ -348,6 +348,7 @@ class KeivnaMapAnalyzer {
     return result.toInt();
   }
 
+  //TODO: Shooting actions outdated
   //returns points scored by shooting for the given match, only shots scored during auton
   //takes in double score value of shots during auton
   static int _getShootingAutonPtsForMatch(Match match) {
@@ -357,14 +358,11 @@ class KeivnaMapAnalyzer {
       ActionType gameAction = ActionType.values[i];
       int occurence = numAutonShots[i];
       switch (gameAction) {
-        case (ActionType.SHOT_LOW):
-          result += (GameConstants.lowShotAutonValue * occurence);
+        case (ActionType.SHOT_LOWER):
+          result += (GameConstants.lowerHubShotAutonValue * occurence);
           break;
-        case (ActionType.SHOT_OUTER):
-          result += (GameConstants.outerShotAutonValue * occurence);
-          break;
-        case (ActionType.SHOT_INNER):
-          result += (GameConstants.innerShotAutonValue * occurence);
+        case (ActionType.SHOT_UPPER):
+          result += (GameConstants.upperHubShotAutonValue * occurence);
           break;
         default:
           break;
@@ -425,15 +423,16 @@ class KeivnaMapAnalyzer {
   }
 
 //returns true if crossed init line, otherwise false
-  static bool _autonCrossedInitiationLine(Match match) {
+  static bool _autonCrossedTarmac(Match match) {
     for (GameAction action in match.actions) {
-      if (action.actionType == ActionType.OTHER_CROSSED_INITIATION_LINE) {
+      if (action.actionType == ActionType.CROSSED_TARMAC) {
         return true;
       }
     }
     return false;
   }
 
+  //TODO: Update this list
   //Game Replay stuff
   static List<List<Object>> actionRelatedColors = [
     ["OTHER", Colors.orange],
@@ -443,9 +442,8 @@ class KeivnaMapAnalyzer {
     ["MISSED", Colors.red],
     ["INTAKE", Colors.blue],
     ["SHOT", Colors.green],
-    ["LOW", Colors.white],
-    ["OUTER", Colors.grey],
-    ["INNER", Colors.black],
+    ["UPPER", Colors.grey],
+    ["LOWER", Colors.black],
   ];
 
   static List<Color> getColorCombo(BuildContext context, String selectedMatch,
