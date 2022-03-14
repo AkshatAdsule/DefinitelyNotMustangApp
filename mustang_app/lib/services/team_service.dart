@@ -76,7 +76,7 @@ class TeamService {
     if (!exists) {
       // await _teamsRef.doc(team.teamNumber).set(team.toJson());
       DataService.getInstance().tryUploadDoc(
-          path: _teamsRef.path + team.teamNumber, data: team.toJson());
+          path: _teamsRef.path + data.teamNumber, data: data.toJson());
     } else {
       throw new Exception('A team with this number already exists');
     }

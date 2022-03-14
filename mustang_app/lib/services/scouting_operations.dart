@@ -12,7 +12,7 @@ class ScoutingOperations {
   static final CollectionReference _teamsRef =
       _db.collection(_year).doc('info').collection('teams');
 
-  static Future<void> setTeamData(Team team) async {
+  static Future<void> setTeamData(PitScoutingData team) async {
     // await _teamsRef.doc(team.teamNumber).set(team.toJson());
     DataService.getInstance().tryUploadDoc(
       path: _teamsRef.path + "/${team.teamNumber}",
