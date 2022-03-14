@@ -26,7 +26,8 @@ class DataService {
       String cache = prefs.getString('cache');
       if (cache != null || cache.length > 0) {
         // parse the cache
-        (json.decode(cache) as List).forEach((i) {
+        List<dynamic> cacheList = json.decode(cache) as List;
+        cacheList.forEach((i) {
           _cache.add(CachedData(
             dbpath: i["dbpath"],
             data: jsonDecode(
@@ -37,12 +38,18 @@ class DataService {
       }
       print("Internet restored; Trying upload cache");
       if (_cache.length > 0) {
-        _cache.forEach((item) async {
-          await FirebaseFirestore.instance
-              .doc(item.dbpath)
-              .set(item.data, SetOptions(merge: true));
-          _cache.remove(item);
-        });
+        for (int i = 0; i < _cache.length; i++) {
+          var item = _cache[i];
+          await FirebaseFirestore.instance.doc(item.dbpath).set(
+                item.data,
+                SetOptions(merge: true),
+              );
+          _cache.removeAt(i--);
+        }
+        // await FirebaseFirestore.instance
+        //     .doc(item.dbpath)
+        //     .set(item.data, SetOptions(merge: true));
+        //   _cache.remove(item);
         writeCacheToPrefs();
         return;
       }
