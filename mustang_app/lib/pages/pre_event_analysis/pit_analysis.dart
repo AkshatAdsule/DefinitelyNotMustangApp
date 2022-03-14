@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:mustang_app/components/shared/fancy_loading_overlay.dart';
 import 'package:mustang_app/models/pitscouting_data.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class PitAnalysis extends StatefulWidget {
   final List<String> teams;
@@ -247,12 +246,16 @@ class _PitAnalysisState extends State<PitAnalysis> {
                   ),
                 ],
               ),
-              data.imageURL != null
+              data.imageURL != null || data.imageURL == ""
                   ? _buildDataSection(title: "Photo", children: [
-                      Image(
-                        image: NetworkImage(data.imageURL),
-                        width: 300,
-                      ),
+                      CachedNetworkImage(
+                        imageUrl: data.imageURL,
+                        placeholder: (_, __) => CircularProgressIndicator(),
+                        errorWidget: (_, __, ___) => Center(
+                          child: Text(
+                              "Something went wrong when loading the image"),
+                        ),
+                      )
                     ])
                   : Container()
             ],
