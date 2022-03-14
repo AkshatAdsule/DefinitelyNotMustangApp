@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:mustang_app/models/robot.dart';
 import 'package:mustang_app/components/shared/screen.dart';
 import 'package:mustang_app/pages/scouting/post_scouter.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../models/pitscouting_data.dart';
 import '../../services/scouting_operations.dart';
 
@@ -21,6 +23,7 @@ class PitScouter extends StatefulWidget {
 class _PitScouterState extends State<PitScouter> {
   String _teamNumber;
   DriveBaseType _driveBase = DriveBaseType.TANK;
+  String imageUrl;
   Map<String, dynamic> state = {};
   _PitScouterState(teamNumber) {
     _teamNumber = teamNumber;
@@ -202,13 +205,29 @@ class _PitScouterState extends State<PitScouter> {
               ),
             ],
           ),
+          ElevatedButton(
+            onPressed: () async {
+              FirebaseStorage storage = FirebaseStorage.instance;
+              final ImagePicker picker = ImagePicker();
+              final XFile photo =
+                  await picker.pickImage(source: ImageSource.camera);
+              Reference r = storage.ref("photos/$_teamNumber");
+              r.putData(await photo.readAsBytes());
+              imageUrl = await r.getDownloadURL();
+            },
+            child: Text("Take photo of robot"),
+          ),
           Container(
             padding: EdgeInsets.only(top: 10, bottom: 10),
             child: ElevatedButton(
               onPressed: () {
                 ScoutingOperations.setTeamData(
-                  PitScoutingData.fromPitScoutingState(state,
-                      teamNumber: _teamNumber, drivebaseType: _driveBase),
+                  PitScoutingData.fromPitScoutingState(
+                    state,
+                    teamNumber: _teamNumber,
+                    drivebaseType: _driveBase,
+                    imageURL: imageUrl,
+                  ),
                 );
                 Navigator.pushNamed(context, PostScouter.route);
               },

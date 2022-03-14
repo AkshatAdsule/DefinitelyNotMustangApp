@@ -247,6 +247,14 @@ class _PitAnalysisState extends State<PitAnalysis> {
                   ),
                 ],
               ),
+              data.imageURL != null
+                  ? _buildDataSection(title: "Photo", children: [
+                      Image(
+                        image: NetworkImage(data.imageURL),
+                        width: 300,
+                      ),
+                    ])
+                  : Container()
             ],
           ),
         ),

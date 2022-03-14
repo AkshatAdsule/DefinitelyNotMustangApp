@@ -41,6 +41,7 @@ dependencies:
   package_info_plus: ^1.0.3
   connectivity_plus: ^2.0.2
   shared_preferences: ^2.0.8
+  image_picker: ^0.8.4+11
 
   flutter:
     sdk: flutter

@@ -11,7 +11,8 @@ class PitScoutingData {
       features,
       autonRoutine,
       accuracy,
-      driverExperience;
+      driverExperience,
+      imageURL;
   DriveBaseType drivebaseType;
   List<String> scoreLocations, intakeLocations, hubTargets, climbLocations;
   int autonBalls;
@@ -54,6 +55,7 @@ class PitScoutingData {
     @required this.accuracy,
     @required this.driverExperience,
     @required this.badFalcons,
+    @required this.imageURL,
   });
 
   factory PitScoutingData.fromSnapshot(DocumentSnapshot snapshot) {
@@ -66,35 +68,37 @@ class PitScoutingData {
 
   factory PitScoutingData.fromJson(Map<String, dynamic> data) {
     return PitScoutingData(
-      teamNumber: data['teamNumber'] ?? "",
-      teamName: data['teamName'] ?? "",
-      drivebaseType: Robot.driveBaseTypeFromString(data['drivebaseType']),
-      notes: data['notes'] ?? '',
-      teamEmail: data['teamEmail'] ?? "",
-      region: data['region'] ?? "",
-      autonBalls: data["autonBalls"] ?? 0,
-      accuracy: data["accuracy"] ?? "",
-      climbLocations: (data["climbLocations"] as List<dynamic>)
-          .map((e) => e.toString())
-          .toList(),
-      hubTargets: (data["hubTargets"] as List<dynamic>)
-          .map((e) => e.toString())
-          .toList(),
-      intakeLocations: (data["intakeLocations"] as List<dynamic>)
-          .map((e) => e.toString())
-          .toList(),
-      scoreLocations: (data["scoreLocations"] as List<dynamic>)
-          .map((e) => e.toString())
-          .toList(),
-      features: data["features"] ?? "",
-      driverExperience: data["driverExperience"] ?? "",
-      autonRoutine: data["autonRoutine"] ?? "",
-      badFalcons: data["bad_falcons"] ?? false,
-    );
+        teamNumber: data['teamNumber'] ?? "",
+        teamName: data['teamName'] ?? "",
+        drivebaseType: Robot.driveBaseTypeFromString(data['drivebaseType']),
+        notes: data['notes'] ?? '',
+        teamEmail: data['teamEmail'] ?? "",
+        region: data['region'] ?? "",
+        autonBalls: data["autonBalls"] ?? 0,
+        accuracy: data["accuracy"] ?? "",
+        climbLocations: (data["climbLocations"] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList(),
+        hubTargets: (data["hubTargets"] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList(),
+        intakeLocations: (data["intakeLocations"] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList(),
+        scoreLocations: (data["scoreLocations"] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList(),
+        features: data["features"] ?? "",
+        driverExperience: data["driverExperience"] ?? "",
+        autonRoutine: data["autonRoutine"] ?? "",
+        badFalcons: data["bad_falcons"] ?? false,
+        imageURL: data["imageURL"] ?? "");
   }
 
   PitScoutingData.fromPitScoutingState(Map<String, dynamic> state,
-      {@required this.teamNumber, @required this.drivebaseType}) {
+      {@required this.teamNumber,
+      @required this.drivebaseType,
+      @required this.imageURL}) {
     this.climbLocations = [];
     this.hubTargets = [];
     this.scoreLocations = [];
@@ -173,7 +177,8 @@ class PitScoutingData {
       'autonRoutine': autonRoutine ?? "",
       'accuracy': accuracy ?? "",
       'driverExperience': driverExperience ?? "",
-      'badFalcons': badFalcons ?? false
+      'badFalcons': badFalcons ?? false,
+      'imageURL': imageURL ?? ""
     };
   }
 }
