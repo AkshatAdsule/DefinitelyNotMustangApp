@@ -49,6 +49,14 @@ class _PitAnalysisState extends State<PitAnalysis> {
         ));
       }
     }
+    _filters.add(
+      FilterChip(
+        label: "Not broken falcons",
+        test: (PitScoutingData data) => data.badFalcons,
+        instance: this,
+        key: GlobalKey(),
+      ),
+    );
     _acquireData(widget.teams);
   }
 
@@ -123,7 +131,10 @@ class _PitAnalysisState extends State<PitAnalysis> {
           ),
           Padding(
             padding: EdgeInsets.only(left: 8),
-            child: Column(children: children),
+            child: Column(
+              children: children,
+              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
           ),
         ],
       ),
@@ -145,10 +156,30 @@ class _PitAnalysisState extends State<PitAnalysis> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               _buildDataSection(
+                title: "General",
+                children: [
+                  Text(
+                    "Comments: ${data.notes}",
+                  ),
+                  Text(
+                    "Driver Skill: ${data.driverExperience}",
+                  ),
+                  Text(
+                    "Cool Features: ${data.features}",
+                  ),
+                  Text(
+                    "Claimed Accuracy: ${data.accuracy}",
+                  )
+                ],
+              ),
+              _buildDataSection(
                 title: "Auton",
                 children: [
                   Text(
                     "Auton Balls: ${data.autonBalls}",
+                  ),
+                  Text(
+                    "Auton Routine: ${data.autonRoutine}",
                   ),
                 ],
               ),
@@ -212,93 +243,10 @@ class _PitAnalysisState extends State<PitAnalysis> {
                   ),
                   _buildCheckBoxIndicator(
                     "Traverse",
-                    data.climbLocations.contains("Traverse"),
+                    data.climbLocations.contains("Traversal"),
                   ),
                 ],
               ),
-             
-              _buildDataSection(
-                title: "Robot Features",
-                children: [
-                  Text(
-                    data.q1,
-                    textAlign: TextAlign.left,
-                  ),
-                ],
-              ),
-               _buildDataSection(
-                title: "Auton Routine",
-                children: [
-                  Text(
-                    data.q2,
-                    textAlign: TextAlign.left,
-                  ),
-                ],
-              ),
-              _buildDataSection(
-                title: "Robot Comments",
-                children: [
-                  Text(
-                    data.q3,
-                    textAlign: TextAlign.left,
-                  ),
-                ],
-              ),
-              _buildDataSection(
-                title: "Battery Capacity",
-                children: [
-                  Text(
-                    data.q4,
-                    textAlign: TextAlign.left,
-                  ),
-                ],
-              ),
-              _buildDataSection(
-                title: "Battery Charge Capacity",
-                children: [
-                  Text(
-                    data.q5,
-                    textAlign: TextAlign.left,
-                  ),
-                ],
-              ),
-              _buildDataSection(
-                title: "Cool new tools",
-                children: [
-                  Text(
-                    data.q6,
-                    textAlign: TextAlign.left,
-                  ),
-                ],
-              ),
-              _buildDataSection(
-                title: "Storage Pros and Cons",
-                children: [
-                  Text(
-                    data.q7,
-                    textAlign: TextAlign.left,
-                  ),
-                ],
-              ),
-              _buildDataSection(
-                title: "Asthetics",
-                children: [
-                  Text(
-                    data.q8,
-                    textAlign: TextAlign.left,
-                  ),
-                ],
-              ),
-              _buildDataSection(
-                title: "Final Comments",
-                children: [
-                  Text(
-                    data.q9,
-                    textAlign: TextAlign.left,
-                  ),
-                ],
-              ),
-
             ],
           ),
         ),

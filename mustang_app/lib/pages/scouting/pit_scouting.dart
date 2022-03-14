@@ -22,55 +22,9 @@ class _PitScouterState extends State<PitScouter> {
   String _teamNumber;
   DriveBaseType _driveBase = DriveBaseType.TANK;
   Map<String, dynamic> state = {};
-  List<TextEditingController> myController = List.generate(9, (i) => TextEditingController());
-  List<String> prompts = [
-     "1. What cool features does their robot have? What are they proud of?",
-     "2. Describe their auton routine.",
-     "3. Any final comments about the robot?",
-     //below is for pit scouting
-     "4. What is their battery capacity?",
-     "5. What is their battery charge capacity?", 
-     "6. Any cool new tools they are using?",
-     "7. What are the pros and cons of their storage?", 
-     "8. Is their pit asthetically pleasing? Why or why not?", 
-     "9. Any final comments?",
-  ];
-
   _PitScouterState(teamNumber) {
     _teamNumber = teamNumber;
   }
-
-  Widget createTextQuestion(String question, int num) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          question, 
-           textAlign: TextAlign.left,
-             // textScaleFactor: 2.0,
-              style: TextStyle (
-               // fontWeight: FontWeight.w400,
-                fontSize: 15.0,
-                letterSpacing: 1.0,
-                wordSpacing: 1.0,
-              )
-        ),
-         SizedBox(height:10),
-        TextField(
-          onChanged: (String val) {
-          state[question] = val;
-          print(state);
-        },
-          controller: myController[num],
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-          ),
-        ),
-        SizedBox(height:20),
-      ],
-    );
-  }
-
 
   Widget _scoutingSection(String title, List<Widget> questions) {
     return Column(
@@ -91,7 +45,8 @@ class _PitScouterState extends State<PitScouter> {
     );
   }
 
-  Widget _checkBox({String title}) {
+  Widget _checkBox({@required String title, String key}) {
+    key = key ?? title;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Row(
@@ -102,11 +57,10 @@ class _PitScouterState extends State<PitScouter> {
             style: TextStyle(fontSize: 16),
           ),
           Checkbox(
-            value: state[title] ?? false,
+            value: state[key] ?? false,
             onChanged: (bool next) {
               setState(() {
-                state[title] = !(state[title] ?? false);
-                print(state);
+                state[key] = !(state[key] ?? false);
               });
             },
           ),
@@ -115,13 +69,13 @@ class _PitScouterState extends State<PitScouter> {
     );
   }
 
-  Widget _textField({String title, bool isNum}) {
+  Widget _textField({@required String title, bool isNum: false, String key}) {
+    key = key ?? title;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: TextField(
         onChanged: (String val) {
-          state[title] = val;
-          print(state);
+          state[key] = val;
         },
         inputFormatters: isNum ? [FilteringTextInputFormatter.digitsOnly] : [],
         keyboardType: isNum
@@ -182,56 +136,15 @@ class _PitScouterState extends State<PitScouter> {
               }).toList(),
             ),
           ),
-          // ListTile(
-          //  title: Text(
-          //           'Programming Language',
-          //         style: new TextStyle(fontSize: 20.0),
-          //         ),
-          //         trailing: DropdownButton<ProgrammingLanguage>(
-          //           value: _lang,
-          //           icon: Icon(Icons.arrow_downward),
-          //           iconSize: 24,
-          //           elevation: 16,
-          //           style: TextStyle(color: Colors.green, fontSize: 20.0),
-          //           underline: Container(
-          //             height: 2,
-          //             color: Colors.green,
-          //           ),
-          //           onChanged: (ProgrammingLanguage lang) {
-          //             setState(() {
-          //               _lang = lang;
-          //             });
-          //           },
-          //           items: <ProgrammingLanguage>[
-          //             ProgrammingLanguage.JAVA, 
-          //             ProgrammingLanguage.PYTHON,
-          //             ProgrammingLanguage.C,
-          //            ProgrammingLanguage.CPP,
-          //            ProgrammingLanguage.OTHER
-          //           ].map<DropdownMenuItem<ProgrammingLanguage>>(
-          //               (ProgrammingLanguage lang) {
-          //             return DropdownMenuItem<ProgrammingLanguage>(
-          //               value: lang,
-          //               child: Center(
-          //                   child: Text(lang.toString().substring(
-          //                       lang.toString().indexOf('.') + 1))),
-          //             );
-          //           }).toList(),
-          //         ),
-          //       ),
-                
-          Container(
-            padding: EdgeInsets.all(10),
-            child: Column(children: <Widget>[
-              createTextQuestion(prompts[0], 0),
-              createTextQuestion(prompts[1], 1),
-              createTextQuestion(prompts[2], 2),
-            ])
-          ),
           _scoutingSection(
             "Auton",
             [
               _textField(title: "Auton Balls", isNum: true),
+              _textField(
+                title: "Describe their auton routine",
+                key: "auton_routine",
+                isNum: false,
+              )
             ],
           ),
           _scoutingSection(
@@ -262,28 +175,38 @@ class _PitScouterState extends State<PitScouter> {
               _checkBox(title: "Low"),
               _checkBox(title: "Middle"),
               _checkBox(title: "High"),
-              _checkBox(title: "Traverse"),
+              _checkBox(title: "Traversal"),
             ],
           ),
-          _title(title: "Pit Scouting Questions"),
-           Container(
-            padding: EdgeInsets.all(10),
-            child: Column(children: <Widget>[
-              createTextQuestion(prompts[3], 3),
-              createTextQuestion(prompts[4], 4),
-              createTextQuestion(prompts[5], 5),
-              createTextQuestion(prompts[6], 6),
-              createTextQuestion(prompts[7], 7),
-              createTextQuestion(prompts[8], 8),
-            ])
+          _scoutingSection(
+            "General",
+            [
+              _textField(
+                title: "Driver Experience",
+                key: "driver_experience",
+                isNum: false,
+              ),
+              _textField(
+                title: "Shooting Accuracy",
+                key: "quoted_accuracy",
+                isNum: false,
+              ),
+              _textField(title: "Cool Features", key: "features", isNum: false),
+              _textField(
+                title: "Final Comments",
+                isNum: false,
+              ),
+              _checkBox(
+                title: "Using Falcons without fix?",
+                key: "bad_falcons",
+              ),
+            ],
           ),
-         // _textField(title: "Final Comments", isNum: false),
           Container(
             padding: EdgeInsets.only(top: 10, bottom: 10),
             child: ElevatedButton(
               onPressed: () {
                 ScoutingOperations.setTeamData(
-                  //TODO could pass in new Team with Robot (as attribute)
                   PitScoutingData.fromPitScoutingState(state,
                       teamNumber: _teamNumber, drivebaseType: _driveBase),
                 );
