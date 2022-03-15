@@ -1,6 +1,8 @@
 # Mustang-App
 Scouting app
 
+[![Deploy Flutter Web](https://github.com/AkshatAdsule/DefinitelyNotMustangApp/actions/workflows/deploy_web.yaml/badge.svg)](https://github.com/AkshatAdsule/DefinitelyNotMustangApp/actions/workflows/deploy_web.yaml)
+
 ## Contents
 
 - android - build directory for android
