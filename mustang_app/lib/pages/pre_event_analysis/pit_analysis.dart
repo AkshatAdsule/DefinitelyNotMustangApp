@@ -249,8 +249,12 @@ class _PitAnalysisState extends State<PitAnalysis> {
               data.imageURL != null || data.imageURL == ""
                   ? _buildDataSection(title: "Photo", children: [
                       CachedNetworkImage(
+                        height: 300,
                         imageUrl: data.imageURL,
-                        placeholder: (_, __) => CircularProgressIndicator(),
+                        placeholder: (_, __) => SizedBox(
+                            height: 300,
+                            width: 300,
+                            child: CircularProgressIndicator()),
                         errorWidget: (_, __, ___) => Center(
                           child: Text(
                               "Something went wrong when loading the image"),
