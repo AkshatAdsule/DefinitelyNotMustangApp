@@ -4,6 +4,7 @@ import 'package:mustang_app/constants/preferences.dart';
 import 'package:mustang_app/models/match.dart';
 import 'package:mustang_app/models/pitscouting_data.dart';
 import 'package:mustang_app/models/team.dart';
+import 'package:mustang_app/services/data_service.dart';
 
 class ScoutingOperations {
   static FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -11,8 +12,12 @@ class ScoutingOperations {
   static final CollectionReference _teamsRef =
       _db.collection(_year).doc('info').collection('teams');
 
-  static Future<void> setTeamData(PitScoutingData data) async {
-    await _teamsRef.doc(data.teamNumber).set(data.toJson());
+  static Future<void> setTeamData(PitScoutingData team) async {
+    // await _teamsRef.doc(team.teamNumber).set(team.toJson());
+    DataService.getInstance().tryUploadDoc(
+      path: _teamsRef.path + "/${team.teamNumber}",
+      data: team.toJson(),
+    );
   }
 
   static Future<void> setMatchData(
@@ -20,11 +25,16 @@ class ScoutingOperations {
     String uid,
     String name,
   ) async {
-    await _teamsRef
-        .doc(match.teamNumber)
-        .collection('matches')
-        .doc(match.matchNumber)
-        .set({...match.toJson(), 'name': name, 'userId': uid});
+    // await _teamsRef
+    //     .doc(match.teamNumber)
+    //     .collection('matches')
+    //     .doc(match.matchNumber)
+    //     .set({...match.toJson(), 'name': name, 'userId': uid});
+    DataService.getInstance().tryUploadDoc(
+      path:
+          _teamsRef.path + "/${match.teamNumber}/matches/${match.matchNumber}",
+      data: {...match.toJson(), 'name': name, 'userId': uid},
+    );
   }
 
   static Future<bool> doesTeamDataExist(String teamNumber) async {
@@ -80,6 +90,10 @@ class ScoutingOperations {
   }
 
   static Future<void> initTeamData(String teamNumber) async {
-    await _teamsRef.doc(teamNumber).set({'teamNumber': teamNumber});
+    // await _teamsRef.doc(teamNumber).set({'teamNumber': teamNumber});
+    DataService.getInstance().tryUploadDoc(
+      path: _teamsRef.path + "/$teamNumber",
+      data: {'teamNumber': teamNumber},
+    );
   }
 }

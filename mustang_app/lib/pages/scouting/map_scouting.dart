@@ -64,7 +64,7 @@ class MapScoutingState extends State<MapScouting> {
   int sliderLastChanged;
   bool completedRotationControl,
       completedPositionControl,
-      crossedInitiationLine,
+      crossedTarmac,
       humanShoot;
   double sliderVal;
   int counter = 0;
@@ -89,7 +89,7 @@ class MapScoutingState extends State<MapScouting> {
     stopwatch = new Stopwatch();
     completedRotationControl = false;
     completedPositionControl = false;
-    crossedInitiationLine = false;
+    crossedTarmac = false;
     humanShoot = false;
     actions = [];
     counter = 0;
@@ -261,9 +261,9 @@ class MapScoutingState extends State<MapScouting> {
     vibrate();
   }
 
-  void setCrossedInitiationLine(bool newVal) {
+  void setCrossedTarmac(bool newVal) {
     setState(() {
-      crossedInitiationLine = newVal;
+      crossedTarmac = newVal;
     });
   }
 
@@ -301,7 +301,7 @@ class MapScoutingState extends State<MapScouting> {
           break;
         case ActionType.CROSSED_TARMAC:
           setState(() {
-            crossedInitiationLine = false;
+            crossedTarmac = false;
           });
           break;
         default:

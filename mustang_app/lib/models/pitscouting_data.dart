@@ -3,10 +3,20 @@ import 'package:flutter/foundation.dart';
 import 'package:mustang_app/models/robot.dart';
 
 class PitScoutingData {
-  String teamNumber, teamName, teamEmail, region, notes;
+  String teamNumber,
+      teamName,
+      teamEmail,
+      region,
+      notes,
+      features,
+      autonRoutine,
+      accuracy,
+      driverExperience,
+      imageURL;
   DriveBaseType drivebaseType;
   List<String> scoreLocations, intakeLocations, hubTargets, climbLocations;
   int autonBalls;
+  bool badFalcons;
 
   static const List<String> ALL_INTAKE_LOCATIONS = ["Terminal", "Field"];
   static const List<String> ALL_SCORE_LOCATIONS = [
@@ -19,7 +29,7 @@ class PitScoutingData {
     "Low",
     "Middle",
     "High",
-    "Traverse"
+    "Traversal"
   ];
   static const List<List<String>> ALL_CRITERIA = [
     ALL_INTAKE_LOCATIONS,
@@ -31,15 +41,21 @@ class PitScoutingData {
   PitScoutingData({
     @required this.teamNumber,
     @required this.drivebaseType,
-    this.notes = '',
+    @required this.notes,
     @required this.scoreLocations,
     @required this.intakeLocations,
     @required this.hubTargets,
     @required this.climbLocations,
     @required this.autonBalls,
-    this.teamName,
-    this.teamEmail,
-    this.region,
+    @required this.autonRoutine,
+    @required this.teamName,
+    @required this.teamEmail,
+    @required this.region,
+    @required this.features,
+    @required this.accuracy,
+    @required this.driverExperience,
+    @required this.badFalcons,
+    @required this.imageURL,
   });
 
   factory PitScoutingData.fromSnapshot(DocumentSnapshot snapshot) {
@@ -52,30 +68,37 @@ class PitScoutingData {
 
   factory PitScoutingData.fromJson(Map<String, dynamic> data) {
     return PitScoutingData(
-      teamNumber: data['teamNumber'] ?? '',
-      teamName: data['teamName'] ?? '',
-      drivebaseType: Robot.driveBaseTypeFromString(data['drivebaseType']),
-      notes: data['notes'] ?? '',
-      teamEmail: data['teamEmail'] ?? '',
-      region: data['region'] ?? '',
-      autonBalls: data["autonBalls"],
-      climbLocations: (data["climbLocations"] as List<dynamic>)
-          .map((e) => e.toString())
-          .toList(),
-      hubTargets: (data["hubTargets"] as List<dynamic>)
-          .map((e) => e.toString())
-          .toList(),
-      intakeLocations: (data["intakeLocations"] as List<dynamic>)
-          .map((e) => e.toString())
-          .toList(),
-      scoreLocations: (data["scoreLocations"] as List<dynamic>)
-          .map((e) => e.toString())
-          .toList(),
-    );
+        teamNumber: data['teamNumber'] ?? "",
+        teamName: data['teamName'] ?? "",
+        drivebaseType: Robot.driveBaseTypeFromString(data['drivebaseType']),
+        notes: data['notes'] ?? '',
+        teamEmail: data['teamEmail'] ?? "",
+        region: data['region'] ?? "",
+        autonBalls: data["autonBalls"] ?? 0,
+        accuracy: data["accuracy"] ?? "",
+        climbLocations: (data["climbLocations"] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList(),
+        hubTargets: (data["hubTargets"] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList(),
+        intakeLocations: (data["intakeLocations"] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList(),
+        scoreLocations: (data["scoreLocations"] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList(),
+        features: data["features"] ?? "",
+        driverExperience: data["driverExperience"] ?? "",
+        autonRoutine: data["autonRoutine"] ?? "",
+        badFalcons: data["bad_falcons"] ?? false,
+        imageURL: data["imageURL"] ?? "");
   }
 
   PitScoutingData.fromPitScoutingState(Map<String, dynamic> state,
-      {@required this.teamNumber, @required this.drivebaseType}) {
+      {@required this.teamNumber,
+      @required this.drivebaseType,
+      @required this.imageURL}) {
     this.climbLocations = [];
     this.hubTargets = [];
     this.scoreLocations = [];
@@ -85,9 +108,12 @@ class PitScoutingData {
         case "Auton Balls":
           this.autonBalls = int.parse(item.value);
           break;
+        case "auton_routine":
+          this.autonRoutine = item.value;
+          break;
         case "Against Fender":
         case "In Tarmac":
-        case "Outside of Tarmac":
+        case "Outside Tarmac":
           if (item.value) {
             this.scoreLocations.add(item.key);
           }
@@ -107,13 +133,28 @@ class PitScoutingData {
         case "Low":
         case "Middle":
         case "High":
-        case "Traverse":
+        case "Traversal":
           if (item.value) {
             this.climbLocations.add(item.key);
           }
           break;
+        case "driver_experience":
+          this.driverExperience = item.value;
+          break;
+        case "quoted_accuracy":
+          this.accuracy = item.value;
+          break;
         case "Final Comments":
           this.notes = item.value;
+          break;
+        case "features":
+          this.features = item.value;
+          break;
+        case "Final Comments":
+          this.notes = item.value;
+          break;
+        case "bad_falcons":
+          this.badFalcons = item.value ?? false;
           break;
       }
     }
@@ -123,15 +164,21 @@ class PitScoutingData {
     return {
       'teamNumber': teamNumber,
       'drivebaseType': describeEnum(drivebaseType),
-      'notes': notes,
+      'notes': notes ?? "",
       'teamName': teamName,
       'teamEmail': teamEmail,
       'region': region,
-      'climbLocations': climbLocations,
-      'scoreLocations': scoreLocations,
-      'intakeLocations': intakeLocations,
-      'hubTargets': hubTargets,
-      'autonBalls': autonBalls,
+      'climbLocations': climbLocations ?? [],
+      'scoreLocations': scoreLocations ?? [],
+      'intakeLocations': intakeLocations ?? [],
+      'hubTargets': hubTargets ?? [],
+      'autonBalls': autonBalls ?? -1,
+      'features': features ?? "",
+      'autonRoutine': autonRoutine ?? "",
+      'accuracy': accuracy ?? "",
+      'driverExperience': driverExperience ?? "",
+      'badFalcons': badFalcons ?? false,
+      'imageURL': imageURL ?? ""
     };
   }
 }

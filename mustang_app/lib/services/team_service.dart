@@ -4,6 +4,7 @@ import 'package:mustang_app/models/pitscouting_data.dart';
 import 'package:mustang_app/models/team.dart';
 import 'package:mustang_app/models/match.dart';
 import 'package:mustang_app/models/user.dart';
+import 'package:mustang_app/services/data_service.dart';
 import 'package:mustang_app/services/scouting_operations.dart';
 
 class TeamService {
@@ -73,7 +74,9 @@ class TeamService {
   static Future<void> createTeam(PitScoutingData data) async {
     bool exists = await ScoutingOperations.doesTeamDataExist(data.teamNumber);
     if (!exists) {
-      await _teamsRef.doc(data.teamNumber).set(data.toJson());
+      // await _teamsRef.doc(team.teamNumber).set(team.toJson());
+      DataService.getInstance().tryUploadDoc(
+          path: _teamsRef.path + data.teamNumber, data: data.toJson());
     } else {
       throw new Exception('A team with this number already exists');
     }

@@ -8,12 +8,14 @@ import 'package:mustang_app/pages/onboarding/join_team.dart';
 import 'package:mustang_app/pages/onboarding/register.dart';
 import 'package:mustang_app/pages/onboarding/verify_email.dart';
 import 'package:mustang_app/pages/profile.dart';
+import 'package:mustang_app/services/data_service.dart';
 import 'package:mustang_app/services/setup_service.dart';
 import 'package:mustang_app/services/auth_service.dart';
 import 'models/user.dart';
 import 'pages/pages.dart';
 import 'utils/orientation_helpers.dart';
 import 'package:provider/provider.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -192,9 +194,23 @@ class MyApp extends StatelessWidget {
           value: AuthService.onAuthStateChanged(),
           initialData: null,
         ),
+        StreamProvider<ConnectivityResult>(
+          create: (_) => Connectivity().onConnectivityChanged,
+          initialData: ConnectivityResult.none,
+        ),
       ],
       child: Builder(
         builder: (context) {
+          Connectivity()
+              .onConnectivityChanged
+              .listen((ConnectivityResult result) {
+            if (result != ConnectivityResult.none) {
+              // Connected to internet
+              print("Internet restored; Trying upload cache");
+              DataService.getInstance().tryUploadCache();
+            }
+          });
+
           return StreamProvider<UserModel>.value(
             value: AuthService.streamUser(Provider.of<User>(context)),
             initialData: null,

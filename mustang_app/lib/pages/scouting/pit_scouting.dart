@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:mustang_app/models/robot.dart';
 import 'package:mustang_app/components/shared/screen.dart';
 import 'package:mustang_app/pages/scouting/post_scouter.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../models/pitscouting_data.dart';
 import '../../services/scouting_operations.dart';
 
@@ -21,8 +23,8 @@ class PitScouter extends StatefulWidget {
 class _PitScouterState extends State<PitScouter> {
   String _teamNumber;
   DriveBaseType _driveBase = DriveBaseType.TANK;
+  String imageUrl;
   Map<String, dynamic> state = {};
-
   _PitScouterState(teamNumber) {
     _teamNumber = teamNumber;
   }
@@ -46,7 +48,8 @@ class _PitScouterState extends State<PitScouter> {
     );
   }
 
-  Widget _checkBox({String title}) {
+  Widget _checkBox({@required String title, String key}) {
+    key = key ?? title;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Row(
@@ -57,11 +60,10 @@ class _PitScouterState extends State<PitScouter> {
             style: TextStyle(fontSize: 16),
           ),
           Checkbox(
-            value: state[title] ?? false,
+            value: state[key] ?? false,
             onChanged: (bool next) {
               setState(() {
-                state[title] = !(state[title] ?? false);
-                print(state);
+                state[key] = !(state[key] ?? false);
               });
             },
           ),
@@ -70,13 +72,13 @@ class _PitScouterState extends State<PitScouter> {
     );
   }
 
-  Widget _textField({String title, bool isNum}) {
+  Widget _textField({@required String title, bool isNum: false, String key}) {
+    key = key ?? title;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: TextField(
         onChanged: (String val) {
-          state[title] = val;
-          print(state);
+          state[key] = val;
         },
         inputFormatters: isNum ? [FilteringTextInputFormatter.digitsOnly] : [],
         keyboardType: isNum
@@ -99,7 +101,7 @@ class _PitScouterState extends State<PitScouter> {
             EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         reverse: true,
         child: Column(children: <Widget>[
-          _title(title: "General"),
+          _title(title: "Robot Questions"),
           ListTile(
             title: Text(
               'Drivebase Type',
@@ -125,7 +127,7 @@ class _PitScouterState extends State<PitScouter> {
                 DriveBaseType.OMNI,
                 DriveBaseType.WESTCOAST,
                 DriveBaseType.MECANUM,
-                DriveBaseType.SWERVE
+                DriveBaseType.SWERVE,
               ].map<DropdownMenuItem<DriveBaseType>>((DriveBaseType driveBase) {
                 return DropdownMenuItem<DriveBaseType>(
                   value: driveBase,
@@ -141,6 +143,11 @@ class _PitScouterState extends State<PitScouter> {
             "Auton",
             [
               _textField(title: "Auton Balls", isNum: true),
+              _textField(
+                title: "Describe their auton routine",
+                key: "auton_routine",
+                isNum: false,
+              )
             ],
           ),
           _scoutingSection(
@@ -171,17 +178,56 @@ class _PitScouterState extends State<PitScouter> {
               _checkBox(title: "Low"),
               _checkBox(title: "Middle"),
               _checkBox(title: "High"),
-              _checkBox(title: "Traverse"),
+              _checkBox(title: "Traversal"),
             ],
           ),
-          _textField(title: "Final Comments", isNum: false),
+          _scoutingSection(
+            "General",
+            [
+              _textField(
+                title: "Driver Experience",
+                key: "driver_experience",
+                isNum: false,
+              ),
+              _textField(
+                title: "Shooting Accuracy",
+                key: "quoted_accuracy",
+                isNum: false,
+              ),
+              _textField(title: "Cool Features", key: "features", isNum: false),
+              _textField(
+                title: "Final Comments",
+                isNum: false,
+              ),
+              _checkBox(
+                title: "Using Falcons without fix?",
+                key: "bad_falcons",
+              ),
+            ],
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              FirebaseStorage storage = FirebaseStorage.instance;
+              final ImagePicker picker = ImagePicker();
+              final XFile photo =
+                  await picker.pickImage(source: ImageSource.camera);
+              Reference r = storage.ref("photos/$_teamNumber");
+              r.putData(await photo.readAsBytes());
+              imageUrl = await r.getDownloadURL();
+            },
+            child: Text("Take photo of robot"),
+          ),
           Container(
             padding: EdgeInsets.only(top: 10, bottom: 10),
             child: ElevatedButton(
               onPressed: () {
                 ScoutingOperations.setTeamData(
-                  PitScoutingData.fromPitScoutingState(state,
-                      teamNumber: _teamNumber, drivebaseType: _driveBase),
+                  PitScoutingData.fromPitScoutingState(
+                    state,
+                    teamNumber: _teamNumber,
+                    drivebaseType: _driveBase,
+                    imageURL: imageUrl,
+                  ),
                 );
                 Navigator.pushNamed(context, PostScouter.route);
               },

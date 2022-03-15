@@ -84,7 +84,7 @@ class _SketchPageState extends State<SketchPage> {
             image: DecorationImage(
               fit: BoxFit.fitHeight,
               image: AssetImage(
-                'assets/rightblue_leftred.png',
+                'assets/2022_rightblue_leftred.png',
               ),
             ),
           ),

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:mustang_app/components/shared/fancy_loading_overlay.dart';
 import 'package:mustang_app/models/pitscouting_data.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class PitAnalysis extends StatefulWidget {
   final List<String> teams;
@@ -48,6 +48,14 @@ class _PitAnalysisState extends State<PitAnalysis> {
         ));
       }
     }
+    _filters.add(
+      FilterChip(
+        label: "Not broken falcons",
+        test: (PitScoutingData data) => data.badFalcons,
+        instance: this,
+        key: GlobalKey(),
+      ),
+    );
     _acquireData(widget.teams);
   }
 
@@ -122,7 +130,10 @@ class _PitAnalysisState extends State<PitAnalysis> {
           ),
           Padding(
             padding: EdgeInsets.only(left: 8),
-            child: Column(children: children),
+            child: Column(
+              children: children,
+              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
           ),
         ],
       ),
@@ -143,66 +154,110 @@ class _PitAnalysisState extends State<PitAnalysis> {
                 data.teamNumber,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              _buildDataSection(title: "Auton", children: [
-                Text(
-                  "Auton Balls: ${data.autonBalls}",
-                ),
-              ]),
-              _buildDataSection(title: "Intaking", children: [
-                _buildCheckBoxIndicator(
-                  "Terminal",
-                  data.intakeLocations.contains("Terminal"),
-                ),
-                _buildCheckBoxIndicator(
-                  "Field",
-                  data.intakeLocations.contains("Field"),
-                )
-              ]),
-              _buildDataSection(title: "Scoring Locations", children: [
-                _buildCheckBoxIndicator(
-                  "Against Fender",
-                  data.scoreLocations.contains("Against Fender"),
-                ),
-                _buildCheckBoxIndicator(
-                  "In Tarmac",
-                  data.scoreLocations.contains("In Tarmac"),
-                ),
-                _buildCheckBoxIndicator(
-                  "Outside Tarmac",
-                  data.scoreLocations.contains("Outside Tarmac"),
-                ),
-              ]),
-              _buildDataSection(title: "Hub Targets", children: [
-                _buildCheckBoxIndicator(
-                  "Lower",
-                  data.hubTargets.contains("Lower"),
-                ),
-                _buildCheckBoxIndicator(
-                  "Upper",
-                  data.hubTargets.contains("Upper"),
-                ),
-              ]),
-              _buildDataSection(title: "Climb", children: [
-                _buildCheckBoxIndicator(
-                  "Low",
-                  data.climbLocations.contains("Low"),
-                ),
-                _buildCheckBoxIndicator(
-                  "Middle",
-                  data.climbLocations.contains("Middle"),
-                ),
-                _buildCheckBoxIndicator(
-                  "High",
-                  data.climbLocations.contains("High"),
-                ),
-                _buildCheckBoxIndicator(
-                  "Traverse",
-                  data.climbLocations.contains("Traverse"),
-                ),
-              ]),
-              _buildDataSection(title: "General Comments", children: [
-                Text(data.notes),
-              ])
+              _buildDataSection(
+                title: "General",
+                children: [
+                  Text(
+                    "Comments: ${data.notes}",
+                  ),
+                  Text(
+                    "Driver Skill: ${data.driverExperience}",
+                  ),
+                  Text(
+                    "Cool Features: ${data.features}",
+                  ),
+                  Text(
+                    "Claimed Accuracy: ${data.accuracy}",
+                  )
+                ],
+              ),
+              _buildDataSection(
+                title: "Auton",
+                children: [
+                  Text(
+                    "Auton Balls: ${data.autonBalls}",
+                  ),
+                  Text(
+                    "Auton Routine: ${data.autonRoutine}",
+                  ),
+                ],
+              ),
+              _buildDataSection(
+                title: "Intaking",
+                children: [
+                  _buildCheckBoxIndicator(
+                    "Terminal",
+                    data.intakeLocations.contains("Terminal"),
+                  ),
+                  _buildCheckBoxIndicator(
+                    "Field",
+                    data.intakeLocations.contains("Field"),
+                  )
+                ],
+              ),
+              _buildDataSection(
+                title: "Scoring Locations",
+                children: [
+                  _buildCheckBoxIndicator(
+                    "Against Fender",
+                    data.scoreLocations.contains("Against Fender"),
+                  ),
+                  _buildCheckBoxIndicator(
+                    "In Tarmac",
+                    data.scoreLocations.contains("In Tarmac"),
+                  ),
+                  _buildCheckBoxIndicator(
+                    "Outside Tarmac",
+                    data.scoreLocations.contains("Outside Tarmac"),
+                  ),
+                ],
+              ),
+              _buildDataSection(
+                title: "Hub Targets",
+                children: [
+                  _buildCheckBoxIndicator(
+                    "Lower",
+                    data.hubTargets.contains("Lower"),
+                  ),
+                  _buildCheckBoxIndicator(
+                    "Upper",
+                    data.hubTargets.contains("Upper"),
+                  ),
+                ],
+              ),
+              _buildDataSection(
+                title: "Climb",
+                children: [
+                  _buildCheckBoxIndicator(
+                    "Low",
+                    data.climbLocations.contains("Low"),
+                  ),
+                  _buildCheckBoxIndicator(
+                    "Middle",
+                    data.climbLocations.contains("Middle"),
+                  ),
+                  _buildCheckBoxIndicator(
+                    "High",
+                    data.climbLocations.contains("High"),
+                  ),
+                  _buildCheckBoxIndicator(
+                    "Traverse",
+                    data.climbLocations.contains("Traversal"),
+                  ),
+                ],
+              ),
+              data.imageURL != null || data.imageURL == ""
+                  ? _buildDataSection(title: "Photo", children: [
+                      CachedNetworkImage(
+                        imageUrl: data.imageURL,
+                        placeholder: (_, __) => CircularProgressIndicator(),
+                        errorWidget: (_, __, ___) => Center(
+                          child: Text(
+                              "Something went wrong when loading the image"),
+                        ),
+                      )
+                    ])
+                  : Container()
             ],
           ),
         ),
