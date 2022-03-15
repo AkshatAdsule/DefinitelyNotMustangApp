@@ -15,7 +15,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: subosito/flutter-action@v1
+      - name: setup cname
+        run: echo "tma.aksads.tech" > mustang_app/web/CNAME
+      - name: setup env
+        run: echo -e "BUNDLE_ID='com.homstead.mustangApp'\nPACKAGE_NAME='com.homestead.mustang_app'\nDYNAMIC_LINK_URI_PREFIX='mustangapp.page.link'" > mustang_app/.env
+      - name: allow dot files
+        run: touch mustang_app/web/.nojekyll
       - uses: erickzanardo/flutter-gh-pages@v3
         with:
             workingDir: mustang_app
-
