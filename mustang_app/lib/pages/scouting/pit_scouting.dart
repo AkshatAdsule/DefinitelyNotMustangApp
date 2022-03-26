@@ -212,6 +212,7 @@ class _PitScouterState extends State<PitScouter> {
               final XFile photo =
                   await picker.pickImage(source: ImageSource.camera);
               Reference r = storage.ref("photos/$_teamNumber");
+              r.updateMetadata(SettableMetadata(contentType: "image/jpeg"));
               r.putData(await photo.readAsBytes());
               imageUrl = await r.getDownloadURL();
             },
