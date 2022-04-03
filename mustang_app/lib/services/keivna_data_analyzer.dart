@@ -63,9 +63,29 @@ class KeivnaDataAnalyzer {
     }
     //TODO: get driver skill fixed!
     // result += "Driver Skill: " + match.driverSkill.toString() + "/5\n";
+    result += (match.offenseStrat.length > 0
+        ? "Offense Strategy: " + match.offenseStrat + "\n"
+        : "No Offense Strategy Notes\n");
+
+    result += (match.defenseStrat.length > 0
+        ? "Defense Strategy: " + match.defenseStrat + "\n"
+        : "No Defense Strategy Notes\n");
+
+    result += (match.auton.length > 0
+        ? "Auton Description: " + match.auton + "\n"
+        : "No Auton Notes\n");
+    
+    result += (match.strengths.length > 0
+        ? "Major Strengths: " + match.strengths + "\n"
+        : "No Major Strengths\n");
+
+    result += (match.weaknesses.length > 0
+        ? "Major Weaknesses: " + match.weaknesses + "\n"
+        : "No Major Weaknesses\n");
+
     result += (match.notes.length > 0
-        ? "Match Notes: " + match.notes + "\n"
-        : "No Match Notes\n");
+        ? "Final Comments: " + match.notes + "\n"
+        : "No Final Comments\n");
 
     //total shooting points scored
     int totalShootingPtsScored = _getShootingAutonPtsForMatch(match) +

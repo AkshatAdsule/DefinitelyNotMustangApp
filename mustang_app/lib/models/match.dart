@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import './game_action.dart';
 
 class Match {
-  String matchNumber, teamNumber, allianceColor, notes;
+  String matchNumber, teamNumber, allianceColor, offenseStrat, defenseStrat, auton, strengths, weaknesses, notes;
   MatchResult matchResult;
   List<GameAction> actions;
   bool offenseOnRightSide;
@@ -17,6 +17,11 @@ class Match {
     @required this.allianceColor,
     @required this.offenseOnRightSide,
     @required this.matchResult,
+    this.offenseStrat = "",
+    this.defenseStrat = "",
+    this.auton = "",
+    this.strengths = "", 
+    this.weaknesses = "",
     this.notes = "",
     @required this.driverSkill,
     @required this.actions,
@@ -31,6 +36,11 @@ class Match {
       allianceColor: data['allianceColor'] ?? 'blue',
       offenseOnRightSide: data['offenseOnRightSide'] ?? false,
       matchResult: matchResultFromString(data['matchResult']),
+      offenseStrat: data['offenseStrat'] ?? '',
+      defenseStrat: data['defenseStrat'] ?? '',
+      auton: data['autonDesc'] ?? '',
+      strengths: data['strengths'] ?? '',
+      weaknesses: data['weaknesses'] ?? '',
       notes: data['finalComments'] ?? '',
       driverSkill: data['driverSkill'] ?? 0,
       actions: data['actions'] != null
@@ -78,6 +88,11 @@ class Match {
     return {
       'teamNumber': teamNumber,
       'matchNumber': matchNumber,
+      'offenseStrat': offenseStrat,
+      'defenseStrat': defenseStrat,
+      'autonDesc': auton,
+      'strengths': strengths,
+      'weaknesses': weaknesses,
       'finalComments': notes,
       'allianceColor': allianceColor,
       'offenseOnRightSide': offenseOnRightSide,
