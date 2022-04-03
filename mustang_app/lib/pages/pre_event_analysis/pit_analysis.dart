@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:mustang_app/models/pitscouting_data.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:enum_to_string/enum_to_string.dart';
 
 class PitAnalysis extends StatefulWidget {
   final List<String> teams;
@@ -157,6 +158,9 @@ class _PitAnalysisState extends State<PitAnalysis> {
               _buildDataSection(
                 title: "General",
                 children: [
+                  Text(
+                    "Drivebase: " + EnumToString.convertToString(data.drivebaseType)
+                  ),
                   Text(
                     "Comments: ${data.notes}",
                   ),
