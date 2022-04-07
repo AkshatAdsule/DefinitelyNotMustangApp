@@ -24,6 +24,7 @@ class _PitScouterState extends State<PitScouter> {
   String _teamNumber;
   DriveBaseType _driveBase = DriveBaseType.TANK;
   String imageUrl;
+  bool _imageIsUploading = null;
   Map<String, dynamic> state = {};
   _PitScouterState(teamNumber) {
     _teamNumber = teamNumber;
@@ -207,15 +208,29 @@ class _PitScouterState extends State<PitScouter> {
           ),
           ElevatedButton(
             onPressed: () async {
+              setState(() {
+                _imageIsUploading = true;
+              });
               FirebaseStorage storage = FirebaseStorage.instance;
               final ImagePicker picker = ImagePicker();
               final XFile photo =
                   await picker.pickImage(source: ImageSource.camera);
               Reference r = storage.ref("photos/$_teamNumber");
-              r.putData(await photo.readAsBytes());
+              await r
+                  .updateMetadata(SettableMetadata(contentType: "image/jpeg"));
+              await r.putData(await photo.readAsBytes());
               imageUrl = await r.getDownloadURL();
+              setState(() {
+                _imageIsUploading = false;
+              });
             },
-            child: Text("Take photo of robot"),
+            child: Text(
+              _imageIsUploading == null
+                  ? "Take photo of robot"
+                  : _imageIsUploading
+                      ? "Uploading image..."
+                      : "Image uploaded",
+            ),
           ),
           Container(
             padding: EdgeInsets.only(top: 10, bottom: 10),

@@ -1,8 +1,11 @@
 buildscript {
-    ext.kotlin_version = '1.6.0'
+    ext.kotlin_version = '1.6.10'
     repositories {
         google()
         jcenter()
+        maven {
+            url 'http://download.flutter.io'
+        }
     }
 
     dependencies {
@@ -16,6 +19,9 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven {
+            url 'http://download.flutter.io'
+        }
     }
 }
 

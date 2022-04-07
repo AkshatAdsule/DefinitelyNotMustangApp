@@ -274,7 +274,7 @@ class MapScoutingState extends State<MapScouting> {
   }
 
   void _finishGame(BuildContext context) {
-    Navigator.pushNamed(context, MatchEndScouter.route, arguments: {
+    Navigator.pushReplacementNamed(context, MatchEndScouter.route, arguments: {
       'teamNumber': teamNumber,
       'matchNumber': matchNumber,
       'actions': actions,
@@ -510,18 +510,18 @@ class FinishGameButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return stopwatch.elapsedMilliseconds >= GameConstants.matchEndMillis
-        ? Container(
-            margin: EdgeInsets.only(
-              right: 10,
-            ),
-            child: game_button.ScoutingButton(
-              style: game_button.ButtonStyle.RAISED,
-              type: game_button.ButtonType.ELEMENT,
-              onPressed: () => _onClick(),
-              text: 'Finish Game',
-            ),
-          )
-        : Container();
+    // return stopwatch.elapsedMilliseconds >= GameConstants.matchEndMillis
+    return Container(
+      margin: EdgeInsets.only(
+        right: 10,
+      ),
+      child: game_button.ScoutingButton(
+        style: game_button.ButtonStyle.RAISED,
+        type: game_button.ButtonType.ELEMENT,
+        onPressed: () => _onClick(),
+        text: 'Finish Game',
+      ),
+    );
+    // : Container();
   }
 }

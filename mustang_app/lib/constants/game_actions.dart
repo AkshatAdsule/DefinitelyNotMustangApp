@@ -14,18 +14,18 @@ class RobotAction {
 
 class GameActions {
   static List<RobotAction> climbActions = [
-    RobotAction(
-      "No Park",
-      (MapScoutingState currentState) {
-        currentState.addClimb(ActionType.OTHER_CLIMB_MISS);
-      },
-    ),
-    RobotAction(
-      "Parked",
-      (MapScoutingState currentState) {
-        currentState.addClimb(ActionType.OTHER_PARKED);
-      },
-    ),
+    // RobotAction(
+    //   "No Park",
+    //   (MapScoutingState currentState) {
+    //     currentState.addClimb(ActionType.OTHER_CLIMB_MISS);
+    //   },
+    // ),
+    // RobotAction(
+    //   "Parked",
+    //   (MapScoutingState currentState) {
+    //     currentState.addClimb(ActionType.OTHER_PARKED);
+    //   },
+    // ),
     RobotAction(
       "Low Rung Climb",
       (MapScoutingState currentState) {

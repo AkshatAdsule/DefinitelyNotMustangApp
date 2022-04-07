@@ -60,6 +60,11 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
   String _endState;
   MatchResult _matchResult;
   TextEditingController _finalCommentsController = TextEditingController();
+  TextEditingController _offenseController = TextEditingController();
+  TextEditingController _defenseController = TextEditingController();
+  TextEditingController _autonController = TextEditingController();
+  TextEditingController _strengthsController = TextEditingController();
+  TextEditingController _weaknessesController = TextEditingController();
   bool _brokeDown;
   double _climbLocation;
   bool _offenseOnRightSide;
@@ -93,6 +98,11 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
         allianceColor: _allianceColor,
         offenseOnRightSide: _offenseOnRightSide,
         matchResult: _matchResult,
+        offenseStrat: _offenseController.text,
+        defenseStrat: _defenseController.text,
+        auton: _autonController.text,
+        strengths: _strengthsController.text,
+        weaknesses: _weaknessesController.text,
         notes: _finalCommentsController.text,
         driverSkill: _driverSkill,
         actions: _actions,
@@ -124,7 +134,9 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
     return Screen(
       title: 'Match End',
       child: Builder(
-        builder: (context) => Container(
+        builder: (context) => SingleChildScrollView(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          reverse: true,
           child: Column(
             children: <Widget>[
               Container(
@@ -178,6 +190,61 @@ class _MatchEndScouterState extends State<MatchEndScouter> {
                               setState(() => this._driverSkill = rating),
                         )),
                   ],
+                ),
+              ),
+              Container(
+                padding:
+                    EdgeInsets.only(left: 30, right: 30, top: 15, bottom: 30),
+                child: TextField(
+                  controller: _offenseController,
+                  decoration: InputDecoration(
+                    labelText: 'General Offense Strategy',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              Container(
+                padding:
+                    EdgeInsets.only(left: 30, right: 30, top: 15, bottom: 30),
+                child: TextField(
+                  controller: _defenseController,
+                  decoration: InputDecoration(
+                    labelText: 'General Defense Strategy',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              Container(
+                padding:
+                    EdgeInsets.only(left: 30, right: 30, top: 15, bottom: 30),
+                child: TextField(
+                  controller: _autonController,
+                  decoration: InputDecoration(
+                    labelText: 'Auton Description',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              Container(
+                padding:
+                    EdgeInsets.only(left: 30, right: 30, top: 15, bottom: 30),
+                child: TextField(
+                  controller: _strengthsController,
+                  decoration: InputDecoration(
+                    labelText: 'Major Strengths',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              Container(
+                padding:
+                    EdgeInsets.only(left: 30, right: 30, top: 15, bottom: 30),
+                child: TextField(
+                  controller: _weaknessesController,
+                  decoration: InputDecoration(
+                    labelText: 'Major Weaknesses',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
               Container(
